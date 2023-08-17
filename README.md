@@ -14,7 +14,8 @@ and it will report all detected dangerous uses of workflow expressions.
 
 ### Features
 
-- Report dangerous uses of workflow expressions in `run:` directives.
+- Report dangerous uses of workflow expressions in [`run:`] directives.
+- Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
 
 ## Background
 
@@ -44,6 +45,8 @@ mitigation process.
 
 The software is available under the `GPL-3.0-only` license, see [COPYING] for the full license text.
 
+[`actions/github-script`]: https://github.com/actions/github-script
+[`run:`]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 [argus: a framework for staged static taint analysis of github workflows and actions]:https://www.usenix.org/conference/usenixsecurity23/presentation/muralee
 [blogged about this problem]: https://github.blog/2023-08-09-four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
 [copying]: ./COPYING
