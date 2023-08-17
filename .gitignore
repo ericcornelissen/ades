@@ -1,0 +1,29 @@
+/*
+
+# GitHub
+!.github/
+.github/**
+!.github/workflows/
+.github/workflows/**
+!.github/workflows/audit.yml
+!.github/workflows/check.yml
+!.github/workflows/codeql.yml
+!.github/workflows/semgrep.yml
+!.github/dependabot.yml
+
+# Config
+!.editorconfig
+!.gitattributes
+!.gitignore
+
+# Docs
+!CONTRIBUTING.md
+!COPYING
+!README.md
+!SECURITY.md
+
+# Source
+!Makefile
+!go.mod
+!go.sum
+!*.go
