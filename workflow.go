@@ -18,6 +18,7 @@ package main
 import (
 	"fmt"
 	"regexp"
+	"strings"
 )
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
@@ -49,17 +50,41 @@ func processJob(id string, job *Job) (problems []string) {
 }
 
 func processStep(id int, step *Step) (problems []string) {
-	if matches := r.FindAll([]byte(step.Run), -1); matches != nil {
-		name := fmt.Sprintf("'%s'", step.Name)
-		if step.Name == "" {
-			name = fmt.Sprintf("#%d", id)
-		}
+	name := fmt.Sprintf("'%s'", step.Name)
+	if step.Name == "" {
+		name = fmt.Sprintf("#%d", id)
+	}
 
-		for _, match := range matches {
-			problem := fmt.Sprintf("step %s has '%s'", name, match)
+	if isRunStep(step) {
+		for _, problem := range processScript(step.Run) {
+			problem := fmt.Sprintf("step %s has '%s' in run", name, problem)
+			problems = append(problems, problem)
+		}
+	} else if isActionsGitHubScriptStep(step) {
+		for _, problem := range processScript(step.With.Script) {
+			problem := fmt.Sprintf("step %s has '%s' in script", name, problem)
 			problems = append(problems, problem)
 		}
 	}
 
 	return problems
+}
+
+func processScript(script string) (problems []string) {
+	if matches := r.FindAll([]byte(script), -1); matches != nil {
+		for _, problem := range matches {
+			problems = append(problems, string(problem))
+		}
+	}
+
+	return problems
+
+}
+
+func isRunStep(step *Step) bool {
+	return len(step.Run) > 0
+}
+
+func isActionsGitHubScriptStep(step *Step) bool {
+	return strings.HasPrefix(step.Uses, "actions/github-script@")
 }

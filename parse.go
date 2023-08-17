@@ -31,8 +31,14 @@ type Job struct {
 }
 
 type Step struct {
-	Name string `yaml:"name"`
-	Run  string `yaml:"run"`
+	Name string   `yaml:"name"`
+	Run  string   `yaml:"run"`
+	Uses string   `yaml:"uses"`
+	With StepWith `yaml:"with"`
+}
+
+type StepWith struct {
+	Script string `yaml:"script"`
 }
 
 func parse(data []byte) (workflow Workflow, err error) {

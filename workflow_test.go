@@ -254,7 +254,7 @@ func TestProcessJob(t *testing.T) {
 }
 
 func TestProcessStep(t *testing.T) {
-	testCases := []struct {
+	runTestCases := []struct {
 		name     string
 		id       int
 		step     Step
@@ -300,7 +300,7 @@ func TestProcessStep(t *testing.T) {
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
 			expected: []string{
-				"step #42 has '${{ inputs.name }}'",
+				"step #42 has '${{ inputs.name }}' in run",
 			},
 		},
 		{
@@ -310,7 +310,7 @@ func TestProcessStep(t *testing.T) {
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
 			expected: []string{
-				"step 'Greet person' has '${{ inputs.name }}'",
+				"step 'Greet person' has '${{ inputs.name }}' in run",
 			},
 		},
 		{
@@ -321,8 +321,8 @@ func TestProcessStep(t *testing.T) {
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
 			expected: []string{
-				"step #3 has '${{ inputs.name }}'",
-				"step #3 has '${{ steps.id.outputs.day }}'",
+				"step #3 has '${{ inputs.name }}' in run",
+				"step #3 has '${{ steps.id.outputs.day }}' in run",
 			},
 		},
 		{
@@ -333,13 +333,117 @@ func TestProcessStep(t *testing.T) {
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
 			expected: []string{
-				"step 'Greet person today' has '${{ inputs.name }}'",
-				"step 'Greet person today' has '${{ steps.id.outputs.day }}'",
+				"step 'Greet person today' has '${{ inputs.name }}' in run",
+				"step 'Greet person today' has '${{ steps.id.outputs.day }}' in run",
 			},
 		},
 	}
 
-	for _, tt := range testCases {
+	actionsGitHubScriptCases := []struct {
+		name     string
+		id       int
+		step     Step
+		expected []string
+	}{
+		{
+			name: "Unnamed step using another action",
+			step: Step{
+				Name: "",
+				Uses: "ericcornelissen/non-existent-action",
+			},
+			expected: []string{},
+		},
+		{
+			name: "Named step using another action",
+			step: Step{
+				Name: "Doesn't run",
+				Uses: "ericcornelissen/non-existent-action",
+			},
+			expected: []string{},
+		},
+		{
+			name: "Unnamed step with safe script",
+			step: Step{
+				Name: "",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello world!')",
+				},
+			},
+			expected: []string{},
+		},
+		{
+			name: "Named step with safe script",
+			step: Step{
+				Name: "Run something",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello world!')",
+				},
+			},
+			expected: []string{},
+		},
+		{
+			name: "Unnamed step with unsafe script, one expression",
+			id:   42,
+			step: Step{
+				Name: "",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello ${{ inputs.name }}!')",
+				},
+			},
+			expected: []string{
+				"step #42 has '${{ inputs.name }}' in script",
+			},
+		},
+		{
+			name: "Named step with unsafe script, one expression",
+			step: Step{
+				Name: "Greet person",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello ${{ inputs.name }}!')",
+				},
+			},
+			expected: []string{
+				"step 'Greet person' has '${{ inputs.name }}' in script",
+			},
+		},
+		{
+			name: "Unnamed step with unsafe script, two expression",
+			id:   3,
+			step: Step{
+				Name: "",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
+				},
+			},
+			expected: []string{
+				"step #3 has '${{ inputs.name }}' in script",
+				"step #3 has '${{ steps.id.outputs.day }}' in script",
+			},
+		},
+		{
+			name: "Named run with two expressions",
+			id:   1,
+			step: Step{
+				Name: "Greet person today",
+				Uses: "actions/github-script@v6",
+				With: StepWith{
+					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
+				},
+			},
+			expected: []string{
+				"step 'Greet person today' has '${{ inputs.name }}' in script",
+				"step 'Greet person today' has '${{ steps.id.outputs.day }}' in script",
+			},
+		},
+	}
+
+	allTestCases := append(runTestCases, actionsGitHubScriptCases...)
+	for _, tt := range allTestCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			problems := processStep(tt.id, &tt.step)

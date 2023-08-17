@@ -24,7 +24,7 @@ func TestParseSuccess(t *testing.T) {
 		expected Workflow
 	}{
 		{
-			name: "Perfect workflow",
+			name: "Workflow with 'run:'",
 			yaml: `
 jobs:
   example:
@@ -44,11 +44,48 @@ jobs:
 						Steps: []Step{
 							{
 								Name: "Checkout repository",
-								Run:  "",
+								Uses: "actions/checkout@v3",
 							},
 							{
 								Name: "Echo value",
 								Run:  "echo '${{ inputs.value }}'",
+							},
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "Workflow with 'actions/github-script'",
+			yaml: `
+jobs:
+  example:
+    name: Example
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 1
+    - name: Echo value
+      uses: actions/github-script@v6
+      with:
+        script: console.log('${{ inputs.value }}')
+`,
+			expected: Workflow{
+				Jobs: map[string]Job{
+					"example": {
+						Name: "Example",
+						Steps: []Step{
+							{
+								Name: "Checkout repository",
+								Uses: "actions/checkout@v3",
+							},
+							{
+								Name: "Echo value",
+								Uses: "actions/github-script@v6",
+								With: StepWith{
+									Script: "console.log('${{ inputs.value }}')",
+								},
 							},
 						},
 					},
@@ -72,12 +109,10 @@ jobs:
 						Name: "",
 						Steps: []Step{
 							{
-								Name: "",
-								Run:  "",
+								Uses: "actions/setup-node@v3",
 							},
 							{
-								Name: "",
-								Run:  "echo ${{ inputs.value }}",
+								Run: "echo ${{ inputs.value }}",
 							},
 						},
 					},
@@ -118,6 +153,14 @@ jobs:
 					if got, want := step.Run, expected.Run; got != want {
 						t.Errorf("Unexpected run for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
 					}
+
+					if got, want := step.Uses, expected.Uses; got != want {
+						t.Errorf("Unexpected uses for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					}
+
+					if got, want := step.With.Script, expected.With.Script; got != want {
+						t.Errorf("Unexpected with for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					}
 				}
 			}
 		})
@@ -141,6 +184,15 @@ jobs: 3.14
 jobs:
   example:
     steps: 42
+`,
+		},
+		{
+			name: "Invalid 'with' value",
+			yaml: `
+jobs:
+  example:
+    steps:
+    - with: 1.618
 `,
 		},
 	}
