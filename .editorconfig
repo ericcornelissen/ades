@@ -8,9 +8,10 @@ insert_final_newline=true
 max_line_length=100
 trim_trailing_whitespace=true
 
-[COPYING]
+[{COPYING,DCO.txt}]
 indent_size=unset
 indent_style=space
+max_line_length=80
 
 [Makefile]
 indent_style=tab
