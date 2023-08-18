@@ -54,18 +54,31 @@ func main() {
 		os.Exit(exitSuccess)
 	}
 
-	wd, err := getwd(flag.Args())
+	targets, err := getTargets(flag.Args())
 	if err != nil {
 		fmt.Printf("Unexpected error getting working directory: %s", err)
 		os.Exit(exitError)
 	}
 
-	if err := run(wd); err != nil {
-		fmt.Printf("An unexpected error occurred: %s\n", err)
-		os.Exit(exitError)
+	for i, target := range targets {
+		if len(targets) > 1 {
+			fmt.Println("Scanning", target)
+		}
+
+		if err = run(target); err != nil {
+			fmt.Printf("An unexpected error occurred: %s\n", err)
+		}
+
+		if len(targets) > 1 && i < len(targets)-1 {
+			fmt.Println( /* empty line */ )
+		}
 	}
 
-	os.Exit(exitSuccess)
+	if err == nil {
+		os.Exit(exitSuccess)
+	} else {
+		os.Exit(exitError)
+	}
 }
 
 func run(wd string) error {
@@ -109,11 +122,16 @@ func run(wd string) error {
 	return nil
 }
 
-func getwd(argv []string) (string, error) {
+func getTargets(argv []string) ([]string, error) {
 	if len(argv) > 0 {
-		return argv[0], nil
+		return argv, nil
 	} else {
-		return os.Getwd()
+		wd, err := os.Getwd()
+		if err != nil {
+			return nil, err
+		}
+
+		return []string{wd}, err
 	}
 }
 
@@ -129,7 +147,7 @@ func usage() {
 
 Usage:
 
-  ades [path]
+  ades [path]...
 
 Flags:
 
