@@ -17,7 +17,7 @@ package main
 
 import "testing"
 
-func TestParseSuccess(t *testing.T) {
+func TestParseWorkflowSuccess(t *testing.T) {
 	testCases := []struct {
 		name     string
 		yaml     string
@@ -123,7 +123,7 @@ jobs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			workflow, err := parse([]byte(tt.yaml))
+			workflow, err := parseWorkflow([]byte(tt.yaml))
 			if err != nil {
 				t.Fatalf("Unexpected error: %#v", err)
 			}
@@ -167,7 +167,7 @@ jobs:
 	}
 }
 
-func TestParseError(t *testing.T) {
+func TestParseWorkflowError(t *testing.T) {
 	testCases := []struct {
 		name string
 		yaml string
@@ -199,7 +199,157 @@ jobs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := parse([]byte(tt.yaml))
+			_, err := parseWorkflow([]byte(tt.yaml))
+			if err == nil {
+				t.Fatal("Expected an error, got none")
+			}
+		})
+	}
+}
+
+func TestParseManifestSuccess(t *testing.T) {
+	testCases := []struct {
+		name     string
+		yaml     string
+		expected Manifest
+	}{
+		{
+			name: "Non-composite manifest",
+			yaml: `
+runs:
+  using: node16
+  main: index.js
+`,
+			expected: Manifest{
+				Runs: ManifestRuns{
+					Using: "node16",
+				},
+			},
+		},
+		{
+			name: "Manifest with 'run:'",
+			yaml: `
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+    with:
+      fetch-depth: 1
+  - name: Echo value
+    run: echo '${{ inputs.value }}'
+`,
+			expected: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Checkout repository",
+							Uses: "actions/checkout@v3",
+						},
+						{
+							Name: "Echo value",
+							Run:  "echo '${{ inputs.value }}'",
+						},
+					},
+				},
+			},
+		},
+		{
+			name: "Manifest with 'actions/github-script'",
+			yaml: `
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+    with:
+      fetch-depth: 1
+  - name: Echo value
+    uses: actions/github-script@v6
+    with:
+      script: console.log('${{ inputs.value }}')
+`,
+			expected: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Checkout repository",
+							Uses: "actions/checkout@v3",
+						},
+						{
+							Name: "Echo value",
+							Uses: "actions/github-script@v6",
+							With: StepWith{
+								Script: "console.log('${{ inputs.value }}')",
+							},
+						},
+					},
+				},
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			manifest, err := parseManifest([]byte(tt.yaml))
+			if err != nil {
+				t.Fatalf("Unexpected error: %#v", err)
+			}
+
+			if got, want := len(manifest.Runs.Using), len(tt.expected.Runs.Using); got != want {
+				t.Fatalf("Unexpected using value (got '%d', want '%d')", got, want)
+			}
+
+			if got, want := len(manifest.Runs.Steps), len(tt.expected.Runs.Steps); got != want {
+				t.Fatalf("Unexpected number of steps (got '%d', want '%d')", got, want)
+			}
+
+			for i, step := range manifest.Runs.Steps {
+				expected := tt.expected.Runs.Steps[i]
+
+				if got, want := step.Name, expected.Name; got != want {
+					t.Errorf("Unexpected name for step %d (got '%s', want '%s')", i, got, want)
+				}
+
+				if got, want := step.Run, expected.Run; got != want {
+					t.Errorf("Unexpected run for step %d (got '%s', want '%s')", i, got, want)
+				}
+
+				if got, want := step.Uses, expected.Uses; got != want {
+					t.Errorf("Unexpected uses for step %d (got '%s', want '%s')", i, got, want)
+				}
+
+				if got, want := step.With.Script, expected.With.Script; got != want {
+					t.Errorf("Unexpected with for step %d (got '%s', want '%s')", i, got, want)
+				}
+			}
+		})
+	}
+}
+
+func TestParseManifestError(t *testing.T) {
+	testCases := []struct {
+		name string
+		yaml string
+	}{
+		{
+			name: "Invalid 'runs' value",
+			yaml: `runs: 3.14`,
+		},
+		{
+			name: "Invalid 'steps' value",
+			yaml: `
+runs:
+  steps: 3.14
+`,
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name, func(t *testing.T) {
+			_, err := parseManifest([]byte(tt.yaml))
 			if err == nil {
 				t.Fatal("Expected an error, got none")
 			}

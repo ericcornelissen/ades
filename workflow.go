@@ -23,6 +23,14 @@ import (
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
+func processManifest(manifest *Manifest) (problems []string) {
+	if manifest.Runs.Using == "composite" {
+		problems = processSteps(manifest.Runs.Steps)
+	}
+
+	return problems
+}
+
 func processWorkflow(workflow *Workflow) (problems []string) {
 	for id, job := range workflow.Jobs {
 		job := job
@@ -38,12 +46,18 @@ func processJob(id string, job *Job) (problems []string) {
 		name = id
 	}
 
-	for i, step := range job.Steps {
+	for _, problem := range processSteps(job.Steps) {
+		problem = fmt.Sprintf("job '%s', %s", name, problem)
+		problems = append(problems, problem)
+	}
+
+	return problems
+}
+
+func processSteps(steps []Step) (problems []string) {
+	for i, step := range steps {
 		step := step
-		for _, problem := range processStep(i, &step) {
-			problem = fmt.Sprintf("job '%s', %s", name, problem)
-			problems = append(problems, problem)
-		}
+		problems = append(problems, processStep(i, &step)...)
 	}
 
 	return problems
@@ -78,7 +92,6 @@ func processScript(script string) (problems []string) {
 	}
 
 	return problems
-
 }
 
 func isRunStep(step *Step) bool {

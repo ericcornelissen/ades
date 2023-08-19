@@ -82,6 +82,21 @@ func main() {
 }
 
 func run(wd string) error {
+	if data, err := os.ReadFile(path.Join(wd, "action.yml")); err == nil {
+		manifest, err := parseManifest(data)
+		if err != nil {
+			return err
+		}
+
+		problems := processManifest(&manifest)
+		if cnt := len(problems); cnt > 0 {
+			fmt.Printf("Detected %d problem(s) in 'action.yml':\n", cnt)
+			for _, problem := range problems {
+				fmt.Println("  ", problem)
+			}
+		}
+	}
+
 	workflowsDir := path.Join(wd, ".github", "workflows")
 	workflows, err := os.ReadDir(workflowsDir)
 	if err != nil {
@@ -104,7 +119,7 @@ func run(wd string) error {
 			continue
 		}
 
-		workflow, err := parse(data)
+		workflow, err := parseWorkflow(data)
 		if err != nil {
 			fmt.Printf("Could not parse %s: %v\n", entry.Name(), err)
 			continue

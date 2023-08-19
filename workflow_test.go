@@ -17,6 +17,107 @@ package main
 
 import "testing"
 
+func TestProcessManifest(t *testing.T) {
+	testCases := []struct {
+		name     string
+		manifest Manifest
+		expected int
+	}{
+		{
+			name: "Non-composite manifest",
+			manifest: Manifest{
+				Runs: ManifestRuns{
+					Using: "node16",
+				},
+			},
+			expected: 0,
+		},
+		{
+			name: "Safe manifest",
+			manifest: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Example",
+							Run:  "",
+						},
+					},
+				},
+			},
+			expected: 0,
+		},
+		{
+			name: "Problem in first of two steps in manifest",
+			manifest: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Example unsafe",
+							Run:  "echo ${{ inputs.value }}",
+						},
+						{
+							Name: "Example safe",
+							Run:  "echo 'Hello world!'",
+						},
+					},
+				},
+			},
+			expected: 1,
+		},
+		{
+			name: "Problem in second of two steps in manifest",
+			manifest: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Example safe",
+							Run:  "echo 'Hello world!'",
+						},
+						{
+							Name: "Example unsafe",
+							Run:  "echo ${{ inputs.value }}",
+						},
+					},
+				},
+			},
+			expected: 1,
+		},
+		{
+			name: "Problem in all steps in manifest",
+			manifest: Manifest{
+				Runs: ManifestRuns{
+					Using: "composite",
+					Steps: []Step{
+						{
+							Name: "Greeting",
+							Run:  "echo 'Hello ${{ inputs.name }}!'",
+						},
+						{
+							Name: "Today is",
+							Run:  "echo ${{ steps.id.outputs.day }}",
+						},
+					},
+				},
+			},
+			expected: 2,
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			problems := processManifest(&tt.manifest)
+
+			if got, want := len(problems), tt.expected; got != want {
+				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
+			}
+		})
+	}
+}
+
 func TestProcessWorkflow(t *testing.T) {
 	testCases := []struct {
 		name     string
@@ -93,7 +194,7 @@ func TestProcessWorkflow(t *testing.T) {
 			expected: 1,
 		},
 		{
-			name: "Problem in ll jobs in workflow",
+			name: "Problem in all jobs in workflow",
 			workflow: Workflow{
 				Jobs: map[string]Job{
 					"unsafe": {
@@ -254,12 +355,14 @@ func TestProcessJob(t *testing.T) {
 }
 
 func TestProcessStep(t *testing.T) {
-	runTestCases := []struct {
+	type TestCase struct {
 		name     string
 		id       int
 		step     Step
 		expected []string
-	}{
+	}
+
+	runTestCases := []TestCase{
 		{
 			name: "Unnamed step with no run value",
 			step: Step{
@@ -339,12 +442,7 @@ func TestProcessStep(t *testing.T) {
 		},
 	}
 
-	actionsGitHubScriptCases := []struct {
-		name     string
-		id       int
-		step     Step
-		expected []string
-	}{
+	actionsGitHubScriptCases := []TestCase{
 		{
 			name: "Unnamed step using another action",
 			step: Step{
@@ -442,7 +540,10 @@ func TestProcessStep(t *testing.T) {
 		},
 	}
 
-	allTestCases := append(runTestCases, actionsGitHubScriptCases...)
+	var allTestCases []TestCase
+	allTestCases = append(allTestCases, runTestCases...)
+	allTestCases = append(allTestCases, actionsGitHubScriptCases...)
+
 	for _, tt := range allTestCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {

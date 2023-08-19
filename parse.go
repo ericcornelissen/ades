@@ -41,10 +41,27 @@ type StepWith struct {
 	Script string `yaml:"script"`
 }
 
-func parse(data []byte) (workflow Workflow, err error) {
+func parseWorkflow(data []byte) (workflow Workflow, err error) {
 	if err = yaml.Unmarshal(data, &workflow); err != nil {
 		return workflow, fmt.Errorf("could not parse workflow: %v", err)
 	}
 
 	return workflow, nil
+}
+
+type Manifest struct {
+	Runs ManifestRuns `yaml:"runs"`
+}
+
+type ManifestRuns struct {
+	Using string `yaml:"using"`
+	Steps []Step `yaml:"steps"`
+}
+
+func parseManifest(data []byte) (manifest Manifest, err error) {
+	if err = yaml.Unmarshal(data, &manifest); err != nil {
+		return manifest, fmt.Errorf("could not parse manifest: %v", err)
+	}
+
+	return manifest, nil
 }
