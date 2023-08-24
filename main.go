@@ -100,7 +100,7 @@ func run(target string) (hasProblems bool, err error) {
 
 	if stat.IsDir() {
 		if problems, err := tryManifest(path.Join(target, "action.yml")); err != nil {
-			return hasProblems, err
+			fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 		} else {
 			hasProblems = len(problems) > 0
 			printProblems("action.yml", problems)
