@@ -93,6 +93,42 @@ func main() {
 }
 
 func run(wd string) (hasProblems bool, err error) {
+	if data, err := os.ReadFile(wd); err == nil {
+		manifest, err := parseManifest(data)
+		if err != nil {
+			return hasProblems, err
+		}
+
+		problems := processManifest(&manifest)
+		if cnt := len(problems); cnt > 0 {
+			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, wd)
+			for _, problem := range problems {
+				fmt.Println("  ", problem)
+			}
+		}
+
+		if len(problems) > 0 {
+			// don't try to parse the file as an Actions workflow if it was already
+			// successfully analyzed as an Action manifest.
+			return true, nil
+		}
+
+		workflow, err := parseWorkflow(data)
+		if err != nil {
+			return hasProblems, err
+		}
+
+		problems = processWorkflow(&workflow)
+		if cnt := len(problems); cnt > 0 {
+			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, wd)
+			for _, problem := range problems {
+				fmt.Println("  ", problem)
+			}
+		}
+
+		return len(problems) > 0, nil
+	}
+
 	if data, err := os.ReadFile(path.Join(wd, "action.yml")); err == nil {
 		manifest, err := parseManifest(data)
 		if err != nil {
