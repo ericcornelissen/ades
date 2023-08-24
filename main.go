@@ -92,98 +92,97 @@ func main() {
 	}
 }
 
-func run(wd string) (hasProblems bool, err error) {
-	if data, err := os.ReadFile(wd); err == nil {
-		manifest, err := parseManifest(data)
-		if err != nil {
-			return hasProblems, err
-		}
-
-		problems := processManifest(&manifest)
-		if cnt := len(problems); cnt > 0 {
-			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, wd)
-			for _, problem := range problems {
-				fmt.Println("  ", problem)
-			}
-		}
-
-		if len(problems) > 0 {
-			// don't try to parse the file as an Actions workflow if it was already
-			// successfully analyzed as an Action manifest.
-			return true, nil
-		}
-
-		workflow, err := parseWorkflow(data)
-		if err != nil {
-			return hasProblems, err
-		}
-
-		problems = processWorkflow(&workflow)
-		if cnt := len(problems); cnt > 0 {
-			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, wd)
-			for _, problem := range problems {
-				fmt.Println("  ", problem)
-			}
-		}
-
-		return len(problems) > 0, nil
-	}
-
-	if data, err := os.ReadFile(path.Join(wd, "action.yml")); err == nil {
-		manifest, err := parseManifest(data)
-		if err != nil {
-			return hasProblems, err
-		}
-
-		problems := processManifest(&manifest)
-		if cnt := len(problems); cnt > 0 {
-			hasProblems = true
-			fmt.Printf("Detected %d problem(s) in 'action.yml':\n", cnt)
-			for _, problem := range problems {
-				fmt.Println("  ", problem)
-			}
-		}
-	}
-
-	workflowsDir := path.Join(wd, ".github", "workflows")
-	workflows, err := os.ReadDir(workflowsDir)
+func run(target string) (hasProblems bool, err error) {
+	stat, err := os.Stat(target)
 	if err != nil {
-		return hasProblems, fmt.Errorf("could not read workflows directory: %v", err)
+		return hasProblems, fmt.Errorf("could not process %s: %v", target, err)
 	}
 
-	for _, entry := range workflows {
-		if entry.Type().IsDir() {
-			continue
+	if stat.IsDir() {
+		if problems, err := tryManifest(path.Join(target, "action.yml")); err != nil {
+			return hasProblems, err
+		} else {
+			hasProblems = len(problems) > 0
+			printProblems("action.yml", problems)
 		}
 
-		if path.Ext(entry.Name()) != ".yml" {
-			continue
-		}
-
-		workflowPath := path.Join(workflowsDir, entry.Name())
-		data, err := os.ReadFile(workflowPath)
+		workflowsDir := path.Join(target, ".github", "workflows")
+		workflows, err := os.ReadDir(workflowsDir)
 		if err != nil {
-			fmt.Printf("Could not read %s: %v\n", entry.Name(), err)
-			continue
+			return hasProblems, fmt.Errorf("could not read workflows directory: %v", err)
 		}
 
-		workflow, err := parseWorkflow(data)
-		if err != nil {
-			fmt.Printf("Could not parse %s: %v\n", entry.Name(), err)
-			continue
-		}
-
-		problems := processWorkflow(&workflow)
-		if cnt := len(problems); cnt > 0 {
-			hasProblems = true
-			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, entry.Name())
-			for _, problem := range problems {
-				fmt.Println("  ", problem)
+		for _, entry := range workflows {
+			if entry.Type().IsDir() {
+				continue
 			}
+
+			if path.Ext(entry.Name()) != ".yml" {
+				continue
+			}
+
+			workflowPath := path.Join(workflowsDir, entry.Name())
+			if problems, err := tryWorkflow(workflowPath); err != nil {
+				fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
+			} else {
+				hasProblems = len(problems) > 0
+				printProblems(entry.Name(), problems)
+			}
+		}
+	} else {
+		if problems, err := tryManifest(target); err != nil {
+			return hasProblems, err
+		} else {
+			hasProblems = len(problems) > 0
+			printProblems(target, problems)
+		}
+
+		if problems, err := tryWorkflow(target); err != nil {
+			return hasProblems, err
+		} else {
+			hasProblems = len(problems) > 0
+			printProblems(target, problems)
 		}
 	}
 
 	return hasProblems, nil
+}
+
+func tryManifest(manifestPath string) (problems []string, err error) {
+	data, err := os.ReadFile(manifestPath)
+	if err != nil {
+		return nil, nil
+	}
+
+	manifest, err := parseManifest(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return processManifest(&manifest), nil
+}
+
+func tryWorkflow(workflowPath string) (problems []string, err error) {
+	data, err := os.ReadFile(workflowPath)
+	if err != nil {
+		return nil, err
+	}
+
+	workflow, err := parseWorkflow(data)
+	if err != nil {
+		return nil, err
+	}
+
+	return processWorkflow(&workflow), nil
+}
+
+func printProblems(file string, problems []string) {
+	if cnt := len(problems); cnt > 0 {
+		fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, file)
+		for _, problem := range problems {
+			fmt.Println("  ", problem)
+		}
+	}
 }
 
 func getTargets(argv []string) ([]string, error) {
