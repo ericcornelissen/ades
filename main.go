@@ -130,11 +130,13 @@ func run(target string) (hasProblems bool, err error) {
 			}
 		}
 	} else {
-		if problems, err := tryManifest(target); err != nil {
-			return hasProblems, err
-		} else {
-			hasProblems = len(problems) > 0
-			printProblems(target, problems)
+		if stat.Name() == "action.yml" {
+			if problems, err := tryManifest(target); err != nil {
+				return hasProblems, err
+			} else {
+				hasProblems = len(problems) > 0
+				printProblems(target, problems)
+			}
 		}
 
 		if problems, err := tryWorkflow(target); err != nil {
