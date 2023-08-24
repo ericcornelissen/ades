@@ -1,0 +1,30 @@
+mkdir .github/workflows
+
+! exec ades
+cmp stdout stdout.txt
+! stderr .
+
+
+-- action.yml --
+name: Example action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+  - name: Safe run
+    run: echo 'Hello world!'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+
+-- stdout.txt --
+Detected 1 problem(s) in 'action.yml':
+   step 'Unsafe run' has '${{ inputs.name }}' in run

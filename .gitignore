@@ -28,3 +28,8 @@
 !go.mod
 !go.sum
 !*.go
+
+# Test
+!test/
+test/**
+!test/*.txtar

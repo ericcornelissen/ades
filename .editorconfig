@@ -24,6 +24,10 @@ indent_style=tab
 indent_size=unset
 indent_style=space
 
+[*.txtar]
+indent_size=unset
+indent_style=unset
+
 [*.yml]
 indent_size=2
 indent_style=space

@@ -1,0 +1,20 @@
+exec ades --help
+stdout 'find problematic use of template variables in GitHub Action workflows\n'
+! stderr .
+
+
+exec ades --legal
+cmp stdout gpl-3.0.txt
+! stderr .
+
+
+exec ades --version
+stdout 'v23.08'
+! stderr .
+
+
+-- gpl-3.0.txt --
+ades  Copyright (C) 2023  Eric Cornelissen
+This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
+This is free software, and you are welcome to redistribute it under certain
+conditions; see the GPL v3.0 for details.

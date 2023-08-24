@@ -1,0 +1,5 @@
+mkdir .github/workflows
+
+exec ades
+! stdout .
+! stderr .
