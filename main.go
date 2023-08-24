@@ -23,8 +23,9 @@ import (
 )
 
 const (
-	exitSuccess = 0
-	exitError   = 1
+	exitSuccess  = 0
+	exitError    = 1
+	exitProblems = 2
 )
 
 var (
@@ -60,13 +61,20 @@ func main() {
 		os.Exit(exitError)
 	}
 
+	problems, err := false, nil
 	for i, target := range targets {
 		if len(targets) > 1 {
 			fmt.Println("Scanning", target)
 		}
 
-		if err = run(target); err != nil {
-			fmt.Printf("An unexpected error occurred: %s\n", err)
+		targetHasProblems, targetErr := run(target)
+		if targetErr != nil {
+			err = targetErr
+			fmt.Printf("An unexpected error occurred: %s\n", targetErr)
+		}
+
+		if targetHasProblems {
+			problems = true
 		}
 
 		if len(targets) > 1 && i < len(targets)-1 {
@@ -74,22 +82,26 @@ func main() {
 		}
 	}
 
-	if err == nil {
-		os.Exit(exitSuccess)
-	} else {
+	switch {
+	case err != nil:
 		os.Exit(exitError)
+	case problems:
+		os.Exit(exitProblems)
+	default:
+		os.Exit(exitSuccess)
 	}
 }
 
-func run(wd string) error {
+func run(wd string) (hasProblems bool, err error) {
 	if data, err := os.ReadFile(path.Join(wd, "action.yml")); err == nil {
 		manifest, err := parseManifest(data)
 		if err != nil {
-			return err
+			return hasProblems, err
 		}
 
 		problems := processManifest(&manifest)
 		if cnt := len(problems); cnt > 0 {
+			hasProblems = true
 			fmt.Printf("Detected %d problem(s) in 'action.yml':\n", cnt)
 			for _, problem := range problems {
 				fmt.Println("  ", problem)
@@ -100,7 +112,7 @@ func run(wd string) error {
 	workflowsDir := path.Join(wd, ".github", "workflows")
 	workflows, err := os.ReadDir(workflowsDir)
 	if err != nil {
-		return fmt.Errorf("could not read workflows directory: %v", err)
+		return hasProblems, fmt.Errorf("could not read workflows directory: %v", err)
 	}
 
 	for _, entry := range workflows {
@@ -127,6 +139,7 @@ func run(wd string) error {
 
 		problems := processWorkflow(&workflow)
 		if cnt := len(problems); cnt > 0 {
+			hasProblems = true
 			fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, entry.Name())
 			for _, problem := range problems {
 				fmt.Println("  ", problem)
@@ -134,7 +147,7 @@ func run(wd string) error {
 		}
 	}
 
-	return nil
+	return hasProblems, nil
 }
 
 func getTargets(argv []string) ([]string, error) {
