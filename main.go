@@ -181,7 +181,13 @@ Flags:
 
   --help      Show this help message and exit.
   --legal     Show legal information and exit.
-  --version   Show the program version and exit.`)
+  --version   Show the program version and exit.
+
+Exit Codes:
+
+  0   Success
+  1   Unexpected error
+  2   Problems detected`)
 }
 
 func version() {
