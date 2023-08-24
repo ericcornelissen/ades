@@ -42,23 +42,27 @@ var (
 )
 
 func main() {
+	os.Exit(ades())
+}
+
+func ades() int {
 	flag.Usage = func() { usage() }
 	flag.Parse()
 
 	if *flagLegal {
 		legal()
-		os.Exit(exitSuccess)
+		return exitSuccess
 	}
 
 	if *flagVersion {
 		version()
-		os.Exit(exitSuccess)
+		return exitSuccess
 	}
 
 	targets, err := getTargets(flag.Args())
 	if err != nil {
 		fmt.Printf("Unexpected error getting working directory: %s", err)
-		os.Exit(exitError)
+		return exitError
 	}
 
 	problems, err := false, nil
@@ -84,11 +88,11 @@ func main() {
 
 	switch {
 	case err != nil:
-		os.Exit(exitError)
+		return exitError
 	case problems:
-		os.Exit(exitProblems)
+		return exitProblems
 	default:
-		os.Exit(exitSuccess)
+		return exitSuccess
 	}
 }
 
@@ -137,13 +141,13 @@ func run(target string) (hasProblems bool, err error) {
 				hasProblems = len(problems) > 0
 				printProblems(target, problems)
 			}
-		}
-
-		if problems, err := tryWorkflow(target); err != nil {
-			return hasProblems, err
 		} else {
-			hasProblems = len(problems) > 0
-			printProblems(target, problems)
+			if problems, err := tryWorkflow(target); err != nil {
+				return hasProblems, err
+			} else {
+				hasProblems = len(problems) > 0
+				printProblems(target, problems)
+			}
 		}
 	}
 
