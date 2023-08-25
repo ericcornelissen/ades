@@ -8,7 +8,7 @@ insert_final_newline=true
 max_line_length=100
 trim_trailing_whitespace=true
 
-[{COPYING,DCO.txt}]
+[*.txt]
 indent_size=unset
 indent_style=space
 max_line_length=80
