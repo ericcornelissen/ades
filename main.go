@@ -106,8 +106,15 @@ func run(target string) (hasProblems bool, err error) {
 		if problems, err := tryManifest(path.Join(target, "action.yml")); err != nil {
 			fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 		} else {
-			hasProblems = len(problems) > 0
+			hasProblems = len(problems) > 0 || hasProblems
 			printProblems("action.yml", problems)
+		}
+
+		if problems, err := tryManifest(path.Join(target, "action.yaml")); err != nil {
+			fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
+		} else {
+			hasProblems = len(problems) > 0 || hasProblems
+			printProblems("action.yaml", problems)
 		}
 
 		workflowsDir := path.Join(target, ".github", "workflows")
@@ -129,23 +136,23 @@ func run(target string) (hasProblems bool, err error) {
 			if problems, err := tryWorkflow(workflowPath); err != nil {
 				fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
 			} else {
-				hasProblems = len(problems) > 0
+				hasProblems = len(problems) > 0 || hasProblems
 				printProblems(entry.Name(), problems)
 			}
 		}
 	} else {
-		if stat.Name() == "action.yml" {
+		if stat.Name() == "action.yml" || stat.Name() == "action.yaml" {
 			if problems, err := tryManifest(target); err != nil {
 				return hasProblems, err
 			} else {
-				hasProblems = len(problems) > 0
+				hasProblems = len(problems) > 0 || hasProblems
 				printProblems(target, problems)
 			}
 		} else {
 			if problems, err := tryWorkflow(target); err != nil {
 				return hasProblems, err
 			} else {
-				hasProblems = len(problems) > 0
+				hasProblems = len(problems) > 0 || hasProblems
 				printProblems(target, problems)
 			}
 		}
