@@ -37,7 +37,7 @@ func TestProcessManifest(t *testing.T) {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Example",
 							Run:  "",
@@ -52,7 +52,7 @@ func TestProcessManifest(t *testing.T) {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Example unsafe",
 							Run:  "echo ${{ inputs.value }}",
@@ -71,7 +71,7 @@ func TestProcessManifest(t *testing.T) {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Example safe",
 							Run:  "echo 'Hello world!'",
@@ -90,7 +90,7 @@ func TestProcessManifest(t *testing.T) {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Greeting",
 							Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -127,10 +127,10 @@ func TestProcessWorkflow(t *testing.T) {
 		{
 			name: "Safe workflow",
 			workflow: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"safe": {
 						Name: "Safe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "",
@@ -144,10 +144,10 @@ func TestProcessWorkflow(t *testing.T) {
 		{
 			name: "Problem in first of two jobs in workflow",
 			workflow: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -156,7 +156,7 @@ func TestProcessWorkflow(t *testing.T) {
 					},
 					"safe": {
 						Name: "Safe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "echo 'Hello world!'",
@@ -170,10 +170,10 @@ func TestProcessWorkflow(t *testing.T) {
 		{
 			name: "Problem in second of two jobs in workflow",
 			workflow: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"safe": {
 						Name: "Safe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "echo 'Hello world!'",
@@ -182,7 +182,7 @@ func TestProcessWorkflow(t *testing.T) {
 					},
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -196,10 +196,10 @@ func TestProcessWorkflow(t *testing.T) {
 		{
 			name: "Problem in all jobs in workflow",
 			workflow: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Greeting",
 								Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -208,7 +208,7 @@ func TestProcessWorkflow(t *testing.T) {
 					},
 					"more-unsafe": {
 						Name: "More Unsafe",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -241,14 +241,14 @@ func TestProcessJob(t *testing.T) {
 	testCases := []struct {
 		name     string
 		id       string
-		job      Job
+		job      WorkflowJob
 		expected int
 	}{
 		{
 			name: "Safe unnamed job",
-			job: Job{
+			job: WorkflowJob{
 				Name: "",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Unnamed Example",
 						Run:  "",
@@ -259,9 +259,9 @@ func TestProcessJob(t *testing.T) {
 		},
 		{
 			name: "Safe named job",
-			job: Job{
+			job: WorkflowJob{
 				Name: "Safe",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Named example",
 						Run:  "",
@@ -273,9 +273,9 @@ func TestProcessJob(t *testing.T) {
 		{
 			name: "Unnamed job with unsafe step",
 			id:   "job-id",
-			job: Job{
+			job: WorkflowJob{
 				Name: "",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Example",
 						Run:  "echo ${{ inputs.value }}",
@@ -286,9 +286,9 @@ func TestProcessJob(t *testing.T) {
 		},
 		{
 			name: "Named job with unsafe step",
-			job: Job{
+			job: WorkflowJob{
 				Name: "Unsafe",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Example",
 						Run:  "echo ${{ inputs.value }}",
@@ -300,9 +300,9 @@ func TestProcessJob(t *testing.T) {
 		{
 			name: "Unnamed job with unsafe and safe steps",
 			id:   "job-id",
-			job: Job{
+			job: WorkflowJob{
 				Name: "",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Checkout repository",
 						Run:  "",
@@ -321,9 +321,9 @@ func TestProcessJob(t *testing.T) {
 		},
 		{
 			name: "Named job with unsafe and safe steps",
-			job: Job{
+			job: WorkflowJob{
 				Name: "Unsafe",
-				Steps: []Step{
+				Steps: []JobStep{
 					{
 						Name: "Checkout repository",
 						Run:  "",
@@ -358,14 +358,14 @@ func TestProcessStep(t *testing.T) {
 	type TestCase struct {
 		name     string
 		id       int
-		step     Step
+		step     JobStep
 		expected []string
 	}
 
 	runTestCases := []TestCase{
 		{
 			name: "Unnamed step with no run value",
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Run:  "",
 			},
@@ -373,7 +373,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named step with no run value",
-			step: Step{
+			step: JobStep{
 				Name: "Doesn't run",
 				Run:  "",
 			},
@@ -381,7 +381,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Unnamed step with safe run value",
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
@@ -389,7 +389,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named step with safe run value",
-			step: Step{
+			step: JobStep{
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
@@ -398,7 +398,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Unnamed run with one expression",
 			id:   42,
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
@@ -408,7 +408,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named run with one expression",
-			step: Step{
+			step: JobStep{
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
@@ -419,7 +419,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Unnamed run with two expressions",
 			id:   3,
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
@@ -431,7 +431,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Named run with two expressions",
 			id:   1,
-			step: Step{
+			step: JobStep{
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
@@ -445,7 +445,7 @@ func TestProcessStep(t *testing.T) {
 	actionsGitHubScriptCases := []TestCase{
 		{
 			name: "Unnamed step using another action",
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Uses: "ericcornelissen/non-existent-action",
 			},
@@ -453,7 +453,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named step using another action",
-			step: Step{
+			step: JobStep{
 				Name: "Doesn't run",
 				Uses: "ericcornelissen/non-existent-action",
 			},
@@ -461,7 +461,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Unnamed step with safe script",
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
 				With: StepWith{
@@ -472,7 +472,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named step with safe script",
-			step: Step{
+			step: JobStep{
 				Name: "Run something",
 				Uses: "actions/github-script@v6",
 				With: StepWith{
@@ -484,7 +484,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Unnamed step with unsafe script, one expression",
 			id:   42,
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
 				With: StepWith{
@@ -497,7 +497,7 @@ func TestProcessStep(t *testing.T) {
 		},
 		{
 			name: "Named step with unsafe script, one expression",
-			step: Step{
+			step: JobStep{
 				Name: "Greet person",
 				Uses: "actions/github-script@v6",
 				With: StepWith{
@@ -511,7 +511,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Unnamed step with unsafe script, two expression",
 			id:   3,
-			step: Step{
+			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
 				With: StepWith{
@@ -526,7 +526,7 @@ func TestProcessStep(t *testing.T) {
 		{
 			name: "Named run with two expressions",
 			id:   1,
-			step: Step{
+			step: JobStep{
 				Name: "Greet person today",
 				Uses: "actions/github-script@v6",
 				With: StepWith{

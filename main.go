@@ -167,7 +167,7 @@ func tryManifest(manifestPath string) (problems []string, err error) {
 		return nil, nil
 	}
 
-	manifest, err := parseManifest(data)
+	manifest, err := ParseManifest(data)
 	if err != nil {
 		return nil, err
 	}
@@ -181,7 +181,7 @@ func tryWorkflow(workflowPath string) (problems []string, err error) {
 		return nil, err
 	}
 
-	workflow, err := parseWorkflow(data)
+	workflow, err := ParseWorkflow(data)
 	if err != nil {
 		return nil, err
 	}
