@@ -21,27 +21,32 @@ import (
 	"gopkg.in/yaml.v3"
 )
 
+// Workflow is a (simplified) representation of a GitHub Actions workflow.
 type Workflow struct {
-	Jobs map[string]Job `yaml:"jobs"`
+	Jobs map[string]WorkflowJob `yaml:"jobs"`
 }
 
-type Job struct {
-	Name  string `yaml:"name"`
-	Steps []Step `yaml:"steps"`
+// WorkflowJob is a (simplified) representation of a workflow job.
+type WorkflowJob struct {
+	Name  string    `yaml:"name"`
+	Steps []JobStep `yaml:"steps"`
 }
 
-type Step struct {
+// JobStep is a (simplified) representation of a workflow job step object.
+type JobStep struct {
 	Name string   `yaml:"name"`
 	Run  string   `yaml:"run"`
 	Uses string   `yaml:"uses"`
 	With StepWith `yaml:"with"`
 }
 
+// StepWith is a (simplified) representation of a job step's `with:` object.
 type StepWith struct {
 	Script string `yaml:"script"`
 }
 
-func parseWorkflow(data []byte) (workflow Workflow, err error) {
+// ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.
+func ParseWorkflow(data []byte) (workflow Workflow, err error) {
 	if err = yaml.Unmarshal(data, &workflow); err != nil {
 		return workflow, fmt.Errorf("could not parse workflow: %v", err)
 	}
@@ -49,16 +54,19 @@ func parseWorkflow(data []byte) (workflow Workflow, err error) {
 	return workflow, nil
 }
 
+// Manifest is a (simplified) representation of a GitHub Actions Action manifest.
 type Manifest struct {
 	Runs ManifestRuns `yaml:"runs"`
 }
 
+// ManifestRuns is a (simplified) representation of an Action manifest's `runs:` object.
 type ManifestRuns struct {
-	Using string `yaml:"using"`
-	Steps []Step `yaml:"steps"`
+	Using string    `yaml:"using"`
+	Steps []JobStep `yaml:"steps"`
 }
 
-func parseManifest(data []byte) (manifest Manifest, err error) {
+// ParseManifest parses a GitHub Actions Action manifest file into a Manifest struct.
+func ParseManifest(data []byte) (manifest Manifest, err error) {
 	if err = yaml.Unmarshal(data, &manifest); err != nil {
 		return manifest, fmt.Errorf("could not parse manifest: %v", err)
 	}

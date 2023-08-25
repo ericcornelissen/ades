@@ -38,10 +38,10 @@ jobs:
       run: echo '${{ inputs.value }}'
 `,
 			expected: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "Example",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Checkout repository",
 								Uses: "actions/checkout@v3",
@@ -72,10 +72,10 @@ jobs:
         script: console.log('${{ inputs.value }}')
 `,
 			expected: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "Example",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Name: "Checkout repository",
 								Uses: "actions/checkout@v3",
@@ -104,10 +104,10 @@ jobs:
     - run: echo ${{ inputs.value }}
 `,
 			expected: Workflow{
-				Jobs: map[string]Job{
+				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "",
-						Steps: []Step{
+						Steps: []JobStep{
 							{
 								Uses: "actions/setup-node@v3",
 							},
@@ -123,7 +123,7 @@ jobs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			workflow, err := parseWorkflow([]byte(tt.yaml))
+			workflow, err := ParseWorkflow([]byte(tt.yaml))
 			if err != nil {
 				t.Fatalf("Unexpected error: %#v", err)
 			}
@@ -199,7 +199,7 @@ jobs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := parseWorkflow([]byte(tt.yaml))
+			_, err := ParseWorkflow([]byte(tt.yaml))
 			if err == nil {
 				t.Fatal("Expected an error, got none")
 			}
@@ -242,7 +242,7 @@ runs:
 			expected: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Checkout repository",
 							Uses: "actions/checkout@v3",
@@ -273,7 +273,7 @@ runs:
 			expected: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
-					Steps: []Step{
+					Steps: []JobStep{
 						{
 							Name: "Checkout repository",
 							Uses: "actions/checkout@v3",
@@ -293,7 +293,7 @@ runs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			manifest, err := parseManifest([]byte(tt.yaml))
+			manifest, err := ParseManifest([]byte(tt.yaml))
 			if err != nil {
 				t.Fatalf("Unexpected error: %#v", err)
 			}
@@ -349,7 +349,7 @@ runs:
 
 	for _, tt := range testCases {
 		t.Run(tt.name, func(t *testing.T) {
-			_, err := parseManifest([]byte(tt.yaml))
+			_, err := ParseManifest([]byte(tt.yaml))
 			if err == nil {
 				t.Fatal("Expected an error, got none")
 			}

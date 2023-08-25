@@ -40,7 +40,7 @@ func processWorkflow(workflow *Workflow) (problems []string) {
 	return problems
 }
 
-func processJob(id string, job *Job) (problems []string) {
+func processJob(id string, job *WorkflowJob) (problems []string) {
 	name := job.Name
 	if name == "" {
 		name = id
@@ -54,7 +54,7 @@ func processJob(id string, job *Job) (problems []string) {
 	return problems
 }
 
-func processSteps(steps []Step) (problems []string) {
+func processSteps(steps []JobStep) (problems []string) {
 	for i, step := range steps {
 		step := step
 		problems = append(problems, processStep(i, &step)...)
@@ -63,7 +63,7 @@ func processSteps(steps []Step) (problems []string) {
 	return problems
 }
 
-func processStep(id int, step *Step) (problems []string) {
+func processStep(id int, step *JobStep) (problems []string) {
 	name := fmt.Sprintf("'%s'", step.Name)
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
@@ -94,10 +94,10 @@ func processScript(script string) (problems []string) {
 	return problems
 }
 
-func isRunStep(step *Step) bool {
+func isRunStep(step *JobStep) bool {
 	return len(step.Run) > 0
 }
 
-func isActionsGitHubScriptStep(step *Step) bool {
+func isActionsGitHubScriptStep(step *JobStep) bool {
 	return strings.HasPrefix(step.Uses, "actions/github-script@")
 }
