@@ -18,10 +18,12 @@
 
 # Docs
 !CONTRIBUTING.md
-!COPYING
-!DCO.txt
 !README.md
 !SECURITY.md
+
+# Legal
+!COPYING.txt
+!DCO.txt
 
 # Source
 !Makefile
