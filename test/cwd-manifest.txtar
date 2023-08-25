@@ -1,11 +1,20 @@
-mkdir .github/workflows
+mkdir project-yml/.github/workflows
+mkdir project-yaml/.github/workflows
 
+# action.yml
+cd project-yml
+! exec ades
+cmp stdout stdout.txt
+! stderr .
+
+# action.yaml
+cd ../project-yaml
 ! exec ades
 cmp stdout stdout.txt
 ! stderr .
 
 
--- action.yml --
+-- project-yml/action.yml --
 name: Example action
 description: Sample action for testing _ades_
 
@@ -24,7 +33,28 @@ runs:
     run: echo 'Hello world!'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
-
--- stdout.txt --
+-- project-yml/stdout.txt --
 Detected 1 problem(s) in 'action.yml':
+   step 'Unsafe run' has '${{ inputs.name }}' in run
+-- project-yaml/action.yaml --
+name: Example action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+  - name: Safe run
+    run: echo 'Hello world!'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- project-yaml/stdout.txt --
+Detected 1 problem(s) in 'action.yaml':
    step 'Unsafe run' has '${{ inputs.name }}' in run
