@@ -39,8 +39,8 @@ from the get-go.
 
 The motivation behind this is twofold. First, it makes the tool much simpler and faster. Second, it
 acknowledges that software development is dynamic and making changes some time after introduction
-can be difficult - (guaranteed) reporting the problem when the code is being written simplifies the
-mitigation process.
+can be difficult - (guaranteed) reporting the violations when the code is being written simplifies
+the mitigation process.
 
 ## License
 

@@ -109,10 +109,10 @@ func TestProcessManifest(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := analyzeManifest(&tt.manifest)
+			violations := analyzeManifest(&tt.manifest)
 
-			if got, want := len(problems), tt.expected; got != want {
-				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.expected; got != want {
+				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 		})
 	}
@@ -228,10 +228,10 @@ func TestProcessWorkflow(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := analyzeWorkflow(&tt.workflow)
+			violations := analyzeWorkflow(&tt.workflow)
 
-			if got, want := len(problems), tt.expected; got != want {
-				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.expected; got != want {
+				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 		})
 	}
@@ -345,10 +345,10 @@ func TestProcessJob(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := analyzeJob(tt.id, &tt.job)
+			violations := analyzeJob(tt.id, &tt.job)
 
-			if got, want := len(problems), tt.expected; got != want {
-				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.expected; got != want {
+				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 		})
 	}
@@ -359,7 +359,7 @@ func TestProcessStep(t *testing.T) {
 		name     string
 		id       int
 		step     JobStep
-		expected []Problem
+		expected []Violation
 	}
 
 	runTestCases := []TestCase{
@@ -369,7 +369,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Named step with no run value",
@@ -377,7 +377,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Doesn't run",
 				Run:  "",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Unnamed step with safe run value",
@@ -385,7 +385,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Named step with safe run value",
@@ -393,7 +393,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Unnamed run with one expression",
@@ -402,7 +402,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
@@ -415,7 +415,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "'Greet person'",
 					problem: "${{ inputs.name }}",
@@ -429,7 +429,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
@@ -447,7 +447,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ inputs.name }}",
@@ -467,7 +467,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Named step using another action",
@@ -475,7 +475,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Doesn't run",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Unnamed step with safe script",
@@ -486,7 +486,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Named step with safe script",
@@ -497,7 +497,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []Problem{},
+			expected: []Violation{},
 		},
 		{
 			name: "Unnamed step with unsafe script, one expression",
@@ -509,7 +509,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
@@ -525,7 +525,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "'Greet person'",
 					problem: "${{ inputs.name }}",
@@ -542,7 +542,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
@@ -563,7 +563,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []Problem{
+			expected: []Violation{
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ inputs.name }}",
@@ -583,14 +583,14 @@ func TestProcessStep(t *testing.T) {
 	for _, tt := range allTestCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := analyzeStep(tt.id, &tt.step)
-			if got, want := len(problems), len(tt.expected); got != want {
-				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
+			violations := analyzeStep(tt.id, &tt.step)
+			if got, want := len(violations), len(tt.expected); got != want {
+				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 
-			for i, problem := range problems {
-				if got, want := problem, tt.expected[i]; got != want {
-					t.Errorf("Unexpected #%d problem (got '%s', want '%s')", i, got, want)
+			for i, violation := range violations {
+				if got, want := violation, tt.expected[i]; got != want {
+					t.Errorf("Unexpected #%d violation (got '%s', want '%s')", i, got, want)
 				}
 			}
 		})

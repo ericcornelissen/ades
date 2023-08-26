@@ -32,5 +32,5 @@ jobs:
       run: echo 'Hello ${{ inputs.name }}'
 
 -- stdout.txt --
-Detected 1 problem(s) in 'unsafe.yml':
+Detected 1 violation(s) in 'unsafe.yml':
    job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}'

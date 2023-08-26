@@ -18,5 +18,5 @@ jobs:
       run: echo 'Hello ${{ inputs.name }}'
 
 -- stdout.txt --
-Detected 1 problem(s) in 'project/workflow.yml':
+Detected 1 violation(s) in 'project/workflow.yml':
    job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}'
