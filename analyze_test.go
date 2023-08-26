@@ -109,7 +109,7 @@ func TestProcessManifest(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := processManifest(&tt.manifest)
+			problems := analyzeManifest(&tt.manifest)
 
 			if got, want := len(problems), tt.expected; got != want {
 				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
@@ -228,7 +228,7 @@ func TestProcessWorkflow(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := processWorkflow(&tt.workflow)
+			problems := analyzeWorkflow(&tt.workflow)
 
 			if got, want := len(problems), tt.expected; got != want {
 				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
@@ -345,7 +345,7 @@ func TestProcessJob(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := processJob(tt.id, &tt.job)
+			problems := analyzeJob(tt.id, &tt.job)
 
 			if got, want := len(problems), tt.expected; got != want {
 				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
@@ -583,7 +583,7 @@ func TestProcessStep(t *testing.T) {
 	for _, tt := range allTestCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			problems := processStep(tt.id, &tt.step)
+			problems := analyzeStep(tt.id, &tt.step)
 			if got, want := len(problems), len(tt.expected); got != want {
 				t.Fatalf("Unexpected number of problems (got '%d', want '%d')", got, want)
 			}

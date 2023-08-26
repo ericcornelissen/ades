@@ -29,30 +29,30 @@ type Problem struct {
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
-func processManifest(manifest *Manifest) (problems []Problem) {
+func analyzeManifest(manifest *Manifest) (problems []Problem) {
 	if manifest.Runs.Using == "composite" {
-		problems = processSteps(manifest.Runs.Steps)
+		problems = analyzeSteps(manifest.Runs.Steps)
 	}
 
 	return problems
 }
 
-func processWorkflow(workflow *Workflow) (problems []Problem) {
+func analyzeWorkflow(workflow *Workflow) (problems []Problem) {
 	for id, job := range workflow.Jobs {
 		job := job
-		problems = append(problems, processJob(id, &job)...)
+		problems = append(problems, analyzeJob(id, &job)...)
 	}
 
 	return problems
 }
 
-func processJob(id string, job *WorkflowJob) (problems []Problem) {
+func analyzeJob(id string, job *WorkflowJob) (problems []Problem) {
 	name := job.Name
 	if name == "" {
 		name = id
 	}
 
-	for _, problem := range processSteps(job.Steps) {
+	for _, problem := range analyzeSteps(job.Steps) {
 		problem.jobId = fmt.Sprintf("'%s'", name)
 		problems = append(problems, problem)
 	}
@@ -60,16 +60,16 @@ func processJob(id string, job *WorkflowJob) (problems []Problem) {
 	return problems
 }
 
-func processSteps(steps []JobStep) (problems []Problem) {
+func analyzeSteps(steps []JobStep) (problems []Problem) {
 	for i, step := range steps {
 		step := step
-		problems = append(problems, processStep(i, &step)...)
+		problems = append(problems, analyzeStep(i, &step)...)
 	}
 
 	return problems
 }
 
-func processStep(id int, step *JobStep) (problems []Problem) {
+func analyzeStep(id int, step *JobStep) (problems []Problem) {
 	name := fmt.Sprintf("'%s'", step.Name)
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
@@ -84,7 +84,7 @@ func processStep(id int, step *JobStep) (problems []Problem) {
 		return nil
 	}
 
-	for _, problem := range processScript(script) {
+	for _, problem := range analyzeScript(script) {
 		problem.stepId = name
 		problems = append(problems, problem)
 	}
@@ -92,7 +92,7 @@ func processStep(id int, step *JobStep) (problems []Problem) {
 	return problems
 }
 
-func processScript(script string) (problems []Problem) {
+func analyzeScript(script string) (problems []Problem) {
 	if matches := r.FindAll([]byte(script), -1); matches != nil {
 		for _, problem := range matches {
 			problems = append(problems, Problem{
