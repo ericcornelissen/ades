@@ -172,7 +172,7 @@ func tryManifest(manifestPath string) (problems []Problem, err error) {
 		return nil, err
 	}
 
-	return processManifest(&manifest), nil
+	return analyzeManifest(&manifest), nil
 }
 
 func tryWorkflow(workflowPath string) (problems []Problem, err error) {
@@ -186,7 +186,7 @@ func tryWorkflow(workflowPath string) (problems []Problem, err error) {
 		return nil, err
 	}
 
-	return processWorkflow(&workflow), nil
+	return analyzeWorkflow(&workflow), nil
 }
 
 func printProblems(file string, problems []Problem) {
