@@ -161,7 +161,7 @@ func run(target string) (hasProblems bool, err error) {
 	return hasProblems, nil
 }
 
-func tryManifest(manifestPath string) (problems []string, err error) {
+func tryManifest(manifestPath string) (problems []Problem, err error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return nil, nil
@@ -175,7 +175,7 @@ func tryManifest(manifestPath string) (problems []string, err error) {
 	return processManifest(&manifest), nil
 }
 
-func tryWorkflow(workflowPath string) (problems []string, err error) {
+func tryWorkflow(workflowPath string) (problems []Problem, err error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
 		return nil, err
@@ -189,11 +189,15 @@ func tryWorkflow(workflowPath string) (problems []string, err error) {
 	return processWorkflow(&workflow), nil
 }
 
-func printProblems(file string, problems []string) {
+func printProblems(file string, problems []Problem) {
 	if cnt := len(problems); cnt > 0 {
 		fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, file)
 		for _, problem := range problems {
-			fmt.Println("  ", problem)
+			if problem.jobId == "" {
+				fmt.Printf("   step %s has '%s'\n", problem.stepId, problem.problem)
+			} else {
+				fmt.Printf("   job %s, step %s has '%s'\n", problem.jobId, problem.stepId, problem.problem)
+			}
 		}
 	}
 }

@@ -21,9 +21,15 @@ import (
 	"strings"
 )
 
+type Problem struct {
+	jobId   string
+	stepId  string
+	problem string
+}
+
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
-func processManifest(manifest *Manifest) (problems []string) {
+func processManifest(manifest *Manifest) (problems []Problem) {
 	if manifest.Runs.Using == "composite" {
 		problems = processSteps(manifest.Runs.Steps)
 	}
@@ -31,7 +37,7 @@ func processManifest(manifest *Manifest) (problems []string) {
 	return problems
 }
 
-func processWorkflow(workflow *Workflow) (problems []string) {
+func processWorkflow(workflow *Workflow) (problems []Problem) {
 	for id, job := range workflow.Jobs {
 		job := job
 		problems = append(problems, processJob(id, &job)...)
@@ -40,21 +46,21 @@ func processWorkflow(workflow *Workflow) (problems []string) {
 	return problems
 }
 
-func processJob(id string, job *WorkflowJob) (problems []string) {
+func processJob(id string, job *WorkflowJob) (problems []Problem) {
 	name := job.Name
 	if name == "" {
 		name = id
 	}
 
 	for _, problem := range processSteps(job.Steps) {
-		problem = fmt.Sprintf("job '%s', %s", name, problem)
+		problem.jobId = fmt.Sprintf("'%s'", name)
 		problems = append(problems, problem)
 	}
 
 	return problems
 }
 
-func processSteps(steps []JobStep) (problems []string) {
+func processSteps(steps []JobStep) (problems []Problem) {
 	for i, step := range steps {
 		step := step
 		problems = append(problems, processStep(i, &step)...)
@@ -63,31 +69,35 @@ func processSteps(steps []JobStep) (problems []string) {
 	return problems
 }
 
-func processStep(id int, step *JobStep) (problems []string) {
+func processStep(id int, step *JobStep) (problems []Problem) {
 	name := fmt.Sprintf("'%s'", step.Name)
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
 	}
 
+	var script string
 	if isRunStep(step) {
-		for _, problem := range processScript(step.Run) {
-			problem := fmt.Sprintf("step %s has '%s' in run", name, problem)
-			problems = append(problems, problem)
-		}
+		script = step.Run
 	} else if isActionsGitHubScriptStep(step) {
-		for _, problem := range processScript(step.With.Script) {
-			problem := fmt.Sprintf("step %s has '%s' in script", name, problem)
-			problems = append(problems, problem)
-		}
+		script = step.With.Script
+	} else {
+		return nil
+	}
+
+	for _, problem := range processScript(script) {
+		problem.stepId = name
+		problems = append(problems, problem)
 	}
 
 	return problems
 }
 
-func processScript(script string) (problems []string) {
+func processScript(script string) (problems []Problem) {
 	if matches := r.FindAll([]byte(script), -1); matches != nil {
 		for _, problem := range matches {
-			problems = append(problems, string(problem))
+			problems = append(problems, Problem{
+				problem: string(problem),
+			})
 		}
 	}
 
