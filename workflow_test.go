@@ -359,7 +359,7 @@ func TestProcessStep(t *testing.T) {
 		name     string
 		id       int
 		step     JobStep
-		expected []string
+		expected []Problem
 	}
 
 	runTestCases := []TestCase{
@@ -369,7 +369,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Named step with no run value",
@@ -377,7 +377,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Doesn't run",
 				Run:  "",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Unnamed step with safe run value",
@@ -385,7 +385,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Named step with safe run value",
@@ -393,7 +393,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Unnamed run with one expression",
@@ -402,8 +402,11 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []string{
-				"step #42 has '${{ inputs.name }}' in run",
+			expected: []Problem{
+				{
+					stepId:  "#42",
+					problem: "${{ inputs.name }}",
+				},
 			},
 		},
 		{
@@ -412,8 +415,11 @@ func TestProcessStep(t *testing.T) {
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []string{
-				"step 'Greet person' has '${{ inputs.name }}' in run",
+			expected: []Problem{
+				{
+					stepId:  "'Greet person'",
+					problem: "${{ inputs.name }}",
+				},
 			},
 		},
 		{
@@ -423,9 +429,15 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []string{
-				"step #3 has '${{ inputs.name }}' in run",
-				"step #3 has '${{ steps.id.outputs.day }}' in run",
+			expected: []Problem{
+				{
+					stepId:  "#3",
+					problem: "${{ inputs.name }}",
+				},
+				{
+					stepId:  "#3",
+					problem: "${{ steps.id.outputs.day }}",
+				},
 			},
 		},
 		{
@@ -435,9 +447,15 @@ func TestProcessStep(t *testing.T) {
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []string{
-				"step 'Greet person today' has '${{ inputs.name }}' in run",
-				"step 'Greet person today' has '${{ steps.id.outputs.day }}' in run",
+			expected: []Problem{
+				{
+					stepId:  "'Greet person today'",
+					problem: "${{ inputs.name }}",
+				},
+				{
+					stepId:  "'Greet person today'",
+					problem: "${{ steps.id.outputs.day }}",
+				},
 			},
 		},
 	}
@@ -449,7 +467,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Named step using another action",
@@ -457,7 +475,7 @@ func TestProcessStep(t *testing.T) {
 				Name: "Doesn't run",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Unnamed step with safe script",
@@ -468,7 +486,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Named step with safe script",
@@ -479,7 +497,7 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []string{},
+			expected: []Problem{},
 		},
 		{
 			name: "Unnamed step with unsafe script, one expression",
@@ -491,8 +509,11 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []string{
-				"step #42 has '${{ inputs.name }}' in script",
+			expected: []Problem{
+				{
+					stepId:  "#42",
+					problem: "${{ inputs.name }}",
+				},
 			},
 		},
 		{
@@ -504,8 +525,11 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []string{
-				"step 'Greet person' has '${{ inputs.name }}' in script",
+			expected: []Problem{
+				{
+					stepId:  "'Greet person'",
+					problem: "${{ inputs.name }}",
+				},
 			},
 		},
 		{
@@ -518,9 +542,15 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []string{
-				"step #3 has '${{ inputs.name }}' in script",
-				"step #3 has '${{ steps.id.outputs.day }}' in script",
+			expected: []Problem{
+				{
+					stepId:  "#3",
+					problem: "${{ inputs.name }}",
+				},
+				{
+					stepId:  "#3",
+					problem: "${{ steps.id.outputs.day }}",
+				},
 			},
 		},
 		{
@@ -533,9 +563,15 @@ func TestProcessStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []string{
-				"step 'Greet person today' has '${{ inputs.name }}' in script",
-				"step 'Greet person today' has '${{ steps.id.outputs.day }}' in script",
+			expected: []Problem{
+				{
+					stepId:  "'Greet person today'",
+					problem: "${{ inputs.name }}",
+				},
+				{
+					stepId:  "'Greet person today'",
+					problem: "${{ steps.id.outputs.day }}",
+				},
 			},
 		},
 	}

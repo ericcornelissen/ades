@@ -32,7 +32,7 @@ runs:
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yml/stdout.txt --
 Detected 1 problem(s) in 'action.yml':
-   step 'Unsafe run' has '${{ inputs.name }}' in run
+   step 'Unsafe run' has '${{ inputs.name }}'
 -- project-yaml/action.yaml --
 name: Example action
 description: Sample action for testing _ades_
@@ -54,4 +54,4 @@ runs:
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yaml/stdout.txt --
 Detected 1 problem(s) in 'action.yaml':
-   step 'Unsafe run' has '${{ inputs.name }}' in run
+   step 'Unsafe run' has '${{ inputs.name }}'
