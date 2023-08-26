@@ -21,7 +21,7 @@ import (
 	"strings"
 )
 
-type Problem struct {
+type Violation struct {
 	jobId   string
 	stepId  string
 	problem string
@@ -29,47 +29,47 @@ type Problem struct {
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
-func analyzeManifest(manifest *Manifest) (problems []Problem) {
+func analyzeManifest(manifest *Manifest) (violations []Violation) {
 	if manifest.Runs.Using == "composite" {
-		problems = analyzeSteps(manifest.Runs.Steps)
+		violations = analyzeSteps(manifest.Runs.Steps)
 	}
 
-	return problems
+	return violations
 }
 
-func analyzeWorkflow(workflow *Workflow) (problems []Problem) {
+func analyzeWorkflow(workflow *Workflow) (violations []Violation) {
 	for id, job := range workflow.Jobs {
 		job := job
-		problems = append(problems, analyzeJob(id, &job)...)
+		violations = append(violations, analyzeJob(id, &job)...)
 	}
 
-	return problems
+	return violations
 }
 
-func analyzeJob(id string, job *WorkflowJob) (problems []Problem) {
+func analyzeJob(id string, job *WorkflowJob) (violations []Violation) {
 	name := job.Name
 	if name == "" {
 		name = id
 	}
 
-	for _, problem := range analyzeSteps(job.Steps) {
-		problem.jobId = fmt.Sprintf("'%s'", name)
-		problems = append(problems, problem)
+	for _, violation := range analyzeSteps(job.Steps) {
+		violation.jobId = fmt.Sprintf("'%s'", name)
+		violations = append(violations, violation)
 	}
 
-	return problems
+	return violations
 }
 
-func analyzeSteps(steps []JobStep) (problems []Problem) {
+func analyzeSteps(steps []JobStep) (violations []Violation) {
 	for i, step := range steps {
 		step := step
-		problems = append(problems, analyzeStep(i, &step)...)
+		violations = append(violations, analyzeStep(i, &step)...)
 	}
 
-	return problems
+	return violations
 }
 
-func analyzeStep(id int, step *JobStep) (problems []Problem) {
+func analyzeStep(id int, step *JobStep) (violations []Violation) {
 	name := fmt.Sprintf("'%s'", step.Name)
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
@@ -84,24 +84,24 @@ func analyzeStep(id int, step *JobStep) (problems []Problem) {
 		return nil
 	}
 
-	for _, problem := range analyzeScript(script) {
-		problem.stepId = name
-		problems = append(problems, problem)
+	for _, violation := range analyzeScript(script) {
+		violation.stepId = name
+		violations = append(violations, violation)
 	}
 
-	return problems
+	return violations
 }
 
-func analyzeScript(script string) (problems []Problem) {
+func analyzeScript(script string) (violations []Violation) {
 	if matches := r.FindAll([]byte(script), -1); matches != nil {
 		for _, problem := range matches {
-			problems = append(problems, Problem{
+			violations = append(violations, Violation{
 				problem: string(problem),
 			})
 		}
 	}
 
-	return problems
+	return violations
 }
 
 func isRunStep(step *JobStep) bool {

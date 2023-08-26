@@ -35,5 +35,5 @@ jobs:
 Scanning project-a
 
 Scanning project-b
-Detected 1 problem(s) in 'unsafe.yml':
+Detected 1 violation(s) in 'unsafe.yml':
    job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}'

@@ -65,7 +65,7 @@ func ades() int {
 		return exitError
 	}
 
-	problems, err := false, nil
+	hasProblems, err := false, nil
 	for i, target := range targets {
 		if len(targets) > 1 {
 			fmt.Println("Scanning", target)
@@ -78,7 +78,7 @@ func ades() int {
 		}
 
 		if targetHasProblems {
-			problems = true
+			hasProblems = true
 		}
 
 		if len(targets) > 1 && i < len(targets)-1 {
@@ -89,7 +89,7 @@ func ades() int {
 	switch {
 	case err != nil:
 		return exitError
-	case problems:
+	case hasProblems:
 		return exitProblems
 	default:
 		return exitSuccess
@@ -103,18 +103,18 @@ func run(target string) (hasProblems bool, err error) {
 	}
 
 	if stat.IsDir() {
-		if problems, err := tryManifest(path.Join(target, "action.yml")); err != nil {
+		if violations, err := tryManifest(path.Join(target, "action.yml")); err != nil {
 			fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 		} else {
-			hasProblems = len(problems) > 0 || hasProblems
-			printProblems("action.yml", problems)
+			hasProblems = len(violations) > 0 || hasProblems
+			printProblems("action.yml", violations)
 		}
 
-		if problems, err := tryManifest(path.Join(target, "action.yaml")); err != nil {
+		if violations, err := tryManifest(path.Join(target, "action.yaml")); err != nil {
 			fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
 		} else {
-			hasProblems = len(problems) > 0 || hasProblems
-			printProblems("action.yaml", problems)
+			hasProblems = len(violations) > 0 || hasProblems
+			printProblems("action.yaml", violations)
 		}
 
 		workflowsDir := path.Join(target, ".github", "workflows")
@@ -133,27 +133,27 @@ func run(target string) (hasProblems bool, err error) {
 			}
 
 			workflowPath := path.Join(workflowsDir, entry.Name())
-			if problems, err := tryWorkflow(workflowPath); err != nil {
+			if violations, err := tryWorkflow(workflowPath); err != nil {
 				fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
 			} else {
-				hasProblems = len(problems) > 0 || hasProblems
-				printProblems(entry.Name(), problems)
+				hasProblems = len(violations) > 0 || hasProblems
+				printProblems(entry.Name(), violations)
 			}
 		}
 	} else {
 		if stat.Name() == "action.yml" || stat.Name() == "action.yaml" {
-			if problems, err := tryManifest(target); err != nil {
+			if violations, err := tryManifest(target); err != nil {
 				return hasProblems, err
 			} else {
-				hasProblems = len(problems) > 0 || hasProblems
-				printProblems(target, problems)
+				hasProblems = len(violations) > 0 || hasProblems
+				printProblems(target, violations)
 			}
 		} else {
-			if problems, err := tryWorkflow(target); err != nil {
+			if violations, err := tryWorkflow(target); err != nil {
 				return hasProblems, err
 			} else {
-				hasProblems = len(problems) > 0 || hasProblems
-				printProblems(target, problems)
+				hasProblems = len(violations) > 0 || hasProblems
+				printProblems(target, violations)
 			}
 		}
 	}
@@ -161,7 +161,7 @@ func run(target string) (hasProblems bool, err error) {
 	return hasProblems, nil
 }
 
-func tryManifest(manifestPath string) (problems []Problem, err error) {
+func tryManifest(manifestPath string) (violations []Violation, err error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return nil, nil
@@ -175,7 +175,7 @@ func tryManifest(manifestPath string) (problems []Problem, err error) {
 	return analyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(workflowPath string) (problems []Problem, err error) {
+func tryWorkflow(workflowPath string) (violations []Violation, err error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
 		return nil, err
@@ -189,14 +189,14 @@ func tryWorkflow(workflowPath string) (problems []Problem, err error) {
 	return analyzeWorkflow(&workflow), nil
 }
 
-func printProblems(file string, problems []Problem) {
-	if cnt := len(problems); cnt > 0 {
-		fmt.Printf("Detected %d problem(s) in '%s':\n", cnt, file)
-		for _, problem := range problems {
-			if problem.jobId == "" {
-				fmt.Printf("   step %s has '%s'\n", problem.stepId, problem.problem)
+func printProblems(file string, violations []Violation) {
+	if cnt := len(violations); cnt > 0 {
+		fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
+		for _, violation := range violations {
+			if violation.jobId == "" {
+				fmt.Printf("   step %s has '%s'\n", violation.stepId, violation.problem)
 			} else {
-				fmt.Printf("   job %s, step %s has '%s'\n", problem.jobId, problem.stepId, problem.problem)
+				fmt.Printf("   job %s, step %s has '%s'\n", violation.jobId, violation.stepId, violation.problem)
 			}
 		}
 	}

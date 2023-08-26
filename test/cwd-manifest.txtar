@@ -34,7 +34,7 @@ runs:
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yml/stdout.txt --
-Detected 1 problem(s) in 'action.yml':
+Detected 1 violation(s) in 'action.yml':
    step 'Unsafe run' has '${{ inputs.name }}'
 -- project-yaml/action.yaml --
 name: Example action
@@ -56,5 +56,5 @@ runs:
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yaml/stdout.txt --
-Detected 1 problem(s) in 'action.yaml':
+Detected 1 violation(s) in 'action.yaml':
    step 'Unsafe run' has '${{ inputs.name }}'
