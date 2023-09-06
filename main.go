@@ -20,12 +20,13 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"regexp"
 )
 
 const (
-	exitSuccess  = 0
-	exitError    = 1
-	exitProblems = 2
+	exitSuccess    = 0
+	exitError      = 1
+	exitViolations = 2
 )
 
 var (
@@ -42,10 +43,10 @@ var (
 )
 
 func main() {
-	os.Exit(ades())
+	os.Exit(run())
 }
 
-func ades() int {
+func run() int {
 	flag.Usage = func() { usage() }
 	flag.Parse()
 
@@ -65,20 +66,24 @@ func ades() int {
 		return exitError
 	}
 
-	hasProblems, err := false, nil
+	hasViolations, hasError := false, false
 	for i, target := range targets {
 		if len(targets) > 1 {
 			fmt.Println("Scanning", target)
 		}
 
-		targetHasProblems, targetErr := run(target)
-		if targetErr != nil {
-			err = targetErr
-			fmt.Printf("An unexpected error occurred: %s\n", targetErr)
+		violations, err := analyzeTarget(target)
+		if err == nil {
+			printViolations(violations)
+		} else {
+			fmt.Printf("An unexpected error occurred: %s\n", err)
+			hasError = true
 		}
 
-		if targetHasProblems {
-			hasProblems = true
+		for _, fileVioviolations := range violations {
+			if len(fileVioviolations) > 0 {
+				hasViolations = true
+			}
 		}
 
 		if len(targets) > 1 && i < len(targets)-1 {
@@ -87,81 +92,86 @@ func ades() int {
 	}
 
 	switch {
-	case err != nil:
+	case hasError:
 		return exitError
-	case hasProblems:
-		return exitProblems
+	case hasViolations:
+		return exitViolations
 	default:
 		return exitSuccess
 	}
 }
 
-func run(target string) (hasProblems bool, err error) {
+func analyzeTarget(target string) (map[string][]Violation, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
-		return hasProblems, fmt.Errorf("could not process %s: %v", target, err)
+		return nil, fmt.Errorf("could not process %s: %v", target, err)
 	}
 
 	if stat.IsDir() {
-		if violations, err := tryManifest(path.Join(target, "action.yml")); err != nil {
-			fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
-		} else {
-			hasProblems = len(violations) > 0 || hasProblems
-			printProblems("action.yml", violations)
-		}
-
-		if violations, err := tryManifest(path.Join(target, "action.yaml")); err != nil {
-			fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
-		} else {
-			hasProblems = len(violations) > 0 || hasProblems
-			printProblems("action.yaml", violations)
-		}
-
-		workflowsDir := path.Join(target, ".github", "workflows")
-		workflows, err := os.ReadDir(workflowsDir)
-		if err != nil {
-			return hasProblems, fmt.Errorf("could not read workflows directory: %v", err)
-		}
-
-		for _, entry := range workflows {
-			if entry.Type().IsDir() {
-				continue
-			}
-
-			if path.Ext(entry.Name()) != ".yml" {
-				continue
-			}
-
-			workflowPath := path.Join(workflowsDir, entry.Name())
-			if violations, err := tryWorkflow(workflowPath); err != nil {
-				fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
-			} else {
-				hasProblems = len(violations) > 0 || hasProblems
-				printProblems(entry.Name(), violations)
-			}
-		}
+		return analyzeRepository(target)
 	} else {
-		if stat.Name() == "action.yml" || stat.Name() == "action.yaml" {
-			if violations, err := tryManifest(target); err != nil {
-				return hasProblems, err
-			} else {
-				hasProblems = len(violations) > 0 || hasProblems
-				printProblems(target, violations)
-			}
+		fileViolations, err := analyzeFile(target)
+		if err != nil {
+			return nil, err
+		}
+
+		violations := make(map[string][]Violation)
+		violations[target] = fileViolations
+		return violations, nil
+	}
+}
+
+func analyzeRepository(target string) (map[string][]Violation, error) {
+	violations := make(map[string][]Violation)
+
+	if fileViolations, err := tryManifest(path.Join(target, "action.yml")); err == nil {
+		violations["action.yml"] = fileViolations
+	} else {
+		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
+	}
+
+	if fileViolations, err := tryManifest(path.Join(target, "action.yaml")); err == nil {
+		violations["action.yaml"] = fileViolations
+	} else {
+		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
+	}
+
+	workflowsDir := path.Join(target, ".github", "workflows")
+	workflows, err := os.ReadDir(workflowsDir)
+	if err != nil {
+		return violations, fmt.Errorf("could not read workflows directory: %v", err)
+	}
+
+	for _, entry := range workflows {
+		if entry.IsDir() {
+			continue
+		}
+
+		if path.Ext(entry.Name()) != ".yml" {
+			continue
+		}
+
+		workflowPath := path.Join(workflowsDir, entry.Name())
+		if workflowViolations, err := tryWorkflow(workflowPath); err == nil {
+			targetRelativePath := path.Join(".github", "workflows", entry.Name())
+			violations[targetRelativePath] = workflowViolations
 		} else {
-			if violations, err := tryWorkflow(target); err != nil {
-				return hasProblems, err
-			} else {
-				hasProblems = len(violations) > 0 || hasProblems
-				printProblems(target, violations)
-			}
+			fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
 		}
 	}
 
-	return hasProblems, nil
+	return violations, nil
 }
 
-func tryManifest(manifestPath string) (violations []Violation, err error) {
+func analyzeFile(target string) ([]Violation, error) {
+	if matched, _ := regexp.MatchString("action.ya?ml", target); matched {
+		return tryManifest(target)
+	} else {
+		return tryWorkflow(target)
+	}
+}
+
+func tryManifest(manifestPath string) ([]Violation, error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
 		return nil, nil
@@ -175,7 +185,7 @@ func tryManifest(manifestPath string) (violations []Violation, err error) {
 	return analyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(workflowPath string) (violations []Violation, err error) {
+func tryWorkflow(workflowPath string) ([]Violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
 		return nil, err
@@ -189,30 +199,28 @@ func tryWorkflow(workflowPath string) (violations []Violation, err error) {
 	return analyzeWorkflow(&workflow), nil
 }
 
-func printProblems(file string, violations []Violation) {
-	if cnt := len(violations); cnt > 0 {
-		fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
-		for _, violation := range violations {
-			if violation.jobId == "" {
-				fmt.Printf("   step %s has '%s'\n", violation.stepId, violation.problem)
-			} else {
-				fmt.Printf("   job %s, step %s has '%s'\n", violation.jobId, violation.stepId, violation.problem)
+func printViolations(violations map[string][]Violation) {
+	for file, fileViolations := range violations {
+		if cnt := len(fileViolations); cnt > 0 {
+			fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
+			for _, violation := range fileViolations {
+				if violation.jobId == "" {
+					fmt.Printf("   step %s has '%s'\n", violation.stepId, violation.problem)
+				} else {
+					fmt.Printf("   job %s, step %s has '%s'\n", violation.jobId, violation.stepId, violation.problem)
+				}
 			}
 		}
 	}
 }
 
 func getTargets(argv []string) ([]string, error) {
-	if len(argv) > 0 {
-		return argv, nil
-	} else {
+	if len(argv) == 0 {
 		wd, err := os.Getwd()
-		if err != nil {
-			return nil, err
-		}
-
 		return []string{wd}, err
 	}
+
+	return argv, nil
 }
 
 func legal() {
