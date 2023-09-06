@@ -1,0 +1,3 @@
+! exec ades ./does-not-exist
+stdout 'An unexpected error occurred: could not process ./does-not-exist:'
+! stderr .
