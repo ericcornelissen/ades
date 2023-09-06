@@ -9,7 +9,7 @@ import (
 
 func TestMain(m *testing.M) {
 	commands := map[string]func() int{
-		"ades": ades,
+		"ades": run,
 	}
 
 	os.Exit(testscript.RunMain(m, commands))

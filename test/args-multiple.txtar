@@ -9,7 +9,7 @@ on: [push]
 
 jobs:
   example:
-    name: Example safe  job
+    name: Example safe job
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
@@ -35,5 +35,5 @@ jobs:
 Scanning project-a
 
 Scanning project-b
-Detected 1 violation(s) in 'unsafe.yml':
+Detected 1 violation(s) in '.github/workflows/unsafe.yml':
    job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}'
