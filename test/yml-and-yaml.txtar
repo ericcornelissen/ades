@@ -1,0 +1,53 @@
+# cwd
+! exec ades .
+cmp stdout repo-stdout.txt
+! stderr .
+
+# file: .yml
+! exec ades .github/workflows/workflow.yml
+cmp stdout yml-stdout.txt
+! stderr .
+
+# file: .yaml
+! exec ades .github/workflows/workflow.yaml
+cmp stdout yaml-stdout.txt
+! stderr .
+
+
+-- .github/workflows/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Unsafe .yml
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Unsafe run
+      run: echo 'Hello from .yml, ${{ inputs.name }}'
+-- .github/workflows/workflow.yaml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Unsafe .yaml
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Unsafe run
+      run: echo 'Hello from .yaml, ${{ inputs.name }}'
+-- repo-stdout.txt --
+Detected 1 violation(s) in '.github/workflows/workflow.yaml':
+   job 'Unsafe .yaml', step 'Unsafe run' has '${{ inputs.name }}'
+Detected 1 violation(s) in '.github/workflows/workflow.yml':
+   job 'Unsafe .yml', step 'Unsafe run' has '${{ inputs.name }}'
+-- yml-stdout.txt --
+Detected 1 violation(s) in '.github/workflows/workflow.yml':
+   job 'Unsafe .yml', step 'Unsafe run' has '${{ inputs.name }}'
+-- yaml-stdout.txt --
+Detected 1 violation(s) in '.github/workflows/workflow.yaml':
+   job 'Unsafe .yaml', step 'Unsafe run' has '${{ inputs.name }}'
