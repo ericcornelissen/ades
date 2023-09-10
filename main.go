@@ -147,7 +147,7 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 			continue
 		}
 
-		if path.Ext(entry.Name()) != ".yml" {
+		if ext := path.Ext(entry.Name()); ext != ".yml" && ext != ".yaml" {
 			continue
 		}
 
