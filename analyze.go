@@ -76,11 +76,12 @@ func analyzeStep(id int, step *JobStep) (violations []Violation) {
 	}
 
 	var script string
-	if isRunStep(step) {
+	switch {
+	case isRunStep(step):
 		script = step.Run
-	} else if isActionsGitHubScriptStep(step) {
+	case isActionsGitHubScriptStep(step):
 		script = step.With.Script
-	} else {
+	default:
 		return nil
 	}
 

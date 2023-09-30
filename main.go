@@ -188,7 +188,7 @@ func tryManifest(manifestPath string) ([]Violation, error) {
 func tryWorkflow(workflowPath string) ([]Violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("could not read workflow: %v", err)
 	}
 
 	workflow, err := ParseWorkflow(data)
