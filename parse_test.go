@@ -122,6 +122,7 @@ jobs:
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			workflow, err := ParseWorkflow([]byte(tt.yaml))
 			if err != nil {
@@ -198,6 +199,7 @@ jobs:
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := ParseWorkflow([]byte(tt.yaml))
 			if err == nil {
@@ -292,6 +294,7 @@ runs:
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			manifest, err := ParseManifest([]byte(tt.yaml))
 			if err != nil {
@@ -348,6 +351,7 @@ runs:
 	}
 
 	for _, tt := range testCases {
+		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			_, err := ParseManifest([]byte(tt.yaml))
 			if err == nil {
