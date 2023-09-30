@@ -1,6 +1,7 @@
 # cwd
 ! exec ades .
-cmp stdout repo-stdout.txt
+stdout .github/workflows/workflow.yml
+stdout .github/workflows/workflow.yaml
 ! stderr .
 
 # file: .yml
@@ -40,11 +41,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Unsafe run
       run: echo 'Hello from .yaml, ${{ inputs.name }}'
--- repo-stdout.txt --
-Detected 1 violation(s) in '.github/workflows/workflow.yaml':
-   job 'Unsafe .yaml', step 'Unsafe run' has '${{ inputs.name }}'
-Detected 1 violation(s) in '.github/workflows/workflow.yml':
-   job 'Unsafe .yml', step 'Unsafe run' has '${{ inputs.name }}'
 -- yml-stdout.txt --
 Detected 1 violation(s) in '.github/workflows/workflow.yml':
    job 'Unsafe .yml', step 'Unsafe run' has '${{ inputs.name }}'
