@@ -16,7 +16,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Safe run
       run: echo 'Hello world!'
-
 -- .github/workflows/unsafe.yml --
 name: Example unsafe workflow
 on: [push]
@@ -30,7 +29,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'
-
 -- stdout.txt --
 Detected 1 violation(s) in '.github/workflows/unsafe.yml':
    job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}'
