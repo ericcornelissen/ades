@@ -16,7 +16,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Safe run
       run: echo 'Hello world!'
-
 -- project-b/.github/workflows/unsafe.yml --
 name: Example unsafe workflow
 on: [push]
@@ -30,7 +29,6 @@ jobs:
       uses: actions/checkout@v3
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'
-
 -- stdout.txt --
 Scanning project-a
 
