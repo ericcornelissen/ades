@@ -44,8 +44,8 @@ the mitigation process.
 
 ## License
 
-The software is available under the `GPL-3.0-only` license, see [COPYING.txt] for the full license
-text. The documentation is available under the `GFDL-1.3-or-later` license, see [GNU Free
+The software is available under the `GPL-3.0-or-later` license, see [COPYING.txt] for the full
+license text. The documentation is available under the `GFDL-1.3-or-later` license, see [GNU Free
 Documentation License v1.3] for the full license text.
 
 [`actions/github-script`]: https://github.com/actions/github-script
