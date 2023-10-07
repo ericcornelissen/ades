@@ -16,6 +16,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -126,13 +127,13 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
-	} else {
+	} else if !errors.Is(err, ErrNotRead) {
 		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 	}
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yaml")); err == nil {
 		violations["action.yaml"] = fileViolations
-	} else {
+	} else if !errors.Is(err, ErrNotRead) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
 	}
 
@@ -171,15 +172,20 @@ func analyzeFile(target string) ([]Violation, error) {
 	}
 }
 
+var (
+	ErrNotRead   = errors.New("not found")
+	ErrNotParsed = errors.New("not parsed")
+)
+
 func tryManifest(manifestPath string) ([]Violation, error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
-		return nil, nil
+		return nil, fmt.Errorf("%w (%v)", ErrNotRead, err)
 	}
 
 	manifest, err := ParseManifest(data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w (%v)", ErrNotParsed, err)
 	}
 
 	return analyzeManifest(&manifest), nil
@@ -188,12 +194,12 @@ func tryManifest(manifestPath string) ([]Violation, error) {
 func tryWorkflow(workflowPath string) ([]Violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
-		return nil, fmt.Errorf("could not read workflow: %v", err)
+		return nil, fmt.Errorf("%w (%v)", ErrNotRead, err)
 	}
 
 	workflow, err := ParseWorkflow(data)
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("%w (%v)", ErrNotParsed, err)
 	}
 
 	return analyzeWorkflow(&workflow), nil
