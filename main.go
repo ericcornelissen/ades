@@ -16,6 +16,7 @@
 package main
 
 import (
+	"errors"
 	"flag"
 	"fmt"
 	"os"
@@ -138,7 +139,7 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 
 	workflowsDir := path.Join(target, ".github", "workflows")
 	workflows, err := os.ReadDir(workflowsDir)
-	if err != nil {
+	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return violations, fmt.Errorf("could not read workflows directory: %v", err)
 	}
 

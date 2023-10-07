@@ -1,6 +1,3 @@
-mkdir project-yml/.github/workflows
-mkdir project-yaml/.github/workflows
-
 # action.yml
 cd project-yml
 ! exec ades
