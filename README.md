@@ -17,6 +17,7 @@ and it will report all detected dangerous uses of workflow expressions.
 - Scan workflow files and action manifests.
 - Report dangerous uses of workflow expressions in [`run:`] directives.
 - Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
+- Provides suggested fixes.
 
 ## Background
 

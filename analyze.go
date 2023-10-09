@@ -21,10 +21,18 @@ import (
 	"strings"
 )
 
+type ViolationKind uint8
+
+const (
+	ExpressionInRunScript ViolationKind = iota
+	ExpressionInActionsGithubScript
+)
+
 type Violation struct {
 	jobId   string
 	stepId  string
 	problem string
+	kind    ViolationKind
 }
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
@@ -75,17 +83,21 @@ func analyzeStep(id int, step *JobStep) (violations []Violation) {
 		name = fmt.Sprintf("#%d", id)
 	}
 
+	var kind ViolationKind
 	var script string
 	switch {
 	case isRunStep(step):
+		kind = ExpressionInRunScript
 		script = step.Run
 	case isActionsGitHubScriptStep(step):
+		kind = ExpressionInActionsGithubScript
 		script = step.With.Script
 	default:
 		return nil
 	}
 
 	for _, violation := range analyzeScript(script) {
+		violation.kind = kind
 		violation.stepId = name
 		violations = append(violations, violation)
 	}
