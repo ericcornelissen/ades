@@ -22,6 +22,7 @@ import (
 	"os"
 	"path"
 	"regexp"
+	"strings"
 )
 
 const (
@@ -81,8 +82,8 @@ func run() int {
 			hasError = true
 		}
 
-		for _, fileVioviolations := range violations {
-			if len(fileVioviolations) > 0 {
+		for _, fileViolations := range violations {
+			if len(fileViolations) > 0 {
 				hasViolations = true
 			}
 		}
@@ -210,14 +211,39 @@ func printViolations(violations map[string][]Violation) {
 		if cnt := len(fileViolations); cnt > 0 {
 			fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
 			for _, violation := range fileViolations {
-				if violation.jobId == "" {
-					fmt.Printf("   step %s has '%s'\n", violation.stepId, violation.problem)
-				} else {
-					fmt.Printf("   job %s, step %s has '%s'\n", violation.jobId, violation.stepId, violation.problem)
-				}
+				violation := violation
+				printViolation(&violation)
 			}
 		}
 	}
+}
+
+func printViolation(violation *Violation) {
+	if violation.jobId == "" {
+		fmt.Printf("  step %s has '%s'", violation.stepId, violation.problem)
+	} else {
+		fmt.Printf("  job %s, step %s has '%s'", violation.jobId, violation.stepId, violation.problem)
+	}
+
+	envVarName := getVariableNameForExpression(violation.problem)
+
+	fmt.Println(", suggestion:")
+	fmt.Printf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, violation.problem)
+	switch violation.kind {
+	case ExpressionInRunScript:
+		fmt.Printf("    2. Replace all occurrences of `%s` by `$%s`", violation.problem, envVarName)
+	case ExpressionInActionsGithubScript:
+		fmt.Printf("    2. Replace all occurrences of `%s` by `process.env.%s`", violation.problem, envVarName)
+	}
+	fmt.Println()
+	fmt.Println("       (make sure to keep the behavior of the script the same)")
+}
+
+func getVariableNameForExpression(expression string) (name string) {
+	parts := strings.Split(expression, ".")
+	name = strings.TrimRight(parts[len(parts)-1], "}")
+	name = strings.TrimSpace(name)
+	return strings.ToUpper(name)
 }
 
 func getTargets(argv []string) ([]string, error) {

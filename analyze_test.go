@@ -406,6 +406,7 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInRunScript,
 				},
 			},
 		},
@@ -419,6 +420,7 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "'Greet person'",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInRunScript,
 				},
 			},
 		},
@@ -433,10 +435,12 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInRunScript,
 				},
 				{
 					stepId:  "#3",
 					problem: "${{ steps.id.outputs.day }}",
+					kind:    ExpressionInRunScript,
 				},
 			},
 		},
@@ -451,10 +455,12 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInRunScript,
 				},
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ steps.id.outputs.day }}",
+					kind:    ExpressionInRunScript,
 				},
 			},
 		},
@@ -513,6 +519,7 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 			},
 		},
@@ -529,6 +536,7 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "'Greet person'",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 			},
 		},
@@ -546,10 +554,12 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 				{
 					stepId:  "#3",
 					problem: "${{ steps.id.outputs.day }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 			},
 		},
@@ -567,10 +577,12 @@ func TestProcessStep(t *testing.T) {
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ inputs.name }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 				{
 					stepId:  "'Greet person today'",
 					problem: "${{ steps.id.outputs.day }}",
+					kind:    ExpressionInActionsGithubScript,
 				},
 			},
 		},
@@ -590,7 +602,7 @@ func TestProcessStep(t *testing.T) {
 
 			for i, violation := range violations {
 				if got, want := violation, tt.expected[i]; got != want {
-					t.Errorf("Unexpected #%d violation (got '%s', want '%s')", i, got, want)
+					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
 				}
 			}
 		})
