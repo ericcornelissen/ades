@@ -19,6 +19,70 @@ and it will report all detected dangerous uses of workflow expressions.
 - Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
 - Provides suggested fixes.
 
+### Resolutions
+
+#### Expression in `run:` directive
+
+When a workflow expression appears in a `run:` directive you can avoid any potential attacks by
+extracting the expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  run: |
+    echo 'Hello ${{ inputs.name }}'
+```
+
+can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  env:
+    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+  run: |
+    echo "Hello $NAME"
+#        ^      ^^^^^
+#        |      |  Replace the expression with the environment variable
+#        |
+#        | Note: the use of double quotes is required in this example (for interpolation)
+```
+
+#### Expression in `actions/github-script` script
+
+When a workflow expression appears in a `actions/github-script` script you can avoid any potential
+attacks by extracting the expression into an environment variable and using the environment variable
+instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: actions/github-script@v6
+  with:
+    script: console.log('Hello ${{ inputs.name }}')
+```
+
+can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: actions/github-script@v6
+  env:
+    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+  with:
+    script: console.log(`Hello ${process.env.NAME}`)
+#                       ^      ^^^^^^^^^^^^^^^^^^^
+#                       |      |  Replace the expression with the environment variable
+#                       |
+#                       | Note: the use of backticks is required in this example (for interpolation)
+
+
+- name: Example step
+  run: |
+    echo "Hello $NAME"
+```
+
 ## Background
 
 A [workflow expression] is a string like:
