@@ -34,7 +34,7 @@ For example, given the workflow snippet:
     echo 'Hello ${{ inputs.name }}'
 ```
 
-can be made safer by converting it into:
+it can be made safer by converting it into:
 
 ```yaml
 - name: Example step
@@ -43,7 +43,7 @@ can be made safer by converting it into:
   run: |
     echo "Hello $NAME"
 #        ^      ^^^^^
-#        |      |  Replace the expression with the environment variable
+#        |      | Replace the expression with the environment variable
 #        |
 #        | Note: the use of double quotes is required in this example (for interpolation)
 ```
@@ -63,7 +63,7 @@ For example, given the workflow snippet:
     script: console.log('Hello ${{ inputs.name }}')
 ```
 
-can be made safer by converting it into:
+it can be made safer by converting it into:
 
 ```yaml
 - name: Example step
@@ -73,14 +73,9 @@ can be made safer by converting it into:
   with:
     script: console.log(`Hello ${process.env.NAME}`)
 #                       ^      ^^^^^^^^^^^^^^^^^^^
-#                       |      |  Replace the expression with the environment variable
+#                       |      | Replace the expression with the environment variable
 #                       |
 #                       | Note: the use of backticks is required in this example (for interpolation)
-
-
-- name: Example step
-  run: |
-    echo "Hello $NAME"
 ```
 
 ## Background
