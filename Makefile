@@ -35,10 +35,12 @@ fmt: ## Format the source code
 	@echo 'Formatting...'
 	@go fmt .
 	@go mod tidy
+	@go run golang.org/x/tools/cmd/goimports@v0.14.0 -w .
 
 fmt-check: ## Check the source code formatting
 	@echo 'Checking formatting...'
-	@gofmt -l .
+	@test -z "$$(gofmt -l .)"
+	@test -z "$$(go run golang.org/x/tools/cmd/goimports@v0.14.0 -l .)"
 
 .PHONY: run
 run: ## Run the project on itself
