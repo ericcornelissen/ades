@@ -53,6 +53,23 @@ test: ## Run all tests
 vet: ## Vet the source code
 	@echo 'Vetting...'
 	@go vet .
+	@go run 4d63.com/gochecknoinits@25bb07f .
+	@go run github.com/alexkohler/dogsled/cmd/dogsled@34d2ab9 .
+	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret@v2.0.1 .
+	@go run github.com/alexkohler/prealloc@v1.0.0 .
+	@go run github.com/alexkohler/unimport@e6f2b2e .
+	@go run github.com/go-critic/go-critic/cmd/gocritic@v0.9.0 check .
+	@go run github.com/gordonklaus/ineffassign@0e73809 .
+	@go run github.com/kisielk/errcheck@v1.6.3 .
+	@go run github.com/kyoh86/looppointer/cmd/looppointer@v0.2.1 .
+	@go run github.com/mdempsky/unconvert@4157069 .
+	@go run github.com/nishanths/exhaustive/cmd/exhaustive@v0.11.0 .
+	@go run github.com/polyfloyd/go-errorlint@v1.4.5 .
+	@go run github.com/remyoudompheng/go-misc/deadcode@2d6ac65 .
+	@go run github.com/tetafro/godot/cmd/godot@v1.4.15 .
+	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@2f9d82f .
+	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.6 .
+	@go run mvdan.cc/unparam@3ee2d22 .
 
 .PHONY: verify
 verify: build fmt-check test run vet ## Verify project is in a good state
