@@ -74,7 +74,7 @@ func run() int {
 		return exitError
 	}
 
-	violations, hasError := make(map[string][]Violation), false
+	violations, hasError := make(map[string]map[string][]Violation), false
 	for i, target := range targets {
 		if len(targets) > 1 && !(*flagJson) {
 			fmt.Println("Scanning", target)
@@ -92,7 +92,11 @@ func run() int {
 
 			for file, fileViolations := range targetViolations {
 				if len(fileViolations) > 0 {
-					violations[file] = fileViolations
+					if _, ok := violations[target]; !ok {
+						violations[target] = make(map[string][]Violation)
+					}
+
+					violations[target][file] = fileViolations
 				}
 			}
 		} else {
@@ -223,33 +227,35 @@ type jsonOutput struct {
 }
 
 type jsonViolation struct {
+	Target  string `json:"target"`
 	File    string `json:"file"`
 	Job     string `json:"job"`
 	Step    string `json:"step"`
 	Problem string `json:"problem"`
 }
 
-func printJson(rawViolations map[string][]Violation) {
+func printJson(rawViolations map[string]map[string][]Violation) {
 	violations := make([]jsonViolation, 0)
-	for file, fileViolations := range rawViolations {
-		for _, fileViolation := range fileViolations {
-			violations = append(violations, jsonViolation{
-				File:    file,
-				Job:     fileViolation.jobId,
-				Step:    fileViolation.stepId,
-				Problem: fileViolation.problem,
-			})
+	for target, targetViolations := range rawViolations {
+		for file, fileViolations := range targetViolations {
+			for _, fileViolation := range fileViolations {
+				violations = append(violations, jsonViolation{
+					Target:  target,
+					File:    file,
+					Job:     fileViolation.jobId,
+					Step:    fileViolation.stepId,
+					Problem: fileViolation.problem,
+				})
+			}
 		}
 	}
 
-	b, err := json.Marshal(jsonOutput{
-		Violations: violations,
-	})
+	jsonBytes, err := json.Marshal(jsonOutput{Violations: violations})
 	if err != nil {
-		fmt.Printf("Error: %s", err)
-		return
+		fmt.Printf("Could not produce JSON output: %s", err)
+	} else {
+		fmt.Println(string(jsonBytes))
 	}
-	fmt.Println(string(b))
 }
 
 func printViolations(violations map[string][]Violation) {
