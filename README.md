@@ -117,9 +117,9 @@ Documentation License v1.3] for the full license text.
 
 [`actions/github-script`]: https://github.com/actions/github-script
 [`run:`]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
+[`schema.json`]: ./schema.json
 [argus: a framework for staged static taint analysis of github workflows and actions]:https://www.usenix.org/conference/usenixsecurity23/presentation/muralee
 [blogged about this problem]: https://github.blog/2023-08-09-four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
 [copying.txt]: ./COPYING.txt
 [gnu free documentation license v1.3]: https://www.gnu.org/licenses/fdl-1.3.en.html
 [workflow expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
-[`schema.json`]: ./schema.json

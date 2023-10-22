@@ -16,4 +16,4 @@ jobs:
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'
 -- stdout.txt --
-{"problems":[{"file":".github/workflows/workflow.yml","job":"'Example unsafe job'","step":"'Unsafe run'","problem":"${{ inputs.name }}"}]}
+{"problems":[{"file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
