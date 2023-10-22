@@ -266,9 +266,9 @@ func printViolations(violations map[string][]Violation) {
 
 func printViolation(violation *Violation) {
 	if violation.jobId == "" {
-		fmt.Printf("  step %s has '%s'", violation.stepId, violation.problem)
+		fmt.Printf("  step '%s' has '%s'", violation.stepId, violation.problem)
 	} else {
-		fmt.Printf("  job %s, step %s has '%s'", violation.jobId, violation.stepId, violation.problem)
+		fmt.Printf("  job '%s', step '%s' has '%s'", violation.jobId, violation.stepId, violation.problem)
 	}
 
 	envVarName := getVariableNameForExpression(violation.problem)

@@ -61,7 +61,7 @@ func analyzeJob(id string, job *WorkflowJob) (violations []Violation) {
 	}
 
 	for _, violation := range analyzeSteps(job.Steps) {
-		violation.jobId = fmt.Sprintf("'%s'", name)
+		violation.jobId = name
 		violations = append(violations, violation)
 	}
 
@@ -78,7 +78,7 @@ func analyzeSteps(steps []JobStep) (violations []Violation) {
 }
 
 func analyzeStep(id int, step *JobStep) (violations []Violation) {
-	name := fmt.Sprintf("'%s'", step.Name)
+	name := step.Name
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
 	}

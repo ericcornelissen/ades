@@ -418,7 +418,7 @@ func TestProcessStep(t *testing.T) {
 			},
 			expected: []Violation{
 				{
-					stepId:  "'Greet person'",
+					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
 					kind:    ExpressionInRunScript,
 				},
@@ -453,12 +453,12 @@ func TestProcessStep(t *testing.T) {
 			},
 			expected: []Violation{
 				{
-					stepId:  "'Greet person today'",
+					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
 					kind:    ExpressionInRunScript,
 				},
 				{
-					stepId:  "'Greet person today'",
+					stepId:  "Greet person today",
 					problem: "${{ steps.id.outputs.day }}",
 					kind:    ExpressionInRunScript,
 				},
@@ -534,7 +534,7 @@ func TestProcessStep(t *testing.T) {
 			},
 			expected: []Violation{
 				{
-					stepId:  "'Greet person'",
+					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
 					kind:    ExpressionInActionsGithubScript,
 				},
@@ -575,12 +575,12 @@ func TestProcessStep(t *testing.T) {
 			},
 			expected: []Violation{
 				{
-					stepId:  "'Greet person today'",
+					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
 					kind:    ExpressionInActionsGithubScript,
 				},
 				{
-					stepId:  "'Greet person today'",
+					stepId:  "Greet person today",
 					problem: "${{ steps.id.outputs.day }}",
 					kind:    ExpressionInActionsGithubScript,
 				},
