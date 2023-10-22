@@ -53,6 +53,11 @@ test: ## Run all tests
 	@echo 'Validating JSON schema...'
 	@go run github.com/santhosh-tekuri/jsonschema/cmd/jv@f2cc8ae -assertformat schema.json
 
+.PHONY: test-mutation
+test-mutation: ## Run mutation tests
+	@echo 'Mutation testing...'
+	@go test -v -tags=mutation
+
 .PHONY: vet
 vet: ## Vet the source code
 	@echo 'Vetting...'
