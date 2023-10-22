@@ -69,6 +69,7 @@ vet: ## Vet the source code
 	@go run github.com/polyfloyd/go-errorlint@v1.4.5 .
 	@go run github.com/remyoudompheng/go-misc/deadcode@2d6ac65 .
 	@go run github.com/tetafro/godot/cmd/godot@v1.4.15 .
+	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck@v2.8.1 .
 	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@2f9d82f .
 	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.6 .
 	@go run mvdan.cc/unparam@3ee2d22 .
