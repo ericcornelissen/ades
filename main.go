@@ -16,6 +16,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -32,6 +33,11 @@ const (
 )
 
 var (
+	flagJson = flag.Bool(
+		"json",
+		false,
+		"Output results as JSON",
+	)
 	flagLegal = flag.Bool(
 		"legal",
 		false,
@@ -68,35 +74,41 @@ func run() int {
 		return exitError
 	}
 
-	hasViolations, hasError := false, false
+	violations, hasError := make(map[string][]Violation), false
 	for i, target := range targets {
-		if len(targets) > 1 {
+		if len(targets) > 1 && !(*flagJson) {
 			fmt.Println("Scanning", target)
 		}
 
-		violations, err := analyzeTarget(target)
+		targetViolations, err := analyzeTarget(target)
 		if err == nil {
-			printViolations(violations)
+			if !(*flagJson) {
+				printViolations(targetViolations)
+
+				if len(targets) > 1 && i < len(targets)-1 {
+					fmt.Println( /* empty line */ )
+				}
+			}
+
+			for file, fileViolations := range targetViolations {
+				if len(fileViolations) > 0 {
+					violations[file] = fileViolations
+				}
+			}
 		} else {
 			fmt.Printf("An unexpected error occurred: %s\n", err)
 			hasError = true
 		}
+	}
 
-		for _, fileViolations := range violations {
-			if len(fileViolations) > 0 {
-				hasViolations = true
-			}
-		}
-
-		if len(targets) > 1 && i < len(targets)-1 {
-			fmt.Println( /* empty line */ )
-		}
+	if *flagJson {
+		printJson(violations)
 	}
 
 	switch {
 	case hasError:
 		return exitError
-	case hasViolations:
+	case len(violations) > 0:
 		return exitViolations
 	default:
 		return exitSuccess
@@ -206,6 +218,40 @@ func tryWorkflow(workflowPath string) ([]Violation, error) {
 	return analyzeWorkflow(&workflow), nil
 }
 
+type jsonOutput struct {
+	Violations []jsonViolation `json:"problems"`
+}
+
+type jsonViolation struct {
+	File    string `json:"file"`
+	Job     string `json:"job"`
+	Step    string `json:"step"`
+	Problem string `json:"problem"`
+}
+
+func printJson(rawViolations map[string][]Violation) {
+	violations := make([]jsonViolation, 0)
+	for file, fileViolations := range rawViolations {
+		for _, fileViolation := range fileViolations {
+			violations = append(violations, jsonViolation{
+				File:    file,
+				Job:     fileViolation.jobId,
+				Step:    fileViolation.stepId,
+				Problem: fileViolation.problem,
+			})
+		}
+	}
+
+	b, err := json.Marshal(jsonOutput{
+		Violations: violations,
+	})
+	if err != nil {
+		fmt.Printf("Error: %s", err)
+		return
+	}
+	fmt.Println(string(b))
+}
+
 func printViolations(violations map[string][]Violation) {
 	for file, fileViolations := range violations {
 		if cnt := len(fileViolations); cnt > 0 {
@@ -272,6 +318,7 @@ Usage:
 Flags:
 
   --help      Show this help message and exit.
+  --json      Output results in JSON format.
   --legal     Show legal information and exit.
   --version   Show the program version and exit.
 
