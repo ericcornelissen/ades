@@ -50,6 +50,8 @@ run: ## Run the project on itself
 test: ## Run all tests
 	@echo 'Testing...'
 	@go test .
+	@echo 'Validating JSON schema...'
+	@go run github.com/santhosh-tekuri/jsonschema/cmd/jv@f2cc8ae -assertformat schema.json
 
 .PHONY: vet
 vet: ## Vet the source code

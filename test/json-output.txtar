@@ -1,0 +1,19 @@
+! exec ades -json .github/workflows/workflow.yml
+cmp stdout stdout.txt
+! stderr .
+
+-- .github/workflows/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- stdout.txt --
+{"problems":[{"file":".github/workflows/workflow.yml","job":"'Example unsafe job'","step":"'Unsafe run'","problem":"${{ inputs.name }}"}]}

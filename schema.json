@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema",
+  "title": "JSON output definition for ades (Actions Dangerous Expressions Scanner)",
+  "type": "object",
+  "additionalProperties": true,
+  "properties": {
+    "problems": {
+      "type": "array",
+      "description": "Detected violations",
+      "items": {
+        "type": "object",
+        "additionalProperties": true,
+        "properties": {
+          "file": {
+            "type": "string",
+            "description": "The workflow or manifest file path."
+          },
+          "job": {
+            "type": "string",
+            "description": "The name or index of a job in the workflow. Missing when the file is a manifest.",
+            "optional": true
+          },
+          "step": {
+            "type": "string",
+            "description": "The name or index of a step in the workflow or manifest."
+          },
+          "problem": {
+            "type": "string",
+            "description": "The problematic substring."
+          }
+        }
+      }
+    }
+  }
+}

@@ -18,6 +18,7 @@ and it will report all detected dangerous uses of workflow expressions.
 - Report dangerous uses of workflow expressions in [`run:`] directives.
 - Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
 - Provides suggested fixes.
+- Machine & human readable output formats.
 
 ### Resolutions
 
@@ -78,6 +79,12 @@ it can be made safer by converting it into:
 #                       | Note: the use of backticks is required in this example (for interpolation)
 ```
 
+### JSON output
+
+The `--json` flag can be used to get the scan results in JSON format. This can be used by machines
+to parse the results to process them for other purposes. The schema is defined in [`schema.json`].
+The schema is intended to be stable from one version to the next for longer periods of time.
+
 ## Background
 
 A [workflow expression] is a string like:
@@ -115,3 +122,4 @@ Documentation License v1.3] for the full license text.
 [copying.txt]: ./COPYING.txt
 [gnu free documentation license v1.3]: https://www.gnu.org/licenses/fdl-1.3.en.html
 [workflow expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
+[`schema.json`]: ./schema.json

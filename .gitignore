@@ -29,6 +29,7 @@
 !Makefile
 !go.mod
 !go.sum
+!schema.json
 !*.go
 
 # Test
