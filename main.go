@@ -301,7 +301,11 @@ func getVariableNameForExpression(expression string) (name string) {
 func getTargets(argv []string) ([]string, error) {
 	if len(argv) == 0 {
 		wd, err := os.Getwd()
-		return []string{wd}, err
+		if err != nil {
+			return nil, fmt.Errorf("could not get cwd: %v", err)
+		}
+
+		return []string{wd}, nil
 	}
 
 	return argv, nil
