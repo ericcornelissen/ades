@@ -11,14 +11,17 @@
         "type": "object",
         "additionalProperties": true,
         "properties": {
+          "target": {
+            "type": "string",
+            "description": "The path to the target project that the file is a part of."
+          },
           "file": {
             "type": "string",
             "description": "The workflow or manifest file path."
           },
           "job": {
             "type": "string",
-            "description": "The name or index of a job in the workflow. Missing when the file is a manifest.",
-            "optional": true
+            "description": "The name or index of a job in the workflow. Missing when the file is a manifest."
           },
           "step": {
             "type": "string",
@@ -28,7 +31,13 @@
             "type": "string",
             "description": "The problematic substring."
           }
-        }
+        },
+        "required": [
+          "target",
+          "file",
+          "step",
+          "problem"
+        ]
       }
     }
   }
