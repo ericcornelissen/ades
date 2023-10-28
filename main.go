@@ -27,9 +27,9 @@ import (
 )
 
 const (
-	exitSuccess    = 0
-	exitError      = 1
-	exitViolations = 2
+	exitSuccess = iota
+	exitError
+	exitViolations
 )
 
 var (
@@ -85,8 +85,8 @@ func run() int {
 			if !(*flagJson) {
 				printViolations(targetViolations)
 
-				if len(targets) > 1 && i < len(targets)-1 {
-					fmt.Println( /* empty line */ )
+				if i < len(targets)-1 {
+					fmt.Println( /* empty line between targets */ )
 				}
 			}
 

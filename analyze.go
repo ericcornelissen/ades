@@ -106,7 +106,7 @@ func analyzeStep(id int, step *JobStep) (violations []Violation) {
 }
 
 func analyzeScript(script string) (violations []Violation) {
-	if matches := r.FindAll([]byte(script), -1); matches != nil {
+	if matches := r.FindAll([]byte(script), len(script)); matches != nil {
 		for _, problem := range matches {
 			violations = append(violations, Violation{
 				problem: string(problem),
