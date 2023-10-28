@@ -139,6 +139,11 @@ func analyzeTarget(target string) (map[string][]Violation, error) {
 	}
 }
 
+const (
+	githubDir    = ".github"
+	workflowsDir = "workflows"
+)
+
 func analyzeRepository(target string) (map[string][]Violation, error) {
 	violations := make(map[string][]Violation)
 
@@ -154,8 +159,8 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
 	}
 
-	workflowsDir := path.Join(target, ".github", "workflows")
-	workflows, err := os.ReadDir(workflowsDir)
+	workflowsPath := path.Join(target, githubDir, workflowsDir)
+	workflows, err := os.ReadDir(workflowsPath)
 	if err != nil && !errors.Is(err, os.ErrNotExist) {
 		return violations, fmt.Errorf("could not read workflows directory: %v", err)
 	}
@@ -169,9 +174,9 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 			continue
 		}
 
-		workflowPath := path.Join(workflowsDir, entry.Name())
+		workflowPath := path.Join(workflowsPath, entry.Name())
 		if workflowViolations, err := tryWorkflow(workflowPath); err == nil {
-			targetRelativePath := path.Join(".github", "workflows", entry.Name())
+			targetRelativePath := path.Join(githubDir, workflowsDir, entry.Name())
 			violations[targetRelativePath] = workflowViolations
 		} else {
 			fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
@@ -197,12 +202,12 @@ var (
 func tryManifest(manifestPath string) ([]Violation, error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
-		return nil, fmt.Errorf("%w (%v)", ErrNotRead, err)
+		return nil, errors.Join(ErrNotRead, err)
 	}
 
 	manifest, err := ParseManifest(data)
 	if err != nil {
-		return nil, fmt.Errorf("%w (%v)", ErrNotParsed, err)
+		return nil, errors.Join(ErrNotParsed, err)
 	}
 
 	return analyzeManifest(&manifest), nil
@@ -211,12 +216,12 @@ func tryManifest(manifestPath string) ([]Violation, error) {
 func tryWorkflow(workflowPath string) ([]Violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
-		return nil, fmt.Errorf("%w (%v)", ErrNotRead, err)
+		return nil, errors.Join(ErrNotRead, err)
 	}
 
 	workflow, err := ParseWorkflow(data)
 	if err != nil {
-		return nil, fmt.Errorf("%w (%v)", ErrNotParsed, err)
+		return nil, errors.Join(ErrNotParsed, err)
 	}
 
 	return analyzeWorkflow(&workflow), nil

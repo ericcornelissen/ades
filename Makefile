@@ -69,6 +69,7 @@ vet: ## Vet the source code
 	@go run github.com/alexkohler/unimport@e6f2b2e .
 	@go run github.com/go-critic/go-critic/cmd/gocritic@v0.9.0 check .
 	@go run github.com/gordonklaus/ineffassign@0e73809 .
+	@go run github.com/jgautheron/goconst/cmd/goconst@v1.6.0 .
 	@go run github.com/kisielk/errcheck@v1.6.3 .
 	@go run github.com/kyoh86/looppointer/cmd/looppointer@v0.2.1 .
 	@go run github.com/mdempsky/unconvert@4157069 .
