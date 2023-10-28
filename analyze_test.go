@@ -15,9 +15,14 @@
 
 package main
 
-import "testing"
+import (
+	"fmt"
+	"strings"
+	"testing"
+	"testing/quick"
+)
 
-func TestProcessManifest(t *testing.T) {
+func TestAnalyzeManifest(t *testing.T) {
 	testCases := []struct {
 		name     string
 		manifest Manifest
@@ -118,7 +123,7 @@ func TestProcessManifest(t *testing.T) {
 	}
 }
 
-func TestProcessWorkflow(t *testing.T) {
+func TestAnalyzeWorkflow(t *testing.T) {
 	testCases := []struct {
 		name     string
 		workflow Workflow
@@ -237,7 +242,7 @@ func TestProcessWorkflow(t *testing.T) {
 	}
 }
 
-func TestProcessJob(t *testing.T) {
+func TestAnalyzeJob(t *testing.T) {
 	testCases := []struct {
 		name     string
 		id       string
@@ -354,7 +359,7 @@ func TestProcessJob(t *testing.T) {
 	}
 }
 
-func TestProcessStep(t *testing.T) {
+func TestAnalyzeStep(t *testing.T) {
 	type TestCase struct {
 		name     string
 		id       int
@@ -607,4 +612,78 @@ func TestProcessStep(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestIsRunStep(t *testing.T) {
+	t.Run("Run step", func(t *testing.T) {
+		testCases := []JobStep{
+			{
+				Run: "echo 'Hello world!'",
+			},
+			{
+				Run: "echo 'Hello'\necho 'world!'",
+			},
+			{
+				Run: "a",
+			},
+		}
+
+		for _, tt := range testCases {
+			tt := tt
+			if !isRunStep(&tt) {
+				t.Errorf("Run step not identified: '%s'", tt)
+			}
+		}
+
+		f := func(step JobStep, run string) bool {
+			if len(run) == 0 {
+				return true
+			}
+
+			step.Run = run
+			return isRunStep(&step)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Non-run step", func(t *testing.T) {
+		f := func(step JobStep) bool {
+			step.Run = ""
+			return !isRunStep(&step)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestIsActionsGitHubScriptStep(t *testing.T) {
+	t.Run("Script step", func(t *testing.T) {
+		f := func(step JobStep, ref string) bool {
+			step.Uses = fmt.Sprintf("actions/github-script@%s", ref)
+			return isActionsGitHubScriptStep(&step)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Non-script step", func(t *testing.T) {
+		f := func(step JobStep) bool {
+			if strings.HasPrefix(step.Uses, "actions/github-script@") {
+				return true
+			}
+
+			return !isActionsGitHubScriptStep(&step)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
 }
