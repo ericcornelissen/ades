@@ -8,11 +8,6 @@ insert_final_newline=true
 max_line_length=100
 trim_trailing_whitespace=true
 
-[*.txt]
-indent_size=unset
-indent_style=space
-max_line_length=80
-
 [Makefile]
 indent_style=tab
 
@@ -20,9 +15,18 @@ indent_style=tab
 indent_size=2
 indent_style=tab
 
+[*.json]
+indent_size=2
+indent_style=space
+
 [*.md]
 indent_size=unset
 indent_style=space
+
+[*.txt]
+indent_size=unset
+indent_style=space
+max_line_length=80
 
 [*.txtar]
 indent_size=unset
