@@ -22,6 +22,7 @@ import (
 	"fmt"
 	"os"
 	"path"
+	"path/filepath"
 	"regexp"
 	"strings"
 )
@@ -144,18 +145,22 @@ const (
 	workflowsDir = "workflows"
 )
 
+var (
+	manifestExpr = regexp.MustCompile("action.ya?ml")
+)
+
 func analyzeRepository(target string) (map[string][]Violation, error) {
 	violations := make(map[string][]Violation)
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
-	} else if !errors.Is(err, ErrNotRead) {
+	} else if !errors.Is(err, ErrNotFound) {
 		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 	}
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yaml")); err == nil {
 		violations["action.yaml"] = fileViolations
-	} else if !errors.Is(err, ErrNotRead) {
+	} else if !errors.Is(err, ErrNotFound) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
 	}
 
@@ -186,23 +191,31 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 	return violations, nil
 }
 
+var (
+	ErrNotFound  = errors.New("not found")
+	ErrNotParsed = errors.New("not parsed")
+)
+
 func analyzeFile(target string) ([]Violation, error) {
-	if matched, _ := regexp.MatchString("action.ya?ml", target); matched {
+	absolutePath, err := filepath.Abs(target)
+	if err != nil {
+		return nil, errors.Join(ErrNotFound, err)
+	}
+
+	switch {
+	case strings.HasSuffix(absolutePath, path.Join(githubDir, workflowsDir, path.Base(target))):
+		return tryWorkflow(target)
+	case manifestExpr.MatchString(target):
 		return tryManifest(target)
-	} else {
+	default:
 		return tryWorkflow(target)
 	}
 }
 
-var (
-	ErrNotRead   = errors.New("not found")
-	ErrNotParsed = errors.New("not parsed")
-)
-
 func tryManifest(manifestPath string) ([]Violation, error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
-		return nil, errors.Join(ErrNotRead, err)
+		return nil, errors.Join(ErrNotFound, err)
 	}
 
 	manifest, err := ParseManifest(data)
@@ -216,7 +229,7 @@ func tryManifest(manifestPath string) ([]Violation, error) {
 func tryWorkflow(workflowPath string) ([]Violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
-		return nil, errors.Join(ErrNotRead, err)
+		return nil, errors.Join(ErrNotFound, err)
 	}
 
 	workflow, err := ParseWorkflow(data)
