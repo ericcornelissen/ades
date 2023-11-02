@@ -21,7 +21,8 @@ clean: ## Reset the project to a clean state
 	@echo 'Cleaning...'
 	@git clean -fx \
 		ades \
-		cover.*
+		cover.* \
+		mutation.log
 
 .PHONY: coverage
 coverage: ## Run all tests and generate a coverage report
@@ -56,7 +57,8 @@ test: ## Run all tests
 .PHONY: test-mutation
 test-mutation: ## Run mutation tests
 	@echo 'Mutation testing...'
-	@go test -v -tags=mutation
+	@go run github.com/zimmski/go-mutesting/cmd/go-mutesting@6d92170 . | tee mutation.log
+	@test -z "$$(cat mutation.log | grep FAIL)"
 
 .PHONY: vet
 vet: ## Vet the source code
