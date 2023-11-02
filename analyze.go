@@ -83,19 +83,7 @@ func analyzeStep(id int, step *JobStep) (violations []Violation) {
 		name = fmt.Sprintf("#%d", id)
 	}
 
-	var kind ViolationKind
-	var script string
-	switch {
-	case isRunStep(step):
-		kind = ExpressionInRunScript
-		script = step.Run
-	case isActionsGitHubScriptStep(step):
-		kind = ExpressionInActionsGithubScript
-		script = step.With.Script
-	default:
-		return nil
-	}
-
+	script, kind := extractScript(step)
 	for _, violation := range analyzeScript(script) {
 		violation.kind = kind
 		violation.stepId = name
@@ -115,6 +103,17 @@ func analyzeScript(script string) (violations []Violation) {
 	}
 
 	return violations
+}
+
+func extractScript(step *JobStep) (script string, kind ViolationKind) {
+	switch {
+	case isRunStep(step):
+		return step.Run, ExpressionInRunScript
+	case isActionsGitHubScriptStep(step):
+		return step.With.Script, ExpressionInActionsGithubScript
+	default:
+		return script, kind
+	}
 }
 
 func isRunStep(step *JobStep) bool {

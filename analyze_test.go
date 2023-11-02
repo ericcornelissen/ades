@@ -23,11 +23,13 @@ import (
 )
 
 func TestAnalyzeManifest(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name     string
 		manifest Manifest
 		expected int
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Non-composite manifest",
 			manifest: Manifest{
@@ -124,11 +126,13 @@ func TestAnalyzeManifest(t *testing.T) {
 }
 
 func TestAnalyzeWorkflow(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name     string
 		workflow Workflow
 		expected int
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Safe workflow",
 			workflow: Workflow{
@@ -243,14 +247,22 @@ func TestAnalyzeWorkflow(t *testing.T) {
 }
 
 func TestAnalyzeJob(t *testing.T) {
-	testCases := []struct {
+	type Expectation struct {
+		count int
+		id    string
+	}
+
+	type TestCase struct {
 		name     string
 		id       string
 		job      WorkflowJob
-		expected int
-	}{
+		expected Expectation
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Safe unnamed job",
+			id:   "job-id",
 			job: WorkflowJob{
 				Name: "",
 				Steps: []JobStep{
@@ -260,10 +272,14 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 0,
+			expected: Expectation{
+				count: 0,
+				id:    "job-id",
+			},
 		},
 		{
 			name: "Safe named job",
+			id:   "job-id",
 			job: WorkflowJob{
 				Name: "Safe",
 				Steps: []JobStep{
@@ -273,7 +289,10 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 0,
+			expected: Expectation{
+				count: 0,
+				id:    "job-id",
+			},
 		},
 		{
 			name: "Unnamed job with unsafe step",
@@ -287,10 +306,14 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			expected: Expectation{
+				count: 1,
+				id:    "job-id",
+			},
 		},
 		{
 			name: "Named job with unsafe step",
+			id:   "job-id",
 			job: WorkflowJob{
 				Name: "Unsafe",
 				Steps: []JobStep{
@@ -300,7 +323,10 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			expected: Expectation{
+				count: 1,
+				id:    "Unsafe",
+			},
 		},
 		{
 			name: "Unnamed job with unsafe and safe steps",
@@ -322,7 +348,10 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			expected: Expectation{
+				count: 1,
+				id:    "job-id",
+			},
 		},
 		{
 			name: "Named job with unsafe and safe steps",
@@ -343,7 +372,10 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			expected: Expectation{
+				count: 1,
+				id:    "Unsafe",
+			},
 		},
 	}
 
@@ -352,8 +384,14 @@ func TestAnalyzeJob(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			violations := analyzeJob(tt.id, &tt.job)
 
-			if got, want := len(violations), tt.expected; got != want {
+			if got, want := len(violations), tt.expected.count; got != want {
 				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
+			}
+
+			for i, violation := range violations {
+				if got, want := violation.jobId, tt.expected.id; got != want {
+					t.Errorf("Unexpected job ID for violation %d (got '%s', want '%s')", i, got, want)
+				}
 			}
 		})
 	}
