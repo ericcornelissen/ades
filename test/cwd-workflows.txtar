@@ -33,6 +33,10 @@ jobs:
 I'm not a workflow and I shouldn't be analyzed.
 -- .github/workflows/also/not-a-workflow.py --
 print("Beep boop I'm a helper script")
+-- .github/workflows/also.yml/not-a-workflow.foo --
+I'm also not a workflow and I shouldn't be analyzed.
+-- .github/workflows/also.yaml/not-a-workflow.bar --
+I'm definitly not a workflow and I shouldn't be analyzed.
 -- stdout.txt --
 Detected 1 violation(s) in '.github/workflows/unsafe.yml':
   job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}', suggestion:

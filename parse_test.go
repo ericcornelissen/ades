@@ -18,11 +18,13 @@ package main
 import "testing"
 
 func TestParseWorkflowSuccess(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name     string
 		yaml     string
 		expected Workflow
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Workflow with 'run:'",
 			yaml: `
@@ -169,10 +171,12 @@ jobs:
 }
 
 func TestParseWorkflowError(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name string
 		yaml string
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Invalid 'jobs' value",
 			yaml: `
@@ -210,11 +214,13 @@ jobs:
 }
 
 func TestParseManifestSuccess(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name     string
 		yaml     string
 		expected Manifest
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Non-composite manifest",
 			yaml: `
@@ -333,10 +339,12 @@ runs:
 }
 
 func TestParseManifestError(t *testing.T) {
-	testCases := []struct {
+	type TestCase struct {
 		name string
 		yaml string
-	}{
+	}
+
+	testCases := []TestCase{
 		{
 			name: "Invalid 'runs' value",
 			yaml: `runs: 3.14`,
