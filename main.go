@@ -75,7 +75,7 @@ func run() int {
 		return exitError
 	}
 
-	violations, hasError := make(map[string]map[string][]Violation), false
+	violations, hasError := make(map[string]map[string][]violation), false
 	for i, target := range targets {
 		if len(targets) > 1 && !(*flagJson) {
 			fmt.Println("Scanning", target)
@@ -94,7 +94,7 @@ func run() int {
 			for file, fileViolations := range targetViolations {
 				if len(fileViolations) > 0 {
 					if _, ok := violations[target]; !ok {
-						violations[target] = make(map[string][]Violation)
+						violations[target] = make(map[string][]violation)
 					}
 
 					violations[target][file] = fileViolations
@@ -120,7 +120,7 @@ func run() int {
 	}
 }
 
-func analyzeTarget(target string) (map[string][]Violation, error) {
+func analyzeTarget(target string) (map[string][]violation, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
 		return nil, fmt.Errorf("could not process %s: %v", target, err)
@@ -134,7 +134,7 @@ func analyzeTarget(target string) (map[string][]Violation, error) {
 			return nil, err
 		}
 
-		violations := make(map[string][]Violation)
+		violations := make(map[string][]violation)
 		violations[target] = fileViolations
 		return violations, nil
 	}
@@ -149,18 +149,18 @@ var (
 	manifestExpr = regexp.MustCompile("action.ya?ml")
 )
 
-func analyzeRepository(target string) (map[string][]Violation, error) {
-	violations := make(map[string][]Violation)
+func analyzeRepository(target string) (map[string][]violation, error) {
+	violations := make(map[string][]violation)
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
-	} else if !errors.Is(err, ErrNotFound) {
+	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 	}
 
 	if fileViolations, err := tryManifest(path.Join(target, "action.yaml")); err == nil {
 		violations["action.yaml"] = fileViolations
-	} else if !errors.Is(err, ErrNotFound) {
+	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
 	}
 
@@ -192,14 +192,14 @@ func analyzeRepository(target string) (map[string][]Violation, error) {
 }
 
 var (
-	ErrNotFound  = errors.New("not found")
-	ErrNotParsed = errors.New("not parsed")
+	errNotFound  = errors.New("not found")
+	errNotParsed = errors.New("not parsed")
 )
 
-func analyzeFile(target string) ([]Violation, error) {
+func analyzeFile(target string) ([]violation, error) {
 	absolutePath, err := filepath.Abs(target)
 	if err != nil {
-		return nil, errors.Join(ErrNotFound, err)
+		return nil, errors.Join(errNotFound, err)
 	}
 
 	switch {
@@ -212,29 +212,29 @@ func analyzeFile(target string) ([]Violation, error) {
 	}
 }
 
-func tryManifest(manifestPath string) ([]Violation, error) {
+func tryManifest(manifestPath string) ([]violation, error) {
 	data, err := os.ReadFile(manifestPath)
 	if err != nil {
-		return nil, errors.Join(ErrNotFound, err)
+		return nil, errors.Join(errNotFound, err)
 	}
 
 	manifest, err := ParseManifest(data)
 	if err != nil {
-		return nil, errors.Join(ErrNotParsed, err)
+		return nil, errors.Join(errNotParsed, err)
 	}
 
 	return analyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(workflowPath string) ([]Violation, error) {
+func tryWorkflow(workflowPath string) ([]violation, error) {
 	data, err := os.ReadFile(workflowPath)
 	if err != nil {
-		return nil, errors.Join(ErrNotFound, err)
+		return nil, errors.Join(errNotFound, err)
 	}
 
 	workflow, err := ParseWorkflow(data)
 	if err != nil {
-		return nil, errors.Join(ErrNotParsed, err)
+		return nil, errors.Join(errNotParsed, err)
 	}
 
 	return analyzeWorkflow(&workflow), nil
@@ -252,7 +252,7 @@ type jsonViolation struct {
 	Problem string `json:"problem"`
 }
 
-func printJson(rawViolations map[string]map[string][]Violation) {
+func printJson(rawViolations map[string]map[string][]violation) {
 	violations := make([]jsonViolation, 0)
 	for target, targetViolations := range rawViolations {
 		for file, fileViolations := range targetViolations {
@@ -276,34 +276,34 @@ func printJson(rawViolations map[string]map[string][]Violation) {
 	}
 }
 
-func printViolations(violations map[string][]Violation) {
+func printViolations(violations map[string][]violation) {
 	for file, fileViolations := range violations {
 		if cnt := len(fileViolations); cnt > 0 {
 			fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
-			for _, violation := range fileViolations {
-				violation := violation
-				printViolation(&violation)
+			for _, v := range fileViolations {
+				v := v
+				printViolation(&v)
 			}
 		}
 	}
 }
 
-func printViolation(violation *Violation) {
-	if violation.jobId == "" {
-		fmt.Printf("  step '%s' has '%s'", violation.stepId, violation.problem)
+func printViolation(v *violation) {
+	if v.jobId == "" {
+		fmt.Printf("  step '%s' has '%s'", v.stepId, v.problem)
 	} else {
-		fmt.Printf("  job '%s', step '%s' has '%s'", violation.jobId, violation.stepId, violation.problem)
+		fmt.Printf("  job '%s', step '%s' has '%s'", v.jobId, v.stepId, v.problem)
 	}
 
-	envVarName := getVariableNameForExpression(violation.problem)
+	envVarName := getVariableNameForExpression(v.problem)
 
 	fmt.Println(", suggestion:")
-	fmt.Printf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, violation.problem)
-	switch violation.kind {
-	case ExpressionInRunScript:
-		fmt.Printf("    2. Replace all occurrences of `%s` by `$%s`", violation.problem, envVarName)
-	case ExpressionInActionsGithubScript:
-		fmt.Printf("    2. Replace all occurrences of `%s` by `process.env.%s`", violation.problem, envVarName)
+	fmt.Printf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, v.problem)
+	switch v.kind {
+	case expressionInRunScript:
+		fmt.Printf("    2. Replace all occurrences of `%s` by `$%s`", v.problem, envVarName)
+	case expressionInActionsGithubScript:
+		fmt.Printf("    2. Replace all occurrences of `%s` by `process.env.%s`", v.problem, envVarName)
 	}
 	fmt.Println()
 	fmt.Println("       (make sure to keep the behavior of the script the same)")

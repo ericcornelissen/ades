@@ -388,8 +388,8 @@ func TestAnalyzeJob(t *testing.T) {
 				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 
-			for i, violation := range violations {
-				if got, want := violation.jobId, tt.expected.id; got != want {
+			for i, v := range violations {
+				if got, want := v.jobId, tt.expected.id; got != want {
 					t.Errorf("Unexpected job ID for violation %d (got '%s', want '%s')", i, got, want)
 				}
 			}
@@ -402,7 +402,7 @@ func TestAnalyzeStep(t *testing.T) {
 		name     string
 		id       int
 		step     JobStep
-		expected []Violation
+		expected []violation
 	}
 
 	runTestCases := []TestCase{
@@ -412,7 +412,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Named step with no run value",
@@ -420,7 +420,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Doesn't run",
 				Run:  "",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Unnamed step with safe run value",
@@ -428,7 +428,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Named step with safe run value",
@@ -436,7 +436,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Unnamed run with one expression",
@@ -445,11 +445,11 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 			},
 		},
@@ -459,11 +459,11 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 			},
 		},
@@ -474,16 +474,16 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 				{
 					stepId:  "#3",
 					problem: "${{ steps.id.outputs.day }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 			},
 		},
@@ -494,16 +494,16 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 				{
 					stepId:  "Greet person today",
 					problem: "${{ steps.id.outputs.day }}",
-					kind:    ExpressionInRunScript,
+					kind:    expressionInRunScript,
 				},
 			},
 		},
@@ -516,7 +516,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Named step using another action",
@@ -524,7 +524,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Doesn't run",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Unnamed step with safe script",
@@ -535,7 +535,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Named step with safe script",
@@ -546,7 +546,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []Violation{},
+			expected: []violation{},
 		},
 		{
 			name: "Unnamed step with unsafe script, one expression",
@@ -558,11 +558,11 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 			},
 		},
@@ -575,11 +575,11 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 			},
 		},
@@ -593,16 +593,16 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 				{
 					stepId:  "#3",
 					problem: "${{ steps.id.outputs.day }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 			},
 		},
@@ -616,16 +616,16 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []Violation{
+			expected: []violation{
 				{
 					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 				{
 					stepId:  "Greet person today",
 					problem: "${{ steps.id.outputs.day }}",
-					kind:    ExpressionInActionsGithubScript,
+					kind:    expressionInActionsGithubScript,
 				},
 			},
 		},
@@ -643,8 +643,8 @@ func TestAnalyzeStep(t *testing.T) {
 				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
 			}
 
-			for i, violation := range violations {
-				if got, want := violation, tt.expected[i]; got != want {
+			for i, v := range violations {
+				if got, want := v, tt.expected[i]; got != want {
 					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
 				}
 			}
