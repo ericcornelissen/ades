@@ -16,7 +16,6 @@
 package main
 
 import (
-	"encoding/json"
 	"errors"
 	"flag"
 	"fmt"
@@ -96,9 +95,9 @@ func run() int {
 			if *flagJson {
 				report := make(map[string]map[string][]violation)
 				report["stdin"] = violations
-				printJson(report)
+				fmt.Println(printJson(report))
 			} else {
-				printViolations(violations)
+				fmt.Print(printViolations(violations))
 			}
 
 			return exitViolations
@@ -122,7 +121,7 @@ func run() int {
 		targetViolations, err := analyzeTarget(target)
 		if err == nil {
 			if !(*flagJson) {
-				printViolations(targetViolations)
+				fmt.Print(printViolations(targetViolations))
 
 				if i < len(targets)-1 {
 					fmt.Println( /* empty line between targets */ )
@@ -147,7 +146,7 @@ func run() int {
 	}
 
 	if *flagJson {
-		printJson(violations)
+		fmt.Println(printJson(violations))
 	}
 
 	switch {
@@ -273,82 +272,6 @@ func tryWorkflow(data []byte) ([]violation, error) {
 	}
 
 	return analyzeWorkflow(&workflow), nil
-}
-
-type jsonOutput struct {
-	Violations []jsonViolation `json:"problems"`
-}
-
-type jsonViolation struct {
-	Target  string `json:"target"`
-	File    string `json:"file"`
-	Job     string `json:"job"`
-	Step    string `json:"step"`
-	Problem string `json:"problem"`
-}
-
-func printJson(rawViolations map[string]map[string][]violation) {
-	violations := make([]jsonViolation, 0)
-	for target, targetViolations := range rawViolations {
-		for file, fileViolations := range targetViolations {
-			for _, fileViolation := range fileViolations {
-				violations = append(violations, jsonViolation{
-					Target:  target,
-					File:    file,
-					Job:     fileViolation.jobId,
-					Step:    fileViolation.stepId,
-					Problem: fileViolation.problem,
-				})
-			}
-		}
-	}
-
-	jsonBytes, err := json.Marshal(jsonOutput{Violations: violations})
-	if err != nil {
-		fmt.Printf("Could not produce JSON output: %s", err)
-	} else {
-		fmt.Println(string(jsonBytes))
-	}
-}
-
-func printViolations(violations map[string][]violation) {
-	for file, fileViolations := range violations {
-		if cnt := len(fileViolations); cnt > 0 {
-			fmt.Printf("Detected %d violation(s) in %q:\n", cnt, file)
-			for _, v := range fileViolations {
-				v := v
-				printViolation(&v)
-			}
-		}
-	}
-}
-
-func printViolation(v *violation) {
-	if v.jobId == "" {
-		fmt.Printf("  step %q has %q", v.stepId, v.problem)
-	} else {
-		fmt.Printf("  job %q, step %q has %q", v.jobId, v.stepId, v.problem)
-	}
-
-	envVarName := getVariableNameForExpression(v.problem)
-
-	fmt.Println(", suggestion:")
-	fmt.Printf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, v.problem)
-	switch v.kind {
-	case expressionInRunScript:
-		fmt.Printf("    2. Replace all occurrences of `%s` by `$%s`", v.problem, envVarName)
-	case expressionInActionsGithubScript:
-		fmt.Printf("    2. Replace all occurrences of `%s` by `process.env.%s`", v.problem, envVarName)
-	}
-	fmt.Println()
-	fmt.Println("       (make sure to keep the behavior of the script the same)")
-}
-
-func getVariableNameForExpression(expression string) (name string) {
-	name = expression[strings.LastIndex(expression, ".")+1:]
-	name = strings.TrimRight(name, "}")
-	name = strings.TrimSpace(name)
-	return strings.ToUpper(name)
 }
 
 func getTargets(argv []string) ([]string, error) {
