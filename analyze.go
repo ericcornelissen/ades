@@ -21,23 +21,23 @@ import (
 	"strings"
 )
 
-type ViolationKind uint8
+type violationKind uint8
 
 const (
-	ExpressionInRunScript ViolationKind = iota
-	ExpressionInActionsGithubScript
+	expressionInRunScript violationKind = iota
+	expressionInActionsGithubScript
 )
 
-type Violation struct {
+type violation struct {
 	jobId   string
 	stepId  string
 	problem string
-	kind    ViolationKind
+	kind    violationKind
 }
 
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
-func analyzeManifest(manifest *Manifest) (violations []Violation) {
+func analyzeManifest(manifest *Manifest) (violations []violation) {
 	if manifest.Runs.Using == "composite" {
 		violations = analyzeSteps(manifest.Runs.Steps)
 	}
@@ -45,7 +45,7 @@ func analyzeManifest(manifest *Manifest) (violations []Violation) {
 	return violations
 }
 
-func analyzeWorkflow(workflow *Workflow) (violations []Violation) {
+func analyzeWorkflow(workflow *Workflow) (violations []violation) {
 	for id, job := range workflow.Jobs {
 		job := job
 		violations = append(violations, analyzeJob(id, &job)...)
@@ -54,21 +54,21 @@ func analyzeWorkflow(workflow *Workflow) (violations []Violation) {
 	return violations
 }
 
-func analyzeJob(id string, job *WorkflowJob) (violations []Violation) {
+func analyzeJob(id string, job *WorkflowJob) (violations []violation) {
 	name := job.Name
 	if name == "" {
 		name = id
 	}
 
-	for _, violation := range analyzeSteps(job.Steps) {
-		violation.jobId = name
-		violations = append(violations, violation)
+	for _, v := range analyzeSteps(job.Steps) {
+		v.jobId = name
+		violations = append(violations, v)
 	}
 
 	return violations
 }
 
-func analyzeSteps(steps []JobStep) (violations []Violation) {
+func analyzeSteps(steps []JobStep) (violations []violation) {
 	for i, step := range steps {
 		step := step
 		violations = append(violations, analyzeStep(i, &step)...)
@@ -77,26 +77,26 @@ func analyzeSteps(steps []JobStep) (violations []Violation) {
 	return violations
 }
 
-func analyzeStep(id int, step *JobStep) (violations []Violation) {
+func analyzeStep(id int, step *JobStep) (violations []violation) {
 	name := step.Name
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
 	}
 
 	script, kind := extractScript(step)
-	for _, violation := range analyzeScript(script) {
-		violation.kind = kind
-		violation.stepId = name
-		violations = append(violations, violation)
+	for _, v := range analyzeScript(script) {
+		v.kind = kind
+		v.stepId = name
+		violations = append(violations, v)
 	}
 
 	return violations
 }
 
-func analyzeScript(script string) (violations []Violation) {
+func analyzeScript(script string) (violations []violation) {
 	if matches := r.FindAll([]byte(script), len(script)); matches != nil {
 		for _, problem := range matches {
-			violations = append(violations, Violation{
+			violations = append(violations, violation{
 				problem: string(problem),
 			})
 		}
@@ -105,12 +105,12 @@ func analyzeScript(script string) (violations []Violation) {
 	return violations
 }
 
-func extractScript(step *JobStep) (script string, kind ViolationKind) {
+func extractScript(step *JobStep) (script string, kind violationKind) {
 	switch {
 	case isRunStep(step):
-		return step.Run, ExpressionInRunScript
+		return step.Run, expressionInRunScript
 	case isActionsGitHubScriptStep(step):
-		return step.With.Script, ExpressionInActionsGithubScript
+		return step.With.Script, expressionInActionsGithubScript
 	default:
 		return script, kind
 	}
