@@ -1,6 +1,7 @@
 {
   "$schema": "http://json-schema.org/draft-07/schema",
   "title": "JSON output definition for ades (Actions Dangerous Expressions Scanner)",
+  "license": "CC0-1.0",
   "type": "object",
   "additionalProperties": true,
   "properties": {
