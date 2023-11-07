@@ -1,3 +1,5 @@
+<!-- SPDX-License-Identifier: GFDL-1.3-or-later -->
+
 # Actions Dangerous Expressions Scanner
 
 A simple tool to find dangerous uses of GitHub Actions [Workflow expression]s.
