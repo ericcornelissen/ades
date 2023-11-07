@@ -34,6 +34,28 @@ jobs:
         go-version-file: go.mod
     - name: Check source code formatting
       run: make fmt-check
+  reproducible:
+    name: Reproducible build
+    runs-on: ubuntu-22.04
+    needs:
+    - build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+    - name: Install Go
+      uses: actions/setup-go@93397bea11091df50f3d7e59dc26a7711a8bcfbe # v4.1.0
+      with:
+        go-version-file: go.mod
+    - name: Build
+      run: make build
+    - name: Compute checksum
+      run: shasum ades | tee checksums.txt
+    - name: Clear build
+      run: make clean
+    - name: Rebuild
+      run: make build
+    - name: Verify checksum
+      run: shasum --check checksums.txt --strict
   test-unit:
     name: Unit test
     runs-on: ubuntu-22.04
