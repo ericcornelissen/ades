@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.21
+go 1.21.4
 
 require (
 	github.com/gtramontina/ooze v0.2.0
