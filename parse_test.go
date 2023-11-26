@@ -19,9 +19,9 @@ import "testing"
 
 func TestParseWorkflowSuccess(t *testing.T) {
 	type TestCase struct {
-		name     string
-		yaml     string
-		expected Workflow
+		name string
+		yaml string
+		want Workflow
 	}
 
 	testCases := []TestCase{
@@ -39,7 +39,7 @@ jobs:
     - name: Echo value
       run: echo '${{ inputs.value }}'
 `,
-			expected: Workflow{
+			want: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "Example",
@@ -73,7 +73,7 @@ jobs:
       with:
         script: console.log('${{ inputs.value }}')
 `,
-			expected: Workflow{
+			want: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "Example",
@@ -105,7 +105,7 @@ jobs:
         node-version: 20
     - run: echo ${{ inputs.value }}
 `,
-			expected: Workflow{
+			want: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"example": {
 						Name: "",
@@ -131,38 +131,38 @@ jobs:
 				t.Fatalf("Unexpected error: %#v", err)
 			}
 
-			if got, want := len(workflow.Jobs), len(tt.expected.Jobs); got != want {
-				t.Fatalf("Unexpected number of jobs (got '%d', want '%d')", got, want)
+			if got, want := len(workflow.Jobs), len(tt.want.Jobs); got != want {
+				t.Fatalf("Unexpected number of jobs (got %d, want %d)", got, want)
 			}
 
 			for k, job := range workflow.Jobs {
-				expected := tt.expected.Jobs[k]
+				want := tt.want.Jobs[k]
 
-				if got, want := job.Name, expected.Name; got != want {
-					t.Errorf("Unexpected name for job '%s' (got '%s', want '%s')", k, got, want)
+				if got, want := job.Name, want.Name; got != want {
+					t.Errorf("Unexpected name for job %q (got %q, want %q)", k, got, want)
 				}
 
-				if got, want := len(job.Steps), len(expected.Steps); got != want {
-					t.Fatalf("Unexpected number of steps for job '%s' (got '%d', want '%d')", job, got, want)
+				if got, want := len(job.Steps), len(want.Steps); got != want {
+					t.Fatalf("Unexpected number of steps for job %q (got %d, want %d)", job, got, want)
 				}
 
 				for i, step := range job.Steps {
-					expected := expected.Steps[i]
+					want := want.Steps[i]
 
-					if got, want := step.Name, expected.Name; got != want {
-						t.Errorf("Unexpected name for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					if got, want := step.Name, want.Name; got != want {
+						t.Errorf("Unexpected name for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 
-					if got, want := step.Run, expected.Run; got != want {
-						t.Errorf("Unexpected run for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					if got, want := step.Run, want.Run; got != want {
+						t.Errorf("Unexpected run for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 
-					if got, want := step.Uses, expected.Uses; got != want {
-						t.Errorf("Unexpected uses for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					if got, want := step.Uses, want.Uses; got != want {
+						t.Errorf("Unexpected uses for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 
-					if got, want := step.With.Script, expected.With.Script; got != want {
-						t.Errorf("Unexpected with for job '%s' step %d (got '%s', want '%s')", k, i, got, want)
+					if got, want := step.With.Script, want.With.Script; got != want {
+						t.Errorf("Unexpected with for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 				}
 			}
@@ -215,9 +215,9 @@ jobs:
 
 func TestParseManifestSuccess(t *testing.T) {
 	type TestCase struct {
-		name     string
-		yaml     string
-		expected Manifest
+		name string
+		yaml string
+		want Manifest
 	}
 
 	testCases := []TestCase{
@@ -228,7 +228,7 @@ runs:
   using: node16
   main: index.js
 `,
-			expected: Manifest{
+			want: Manifest{
 				Runs: ManifestRuns{
 					Using: "node16",
 				},
@@ -247,7 +247,7 @@ runs:
   - name: Echo value
     run: echo '${{ inputs.value }}'
 `,
-			expected: Manifest{
+			want: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
 					Steps: []JobStep{
@@ -278,7 +278,7 @@ runs:
     with:
       script: console.log('${{ inputs.value }}')
 `,
-			expected: Manifest{
+			want: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
 					Steps: []JobStep{
@@ -307,31 +307,31 @@ runs:
 				t.Fatalf("Unexpected error: %#v", err)
 			}
 
-			if got, want := len(manifest.Runs.Using), len(tt.expected.Runs.Using); got != want {
-				t.Fatalf("Unexpected using value (got '%d', want '%d')", got, want)
+			if got, want := len(manifest.Runs.Using), len(tt.want.Runs.Using); got != want {
+				t.Fatalf("Unexpected using value (got %d, want %d)", got, want)
 			}
 
-			if got, want := len(manifest.Runs.Steps), len(tt.expected.Runs.Steps); got != want {
-				t.Fatalf("Unexpected number of steps (got '%d', want '%d')", got, want)
+			if got, want := len(manifest.Runs.Steps), len(tt.want.Runs.Steps); got != want {
+				t.Fatalf("Unexpected number of steps (got %d, want %d)", got, want)
 			}
 
 			for i, step := range manifest.Runs.Steps {
-				expected := tt.expected.Runs.Steps[i]
+				want := tt.want.Runs.Steps[i]
 
-				if got, want := step.Name, expected.Name; got != want {
-					t.Errorf("Unexpected name for step %d (got '%s', want '%s')", i, got, want)
+				if got, want := step.Name, want.Name; got != want {
+					t.Errorf("Unexpected name for step %d (got %q, want %q)", i, got, want)
 				}
 
-				if got, want := step.Run, expected.Run; got != want {
-					t.Errorf("Unexpected run for step %d (got '%s', want '%s')", i, got, want)
+				if got, want := step.Run, want.Run; got != want {
+					t.Errorf("Unexpected run for step %d (got %q, want %q)", i, got, want)
 				}
 
-				if got, want := step.Uses, expected.Uses; got != want {
-					t.Errorf("Unexpected uses for step %d (got '%s', want '%s')", i, got, want)
+				if got, want := step.Uses, want.Uses; got != want {
+					t.Errorf("Unexpected uses for step %d (got %q, want %q)", i, got, want)
 				}
 
-				if got, want := step.With.Script, expected.With.Script; got != want {
-					t.Errorf("Unexpected with for step %d (got '%s', want '%s')", i, got, want)
+				if got, want := step.With.Script, want.With.Script; got != want {
+					t.Errorf("Unexpected with for step %d (got %q, want %q)", i, got, want)
 				}
 			}
 		})

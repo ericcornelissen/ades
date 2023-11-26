@@ -279,7 +279,7 @@ func printJson(rawViolations map[string]map[string][]violation) {
 func printViolations(violations map[string][]violation) {
 	for file, fileViolations := range violations {
 		if cnt := len(fileViolations); cnt > 0 {
-			fmt.Printf("Detected %d violation(s) in '%s':\n", cnt, file)
+			fmt.Printf("Detected %d violation(s) in %q:\n", cnt, file)
 			for _, v := range fileViolations {
 				v := v
 				printViolation(&v)
@@ -290,9 +290,9 @@ func printViolations(violations map[string][]violation) {
 
 func printViolation(v *violation) {
 	if v.jobId == "" {
-		fmt.Printf("  step '%s' has '%s'", v.stepId, v.problem)
+		fmt.Printf("  step %q has %q", v.stepId, v.problem)
 	} else {
-		fmt.Printf("  job '%s', step '%s' has '%s'", v.jobId, v.stepId, v.problem)
+		fmt.Printf("  job %q, step %q has %q", v.jobId, v.stepId, v.problem)
 	}
 
 	envVarName := getVariableNameForExpression(v.problem)

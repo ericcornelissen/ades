@@ -21,12 +21,12 @@ jobs:
       with:
         script: console.log("Hello ${{ inputs.name }}");
 -- stdout.txt --
-Detected 2 violation(s) in 'project/workflow.yml':
-  job 'Example unsafe job', step 'Unsafe run' has '${{ inputs.name }}', suggestion:
+Detected 2 violation(s) in "project/workflow.yml":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
     1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
     2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
        (make sure to keep the behavior of the script the same)
-  job 'Example unsafe job', step 'Unsafe GitHub script' has '${{ inputs.name }}', suggestion:
+  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}", suggestion:
     1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
     2. Replace all occurrences of `${{ inputs.name }}` by `process.env.NAME`
        (make sure to keep the behavior of the script the same)
