@@ -31,8 +31,8 @@ runs:
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yml/stdout.txt --
-Detected 1 violation(s) in 'action.yml':
-  step 'Unsafe run' has '${{ inputs.name }}', suggestion:
+Detected 1 violation(s) in "action.yml":
+  step "Unsafe run" has "${{ inputs.name }}", suggestion:
     1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
     2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
        (make sure to keep the behavior of the script the same)
@@ -56,8 +56,8 @@ runs:
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
 -- project-yaml/stdout.txt --
-Detected 1 violation(s) in 'action.yaml':
-  step 'Unsafe run' has '${{ inputs.name }}', suggestion:
+Detected 1 violation(s) in "action.yaml":
+  step "Unsafe run" has "${{ inputs.name }}", suggestion:
     1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
     2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
        (make sure to keep the behavior of the script the same)

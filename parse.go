@@ -46,8 +46,9 @@ type StepWith struct {
 }
 
 // ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.
-func ParseWorkflow(data []byte) (workflow Workflow, err error) {
-	if err = yaml.Unmarshal(data, &workflow); err != nil {
+func ParseWorkflow(data []byte) (Workflow, error) {
+	var workflow Workflow
+	if err := yaml.Unmarshal(data, &workflow); err != nil {
 		return workflow, fmt.Errorf("could not parse workflow: %v", err)
 	}
 
@@ -66,8 +67,9 @@ type ManifestRuns struct {
 }
 
 // ParseManifest parses a GitHub Actions Action manifest file into a Manifest struct.
-func ParseManifest(data []byte) (manifest Manifest, err error) {
-	if err = yaml.Unmarshal(data, &manifest); err != nil {
+func ParseManifest(data []byte) (Manifest, error) {
+	var manifest Manifest
+	if err := yaml.Unmarshal(data, &manifest); err != nil {
 		return manifest, fmt.Errorf("could not parse manifest: %v", err)
 	}
 

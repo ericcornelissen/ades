@@ -26,7 +26,7 @@ func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
 		name     string
 		manifest Manifest
-		expected int
+		want     int
 	}
 
 	testCases := []TestCase{
@@ -37,7 +37,7 @@ func TestAnalyzeManifest(t *testing.T) {
 					Using: "node16",
 				},
 			},
-			expected: 0,
+			want: 0,
 		},
 		{
 			name: "Safe manifest",
@@ -52,7 +52,7 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			expected: 0,
+			want: 0,
 		},
 		{
 			name: "Problem in first of two steps in manifest",
@@ -71,7 +71,7 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			want: 1,
 		},
 		{
 			name: "Problem in second of two steps in manifest",
@@ -90,7 +90,7 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			want: 1,
 		},
 		{
 			name: "Problem in all steps in manifest",
@@ -109,7 +109,7 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			expected: 2,
+			want: 2,
 		},
 	}
 
@@ -118,8 +118,8 @@ func TestAnalyzeManifest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			violations := analyzeManifest(&tt.manifest)
 
-			if got, want := len(violations), tt.expected; got != want {
-				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.want; got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 		})
 	}
@@ -129,7 +129,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 	type TestCase struct {
 		name     string
 		workflow Workflow
-		expected int
+		want     int
 	}
 
 	testCases := []TestCase{
@@ -148,7 +148,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			expected: 0,
+			want: 0,
 		},
 		{
 			name: "Problem in first of two jobs in workflow",
@@ -174,7 +174,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			want: 1,
 		},
 		{
 			name: "Problem in second of two jobs in workflow",
@@ -200,7 +200,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			expected: 1,
+			want: 1,
 		},
 		{
 			name: "Problem in all jobs in workflow",
@@ -230,7 +230,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			expected: 3,
+			want: 3,
 		},
 	}
 
@@ -239,24 +239,20 @@ func TestAnalyzeWorkflow(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			violations := analyzeWorkflow(&tt.workflow)
 
-			if got, want := len(violations), tt.expected; got != want {
-				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.want; got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, tt.want)
 			}
 		})
 	}
 }
 
 func TestAnalyzeJob(t *testing.T) {
-	type Expectation struct {
-		count int
-		id    string
-	}
-
 	type TestCase struct {
-		name     string
-		id       string
-		job      WorkflowJob
-		expected Expectation
+		name      string
+		id        string
+		job       WorkflowJob
+		wantCount int
+		wantId    string
 	}
 
 	testCases := []TestCase{
@@ -272,10 +268,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 0,
-				id:    "job-id",
-			},
+			wantCount: 0,
+			wantId:    "job-id",
 		},
 		{
 			name: "Safe named job",
@@ -289,10 +283,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 0,
-				id:    "job-id",
-			},
+			wantCount: 0,
+			wantId:    "job-id",
 		},
 		{
 			name: "Unnamed job with unsafe step",
@@ -306,10 +298,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 1,
-				id:    "job-id",
-			},
+			wantCount: 1,
+			wantId:    "job-id",
 		},
 		{
 			name: "Named job with unsafe step",
@@ -323,10 +313,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 1,
-				id:    "Unsafe",
-			},
+			wantCount: 1,
+			wantId:    "Unsafe",
 		},
 		{
 			name: "Unnamed job with unsafe and safe steps",
@@ -348,10 +336,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 1,
-				id:    "job-id",
-			},
+			wantCount: 1,
+			wantId:    "job-id",
 		},
 		{
 			name: "Named job with unsafe and safe steps",
@@ -372,10 +358,8 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
-			expected: Expectation{
-				count: 1,
-				id:    "Unsafe",
-			},
+			wantCount: 1,
+			wantId:    "Unsafe",
 		},
 	}
 
@@ -384,13 +368,13 @@ func TestAnalyzeJob(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			violations := analyzeJob(tt.id, &tt.job)
 
-			if got, want := len(violations), tt.expected.count; got != want {
-				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
+			if got, want := len(violations), tt.wantCount; got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 
 			for i, v := range violations {
-				if got, want := v.jobId, tt.expected.id; got != want {
-					t.Errorf("Unexpected job ID for violation %d (got '%s', want '%s')", i, got, want)
+				if got, want := v.jobId, tt.wantId; got != want {
+					t.Errorf("Unexpected job ID for violation %d (got %q, want %q)", i, got, want)
 				}
 			}
 		})
@@ -399,10 +383,10 @@ func TestAnalyzeJob(t *testing.T) {
 
 func TestAnalyzeStep(t *testing.T) {
 	type TestCase struct {
-		name     string
-		id       int
-		step     JobStep
-		expected []violation
+		name string
+		id   int
+		step JobStep
+		want []violation
 	}
 
 	runTestCases := []TestCase{
@@ -412,7 +396,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Named step with no run value",
@@ -420,7 +404,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Doesn't run",
 				Run:  "",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Unnamed step with safe run value",
@@ -428,7 +412,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Named step with safe run value",
@@ -436,7 +420,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Unnamed run with one expression",
@@ -445,7 +429,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
@@ -459,7 +443,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
@@ -474,7 +458,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
@@ -494,7 +478,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
@@ -516,7 +500,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Named step using another action",
@@ -524,7 +508,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Doesn't run",
 				Uses: "ericcornelissen/non-existent-action",
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Unnamed step with safe script",
@@ -535,7 +519,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Named step with safe script",
@@ -546,7 +530,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello world!')",
 				},
 			},
-			expected: []violation{},
+			want: []violation{},
 		},
 		{
 			name: "Unnamed step with unsafe script, one expression",
@@ -558,7 +542,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "#42",
 					problem: "${{ inputs.name }}",
@@ -575,7 +559,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "Greet person",
 					problem: "${{ inputs.name }}",
@@ -593,7 +577,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "#3",
 					problem: "${{ inputs.name }}",
@@ -616,7 +600,7 @@ func TestAnalyzeStep(t *testing.T) {
 					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
-			expected: []violation{
+			want: []violation{
 				{
 					stepId:  "Greet person today",
 					problem: "${{ inputs.name }}",
@@ -639,12 +623,12 @@ func TestAnalyzeStep(t *testing.T) {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
 			violations := analyzeStep(tt.id, &tt.step)
-			if got, want := len(violations), len(tt.expected); got != want {
-				t.Fatalf("Unexpected number of violations (got '%d', want '%d')", got, want)
+			if got, want := len(violations), len(tt.want); got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 
 			for i, v := range violations {
-				if got, want := v, tt.expected[i]; got != want {
+				if got, want := v, tt.want[i]; got != want {
 					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
 				}
 			}
@@ -669,7 +653,7 @@ func TestIsRunStep(t *testing.T) {
 		for _, tt := range testCases {
 			tt := tt
 			if !isRunStep(&tt) {
-				t.Errorf("Run step not identified: '%s'", tt)
+				t.Errorf("Run step not identified: %q", tt)
 			}
 		}
 
