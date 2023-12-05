@@ -93,11 +93,13 @@ func run() int {
 
 			for file, fileViolations := range targetViolations {
 				if len(fileViolations) > 0 {
-					if _, ok := violations[target]; !ok {
-						violations[target] = make(map[string][]violation)
+					targetViolations, ok := violations[target]
+					if !ok {
+						targetViolations = make(map[string][]violation)
+						violations[target] = targetViolations
 					}
 
-					violations[target][file] = fileViolations
+					targetViolations[file] = fileViolations
 				}
 			}
 		} else {
@@ -310,8 +312,8 @@ func printViolation(v *violation) {
 }
 
 func getVariableNameForExpression(expression string) (name string) {
-	parts := strings.Split(expression, ".")
-	name = strings.TrimRight(parts[len(parts)-1], "}")
+	name = expression[strings.LastIndex(expression, ".")+1:]
+	name = strings.TrimRight(name, "}")
 	name = strings.TrimSpace(name)
 	return strings.ToUpper(name)
 }

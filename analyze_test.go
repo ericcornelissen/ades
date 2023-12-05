@@ -35,6 +35,12 @@ func TestAnalyzeManifest(t *testing.T) {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "node16",
+					Steps: []JobStep{
+						{
+							Name: "Example unsafe",
+							Run:  "echo ${{ inputs.value }}",
+						},
+					},
 				},
 			},
 			want: 0,
@@ -123,6 +129,13 @@ func TestAnalyzeManifest(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("nil pointer", func(t *testing.T) {
+		violations := analyzeManifest(nil)
+		if got, want := len(violations), 0; got != want {
+			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
+		}
+	})
 }
 
 func TestAnalyzeWorkflow(t *testing.T) {
@@ -244,6 +257,13 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			}
 		})
 	}
+
+	t.Run("nil pointer", func(t *testing.T) {
+		violations := analyzeWorkflow(nil)
+		if got, want := len(violations), 0; got != want {
+			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
+		}
+	})
 }
 
 func TestAnalyzeJob(t *testing.T) {
