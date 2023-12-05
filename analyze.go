@@ -38,7 +38,7 @@ type violation struct {
 var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
 
 func analyzeManifest(manifest *Manifest) []violation {
-	if manifest.Runs.Using == "composite" {
+	if manifest != nil && manifest.Runs.Using == "composite" {
 		return analyzeSteps(manifest.Runs.Steps)
 	} else {
 		return make([]violation, 0)
@@ -47,6 +47,10 @@ func analyzeManifest(manifest *Manifest) []violation {
 
 func analyzeWorkflow(workflow *Workflow) []violation {
 	violations := make([]violation, 0)
+	if workflow == nil {
+		return violations
+	}
+
 	for id, job := range workflow.Jobs {
 		job := job
 		violations = append(violations, analyzeJob(id, &job)...)
