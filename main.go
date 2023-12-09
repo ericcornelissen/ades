@@ -20,6 +20,7 @@ import (
 	"errors"
 	"flag"
 	"fmt"
+	"io"
 	"os"
 	"path"
 	"path/filepath"
@@ -44,6 +45,11 @@ var (
 		false,
 		"Show legal information and exit",
 	)
+	flagStdin = flag.Bool(
+		"stdin",
+		false,
+		"Read workflow or manifest from stdin",
+	)
 	flagVersion = flag.Bool(
 		"version",
 		false,
@@ -66,6 +72,41 @@ func run() int {
 
 	if *flagVersion {
 		version()
+		return exitSuccess
+	}
+
+	if *flagStdin {
+		data, err := io.ReadAll(os.Stdin)
+		if err != nil {
+			return exitError
+		}
+
+		workflow, err := ParseWorkflow(data)
+		if err != nil {
+			return exitError
+		}
+
+		violations := analyzeWorkflow(&workflow)
+		if len(violations) > 0 {
+			tmp := make(map[string][]violation)
+			tmp["stdin"] = violations
+			printViolations(tmp)
+			return exitViolations
+		}
+
+		manifest, err := ParseManifest(data)
+		if err != nil {
+			return exitError
+		}
+
+		violations = analyzeManifest(&manifest)
+		if len(violations) > 0 {
+			tmp := make(map[string][]violation)
+			tmp["stdin"] = violations
+			printViolations(tmp)
+			return exitViolations
+		}
+
 		return exitSuccess
 	}
 
@@ -350,6 +391,7 @@ Flags:
   --help      Show this help message and exit.
   --json      Output results in JSON format.
   --legal     Show legal information and exit.
+  --stdin     Read workflow or manifest from stdin.
   --version   Show the program version and exit.
 
 Exit Codes:
