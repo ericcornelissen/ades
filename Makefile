@@ -9,7 +9,7 @@ default:
 .PHONY: audit
 audit: ## Audit for vulnerabilities
 	@echo 'Checking vulnerabilities...'
-	@govulncheck .
+	@go run golang.org/x/vuln/cmd/govulncheck .
 
 .PHONY: build
 build: ## Build a binary for the current platform
@@ -35,12 +35,12 @@ fmt: ## Format the source code
 	@echo 'Formatting...'
 	@go fmt .
 	@go mod tidy
-	@go run golang.org/x/tools/cmd/goimports@v0.14.0 -w .
+	@go run golang.org/x/tools/cmd/goimports -w .
 
 fmt-check: ## Check the source code formatting
 	@echo 'Checking formatting...'
 	@test -z "$$(gofmt -l .)"
-	@test -z "$$(go run golang.org/x/tools/cmd/goimports@v0.14.0 -l .)"
+	@test -z "$$(go run golang.org/x/tools/cmd/goimports -l .)"
 
 .PHONY: run
 run: ## Run the project on itself
@@ -51,7 +51,7 @@ test: ## Run all tests
 	@echo 'Testing...'
 	@go test .
 	@echo 'Validating JSON schema...'
-	@go run github.com/santhosh-tekuri/jsonschema/cmd/jv@f2cc8ae -assertformat schema.json
+	@go run github.com/santhosh-tekuri/jsonschema/cmd/jv -assertformat schema.json
 
 .PHONY: test-mutation
 test-mutation: ## Run mutation tests
@@ -62,26 +62,26 @@ test-mutation: ## Run mutation tests
 vet: ## Vet the source code
 	@echo 'Vetting...'
 	@go vet .
-	@go run 4d63.com/gochecknoinits@25bb07f .
-	@go run github.com/alexkohler/dogsled/cmd/dogsled@34d2ab9 .
-	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret@v2.0.1 .
-	@go run github.com/alexkohler/prealloc@v1.0.0 .
-	@go run github.com/alexkohler/unimport@e6f2b2e .
-	@go run github.com/go-critic/go-critic/cmd/gocritic@v0.9.0 check .
-	@go run github.com/gordonklaus/ineffassign@0e73809 .
-	@go run github.com/jgautheron/goconst/cmd/goconst@v1.6.0 .
-	@go run github.com/kisielk/errcheck@v1.6.3 .
-	@go run github.com/kyoh86/looppointer/cmd/looppointer@v0.2.1 .
-	@go run github.com/mdempsky/unconvert@4157069 .
-	@go run github.com/nishanths/exhaustive/cmd/exhaustive@v0.11.0 .
-	@go run github.com/polyfloyd/go-errorlint@v1.4.5 .
-	@go run github.com/remyoudompheng/go-misc/deadcode@2d6ac65 .
-	@go run github.com/tetafro/godot/cmd/godot@v1.4.15 .
-	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck@v2.8.1 .
-	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow@2f9d82f .
-	@go run go.uber.org/nilaway/cmd/nilaway@a267567 .
-	@go run honnef.co/go/tools/cmd/staticcheck@v0.4.6 .
-	@go run mvdan.cc/unparam@3ee2d22 .
+	@go run 4d63.com/gochecknoinits .
+	@go run github.com/alexkohler/dogsled/cmd/dogsled .
+	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret .
+	@go run github.com/alexkohler/prealloc .
+	@go run github.com/alexkohler/unimport .
+	@go run github.com/go-critic/go-critic/cmd/gocritic check .
+	@go run github.com/gordonklaus/ineffassign .
+	@go run github.com/jgautheron/goconst/cmd/goconst .
+	@go run github.com/kisielk/errcheck .
+	@go run github.com/kyoh86/looppointer/cmd/looppointer .
+	@go run github.com/mdempsky/unconvert .
+	@go run github.com/nishanths/exhaustive/cmd/exhaustive .
+	@go run github.com/polyfloyd/go-errorlint .
+	@go run github.com/remyoudompheng/go-misc/deadcode .
+	@go run github.com/tetafro/godot/cmd/godot .
+	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck .
+	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow .
+	@go run go.uber.org/nilaway/cmd/nilaway .
+	@go run honnef.co/go/tools/cmd/staticcheck .
+	@go run mvdan.cc/unparam .
 
 .PHONY: verify
 verify: build fmt-check test run vet ## Verify project is in a good state
