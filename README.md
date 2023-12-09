@@ -14,6 +14,12 @@ ades .
 
 and it will report all detected dangerous uses of workflow expressions.
 
+You can also use the containerized version of the CLI, for example using Docker:
+
+```shell
+docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
+```
+
 ### Features
 
 - Scan workflow files and action manifests.

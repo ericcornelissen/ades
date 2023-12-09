@@ -1,3 +1,5 @@
+CONTAINER_ENGINE?=docker
+
 .PHONY: default
 default:
 	@printf "Usage: make <command>\n\n"
@@ -22,6 +24,13 @@ clean: ## Reset the project to a clean state
 	@git clean -fx \
 		ades \
 		cover.*
+
+.PHONY: container
+container:
+	@$(CONTAINER_ENGINE) build \
+		--file Containerfile \
+		--tag ericornelissen/ades \
+		.
 
 .PHONY: coverage
 coverage: ## Run all tests and generate a coverage report
