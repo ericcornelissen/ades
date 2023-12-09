@@ -1,0 +1,94 @@
+# Safe manifest
+stdin safe/action.yml
+exec ades -stdin
+! stdout .
+! stderr .
+
+# Safe workflow
+stdin .github/workflows/safe.yml
+exec ades -stdin
+! stdout .
+! stderr .
+
+# Unsafe manifest
+stdin unsafe/action.yml
+! exec ades -stdin
+cmp stdout stdout-manifest.txt
+! stderr .
+
+# Unsafe workflow
+stdin .github/workflows/unsafe.yml
+! exec ades -stdin
+cmp stdout stdout-workflow.txt
+! stderr .
+
+
+-- safe/action.yml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+  - name: Safe run
+    run: echo 'Hello world!'
+-- unsafe/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+  - name: Safe run
+    run: echo 'Hello world!'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- stdout-manifest.txt --
+Detected 1 violation(s) in "stdin":
+  step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+-- .github/workflows/safe.yml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Safe run
+      run: echo 'Hello world!'
+-- .github/workflows/unsafe.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- stdout-workflow.txt --
+Detected 1 violation(s) in "stdin":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
