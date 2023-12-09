@@ -28,6 +28,7 @@
 !DCO.txt
 
 # Source
+!Containerfile
 !Makefile
 !go.mod
 !go.sum
