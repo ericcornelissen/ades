@@ -81,29 +81,26 @@ func run() int {
 			return exitError
 		}
 
-		workflow, err := ParseWorkflow(data)
-		if err != nil {
+		violations := make(map[string][]violation)
+		if workflowViolations, err := tryWorkflow(data); err != nil {
 			return exitError
-		}
-
-		violations := analyzeWorkflow(&workflow)
-		if len(violations) > 0 {
-			tmp := make(map[string][]violation)
-			tmp["stdin"] = violations
-			printViolations(tmp)
-			return exitViolations
-		}
-
-		manifest, err := ParseManifest(data)
-		if err != nil {
+		} else if len(workflowViolations) > 0 {
+			violations["stdin"] = workflowViolations
+		} else if manifestViolations, err := tryManifest(data); err != nil {
 			return exitError
+		} else if len(manifestViolations) > 0 {
+			violations["stdin"] = manifestViolations
 		}
 
-		violations = analyzeManifest(&manifest)
 		if len(violations) > 0 {
-			tmp := make(map[string][]violation)
-			tmp["stdin"] = violations
-			printViolations(tmp)
+			if *flagJson {
+				report := make(map[string]map[string][]violation)
+				report["stdin"] = violations
+				printJson(report)
+			} else {
+				printViolations(violations)
+			}
+
 			return exitViolations
 		}
 
@@ -195,13 +192,13 @@ var (
 func analyzeRepository(target string) (map[string][]violation, error) {
 	violations := make(map[string][]violation)
 
-	if fileViolations, err := tryManifest(path.Join(target, "action.yml")); err == nil {
+	if fileViolations, err := analyzeFile(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
 	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 	}
 
-	if fileViolations, err := tryManifest(path.Join(target, "action.yaml")); err == nil {
+	if fileViolations, err := analyzeFile(path.Join(target, "action.yaml")); err == nil {
 		violations["action.yaml"] = fileViolations
 	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
@@ -223,7 +220,7 @@ func analyzeRepository(target string) (map[string][]violation, error) {
 		}
 
 		workflowPath := path.Join(workflowsPath, entry.Name())
-		if workflowViolations, err := tryWorkflow(workflowPath); err == nil {
+		if workflowViolations, err := analyzeFile(workflowPath); err == nil {
 			targetRelativePath := path.Join(githubDir, workflowsDir, entry.Name())
 			violations[targetRelativePath] = workflowViolations
 		} else {
@@ -245,22 +242,22 @@ func analyzeFile(target string) ([]violation, error) {
 		return nil, errors.Join(errNotFound, err)
 	}
 
-	switch {
-	case strings.HasSuffix(absolutePath, path.Join(githubDir, workflowsDir, path.Base(target))):
-		return tryWorkflow(target)
-	case manifestExpr.MatchString(target):
-		return tryManifest(target)
-	default:
-		return tryWorkflow(target)
-	}
-}
-
-func tryManifest(manifestPath string) ([]violation, error) {
-	data, err := os.ReadFile(manifestPath)
+	data, err := os.ReadFile(absolutePath)
 	if err != nil {
 		return nil, errors.Join(errNotFound, err)
 	}
 
+	switch {
+	case strings.HasSuffix(absolutePath, path.Join(githubDir, workflowsDir, path.Base(target))):
+		return tryWorkflow(data)
+	case manifestExpr.MatchString(target):
+		return tryManifest(data)
+	default:
+		return tryWorkflow(data)
+	}
+}
+
+func tryManifest(data []byte) ([]violation, error) {
 	manifest, err := ParseManifest(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
@@ -269,12 +266,7 @@ func tryManifest(manifestPath string) ([]violation, error) {
 	return analyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(workflowPath string) ([]violation, error) {
-	data, err := os.ReadFile(workflowPath)
-	if err != nil {
-		return nil, errors.Join(errNotFound, err)
-	}
-
+func tryWorkflow(data []byte) ([]violation, error) {
 	workflow, err := ParseWorkflow(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
