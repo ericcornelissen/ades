@@ -60,8 +60,6 @@ run: ## Run the project on itself
 test: ## Run all tests
 	@echo 'Testing...'
 	@go test .
-	@echo 'Validating JSON schema...'
-	@go run github.com/santhosh-tekuri/jsonschema/cmd/jv -assertformat schema.json
 
 .PHONY: test-mutation
 test-mutation: ## Run mutation tests

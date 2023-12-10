@@ -16,10 +16,13 @@
 package main
 
 import (
+	"encoding/json"
 	"os"
 	"testing"
+	"testing/quick"
 
 	"github.com/rogpeppe/go-internal/testscript"
+	"github.com/santhosh-tekuri/jsonschema/v5"
 )
 
 func TestMain(m *testing.M) {
@@ -34,4 +37,30 @@ func TestCli(t *testing.T) {
 	testscript.Run(t, testscript.Params{
 		Dir: "test",
 	})
+}
+
+func TestJsonSchema(t *testing.T) {
+	schema, err := jsonschema.Compile("schema.json")
+	if err != nil {
+		t.Fatalf("schema.json is not a valid JSON Schema: %v", err)
+	}
+
+	f := func(output jsonOutput) bool {
+		bytes, err := json.Marshal(output)
+		if err != nil {
+			return false
+		}
+
+		var data interface{}
+		if err = json.Unmarshal(bytes, &data); err != nil {
+			return false
+		}
+
+		err = schema.Validate(data)
+		return err == nil
+	}
+
+	if err := quick.Check(f, nil); err != nil {
+		t.Error(err)
+	}
 }
