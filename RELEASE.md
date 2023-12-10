@@ -64,5 +64,20 @@ an example):
    "Release {_version_}" (e.g. "Release v23.12"). The release text should be "{_version_}" (e.g.
    "v23.12"). The release artifact should follow the previous release as closely as possible.
 
+1. Publish to [Docker Hub], first with a version tag:
+
+   ```shell
+   make container CONTAINER_TAG=v23.12
+   docker push ericornelissen/ades:v23.12
+   ```
+
+   then the `latest` tag:
+
+   ```shell
+   make container CONTAINER_TAG=latest
+   docker push ericornelissen/ades:latest
+   ```
+
+[docker hub]: https://hub.docker.com/
 [git tag]: https://git-scm.com/book/en/v2/Git-Basics-Tagging
 [github release]: https://docs.github.com/en/repositories/releasing-projects-on-github/managing-releases-in-a-repository
