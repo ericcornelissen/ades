@@ -1,0 +1,90 @@
+name: Publish
+on:
+  push:
+    tags:
+    - v[0-9]+.[0-9]+
+
+permissions: read-all
+
+jobs:
+  github-release:
+    name: GitHub Release
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write # To create a GitHub Release
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+    - name: Install Go
+      uses: actions/setup-go@0c52d547c9bc32b1aa3301fd7a9cb496313a4491 # v5.0.0
+      with:
+        go-version-file: go.mod
+    - name: Get release version
+      id: version
+      shell: bash
+      run: |
+        echo "version=${GITHUB_REF#refs/tags/}" >>"$GITHUB_OUTPUT"
+    - name: Compile
+      run: |
+        mkdir _compiled
+
+        # darwin/amd64
+        env GOOS=darwin GOARCH=amd64 go build -o ades
+        tar -czf "ades_darwin_amd64.tar.gz" "ades"
+        mv ades_darwin_amd64.tar.gz _compiled/
+
+        # darwin/arm64
+        env GOOS=darwin GOARCH=arm64 go build -o ades
+        tar -czf "ades_darwin_arm64.tar.gz" "ades"
+        mv ades_darwin_arm64.tar.gz _compiled/
+
+        # linux/386
+        env GOOS=linux GOARCH=386 go build -o ades
+        tar -czf "ades_linux_386.tar.gz" "ades"
+        mv ades_linux_386.tar.gz _compiled/
+
+        # linux/amd64
+        env GOOS=linux GOARCH=amd64 go build -o ades
+        tar -czf "ades_linux_amd64.tar.gz" "ades"
+        mv ades_linux_amd64.tar.gz _compiled/
+
+        # linux/arm
+        env GOOS=linux GOARCH=arm go build -o ades
+        tar -czf "ades_linux_arm.tar.gz" "ades"
+        mv ades_linux_arm.tar.gz _compiled/
+
+        # linux/arm64
+        env GOOS=linux GOARCH=arm64 go build -o ades
+        tar -czf "ades_linux_arm64.tar.gz" "ades"
+        mv ades_linux_arm64.tar.gz _compiled/
+
+        # windows/386
+        env GOOS=windows GOARCH=386 go build -o ades
+        mv ades ades.exe
+        zip -9q "ades_windows_386.zip" "ades.exe"
+        mv ades_windows_386.zip _compiled/
+
+        # windows/amd64
+        env GOOS=windows GOARCH=amd64 go build -o ades
+        mv ades ades.exe
+        zip -9q "ades_windows_amd64.zip" "ades.exe"
+        mv ades_windows_amd64.zip _compiled/
+
+        # windows/arm
+        env GOOS=windows GOARCH=arm go build -o ades
+        mv ades ades.exe
+        zip -9q "ades_windows_arm.zip" "ades.exe"
+        mv ades_windows_arm.zip _compiled/
+
+        # windows/arm64
+        env GOOS=windows GOARCH=arm64 go build -o ades
+        mv ades ades.exe
+        zip -9q "ades_windows_arm64.zip" "ades.exe"
+        mv ades_windows_arm64.zip _compiled/
+    - name: Create GitHub release
+      uses: ncipollo/release-action@6c75be85e571768fa31b40abf38de58ba0397db5 # v1.13.0
+      with:
+        tag: ${{ steps.version.outputs.version }}
+        name: Release ${{ steps.version.outputs.version }}
+        body: ${{ steps.version.outputs.version }}
+        artifacts: ./_compiled/*
