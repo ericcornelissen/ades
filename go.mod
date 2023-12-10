@@ -19,7 +19,7 @@ require (
 	github.com/polyfloyd/go-errorlint v1.4.5
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/rogpeppe/go-internal v1.11.0
-	github.com/santhosh-tekuri/jsonschema/cmd/jv v0.6.0
+	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.15
 	github.com/tomarrell/wrapcheck/v2 v2.8.1
 	go.uber.org/nilaway v0.0.0-20231117175943-a267567c6fff
@@ -57,7 +57,6 @@ require (
 	github.com/quasilyte/gogrep v0.5.0 // indirect
 	github.com/quasilyte/regex/syntax v0.0.0-20210819130434-b3f0c404a727 // indirect
 	github.com/quasilyte/stdinfo v0.0.0-20220114132959-f7386bf02567 // indirect
-	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1 // indirect
 	github.com/spf13/afero v1.11.0 // indirect
 	github.com/spf13/cast v1.6.0 // indirect
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect

@@ -39,7 +39,6 @@ import (
 	_ "github.com/nishanths/exhaustive/cmd/exhaustive"
 	_ "github.com/polyfloyd/go-errorlint"
 	_ "github.com/remyoudompheng/go-misc/deadcode"
-	_ "github.com/santhosh-tekuri/jsonschema/cmd/jv"
 	_ "github.com/tetafro/godot/cmd/godot"
 	_ "github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck"
 	_ "go.uber.org/nilaway/cmd/nilaway"
