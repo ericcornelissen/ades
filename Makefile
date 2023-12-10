@@ -1,4 +1,5 @@
 CONTAINER_ENGINE?=docker
+CONTAINER_TAG?=latest
 
 .PHONY: default
 default:
@@ -29,7 +30,7 @@ clean: ## Reset the project to a clean state
 container:
 	@$(CONTAINER_ENGINE) build \
 		--file Containerfile \
-		--tag ericornelissen/ades \
+		--tag ericornelissen/ades:$(CONTAINER_TAG) \
 		.
 
 .PHONY: coverage
