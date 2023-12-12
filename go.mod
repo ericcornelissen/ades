@@ -20,7 +20,7 @@ require (
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/rogpeppe/go-internal v1.11.0
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
-	github.com/tetafro/godot v1.4.15
+	github.com/tetafro/godot v1.4.16
 	github.com/tomarrell/wrapcheck/v2 v2.8.1
 	go.uber.org/nilaway v0.0.0-20231117175943-a267567c6fff
 	golang.org/x/tools v0.16.0
