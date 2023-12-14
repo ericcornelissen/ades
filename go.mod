@@ -9,7 +9,7 @@ require (
 	github.com/alexkohler/prealloc v1.0.0
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/go-critic/go-critic v0.10.0
-	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
+	github.com/gordonklaus/ineffassign v0.1.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/jgautheron/goconst v1.6.0
 	github.com/kisielk/errcheck v1.6.3
