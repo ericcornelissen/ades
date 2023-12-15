@@ -23,6 +23,18 @@ import (
 
 type violationKind uint8
 
+func (kind violationKind) String() string {
+	var s string
+	switch kind {
+	case expressionInRunScript:
+		s = "ADES100"
+	case expressionInActionsGithubScript:
+		s = "ADES101"
+	}
+
+	return s
+}
+
 const (
 	expressionInRunScript violationKind = iota
 	expressionInActionsGithubScript

@@ -58,7 +58,7 @@ func printJson(rawViolations map[string]map[string][]violation) string {
 	return string(jsonBytes)
 }
 
-func printViolations(violations map[string][]violation) string {
+func printViolations(violations map[string][]violation, suggestions bool) string {
 	var sb strings.Builder
 	for file, fileViolations := range violations {
 		if cnt := len(fileViolations); cnt > 0 {
@@ -66,7 +66,7 @@ func printViolations(violations map[string][]violation) string {
 			sb.WriteRune('\n')
 			for _, violation := range fileViolations {
 				violation := violation
-				sb.WriteString(printViolation(&violation))
+				sb.WriteString(printViolation(&violation, suggestions))
 				sb.WriteRune('\n')
 			}
 		}
@@ -75,7 +75,7 @@ func printViolations(violations map[string][]violation) string {
 	return sb.String()
 }
 
-func printViolation(v *violation) string {
+func printViolation(v *violation, suggestions bool) string {
 	var sb strings.Builder
 	if v.jobId == "" {
 		sb.WriteString(fmt.Sprintf("  step %q has %q", v.stepId, v.problem))
@@ -84,18 +84,21 @@ func printViolation(v *violation) string {
 	}
 
 	envVarName := getVariableNameForExpression(v.problem)
-
-	sb.WriteString(", suggestion:")
-	sb.WriteRune('\n')
-	sb.WriteString(fmt.Sprintf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, v.problem))
-	switch v.kind {
-	case expressionInRunScript:
-		sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `$%s`", v.problem, envVarName))
-	case expressionInActionsGithubScript:
-		sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `process.env.%s`", v.problem, envVarName))
+	if suggestions {
+		sb.WriteString(", suggestion:")
+		sb.WriteRune('\n')
+		sb.WriteString(fmt.Sprintf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, v.problem))
+		switch v.kind {
+		case expressionInRunScript:
+			sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `$%s`", v.problem, envVarName))
+		case expressionInActionsGithubScript:
+			sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `process.env.%s`", v.problem, envVarName))
+		}
+		sb.WriteRune('\n')
+		sb.WriteString("       (make sure to keep the behavior of the script the same)")
+	} else {
+		sb.WriteString(fmt.Sprintf(" (%s)", v.kind))
 	}
-	sb.WriteRune('\n')
-	sb.WriteString("       (make sure to keep the behavior of the script the same)")
 
 	return sb.String()
 }

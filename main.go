@@ -49,6 +49,11 @@ var (
 		false,
 		"Read workflow or manifest from stdin",
 	)
+	flagSuggestions = flag.Bool(
+		"suggestions",
+		false,
+		"Show suggested fixes inline",
+	)
 	flagVersion = flag.Bool(
 		"version",
 		false,
@@ -97,7 +102,7 @@ func run() int {
 				report["stdin"] = violations
 				fmt.Println(printJson(report))
 			} else {
-				fmt.Print(printViolations(violations))
+				fmt.Print(printViolations(violations, *flagSuggestions))
 			}
 
 			return exitViolations
@@ -121,7 +126,7 @@ func run() int {
 		targetViolations, err := analyzeTarget(target)
 		if err == nil {
 			if !(*flagJson) {
-				fmt.Print(printViolations(targetViolations))
+				fmt.Print(printViolations(targetViolations, *flagSuggestions))
 
 				if i < len(targets)-1 {
 					fmt.Println( /* empty line between targets */ )
@@ -303,11 +308,12 @@ Usage:
 
 Flags:
 
-  --help      Show this help message and exit.
-  --json      Output results in JSON format.
-  --legal     Show legal information and exit.
-  --stdin     Read workflow or manifest from stdin.
-  --version   Show the program version and exit.
+  --help          Show this help message and exit.
+  --json          Output results in JSON format.
+  --legal         Show legal information and exit.
+  --stdin         Read workflow or manifest from stdin.
+  --suggestions   Show suggested fixes inline.
+  --version       Show the program version and exit.
 
 Exit Codes:
 
