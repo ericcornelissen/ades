@@ -28,9 +28,9 @@ docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
 - Provides suggested fixes.
 - Machine & human readable output formats.
 
-### Resolutions
+### Rules
 
-#### Expression in `run:` directive
+#### ADES100 - Expression in `run:` directive
 
 When a workflow expression appears in a `run:` directive you can avoid any potential attacks by
 extracting the expression into an environment variable and using the environment variable instead.
@@ -57,7 +57,7 @@ it can be made safer by converting it into:
 #        | Note: the use of double quotes is required in this example (for interpolation)
 ```
 
-#### Expression in `actions/github-script` script
+#### ADES101 - Expression in `actions/github-script` script
 
 When a workflow expression appears in a `actions/github-script` script you can avoid any potential
 attacks by extracting the expression into an environment variable and using the environment variable

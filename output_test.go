@@ -82,9 +82,10 @@ func TestPrintJson(t *testing.T) {
 
 func TestPrintViolations(t *testing.T) {
 	type TestCase struct {
-		name       string
-		violations func() map[string][]violation
-		want       string
+		name            string
+		violations      func() map[string][]violation
+		want            string
+		wantSuggestions string
 	}
 
 	testCases := []TestCase{
@@ -93,7 +94,8 @@ func TestPrintViolations(t *testing.T) {
 			violations: func() map[string][]violation {
 				return make(map[string][]violation)
 			},
-			want: ``,
+			want:            ``,
+			wantSuggestions: ``,
 		},
 		{
 			name: "File without violations",
@@ -102,7 +104,8 @@ func TestPrintViolations(t *testing.T) {
 				m["workflow.yml"] = make([]violation, 0)
 				return m
 			},
-			want: ``,
+			want:            ``,
+			wantSuggestions: ``,
 		},
 		{
 			name: "Workflow with violation in run script",
@@ -118,6 +121,9 @@ func TestPrintViolations(t *testing.T) {
 				return m
 			},
 			want: `Detected 1 violation(s) in "workflow.yml":
+  job "4", step "2" has "${{ foo.bar }}" (ADES100)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
   job "4", step "2" has "${{ foo.bar }}", suggestion:
     1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
@@ -138,6 +144,9 @@ func TestPrintViolations(t *testing.T) {
 				return m
 			},
 			want: `Detected 1 violation(s) in "workflow.yml":
+  job "4", step "2" has "${{ foo.bar }}" (ADES101)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
   job "4", step "2" has "${{ foo.bar }}", suggestion:
     1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
@@ -158,6 +167,9 @@ func TestPrintViolations(t *testing.T) {
 				return m
 			},
 			want: `Detected 1 violation(s) in "action.yml":
+  step "2" has "${{ foo.bar }}" (ADES100)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "action.yml":
   step "2" has "${{ foo.bar }}", suggestion:
     1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
@@ -177,6 +189,9 @@ func TestPrintViolations(t *testing.T) {
 				return m
 			},
 			want: `Detected 1 violation(s) in "action.yml":
+  step "2" has "${{ foo.bar }}" (ADES101)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "action.yml":
   step "2" has "${{ foo.bar }}", suggestion:
     1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
@@ -188,8 +203,12 @@ func TestPrintViolations(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			if got, want := printViolations(tt.violations()), tt.want; got != want {
-				t.Fatalf("Unexpected JSON output (got %q, want %q)", got, want)
+			if got, want := printViolations(tt.violations(), false), tt.want; got != want {
+				t.Errorf("Unexpected output (got %q, want %q)", got, want)
+			}
+
+			if got, want := printViolations(tt.violations(), true), tt.wantSuggestions; got != want {
+				t.Errorf("Unexpected output with suggestions (got %q, want %q)", got, want)
 			}
 		})
 	}
