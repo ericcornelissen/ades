@@ -23,13 +23,18 @@ import (
 
 type violationKind uint8
 
+var (
+	expressionInRunScriptId           = "ADES100"
+	expressionInActionsGithubScriptId = "ADES101"
+)
+
 func (kind violationKind) String() string {
 	var s string
 	switch kind {
 	case expressionInRunScript:
-		s = "ADES100"
+		s = expressionInRunScriptId
 	case expressionInActionsGithubScript:
-		s = "ADES101"
+		s = expressionInActionsGithubScriptId
 	}
 
 	return s

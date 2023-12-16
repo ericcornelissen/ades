@@ -73,6 +73,8 @@ func TestPrintJson(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			if got, want := printJson(tt.violations()), tt.want; got != want {
 				t.Fatalf("Unexpected JSON output (got %q, want %q)", got, want)
 			}
@@ -203,6 +205,8 @@ func TestPrintViolations(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			if got, want := printViolations(tt.violations(), false), tt.want; got != want {
 				t.Errorf("Unexpected output (got %q, want %q)", got, want)
 			}
