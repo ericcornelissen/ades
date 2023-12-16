@@ -28,6 +28,9 @@
 !COPYING.txt
 !DCO.txt
 
+# Security
+!capabilities.json
+
 # Source
 !Containerfile
 !Containerfile.dev
