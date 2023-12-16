@@ -34,6 +34,11 @@ const (
 )
 
 var (
+	flagExplain = flag.String(
+		"explain",
+		"",
+		"Explain the given violation",
+	)
 	flagJson = flag.Bool(
 		"json",
 		false,
@@ -77,6 +82,17 @@ func run() int {
 	if *flagVersion {
 		version()
 		return exitSuccess
+	}
+
+	if *flagExplain != "" {
+		explanation, err := explain(*flagExplain)
+		if err != nil {
+			fmt.Printf("Unknown rule %q\n", *flagExplain)
+			return exitError
+		} else {
+			fmt.Print(explanation)
+			return exitSuccess
+		}
 	}
 
 	if *flagStdin {
@@ -308,12 +324,13 @@ Usage:
 
 Flags:
 
-  --help          Show this help message and exit.
-  --json          Output results in JSON format.
-  --legal         Show legal information and exit.
-  --stdin         Read workflow or manifest from stdin.
-  --suggestions   Show suggested fixes inline.
-  --version       Show the program version and exit.
+  --explain ADESxxx   Explain the given violation.
+  --help              Show this help message and exit.
+  --json              Output results in JSON format.
+  --legal             Show legal information and exit.
+  --stdin             Read workflow or manifest from stdin.
+  --suggestions       Show suggested fixes inline.
+  --version           Show the program version and exit.
 
 Exit Codes:
 
