@@ -1,0 +1,153 @@
+# Empty project
+mkdir empty
+
+exec ades 'empty'
+! stdout .
+! stderr .
+
+# Safe project
+exec ades 'safe'
+! stdout .
+! stderr .
+
+# Unsafe manifest (.yml)
+! exec ades 'manifests/action.yml'
+stdout 'manifests/action.yml'
+! stderr .
+
+# Unsafe manifest (.yaml)
+! exec ades 'manifests/action.yaml'
+stdout 'manifests/action.yaml'
+! stderr .
+
+# Unsafe workflow (.yml)
+! exec ades 'workflows/.github/workflows/unsafe.yml'
+stdout 'workflows/.github/workflows/unsafe.yml'
+! stderr .
+
+# Unsafe workflow (.yaml)
+! exec ades 'workflows/.github/workflows/unsafe.yaml'
+stdout 'workflows/.github/workflows/unsafe.yaml'
+! stderr .
+
+# Unsafe project
+! exec ades 'workflows'
+stdout '.github/workflows/unsafe.yml'
+stdout '.github/workflows/unsafe.yaml'
+! stderr .
+
+# Multiple targets
+! exec ades 'safe' 'workflows' 'manifests/action.yml'
+stdout '[safe]'
+stdout '[workflows]'
+stdout '[manifest/action.yml]'
+! stderr .
+
+
+-- manifests/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- manifests/action.yaml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- safe/.github/workflows/safe.yml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example safe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Safe run
+      run: echo 'Hello .yml!'
+-- safe/.github/workflows/safe.yaml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example safe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Safe run
+      run: echo 'Hello .yaml!'
+-- safe/action.yml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+-- workflows/.github/workflows/unsafe.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Safe run
+      run: echo 'Hello .yml'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- workflows/.github/workflows/unsafe.yaml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Safe run
+      run: echo 'Hello .yaml'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'

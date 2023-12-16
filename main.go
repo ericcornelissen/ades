@@ -156,12 +156,12 @@ func runOnStdin() (map[string]map[string][]violation, bool) {
 
 	violations := make(map[string][]violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
+		fmt.Println("Could not parse input, is it YAML?")
 		return nil, false
 	} else if len(workflowViolations) != 0 {
 		violations["stdin"] = workflowViolations
-	} else if manifestViolations, err := tryManifest(data); err != nil {
-		return nil, false
 	} else {
+		manifestViolations, _ := tryManifest(data)
 		violations["stdin"] = manifestViolations
 	}
 
