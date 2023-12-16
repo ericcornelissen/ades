@@ -1,14 +1,14 @@
-exec ades --help
+exec ades -help
 stdout 'find problematic use of template variables in GitHub Action workflows\n'
 ! stderr .
 
 
-exec ades --legal
+exec ades -legal
 cmp stdout legal-stdout.snapshot
 ! stderr .
 
 
-exec ades --version
+exec ades -version
 stdout 'v23.11'
 ! stderr .
 
