@@ -28,10 +28,24 @@ default:
 		printf "  \033[36m%-30s\033[0m %s\n", $$1, $$NF \
 	}' $(MAKEFILE_LIST)
 
-.PHONY: audit
-audit: ## Audit for vulnerabilities
+.PHONY: audit audit-capabilities audit-vulnerabilities update-capabilities
+audit: audit-capabilities audit-vulnerabilities ## Audit the codebase
+
+audit-capabilities: ## Audit for capabilities
+	@echo 'Checking capabilities...'
+	@go run github.com/google/capslock/cmd/capslock \
+		-noisy \
+		-output=compare capabilities.json
+
+audit-vulnerabilities: ## Audit for vulnerabilities
 	@echo 'Checking vulnerabilities...'
 	@go run golang.org/x/vuln/cmd/govulncheck .
+
+update-capabilities:
+	@echo 'Updating capabilities...'
+	@go run github.com/google/capslock/cmd/capslock \
+		-noisy \
+		-output json >capabilities.json
 
 .PHONY: build
 build: ## Build the ades binary for the current platform

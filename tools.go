@@ -31,6 +31,7 @@ import (
 	_ "github.com/catenacyber/perfsprint"
 	_ "github.com/dkorunic/betteralign/cmd/betteralign"
 	_ "github.com/go-critic/go-critic/cmd/gocritic"
+	_ "github.com/google/capslock/cmd/capslock"
 	_ "github.com/google/go-licenses"
 	_ "github.com/gordonklaus/ineffassign"
 	_ "github.com/jgautheron/goconst/cmd/goconst"
