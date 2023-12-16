@@ -122,8 +122,9 @@ func TestAnalyzeManifest(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			violations := analyzeManifest(&tt.manifest)
+			t.Parallel()
 
+			violations := analyzeManifest(&tt.manifest)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -250,8 +251,9 @@ func TestAnalyzeWorkflow(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			violations := analyzeWorkflow(&tt.workflow)
+			t.Parallel()
 
+			violations := analyzeWorkflow(&tt.workflow)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, tt.want)
 			}
@@ -386,8 +388,9 @@ func TestAnalyzeJob(t *testing.T) {
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
-			violations := analyzeJob(tt.id, &tt.job)
+			t.Parallel()
 
+			violations := analyzeJob(tt.id, &tt.job)
 			if got, want := len(violations), tt.wantCount; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -642,6 +645,8 @@ func TestAnalyzeStep(t *testing.T) {
 	for _, tt := range allTestCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			violations := analyzeStep(tt.id, &tt.step)
 			if got, want := len(violations), len(tt.want); got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)

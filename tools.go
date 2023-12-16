@@ -34,6 +34,7 @@ import (
 	_ "github.com/gordonklaus/ineffassign"
 	_ "github.com/jgautheron/goconst/cmd/goconst"
 	_ "github.com/kisielk/errcheck"
+	_ "github.com/kunwardeep/paralleltest"
 	_ "github.com/kyoh86/looppointer/cmd/looppointer"
 	_ "github.com/mdempsky/unconvert"
 	_ "github.com/nishanths/exhaustive/cmd/exhaustive"

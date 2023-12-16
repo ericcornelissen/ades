@@ -126,6 +126,8 @@ jobs:
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			workflow, err := ParseWorkflow([]byte(tt.yaml))
 			if err != nil {
 				t.Fatalf("Unexpected error: %#v", err)
@@ -205,6 +207,8 @@ jobs:
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			_, err := ParseWorkflow([]byte(tt.yaml))
 			if err == nil {
 				t.Fatal("Expected an error, got none")
@@ -302,6 +306,8 @@ runs:
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			manifest, err := ParseManifest([]byte(tt.yaml))
 			if err != nil {
 				t.Fatalf("Unexpected error: %#v", err)
@@ -361,6 +367,8 @@ runs:
 	for _, tt := range testCases {
 		tt := tt
 		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
 			_, err := ParseManifest([]byte(tt.yaml))
 			if err == nil {
 				t.Fatal("Expected an error, got none")
