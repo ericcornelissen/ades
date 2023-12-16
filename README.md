@@ -30,62 +30,7 @@ docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
 
 ### Rules
 
-#### ADES100 - Expression in `run:` directive
-
-When a workflow expression appears in a `run:` directive you can avoid any potential attacks by
-extracting the expression into an environment variable and using the environment variable instead.
-
-For example, given the workflow snippet:
-
-```yaml
-- name: Example step
-  run: |
-    echo 'Hello ${{ inputs.name }}'
-```
-
-it can be made safer by converting it into:
-
-```yaml
-- name: Example step
-  env:
-    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
-  run: |
-    echo "Hello $NAME"
-#        ^      ^^^^^
-#        |      | Replace the expression with the environment variable
-#        |
-#        | Note: the use of double quotes is required in this example (for interpolation)
-```
-
-#### ADES101 - Expression in `actions/github-script` script
-
-When a workflow expression appears in a `actions/github-script` script you can avoid any potential
-attacks by extracting the expression into an environment variable and using the environment variable
-instead.
-
-For example, given the workflow snippet:
-
-```yaml
-- name: Example step
-  uses: actions/github-script@v6
-  with:
-    script: console.log('Hello ${{ inputs.name }}')
-```
-
-it can be made safer by converting it into:
-
-```yaml
-- name: Example step
-  uses: actions/github-script@v6
-  env:
-    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
-  with:
-    script: console.log(`Hello ${process.env.NAME}`)
-#                       ^      ^^^^^^^^^^^^^^^^^^^
-#                       |      | Replace the expression with the environment variable
-#                       |
-#                       | Note: the use of backticks is required in this example (for interpolation)
-```
+See [RULES.md].
 
 ### JSON output
 
@@ -130,4 +75,5 @@ Documentation License v1.3] for the full license text.
 [blogged about this problem]: https://github.blog/2023-08-09-four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
 [copying.txt]: ./COPYING.txt
 [gnu free documentation license v1.3]: https://www.gnu.org/licenses/fdl-1.3.en.html
+[rules.md]: ./RULES.md
 [workflow expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
