@@ -51,7 +51,7 @@ func TestJsonSchema(t *testing.T) {
 			return false
 		}
 
-		var data interface{}
+		var data any
 		if err = json.Unmarshal(bytes, &data); err != nil {
 			return false
 		}
