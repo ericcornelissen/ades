@@ -18,6 +18,7 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 )
 
@@ -48,6 +49,10 @@ func printJson(rawViolations map[string]map[string][]violation) string {
 			}
 		}
 	}
+
+	sort.Slice(violations, func(i, j int) bool {
+		return violations[i].File < violations[j].File
+	})
 
 	jsonBytes, _ := json.Marshal(jsonOutput{Violations: violations})
 	return string(jsonBytes)

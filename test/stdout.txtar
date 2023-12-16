@@ -23,6 +23,11 @@ cmp stdout snapshots/json-file-stdout.txt
 cmp stdout snapshots/json-repository-stdout.txt
 ! stderr .
 
+# multiple targets, JSON
+! exec ades -json project/action.yml project/.github/workflows/workflow.yml
+cmp stdout snapshots/json-multiple-stdout.txt
+! stderr .
+
 # stdin
 stdin project/.github/workflows/workflow.yml
 ! exec ades -stdin
@@ -74,8 +79,10 @@ jobs:
         script: console.log("Hello ${{ inputs.name }}");
 -- snapshots/json-file-stdout.txt --
 {"problems":[{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
+-- snapshots/json-multiple-stdout.txt --
+{"problems":[{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/action.yml","file":"project/action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
 -- snapshots/json-repository-stdout.txt --
-{"problems":[{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
+{"problems":[{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
 -- snapshots/manifest-stdout.txt --
 Detected 1 violation(s) in "project/action.yml":
   step "Unsafe run" has "${{ inputs.name }}", suggestion:
