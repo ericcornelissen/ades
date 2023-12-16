@@ -95,70 +95,95 @@ func run() int {
 		}
 	}
 
+	var ok bool
+	var targets []string
+	var report map[string]map[string][]violation
+
 	if *flagStdin {
-		data, err := io.ReadAll(os.Stdin)
-		if err != nil {
-			return exitError
-		}
-
-		violations := make(map[string][]violation)
-		if workflowViolations, err := tryWorkflow(data); err != nil {
-			return exitError
-		} else if len(workflowViolations) > 0 {
-			violations["stdin"] = workflowViolations
-		} else if manifestViolations, err := tryManifest(data); err != nil {
-			return exitError
-		} else if len(manifestViolations) > 0 {
-			violations["stdin"] = manifestViolations
-		}
-
-		if len(violations) > 0 {
-			if *flagJson {
-				report := make(map[string]map[string][]violation)
-				report["stdin"] = violations
-				fmt.Println(printJson(report))
-			} else {
-				fmt.Print(printViolations(violations, *flagSuggestions))
+		targets = []string{"stdin"}
+		report, ok = runOnStdin()
+	} else {
+		targets = flag.Args()
+		if len(targets) == 0 {
+			wd, err := os.Getwd()
+			if err != nil {
+				fmt.Printf("Unexpected error getting working directory: %s", err)
+				return exitError
 			}
 
-			return exitViolations
+			targets = []string{wd}
 		}
 
-		return exitSuccess
+		report, ok = runOnTargets(targets)
 	}
 
-	targets, err := getTargets(flag.Args())
-	if err != nil {
-		fmt.Printf("Unexpected error getting working directory: %s", err)
+	if *flagJson {
+		fmt.Println(printJson(report))
+	} else {
+		for i, target := range targets {
+			if i > 0 {
+				fmt.Println( /* empty line between targets */ )
+			}
+			if len(targets) > 1 {
+				fmt.Printf("[%s]\n", target)
+			}
+
+			violations := report[target]
+			fmt.Print(printViolations(violations, *flagSuggestions))
+		}
+	}
+
+	if !ok {
 		return exitError
 	}
 
-	violations, hasError := make(map[string]map[string][]violation), false
-	for i, target := range targets {
-		if len(targets) > 1 && !(*flagJson) {
-			fmt.Println("Scanning", target)
-		}
-
-		targetViolations, err := analyzeTarget(target)
-		if err == nil {
-			if !(*flagJson) {
-				fmt.Print(printViolations(targetViolations, *flagSuggestions))
-
-				if i < len(targets)-1 {
-					fmt.Println( /* empty line between targets */ )
-				}
+	for _, targetViolations := range report {
+		for _, fileViolations := range targetViolations {
+			if len(fileViolations) > 0 {
+				return exitViolations
 			}
+		}
+	}
 
-			for file, fileViolations := range targetViolations {
-				if len(fileViolations) > 0 {
-					targetViolations, ok := violations[target]
-					if !ok {
-						targetViolations = make(map[string][]violation)
-						violations[target] = targetViolations
-					}
+	return exitSuccess
+}
 
-					targetViolations[file] = fileViolations
+func runOnStdin() (map[string]map[string][]violation, bool) {
+	data, err := io.ReadAll(os.Stdin)
+	if err != nil {
+		return nil, false
+	}
+
+	violations := make(map[string][]violation)
+	if workflowViolations, err := tryWorkflow(data); err != nil {
+		return nil, false
+	} else if len(workflowViolations) != 0 {
+		violations["stdin"] = workflowViolations
+	} else if manifestViolations, err := tryManifest(data); err != nil {
+		return nil, false
+	} else {
+		violations["stdin"] = manifestViolations
+	}
+
+	report := make(map[string]map[string][]violation)
+	report["stdin"] = violations
+
+	return report, true
+}
+
+func runOnTargets(targets []string) (map[string]map[string][]violation, bool) {
+	report, hasError := make(map[string]map[string][]violation), false
+	for _, target := range targets {
+		violations, err := runOnTarget(target)
+		if err == nil {
+			for file, fileViolations := range violations {
+				targetViolations, ok := report[target]
+				if !ok {
+					targetViolations = make(map[string][]violation)
+					report[target] = targetViolations
 				}
+
+				targetViolations[file] = fileViolations
 			}
 		} else {
 			fmt.Printf("An unexpected error occurred: %s\n", err)
@@ -166,30 +191,19 @@ func run() int {
 		}
 	}
 
-	if *flagJson {
-		fmt.Println(printJson(violations))
-	}
-
-	switch {
-	case hasError:
-		return exitError
-	case len(violations) > 0:
-		return exitViolations
-	default:
-		return exitSuccess
-	}
+	return report, !hasError
 }
 
-func analyzeTarget(target string) (map[string][]violation, error) {
+func runOnTarget(target string) (map[string][]violation, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
 		return nil, fmt.Errorf("could not process %s: %v", target, err)
 	}
 
 	if stat.IsDir() {
-		return analyzeRepository(target)
+		return runOnRepository(target)
 	} else {
-		fileViolations, err := analyzeFile(target)
+		fileViolations, err := runOnFile(target)
 		if err != nil {
 			return nil, err
 		}
@@ -205,20 +219,16 @@ const (
 	workflowsDir = "workflows"
 )
 
-var (
-	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
-)
-
-func analyzeRepository(target string) (map[string][]violation, error) {
+func runOnRepository(target string) (map[string][]violation, error) {
 	violations := make(map[string][]violation)
 
-	if fileViolations, err := analyzeFile(path.Join(target, "action.yml")); err == nil {
+	if fileViolations, err := runOnFile(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
 	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
 	}
 
-	if fileViolations, err := analyzeFile(path.Join(target, "action.yaml")); err == nil {
+	if fileViolations, err := runOnFile(path.Join(target, "action.yaml")); err == nil {
 		violations["action.yaml"] = fileViolations
 	} else if !errors.Is(err, errNotFound) {
 		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
@@ -240,7 +250,7 @@ func analyzeRepository(target string) (map[string][]violation, error) {
 		}
 
 		workflowPath := path.Join(workflowsPath, entry.Name())
-		if workflowViolations, err := analyzeFile(workflowPath); err == nil {
+		if workflowViolations, err := runOnFile(workflowPath); err == nil {
 			targetRelativePath := path.Join(githubDir, workflowsDir, entry.Name())
 			violations[targetRelativePath] = workflowViolations
 		} else {
@@ -254,9 +264,11 @@ func analyzeRepository(target string) (map[string][]violation, error) {
 var (
 	errNotFound  = errors.New("not found")
 	errNotParsed = errors.New("not parsed")
+
+	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
 )
 
-func analyzeFile(target string) ([]violation, error) {
+func runOnFile(target string) ([]violation, error) {
 	absolutePath, err := filepath.Abs(target)
 	if err != nil {
 		return nil, errors.Join(errNotFound, err)
@@ -293,19 +305,6 @@ func tryWorkflow(data []byte) ([]violation, error) {
 	}
 
 	return analyzeWorkflow(&workflow), nil
-}
-
-func getTargets(argv []string) ([]string, error) {
-	if len(argv) == 0 {
-		wd, err := os.Getwd()
-		if err != nil {
-			return nil, fmt.Errorf("could not get cwd: %v", err)
-		}
-
-		return []string{wd}, nil
-	}
-
-	return argv, nil
 }
 
 func legal() {
