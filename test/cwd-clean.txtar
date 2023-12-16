@@ -1,14 +1,14 @@
+# Empty project
 mkdir empty
 cd empty
 
-# Empty project
 exec ades
 ! stdout .
 ! stderr .
 
+# Non-empty project
 cd ../project
 
-# Non-empty project
 exec ades
 ! stdout .
 ! stderr .

@@ -1,13 +1,15 @@
 # action.yml
 cd project-yml
+
 ! exec ades
-cmp stdout stdout.txt
+stdout 'action.yml'
 ! stderr .
 
 # action.yaml
 cd ../project-yaml
+
 ! exec ades
-cmp stdout stdout.txt
+stdout 'action.yaml'
 ! stderr .
 
 
@@ -30,12 +32,6 @@ runs:
     run: echo 'Hello world!'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
--- project-yml/stdout.txt --
-Detected 1 violation(s) in "action.yml":
-  step "Unsafe run" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
-       (make sure to keep the behavior of the script the same)
 -- project-yaml/action.yaml --
 name: Example action
 description: Sample action for testing _ades_
@@ -55,9 +51,3 @@ runs:
     run: echo 'Hello world!'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
--- project-yaml/stdout.txt --
-Detected 1 violation(s) in "action.yaml":
-  step "Unsafe run" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
-       (make sure to keep the behavior of the script the same)

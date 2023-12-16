@@ -1,0 +1,122 @@
+# workflow target
+! exec ades project/.github/workflows/workflow.yml
+cmp stdout snapshots/workflow-stdout.txt
+! stderr .
+
+# manifest target
+! exec ades project/action.yml
+cmp stdout snapshots/manifest-stdout.txt
+! stderr .
+
+# multiple targets
+! exec ades project/action.yml project/.github/workflows/workflow.yml
+cmp stdout snapshots/multiple-stdout.txt
+! stderr .
+
+# file target, JSON
+! exec ades -json project/.github/workflows/workflow.yml
+cmp stdout snapshots/json-file-stdout.txt
+! stderr .
+
+# repository target, JSON
+! exec ades -json project/
+cmp stdout snapshots/json-repository-stdout.txt
+! stderr .
+
+# stdin
+stdin project/.github/workflows/workflow.yml
+! exec ades -stdin
+cmp stdout snapshots/stdin-stdout.txt
+! stderr .
+
+
+-- project/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v3
+  - name: Safe run
+    run: echo 'Hello world!'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- project/.github/workflows/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+    - name: Safe run
+      run: echo 'Hello world!'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+    - name: Safe GitHub script
+      uses: actions/github-script@v6
+      with:
+        script: console.log("Hello $world!");
+    - name: Unsafe GitHub script
+      uses: actions/github-script@v6
+      with:
+        script: console.log("Hello ${{ inputs.name }}");
+-- snapshots/json-file-stdout.txt --
+{"problems":[{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
+-- snapshots/json-repository-stdout.txt --
+{"problems":[{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
+-- snapshots/manifest-stdout.txt --
+Detected 1 violation(s) in "project/action.yml":
+  step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+-- snapshots/multiple-stdout.txt --
+Scanning project/action.yml
+Detected 1 violation(s) in "project/action.yml":
+  step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+
+Scanning project/.github/workflows/workflow.yml
+Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `process.env.NAME`
+       (make sure to keep the behavior of the script the same)
+-- snapshots/stdin-stdout.txt --
+Detected 2 violation(s) in "stdin":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `process.env.NAME`
+       (make sure to keep the behavior of the script the same)
+-- snapshots/workflow-stdout.txt --
+Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
+       (make sure to keep the behavior of the script the same)
+  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}", suggestion:
+    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
+    2. Replace all occurrences of `${{ inputs.name }}` by `process.env.NAME`
+       (make sure to keep the behavior of the script the same)
