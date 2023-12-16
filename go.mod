@@ -13,6 +13,7 @@ require (
 	github.com/gtramontina/ooze v0.2.0
 	github.com/jgautheron/goconst v1.6.0
 	github.com/kisielk/errcheck v1.6.3
+	github.com/kunwardeep/paralleltest v1.0.9
 	github.com/kyoh86/looppointer v0.2.1
 	github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06
 	github.com/nishanths/exhaustive v0.12.0
