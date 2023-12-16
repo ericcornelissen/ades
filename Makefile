@@ -43,7 +43,8 @@ coverage: ## Run all tests and generate a coverage report
 .PHONY: fmt fmt-check
 fmt: ## Format the source code
 	@echo 'Formatting...'
-	@go fmt .
+	@gofmt -w .
+	@gofmt -w -r 'interface{} -> any' .
 	@go mod tidy
 	@go run golang.org/x/tools/cmd/goimports -w .
 

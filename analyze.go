@@ -35,7 +35,9 @@ type violation struct {
 	kind    violationKind
 }
 
-var r = regexp.MustCompile(`\$\{\{.*?\}\}`)
+var (
+	ghaExpressionRegExp = regexp.MustCompile(`\$\{\{.*?\}\}`)
+)
 
 func analyzeManifest(manifest *Manifest) []violation {
 	if manifest != nil && manifest.Runs.Using == "composite" {
@@ -103,7 +105,7 @@ func analyzeStep(id int, step *JobStep) []violation {
 
 func analyzeScript(script string) []violation {
 	violations := make([]violation, 0)
-	if matches := r.FindAll([]byte(script), len(script)); matches != nil {
+	if matches := ghaExpressionRegExp.FindAll([]byte(script), len(script)); matches != nil {
 		for _, problem := range matches {
 			violations = append(violations, violation{
 				problem: string(problem),

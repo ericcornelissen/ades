@@ -185,7 +185,7 @@ const (
 )
 
 var (
-	manifestExpr = regexp.MustCompile("action.ya?ml")
+	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
 )
 
 func analyzeRepository(target string) (map[string][]violation, error) {
@@ -249,7 +249,7 @@ func analyzeFile(target string) ([]violation, error) {
 	switch {
 	case strings.HasSuffix(absolutePath, path.Join(githubDir, workflowsDir, path.Base(target))):
 		return tryWorkflow(data)
-	case manifestExpr.MatchString(target):
+	case ghaManifestFileRegExp.MatchString(target):
 		return tryManifest(data)
 	default:
 		return tryWorkflow(data)
