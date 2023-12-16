@@ -324,13 +324,13 @@ Usage:
 
 Flags:
 
-  --explain ADESxxx   Explain the given violation.
-  --help              Show this help message and exit.
-  --json              Output results in JSON format.
-  --legal             Show legal information and exit.
-  --stdin             Read workflow or manifest from stdin.
-  --suggestions       Show suggested fixes inline.
-  --version           Show the program version and exit.
+  -explain ADESxxx   Explain the given violation.
+  -help              Show this help message and exit.
+  -json              Output results in JSON format.
+  -legal             Show legal information and exit.
+  -stdin             Read workflow or manifest from stdin.
+  -suggestions       Show suggested fixes inline.
+  -version           Show the program version and exit.
 
 Exit Codes:
 

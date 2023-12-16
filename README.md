@@ -34,9 +34,9 @@ See [RULES.md].
 
 ### JSON output
 
-The `--json` flag can be used to get the scan results in JSON format. This can be used by machines
-to parse the results to process them for other purposes. The schema is defined in [`schema.json`].
-The schema is intended to be stable from one version to the next for longer periods of time.
+The `-json` flag can be used to get the scan results in JSON format. This can be used by machines to
+parse the results to process them for other purposes. The schema is defined in [`schema.json`]. The
+schema is intended to be stable from one version to the next for longer periods of time.
 
 ## Background
 

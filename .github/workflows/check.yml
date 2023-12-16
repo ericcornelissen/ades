@@ -43,7 +43,7 @@ jobs:
       env:
         CONTAINER_ENGINE: ${{ matrix.engine }}
     - name: Test run container with ${{ matrix.engine }}
-      run: ${CONTAINER_ENGINE} run --rm ericornelissen/ades --help
+      run: ${CONTAINER_ENGINE} run --rm ericornelissen/ades -help
       env:
         CONTAINER_ENGINE: ${{ matrix.engine }}
   format:
