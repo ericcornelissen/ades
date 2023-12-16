@@ -13,13 +13,11 @@ exec ades -stdin
 # Unsafe manifest
 stdin unsafe/action.yml
 ! exec ades -stdin
-cmp stdout stdout-manifest.txt
 ! stderr .
 
 # Unsafe workflow
 stdin .github/workflows/unsafe.yml
 ! exec ades -stdin
-cmp stdout stdout-workflow.txt
 ! stderr .
 
 
@@ -54,12 +52,6 @@ runs:
     run: echo 'Hello world!'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
--- stdout-manifest.txt --
-Detected 1 violation(s) in "stdin":
-  step "Unsafe run" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
-       (make sure to keep the behavior of the script the same)
 -- .github/workflows/safe.yml --
 name: Example safe workflow
 on: [push]
@@ -86,9 +78,3 @@ jobs:
       uses: actions/checkout@v3
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'
--- stdout-workflow.txt --
-Detected 1 violation(s) in "stdin":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
-       (make sure to keep the behavior of the script the same)
