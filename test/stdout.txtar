@@ -92,11 +92,11 @@ jobs:
 Detected 1 violation(s) in "project/action.yml":
   step "Unsafe run" has "${{ inputs.name }}" (ADES100)
 -- snapshots/multiple-stdout.txt --
-Scanning project/action.yml
+[project/action.yml]
 Detected 1 violation(s) in "project/action.yml":
   step "Unsafe run" has "${{ inputs.name }}" (ADES100)
 
-Scanning project/.github/workflows/workflow.yml
+[project/.github/workflows/workflow.yml]
 Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
   job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
   job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}" (ADES101)
