@@ -66,6 +66,11 @@ test-mutation: ## Run mutation tests
 	@echo 'Mutation testing...'
 	@go test -v -tags=mutation
 
+.PHONY: test-randomized
+test-randomized: ## Run tests in a random order
+	@echo 'Testing (random order)...'
+	@go test -shuffle=on .
+
 .PHONY: vet
 vet: ## Vet the source code
 	@echo 'Vetting...'

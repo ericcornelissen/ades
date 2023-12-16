@@ -95,7 +95,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Run tests
-      run: make test
+      run: make test-randomized
   test-dogfeed:
     name: Dogfeed
     runs-on: ubuntu-22.04
