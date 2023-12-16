@@ -13,6 +13,10 @@ default:
 audit: ## Audit for vulnerabilities
 	@echo 'Checking vulnerabilities...'
 	@go run golang.org/x/vuln/cmd/govulncheck .
+	@echo 'Checking capabilities...'
+	@go run github.com/google/capslock/cmd/capslock \
+		-noisy \
+		-output=compare capabilities.json
 
 .PHONY: build
 build: ## Build a binary for the current platform
@@ -71,6 +75,14 @@ test-mutation: ## Run mutation tests
 test-randomized: ## Run tests in a random order
 	@echo 'Testing (random order)...'
 	@go test -shuffle=on .
+
+.PHONY: update-capabilities
+update-capabilities:
+	@echo 'Updating capabilities...'
+	@go run github.com/google/capslock/cmd/capslock \
+		-noisy \
+		-output json \
+		>capabilities.json
 
 .PHONY: vet
 vet: ## Vet the source code
