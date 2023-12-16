@@ -33,8 +33,8 @@ jobs:
         file: Containerfile
         push: true
         tags: >-
-          ericornelissen/js-re-scan:latest,
-          ericornelissen/js-re-scan:${{ steps.version.outputs.version }}
+          ericornelissen/ades:latest,
+          ericornelissen/ades:${{ steps.version.outputs.version }}
   github-release:
     name: GitHub Release
     runs-on: ubuntu-22.04
