@@ -1,42 +1,47 @@
-# workflow target
-! exec ades project/.github/workflows/workflow.yml
-cmp stdout snapshots/workflow-stdout.txt
+# Workflow target
+! exec ades 'project/.github/workflows/workflow.yml'
+cmp stdout $WORK/snapshots/workflow-stdout.txt
 ! stderr .
 
-# manifest target
-! exec ades project/action.yml
-cmp stdout snapshots/manifest-stdout.txt
+# Manifest target
+! exec ades 'project/action.yml'
+cmp stdout $WORK/snapshots/manifest-stdout.txt
 ! stderr .
 
-# multiple targets
-! exec ades project/action.yml project/.github/workflows/workflow.yml
-cmp stdout snapshots/multiple-stdout.txt
+# Multiple targets
+! exec ades 'project/action.yml' 'project/.github/workflows/workflow.yml'
+cmp stdout $WORK/snapshots/multiple-stdout.txt
 ! stderr .
 
-# file target, JSON
-! exec ades -json project/.github/workflows/workflow.yml
-cmp stdout snapshots/json-file-stdout.txt
+# File target (JSON)
+! exec ades -json 'project/.github/workflows/workflow.yml'
+cmp stdout $WORK/snapshots/json-file-stdout.txt
 ! stderr .
 
-# repository target, JSON
-! exec ades -json project/
-cmp stdout snapshots/json-repository-stdout.txt
+# Project target (JSON)
+! exec ades -json 'project/'
+cmp stdout $WORK/snapshots/json-repository-stdout.txt
 ! stderr .
 
-# multiple targets, JSON
-! exec ades -json project/action.yml project/.github/workflows/workflow.yml
-cmp stdout snapshots/json-multiple-stdout.txt
+# Multiple targets (JSON)
+! exec ades -json 'project/action.yml' 'project/.github/workflows/workflow.yml'
+cmp stdout $WORK/snapshots/json-multiple-stdout.txt
 ! stderr .
 
-# stdin
+# Stdin
 stdin project/.github/workflows/workflow.yml
 ! exec ades -stdin
-cmp stdout snapshots/stdin-stdout.txt
+cmp stdout $WORK/snapshots/stdin-stdout.txt
 ! stderr .
 
-# suggestions
-! exec ades -suggestions project/.github/workflows/workflow.yml
-cmp stdout snapshots/suggestion-stdout.txt
+# Suggestions
+! exec ades -suggestions 'project/.github/workflows/workflow.yml'
+cmp stdout $WORK/snapshots/suggestion-stdout.txt
+! stderr .
+
+# Not found
+! exec ades 'does-not-exist'
+stdout 'An unexpected error occurred: could not process does-not-exist:'
 ! stderr .
 
 
@@ -54,7 +59,7 @@ runs:
   using: composite
   steps:
   - name: Checkout repository
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
   - name: Safe run
     run: echo 'Hello world!'
   - name: Unsafe run
@@ -69,7 +74,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Safe run
       run: echo 'Hello world!'
     - name: Unsafe run

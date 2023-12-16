@@ -20,17 +20,24 @@ stdin .github/workflows/unsafe.yml
 ! exec ades -stdin
 ! stderr .
 
+# Not yaml
+stdin not-yaml.txt
+! exec ades -stdin
+stdout 'Could not parse input, is it YAML?'
+! stderr .
 
+
+-- not-yaml.txt --
+Hello world!
 -- safe/action.yml --
 name: Example safe action
 description: Sample action for testing _ades_
-
 
 runs:
   using: composite
   steps:
   - name: Checkout repository
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
   - name: Safe run
     run: echo 'Hello world!'
 -- unsafe/action.yml --
@@ -47,7 +54,7 @@ runs:
   using: composite
   steps:
   - name: Checkout repository
-    uses: actions/checkout@v3
+    uses: actions/checkout@v4
   - name: Safe run
     run: echo 'Hello world!'
   - name: Unsafe run
@@ -62,7 +69,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Safe run
       run: echo 'Hello world!'
 -- .github/workflows/unsafe.yml --
@@ -75,6 +82,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'

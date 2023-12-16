@@ -1,15 +1,30 @@
-# As part of a repository
-! exec ades .
-stdout '.github/workflows/action.yml'
+cd yml
+
+# As part of a project (.yml)
+! exec ades '.'
+cmp stdout $WORK/snapshots/yml-stdout.txt
 ! stderr .
 
-# As a file
-! exec ades .github/workflows/action.yml
-stdout '.github/workflows/action.yml'
+# As a file (.yml)
+! exec ades '.github/workflows/action.yml'
+cmp stdout $WORK/snapshots/yml-stdout.txt
 ! stderr .
 
 
--- .github/workflows/action.yml --
+cd ../yaml
+
+# As part of a project (.yaml)
+! exec ades '.'
+cmp stdout $WORK/snapshots/yaml-stdout.txt
+! stderr .
+
+# As a file (.yaml)
+! exec ades '.github/workflows/action.yaml'
+cmp stdout $WORK/snapshots/yaml-stdout.txt
+! stderr .
+
+
+-- yml/.github/workflows/action.yml --
 name: Example unsafe workflow
 on: [push]
 
@@ -19,6 +34,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Unsafe run
       run: echo 'Hello ${{ inputs.name }}'
+-- yaml/.github/workflows/action.yaml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- snapshots/yml-stdout.txt --
+Detected 1 violation(s) in ".github/workflows/action.yml":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
+-- snapshots/yaml-stdout.txt --
+Detected 1 violation(s) in ".github/workflows/action.yaml":
+  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)

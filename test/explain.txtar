@@ -1,15 +1,15 @@
 # Existing rule
-exec ades -explain ADES100
-cmp stdout stdout.txt
+exec ades -explain 'ADES100'
+cmp stdout $WORK/snapshots/ades100-stdout.txt
 ! stderr .
 
 # Non-existent rule
-! exec ades -explain foobar
+! exec ades -explain 'foobar'
 stdout 'Unknown rule "foobar"'
 ! stderr .
 
 
--- stdout.txt --
+-- snapshots/ades100-stdout.txt --
 ADES100 - Expression in 'run:' directive
 
 When a workflow expression appears in a 'run:' directive you can avoid any potential attacks by

@@ -1,0 +1,153 @@
+# Empty project
+mkdir empty
+cd empty
+
+exec ades
+! stdout .
+! stderr .
+
+# Safe project
+cd ../safe
+
+exec ades
+! stdout .
+! stderr .
+
+# Unsafe manifest (.yml)
+cd ../action-yml
+
+! exec ades
+stdout 'action.yml'
+! stderr .
+
+# Unsafe manifest (.yaml)
+cd ../action-yaml
+
+! exec ades
+stdout 'action.yaml'
+! stderr .
+
+# Unsafe workflows
+cd ../workflows
+
+! exec ades
+stdout '.github/workflows/unsafe.yml'
+stdout '.github/workflows/unsafe.yaml'
+! stderr .
+
+
+-- action-yml/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- action-yaml/action.yaml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yaml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- safe/.github/workflows/safe.yml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example safe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Safe run
+      run: echo 'Hello .yml!'
+-- safe/.github/workflows/safe.yaml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example safe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Safe run
+      run: echo 'Hello .yaml!'
+-- safe/action.yml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+-- workflows/.github/workflows/unsafe.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Safe run
+      run: echo 'Hello .yml'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- workflows/.github/workflows/unsafe.yaml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Safe run
+      run: echo 'Hello .yaml'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- workflows/.github/workflows/not-a-workflow.txt --
+I'm not a workflow and I shouldn't be analyzed.
+-- workflows/.github/workflows/also/not-a-workflow.py --
+print("Beep boop I'm a helper script")
+-- workflows/.github/workflows/also.yml/not-a-workflow.foo --
+I'm also not a workflow and I shouldn't be analyzed.
+-- workflows/.github/workflows/also.yaml/not-a-workflow.bar --
+I'm definitly not a workflow and I shouldn't be analyzed.
