@@ -43,6 +43,7 @@ type JobStep struct {
 // StepWith is a (simplified) representation of a job step's `with:` object.
 type StepWith struct {
 	Script string `yaml:"script"`
+	Tag    string `yaml:"tag"`
 }
 
 // ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.

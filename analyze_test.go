@@ -638,9 +638,80 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 	}
 
+	actionTestCases := []TestCase{
+		{
+			name: "git-tag-annotation-action, vulnerable version",
+			step: JobStep{
+				Name: "Vulnerable",
+				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.0",
+				With: StepWith{
+					Tag: "${{ inputs.tag }}",
+				},
+			},
+			want: []violation{
+				{
+					stepId:  "Vulnerable",
+					problem: "${{ inputs.tag }}",
+					kind:    expressionInGitTagAnnotationActionTagInput,
+				},
+			},
+		},
+		{
+			name: "git-tag-annotation-action, old version",
+			step: JobStep{
+				Name: "Old",
+				Uses: "ericcornelissen/git-tag-annotation-action@v0.0.9",
+				With: StepWith{
+					Tag: "${{ inputs.tag }}",
+				},
+			},
+			want: []violation{
+				{
+					stepId:  "Old",
+					problem: "${{ inputs.tag }}",
+					kind:    expressionInGitTagAnnotationActionTagInput,
+				},
+			},
+		},
+		{
+			name: "git-tag-annotation-action, fixed version",
+			step: JobStep{
+				Name: "Fixed",
+				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.1",
+				With: StepWith{
+					Tag: "${{ inputs.tag }}",
+				},
+			},
+			want: []violation{},
+		},
+		{
+			name: "git-tag-annotation-action, SHA pin (unsupported)",
+			step: JobStep{
+				Name: "SHA for v1.0.1",
+				Uses: "ericcornelissen/git-tag-annotation-action@21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				With: StepWith{
+					Tag: "${{ inputs.tag }}",
+				},
+			},
+			want: []violation{},
+		},
+		{
+			name: "git-tag-annotation-action, unpinned major version (unsupported)",
+			step: JobStep{
+				Name: "v1",
+				Uses: "ericcornelissen/git-tag-annotation-action@v1",
+				With: StepWith{
+					Tag: "${{ inputs.tag }}",
+				},
+			},
+			want: []violation{},
+		},
+	}
+
 	var allTestCases []TestCase
 	allTestCases = append(allTestCases, runTestCases...)
 	allTestCases = append(allTestCases, actionsGitHubScriptCases...)
+	allTestCases = append(allTestCases, actionTestCases...)
 
 	for _, tt := range allTestCases {
 		tt := tt
