@@ -65,7 +65,7 @@ test: ## Run all tests
 .PHONY: test-mutation
 test-mutation: ## Run mutation tests
 	@echo 'Mutation testing...'
-	@go test -v -tags=mutation
+	@go test -tags=mutation
 
 .PHONY: test-randomized
 test-randomized: ## Run tests in a random order
