@@ -26,6 +26,13 @@ clean: ## Reset the project to a clean state
 		ades \
 		cover.*
 
+.PHONY: compliance
+compliance: ## Check license compliance
+	@echo 'Checking license compliance...'
+	@go run github.com/google/go-licenses check \
+		--allowed_licenses BSD-3-Clause,GPL-3.0,MIT \
+		.
+
 .PHONY: container
 container: ## Build the ades container for the current platform
 	@$(CONTAINER_ENGINE) build \
@@ -99,4 +106,4 @@ vet: ## Vet the source code
 	@go run mvdan.cc/unparam .
 
 .PHONY: verify
-verify: build fmt-check test run vet ## Verify project is in a good state
+verify: build compliance fmt-check test run vet ## Verify project is in a good state
