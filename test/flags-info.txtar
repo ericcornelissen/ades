@@ -1,13 +1,14 @@
+# Help
 exec ades -help
 stdout 'find problematic use of template variables in GitHub Action workflows\n'
 ! stderr .
 
-
+# Legal
 exec ades -legal
 cmp stdout $WORK/snapshots/legal-stdout.txt
 ! stderr .
 
-
+# Version
 exec ades -version
 stdout 'v23.12'
 ! stderr .

@@ -15,7 +15,7 @@ audit: ## Audit for vulnerabilities
 	@go run golang.org/x/vuln/cmd/govulncheck .
 
 .PHONY: build
-build: ## Build a binary for the current platform
+build: ## Build the ades binary for the current platform
 	@echo 'Building...'
 	@go build .
 
@@ -27,7 +27,7 @@ clean: ## Reset the project to a clean state
 		cover.*
 
 .PHONY: container
-container:
+container: ## Build the ades container for the current platform
 	@$(CONTAINER_ENGINE) build \
 		--file Containerfile \
 		--tag ericornelissen/ades:$(CONTAINER_TAG) \
