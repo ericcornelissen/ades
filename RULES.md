@@ -61,3 +61,11 @@ it can be made safer by converting it into:
 #                       |
 #                       | Note: the use of backticks is required in this example (for interpolation)
 ```
+
+## ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
+
+When a workflow expression is used in the tag input for `ericcornelissen/git-tag-annotation-action`
+in v1.0.0 or earlier it may be used to execute arbitrary shell commands, see [GHSA-hgx2-4pp9-357g].
+To avoid this, upgrade the action to a non-vulnerable version.
+
+[GHSA-hgx2-4pp9-357g]: https://github.com/ericcornelissen/git-tag-annotation-action/security/advisories/GHSA-hgx2-4pp9-357g

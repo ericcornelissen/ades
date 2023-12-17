@@ -25,6 +25,7 @@ docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
 - Scan workflow files and action manifests.
 - Report dangerous uses of workflow expressions in [`run:`] directives.
 - Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
+- _(Experimental)_ Report dangerous uses of workflow expressions in known vulnerable actions.
 - Provides suggested fixes.
 - Machine & human readable output formats.
 

@@ -23,6 +23,7 @@ func TestExplainRule(t *testing.T) {
 	testCases := []string{
 		expressionInRunScriptId,
 		expressionInActionsGithubScriptId,
+		expressionInGitTagAnnotationActionTagInputId,
 	}
 
 	for _, tt := range testCases {

@@ -19,13 +19,16 @@ import (
 	"fmt"
 	"regexp"
 	"strings"
+
+	"golang.org/x/mod/semver"
 )
 
 type violationKind uint8
 
 var (
-	expressionInRunScriptId           = "ADES100"
-	expressionInActionsGithubScriptId = "ADES101"
+	expressionInRunScriptId                      = "ADES100"
+	expressionInActionsGithubScriptId            = "ADES101"
+	expressionInGitTagAnnotationActionTagInputId = "ADES200"
 )
 
 func (kind violationKind) String() string {
@@ -35,6 +38,8 @@ func (kind violationKind) String() string {
 		s = expressionInRunScriptId
 	case expressionInActionsGithubScript:
 		s = expressionInActionsGithubScriptId
+	case expressionInGitTagAnnotationActionTagInput:
+		s = expressionInGitTagAnnotationActionTagInputId
 	}
 
 	return s
@@ -43,6 +48,7 @@ func (kind violationKind) String() string {
 const (
 	expressionInRunScript violationKind = iota
 	expressionInActionsGithubScript
+	expressionInGitTagAnnotationActionTagInput
 )
 
 type violation struct {
@@ -110,11 +116,23 @@ func analyzeStep(id int, step *JobStep) []violation {
 	}
 
 	violations := make([]violation, 0)
-	script, kind := extractScript(step)
-	for _, v := range analyzeScript(script) {
-		v.kind = kind
-		v.stepId = name
-		violations = append(violations, v)
+	switch {
+	case isGitTagAnnotationAction(step):
+		version := step.Uses[strings.LastIndex(step.Uses, "@")+1:]
+		if semver.Canonical(version) == version && semver.Compare("v1.0.0", version) >= 0 {
+			for _, v := range analyzeScript(step.With.Tag) {
+				v.kind = expressionInGitTagAnnotationActionTagInput
+				v.stepId = name
+				violations = append(violations, v)
+			}
+		}
+	case isRunStep(step), isActionsGitHubScriptStep(step):
+		script, kind := extractScript(step)
+		for _, v := range analyzeScript(script) {
+			v.kind = kind
+			v.stepId = name
+			violations = append(violations, v)
+		}
 	}
 
 	return violations
@@ -150,4 +168,8 @@ func isRunStep(step *JobStep) bool {
 
 func isActionsGitHubScriptStep(step *JobStep) bool {
 	return strings.HasPrefix(step.Uses, "actions/github-script@")
+}
+
+func isGitTagAnnotationAction(step *JobStep) bool {
+	return strings.HasPrefix(step.Uses, "ericcornelissen/git-tag-annotation-action@")
 }

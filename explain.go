@@ -23,6 +23,8 @@ func explain(violationId string) (explanation string, err error) {
 		explanation = explainAdes100()
 	case expressionInActionsGithubScriptId:
 		explanation = explainAdes101()
+	case expressionInGitTagAnnotationActionTagInputId:
+		explanation = explainAdes200()
 	default:
 		err = fmt.Errorf("unknown rule %q", violationId)
 	}
@@ -81,4 +83,12 @@ it can be made safer by converting it into:
       #                     |      | Replace the expression with the environment variable
       #                     |
       #                     | Note: the use of backticks is required in this example (for interpolation)`)
+}
+
+func explainAdes200() string {
+	return fmt.Sprintln(`ADES200 - Expression in 'ericcornelissen/git-tag-annotation-action' tag input
+
+When a workflow expression is used in the tag input for 'ericcornelissen/git-tag-annotation-action'
+in v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
+mitigate this, upgrade the action to a non-vulnerable version.`)
 }
