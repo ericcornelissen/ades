@@ -31,6 +31,7 @@ import (
 	_ "github.com/alexkohler/prealloc"
 	_ "github.com/alexkohler/unimport"
 	_ "github.com/go-critic/go-critic/cmd/gocritic"
+	_ "github.com/google/go-licenses"
 	_ "github.com/gordonklaus/ineffassign"
 	_ "github.com/jgautheron/goconst/cmd/goconst"
 	_ "github.com/kisielk/errcheck"
