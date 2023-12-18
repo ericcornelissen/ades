@@ -11,7 +11,7 @@ require (
 	github.com/go-critic/go-critic v0.10.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
-	github.com/jgautheron/goconst v1.6.0
+	github.com/jgautheron/goconst v1.7.0
 	github.com/kisielk/errcheck v1.6.3
 	github.com/kunwardeep/paralleltest v1.0.9
 	github.com/kyoh86/looppointer v0.2.1
