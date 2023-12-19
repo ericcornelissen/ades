@@ -5,7 +5,7 @@ go 1.21.5
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3
 	github.com/alexkohler/dogsled v0.0.0-20210716154023-34d2ab9edb3d
-	github.com/alexkohler/nakedret/v2 v2.0.1
+	github.com/alexkohler/nakedret/v2 v2.0.2
 	github.com/alexkohler/prealloc v1.0.0
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/go-critic/go-critic v0.10.0
