@@ -18,12 +18,17 @@ package main
 import (
 	"fmt"
 	"regexp"
-	"strings"
 
 	"golang.org/x/mod/semver"
 )
 
 type violationKind uint8
+
+const (
+	expressionInRunScript violationKind = iota
+	expressionInActionsGithubScript
+	expressionInGitTagAnnotationActionTagInput
+)
 
 var (
 	expressionInRunScriptId                      = "ADES100"
@@ -44,12 +49,6 @@ func (kind violationKind) String() string {
 
 	return s
 }
-
-const (
-	expressionInRunScript violationKind = iota
-	expressionInActionsGithubScript
-	expressionInGitTagAnnotationActionTagInput
-)
 
 type violation struct {
 	jobId   string
@@ -115,32 +114,35 @@ func analyzeStep(id int, step *JobStep) []violation {
 		name = fmt.Sprintf("#%d", id)
 	}
 
-	violations := make([]violation, 0)
+	var violations []violation
+	var kind violationKind
+
+	uses, _ := ParseUses(step)
 	switch {
-	case isGitTagAnnotationAction(step):
-		version := step.Uses[strings.LastIndex(step.Uses, "@")+1:]
-		if semver.Canonical(version) == version && semver.Compare("v1.0.0", version) >= 0 {
-			for _, v := range analyzeScript(step.With.Tag) {
-				v.kind = expressionInGitTagAnnotationActionTagInput
-				v.stepId = name
-				violations = append(violations, v)
-			}
+	case isRunStep(step):
+		kind = expressionInRunScript
+		violations = analyzeString(step.Run)
+	case uses.Name == "actions/github-script":
+		kind = expressionInActionsGithubScript
+		violations = analyzeString(step.With["script"])
+	case uses.Name == "ericcornelissen/git-tag-annotation-action":
+		if isBeforeOrAtVersion(uses, "v1.0.0") {
+			kind = expressionInGitTagAnnotationActionTagInput
+			violations = analyzeString(step.With["tag"])
 		}
-	case isRunStep(step), isActionsGitHubScriptStep(step):
-		script, kind := extractScript(step)
-		for _, v := range analyzeScript(script) {
-			v.kind = kind
-			v.stepId = name
-			violations = append(violations, v)
-		}
+	}
+
+	for i := range violations {
+		violations[i].kind = kind
+		violations[i].stepId = name
 	}
 
 	return violations
 }
 
-func analyzeScript(script string) []violation {
+func analyzeString(s string) []violation {
 	violations := make([]violation, 0)
-	if matches := ghaExpressionRegExp.FindAll([]byte(script), len(script)); matches != nil {
+	if matches := ghaExpressionRegExp.FindAll([]byte(s), len(s)); matches != nil {
 		for _, problem := range matches {
 			violations = append(violations, violation{
 				problem: string(problem),
@@ -151,25 +153,16 @@ func analyzeScript(script string) []violation {
 	return violations
 }
 
-func extractScript(step *JobStep) (string, violationKind) {
-	switch {
-	case isRunStep(step):
-		return step.Run, expressionInRunScript
-	case isActionsGitHubScriptStep(step):
-		return step.With.Script, expressionInActionsGithubScript
-	default:
-		return "", expressionInRunScript
-	}
-}
-
 func isRunStep(step *JobStep) bool {
 	return len(step.Run) > 0
 }
 
-func isActionsGitHubScriptStep(step *JobStep) bool {
-	return strings.HasPrefix(step.Uses, "actions/github-script@")
-}
+func isBeforeOrAtVersion(uses StepUses, version string) bool {
+	// This comparison checks that the `Ref` is a semantic version string, which is currently the
+	// only supported type of `Ref`.
+	if semver.Canonical(uses.Ref) != uses.Ref {
+		return false
+	}
 
-func isGitTagAnnotationAction(step *JobStep) bool {
-	return strings.HasPrefix(step.Uses, "ericcornelissen/git-tag-annotation-action@")
+	return semver.Compare(version, uses.Ref) >= 0
 }

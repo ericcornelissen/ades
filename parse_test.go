@@ -85,8 +85,8 @@ jobs:
 							{
 								Name: "Echo value",
 								Uses: "actions/github-script@v6",
-								With: StepWith{
-									Script: "console.log('${{ inputs.value }}')",
+								With: map[string]string{
+									"script": "console.log('${{ inputs.value }}')",
 								},
 							},
 						},
@@ -163,7 +163,7 @@ jobs:
 						t.Errorf("Unexpected uses for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 
-					if got, want := step.With.Script, want.With.Script; got != want {
+					if got, want := step.With["script"], want.With["script"]; got != want {
 						t.Errorf("Unexpected with for job %q step %d (got %q, want %q)", k, i, got, want)
 					}
 				}
@@ -293,8 +293,8 @@ runs:
 						{
 							Name: "Echo value",
 							Uses: "actions/github-script@v6",
-							With: StepWith{
-								Script: "console.log('${{ inputs.value }}')",
+							With: map[string]string{
+								"script": "console.log('${{ inputs.value }}')",
 							},
 						},
 					},
@@ -336,7 +336,7 @@ runs:
 					t.Errorf("Unexpected uses for step %d (got %q, want %q)", i, got, want)
 				}
 
-				if got, want := step.With.Script, want.With.Script; got != want {
+				if got, want := step.With["script"], want.With["script"]; got != want {
 					t.Errorf("Unexpected with for step %d (got %q, want %q)", i, got, want)
 				}
 			}
@@ -370,6 +370,141 @@ runs:
 			t.Parallel()
 
 			_, err := ParseManifest([]byte(tt.yaml))
+			if err == nil {
+				t.Fatal("Expected an error, got none")
+			}
+		})
+	}
+}
+
+func TestParseUsesSuccess(t *testing.T) {
+	type TestCase struct {
+		name string
+		step JobStep
+		want StepUses
+	}
+
+	testCases := []TestCase{
+		{
+			name: "Full version tag",
+			step: JobStep{
+				Uses: "foobar@v1.2.3",
+			},
+			want: StepUses{
+				Name: "foobar",
+				Ref:  "v1.2.3",
+			},
+		},
+		{
+			name: "Major version tag",
+			step: JobStep{
+				Uses: "hello-world@v2",
+			},
+			want: StepUses{
+				Name: "hello-world",
+				Ref:  "v2",
+			},
+		},
+		{
+			name: "Full SHA",
+			step: JobStep{
+				Uses: "actions/checkout@2a08af6587712680d7d485082f61ed6cdb72280a",
+			},
+			want: StepUses{
+				Name: "actions/checkout",
+				Ref:  "2a08af6587712680d7d485082f61ed6cdb72280a",
+			},
+		},
+		{
+			name: "Unconventional tag (no 'v' prefix)",
+			step: JobStep{
+				Uses: "actions/upload-artifact@3.1.4",
+			},
+			want: StepUses{
+				Name: "actions/upload-artifact",
+				Ref:  "3.1.4",
+			},
+		},
+		{
+			name: "short name",
+			step: JobStep{
+				Uses: "a@3.1.4",
+			},
+			want: StepUses{
+				Name: "a",
+				Ref:  "3.1.4",
+			},
+		},
+		{
+			name: "1 character version",
+			step: JobStep{
+				Uses: "actions/download-artifact@7",
+			},
+			want: StepUses{
+				Name: "actions/download-artifact",
+				Ref:  "7",
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			uses, err := ParseUses(&tt.step)
+			if err != nil {
+				t.Fatalf("Unexpected error: %#v", err)
+			}
+
+			if got, want := uses.Name, tt.want.Name; got != want {
+				t.Fatalf("Unexpected Name value (got %q, want %q)", got, want)
+			}
+
+			if got, want := uses.Ref, tt.want.Ref; got != want {
+				t.Fatalf("Unexpected Ref value (got %q, want %q)", got, want)
+			}
+		})
+	}
+}
+
+func TestParseUsesError(t *testing.T) {
+	type TestCase struct {
+		name string
+		step JobStep
+	}
+
+	testCases := []TestCase{
+		{
+			name: "No 'uses' value",
+			step: JobStep{},
+		},
+		{
+			name: "Invalid 'uses' value",
+			step: JobStep{
+				Uses: "foobar",
+			},
+		},
+		{
+			name: "Missing version",
+			step: JobStep{
+				Uses: "foobar@",
+			},
+		},
+		{
+			name: "Missing name",
+			step: JobStep{
+				Uses: "@v1.2.3",
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			_, err := ParseUses(&tt.step)
 			if err == nil {
 				t.Fatal("Expected an error, got none")
 			}

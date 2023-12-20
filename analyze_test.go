@@ -17,10 +17,42 @@ package main
 
 import (
 	"fmt"
-	"strings"
 	"testing"
 	"testing/quick"
 )
+
+func TestViolationKindString(t *testing.T) {
+	type TestCase struct {
+		kind violationKind
+		want string
+	}
+
+	testCases := []TestCase{
+		{
+			kind: expressionInRunScript,
+			want: expressionInRunScriptId,
+		},
+		{
+			kind: expressionInActionsGithubScript,
+			want: expressionInActionsGithubScriptId,
+		},
+		{
+			kind: expressionInGitTagAnnotationActionTagInput,
+			want: expressionInGitTagAnnotationActionTagInputId,
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(fmt.Sprint(tt.kind), func(t *testing.T) {
+			t.Parallel()
+
+			if got, want := tt.kind.String(), tt.want; got != want {
+				t.Errorf("Unexpected result (got %q, want %q)", got, want)
+			}
+		})
+	}
+}
 
 func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
@@ -521,7 +553,7 @@ func TestAnalyzeStep(t *testing.T) {
 			name: "Unnamed step using another action",
 			step: JobStep{
 				Name: "",
-				Uses: "ericcornelissen/non-existent-action",
+				Uses: "ericcornelissen/non-existent-action@1.0.0",
 			},
 			want: []violation{},
 		},
@@ -529,7 +561,7 @@ func TestAnalyzeStep(t *testing.T) {
 			name: "Named step using another action",
 			step: JobStep{
 				Name: "Doesn't run",
-				Uses: "ericcornelissen/non-existent-action",
+				Uses: "ericcornelissen/non-existent-action@1.0.0",
 			},
 			want: []violation{},
 		},
@@ -538,8 +570,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello world!')",
+				With: map[string]string{
+					"script": "console.log('Hello world!')",
 				},
 			},
 			want: []violation{},
@@ -549,8 +581,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Run something",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello world!')",
+				With: map[string]string{
+					"script": "console.log('Hello world!')",
 				},
 			},
 			want: []violation{},
@@ -561,8 +593,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello ${{ inputs.name }}!')",
+				With: map[string]string{
+					"script": "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
 			want: []violation{
@@ -578,8 +610,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Greet person",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello ${{ inputs.name }}!')",
+				With: map[string]string{
+					"script": "console.log('Hello ${{ inputs.name }}!')",
 				},
 			},
 			want: []violation{
@@ -596,8 +628,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
+				With: map[string]string{
+					"script": "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
 			want: []violation{
@@ -619,8 +651,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Greet person today",
 				Uses: "actions/github-script@v6",
-				With: StepWith{
-					Script: "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
+				With: map[string]string{
+					"script": "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
 				},
 			},
 			want: []violation{
@@ -644,8 +676,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Vulnerable",
 				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.0",
-				With: StepWith{
-					Tag: "${{ inputs.tag }}",
+				With: map[string]string{
+					"tag": "${{ inputs.tag }}",
 				},
 			},
 			want: []violation{
@@ -661,8 +693,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Old",
 				Uses: "ericcornelissen/git-tag-annotation-action@v0.0.9",
-				With: StepWith{
-					Tag: "${{ inputs.tag }}",
+				With: map[string]string{
+					"tag": "${{ inputs.tag }}",
 				},
 			},
 			want: []violation{
@@ -678,30 +710,8 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Fixed",
 				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.1",
-				With: StepWith{
-					Tag: "${{ inputs.tag }}",
-				},
-			},
-			want: []violation{},
-		},
-		{
-			name: "git-tag-annotation-action, SHA pin (unsupported)",
-			step: JobStep{
-				Name: "SHA for v1.0.1",
-				Uses: "ericcornelissen/git-tag-annotation-action@21fa0360d55070a1d6b999d027db44cc21a7b48d",
-				With: StepWith{
-					Tag: "${{ inputs.tag }}",
-				},
-			},
-			want: []violation{},
-		},
-		{
-			name: "git-tag-annotation-action, unpinned major version (unsupported)",
-			step: JobStep{
-				Name: "v1",
-				Uses: "ericcornelissen/git-tag-annotation-action@v1",
-				With: StepWith{
-					Tag: "${{ inputs.tag }}",
+				With: map[string]string{
+					"tag": "${{ inputs.tag }}",
 				},
 			},
 			want: []violation{},
@@ -779,29 +789,66 @@ func TestIsRunStep(t *testing.T) {
 	})
 }
 
-func TestIsActionsGitHubScriptStep(t *testing.T) {
-	t.Run("Script step", func(t *testing.T) {
-		f := func(step JobStep, ref string) bool {
-			step.Uses = fmt.Sprintf("actions/github-script@%s", ref)
-			return isActionsGitHubScriptStep(&step)
-		}
+func TestIsBeforeOrAtVersion(t *testing.T) {
+	type TestCase struct {
+		name    string
+		uses    StepUses
+		version string
+		want    bool
+	}
 
-		if err := quick.Check(f, nil); err != nil {
-			t.Error(err)
-		}
-	})
+	testCases := []TestCase{
+		{
+			name: "At, full semantic version",
+			uses: StepUses{
+				Ref: "v1.0.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		{
+			name: "Before, full semantic version",
+			uses: StepUses{
+				Ref: "v0.1.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		{
+			name: "After, full semantic version",
+			uses: StepUses{
+				Ref: "v1.0.1",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		{
+			name: "SHA",
+			uses: StepUses{
+				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
 
-	t.Run("Non-script step", func(t *testing.T) {
-		f := func(step JobStep) bool {
-			if strings.HasPrefix(step.Uses, "actions/github-script@") {
-				return true
+		{
+			name: "Major version only",
+			uses: StepUses{
+				Ref: "v1",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			if got, want := isBeforeOrAtVersion(tt.uses, tt.version), tt.want; got != want {
+				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", tt.uses.Ref, tt.version, got, want)
 			}
-
-			return !isActionsGitHubScriptStep(&step)
-		}
-
-		if err := quick.Check(f, nil); err != nil {
-			t.Error(err)
-		}
-	})
+		})
+	}
 }
