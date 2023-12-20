@@ -16,7 +16,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"strings"
 
 	"gopkg.in/yaml.v3"
 )
@@ -34,16 +36,10 @@ type WorkflowJob struct {
 
 // JobStep is a (simplified) representation of a workflow job step object.
 type JobStep struct {
-	Name string   `yaml:"name"`
-	Run  string   `yaml:"run"`
-	Uses string   `yaml:"uses"`
-	With StepWith `yaml:"with"`
-}
-
-// StepWith is a (simplified) representation of a job step's `with:` object.
-type StepWith struct {
-	Script string `yaml:"script"`
-	Tag    string `yaml:"tag"`
+	Name string            `yaml:"name"`
+	Run  string            `yaml:"run"`
+	Uses string            `yaml:"uses"`
+	With map[string]string `yaml:"with"`
 }
 
 // ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.
@@ -75,4 +71,24 @@ func ParseManifest(data []byte) (Manifest, error) {
 	}
 
 	return manifest, nil
+}
+
+// StepUses is a structured representation of a workflow job step `uses:` value.
+type StepUses struct {
+	Name string
+	Ref  string
+}
+
+// ParseUses parses a Github Actions workflow job step's `uses:` value.
+func ParseUses(step *JobStep) (StepUses, error) {
+	var uses StepUses
+
+	i := strings.LastIndex(step.Uses, "@")
+	if i <= 0 || i >= len(step.Uses)-1 {
+		return uses, errors.New("step has no or invalid `uses` value")
+	}
+
+	uses.Name = step.Uses[:i]
+	uses.Ref = step.Uses[i+1:]
+	return uses, nil
 }
