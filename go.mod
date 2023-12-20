@@ -19,7 +19,7 @@ require (
 	github.com/nishanths/exhaustive v0.12.0
 	github.com/polyfloyd/go-errorlint v1.4.7
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
-	github.com/rogpeppe/go-internal v1.11.0
+	github.com/rogpeppe/go-internal v1.12.0
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.16
 	github.com/tomarrell/wrapcheck/v2 v2.8.1
