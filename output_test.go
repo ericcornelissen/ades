@@ -177,6 +177,27 @@ func TestPrintViolations(t *testing.T) {
 `,
 		},
 		{
+			name: "Workflow with violation in kceb/git-message-action",
+			violations: func() map[string][]violation {
+				m := make(map[string][]violation)
+				m["workflow.yml"] = make([]violation, 1)
+				m["workflow.yml"][0] = violation{
+					jobId:   "4",
+					stepId:  "2",
+					problem: "${{ foo.bar }}",
+					kind:    expressionInGitMessageActionShaInput,
+				}
+				return m
+			},
+			want: `Detected 1 violation(s) in "workflow.yml":
+  job "4", step "2" has "${{ foo.bar }}" (ADES201)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
+  job "4", step "2" has "${{ foo.bar }}", suggestion:
+    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes
+`,
+		},
+		{
 			name: "Manifest with violation in run script",
 			violations: func() map[string][]violation {
 				m := make(map[string][]violation)
@@ -238,6 +259,26 @@ func TestPrintViolations(t *testing.T) {
 			wantSuggestions: `Detected 1 violation(s) in "action.yml":
   step "2" has "${{ foo.bar }}", suggestion:
     1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g
+`,
+		},
+		{
+			name: "Manifest with violation in kceb/git-message-action",
+			violations: func() map[string][]violation {
+				m := make(map[string][]violation)
+				m["action.yml"] = make([]violation, 1)
+				m["action.yml"][0] = violation{
+					stepId:  "2",
+					problem: "${{ foo.bar }}",
+					kind:    expressionInGitMessageActionShaInput,
+				}
+				return m
+			},
+			want: `Detected 1 violation(s) in "action.yml":
+  step "2" has "${{ foo.bar }}" (ADES201)
+`,
+			wantSuggestions: `Detected 1 violation(s) in "action.yml":
+  step "2" has "${{ foo.bar }}", suggestion:
+    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes
 `,
 		},
 	}

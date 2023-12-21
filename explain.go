@@ -25,6 +25,8 @@ func explain(violationId string) (explanation string, err error) {
 		explanation = explainAdes101()
 	case expressionInGitTagAnnotationActionTagInputId:
 		explanation = explainAdes200()
+	case expressionInGitMessageActionShaInputId:
+		explanation = explainAdes201()
 	default:
 		err = fmt.Errorf("unknown rule %q", violationId)
 	}
@@ -91,4 +93,12 @@ func explainAdes200() string {
 When a workflow expression is used in the tag input for 'ericcornelissen/git-tag-annotation-action'
 in v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
 mitigate this, upgrade the action to a non-vulnerable version.`)
+}
+
+func explainAdes201() string {
+	return fmt.Sprintln(`ADES201 - Expression in 'kceb/git-message-action' sha input
+
+When a workflow expression is used in the sha input for 'kceb/git-message-action' in v1.1.0 or
+earlier it may be used to execute arbitrary shell commands (no vulnerability identifier available).
+To mitigate this, upgrade the action to a non-vulnerable version.`)
 }

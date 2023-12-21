@@ -28,12 +28,14 @@ const (
 	expressionInRunScript violationKind = iota
 	expressionInActionsGithubScript
 	expressionInGitTagAnnotationActionTagInput
+	expressionInGitMessageActionShaInput
 )
 
 var (
 	expressionInRunScriptId                      = "ADES100"
 	expressionInActionsGithubScriptId            = "ADES101"
 	expressionInGitTagAnnotationActionTagInputId = "ADES200"
+	expressionInGitMessageActionShaInputId       = "ADES201"
 )
 
 func (kind violationKind) String() string {
@@ -45,6 +47,8 @@ func (kind violationKind) String() string {
 		s = expressionInActionsGithubScriptId
 	case expressionInGitTagAnnotationActionTagInput:
 		s = expressionInGitTagAnnotationActionTagInputId
+	case expressionInGitMessageActionShaInput:
+		s = expressionInGitMessageActionShaInputId
 	}
 
 	return s
@@ -129,6 +133,11 @@ func analyzeStep(id int, step *JobStep) []violation {
 		if isBeforeOrAtVersion(uses, "v1.0.0") {
 			kind = expressionInGitTagAnnotationActionTagInput
 			violations = analyzeString(step.With["tag"])
+		}
+	case uses.Name == "kceb/git-message-action":
+		if isBeforeOrAtVersion(uses, "v1.1.0") {
+			kind = expressionInGitMessageActionShaInput
+			violations = analyzeString(step.With["sha"])
 		}
 	}
 

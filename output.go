@@ -101,6 +101,8 @@ func printViolation(v *violation, suggestions bool) string {
 			sb.WriteString("       (make sure to keep the behavior of the script the same)")
 		case expressionInGitTagAnnotationActionTagInput:
 			sb.WriteString("    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g")
+		case expressionInGitMessageActionShaInput:
+			sb.WriteString("    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes")
 		}
 	} else {
 		sb.WriteString(fmt.Sprintf(" (%s)", v.kind))

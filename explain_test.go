@@ -24,6 +24,7 @@ func TestExplainRule(t *testing.T) {
 		expressionInRunScriptId,
 		expressionInActionsGithubScriptId,
 		expressionInGitTagAnnotationActionTagInputId,
+		expressionInGitMessageActionShaInputId,
 	}
 
 	for _, tt := range testCases {

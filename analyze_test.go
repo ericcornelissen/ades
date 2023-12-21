@@ -40,6 +40,10 @@ func TestViolationKindString(t *testing.T) {
 			kind: expressionInGitTagAnnotationActionTagInput,
 			want: expressionInGitTagAnnotationActionTagInputId,
 		},
+		{
+			kind: expressionInGitMessageActionShaInput,
+			want: expressionInGitMessageActionShaInputId,
+		},
 	}
 
 	for _, tt := range testCases {
@@ -718,10 +722,86 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 	}
 
+	gitMessageActionTestCases := []TestCase{
+		{
+			name: "git-message-action, vulnerable version without vulnerable input",
+			step: JobStep{
+				Name: "Vulnerable",
+				Uses: "kceb/git-message-action@v1.1.0",
+				With: map[string]string{},
+			},
+			want: []violation{},
+		},
+		{
+			name: "git-message-action, vulnerable version with vulnerable input",
+			step: JobStep{
+				Name: "Vulnerable",
+				Uses: "kceb/git-message-action@v1.1.0",
+				With: map[string]string{
+					"sha": "${{ inputs.sha }}",
+				},
+			},
+			want: []violation{
+				{
+					stepId:  "Vulnerable",
+					problem: "${{ inputs.sha }}",
+					kind:    expressionInGitMessageActionShaInput,
+				},
+			},
+		},
+		{
+			name: "git-tag-annotation-action, old version without vulnerable input",
+			step: JobStep{
+				Name: "Old",
+				Uses: "kceb/git-message-action@v1.0.0",
+				With: map[string]string{},
+			},
+			want: []violation{},
+		},
+		{
+			name: "git-tag-annotation-action, old version with vulnerable input",
+			step: JobStep{
+				Name: "Old",
+				Uses: "kceb/git-message-action@v1.0.0",
+				With: map[string]string{
+					"sha": "${{ inputs.sha }}",
+				},
+			},
+			want: []violation{
+				{
+					stepId:  "Old",
+					problem: "${{ inputs.sha }}",
+					kind:    expressionInGitMessageActionShaInput,
+				},
+			},
+		},
+		{
+			name: "git-message-action, fixed version without vulnerable input",
+			step: JobStep{
+				Name: "Fixed",
+				Uses: "kceb/git-message-action@v1.2.0",
+				With: map[string]string{},
+			},
+			want: []violation{},
+		},
+		{
+			name: "git-message-action, fixed version with vulnerable input",
+			step: JobStep{
+				Name: "Fixed",
+				Uses: "kceb/git-message-action@v1.2.0",
+				With: map[string]string{
+					"sha": "${{ inputs.sha }}",
+				},
+			},
+			want: []violation{},
+		},
+	}
+
 	var allTestCases []TestCase
 	allTestCases = append(allTestCases, runTestCases...)
 	allTestCases = append(allTestCases, actionsGitHubScriptCases...)
 	allTestCases = append(allTestCases, actionTestCases...)
+	allTestCases = append(allTestCases, gitMessageActionTestCases...)
 
 	for _, tt := range allTestCases {
 		tt := tt

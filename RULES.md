@@ -69,3 +69,9 @@ in v1.0.0 or earlier it may be used to execute arbitrary shell commands, see [GH
 To avoid this, upgrade the action to a non-vulnerable version.
 
 [GHSA-hgx2-4pp9-357g]: https://github.com/ericcornelissen/git-tag-annotation-action/security/advisories/GHSA-hgx2-4pp9-357g
+
+## ADES201 - Expression in `kceb/git-message-action` sha input
+
+When a workflow expression is used in the sha input for `kceb/git-message-action` in v1.1.0 or
+earlier it may be used to execute arbitrary shell commands (no vulnerability identifier available).
+To mitigate this, upgrade the action to a non-vulnerable version.
