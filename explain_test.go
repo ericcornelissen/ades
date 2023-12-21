@@ -33,9 +33,11 @@ func TestExplainRule(t *testing.T) {
 
 			explanation, err := explain(tt)
 			if err != nil {
-				t.Errorf("Unexpected error occurred for %q: %q", tt, err)
-			} else if explanation == "" {
-				t.Errorf("Unexpected empty explanation for %q", tt)
+				t.Fatalf("Unexpected error: %#v", err)
+			}
+
+			if explanation == "" {
+				t.Error("Unexpected empty explanation")
 			}
 		})
 	}
@@ -54,7 +56,7 @@ func TestExplainNonRule(t *testing.T) {
 
 			_, err := explain(tt)
 			if err == nil {
-				t.Errorf("Expected an error for %q but got none", tt)
+				t.Fatal("Expected an error, got none")
 			}
 		})
 	}
