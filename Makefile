@@ -47,6 +47,21 @@ coverage: ## Run all tests and generate a coverage report
 	@echo 'Generating coverage report...'
 	@go tool cover -html cover.out -o cover.html
 
+.PHONY: dev-env dev-img
+dev-env: dev-img ## Run an ephemeral development environment container
+	@$(CONTAINER_ENGINE) run -it \
+		--rm \
+		--workdir '/ades' \
+		--mount "type=bind,source=$(shell pwd),target=/ades" \
+		--name 'ades-dev-env' \
+		'ades-dev-img'
+
+dev-img: ## Build a development environment container image
+	@$(CONTAINER_ENGINE) build \
+		--file 'Containerfile.dev' \
+		--tag 'ades-dev-img' \
+		.
+
 .PHONY: fmt fmt-check
 fmt: ## Format the source code
 	@echo 'Formatting...'

@@ -30,6 +30,7 @@
 
 # Source
 !Containerfile
+!Containerfile.dev
 !Makefile
 !go.mod
 !go.sum
