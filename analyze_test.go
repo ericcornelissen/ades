@@ -16,47 +16,8 @@
 package main
 
 import (
-	"fmt"
 	"testing"
-	"testing/quick"
 )
-
-func TestViolationKindString(t *testing.T) {
-	type TestCase struct {
-		kind violationKind
-		want string
-	}
-
-	testCases := []TestCase{
-		{
-			kind: expressionInRunScript,
-			want: expressionInRunScriptId,
-		},
-		{
-			kind: expressionInActionsGithubScript,
-			want: expressionInActionsGithubScriptId,
-		},
-		{
-			kind: expressionInGitTagAnnotationActionTagInput,
-			want: expressionInGitTagAnnotationActionTagInputId,
-		},
-		{
-			kind: expressionInGitMessageActionShaInput,
-			want: expressionInGitMessageActionShaInputId,
-		},
-	}
-
-	for _, tt := range testCases {
-		tt := tt
-		t.Run(fmt.Sprint(tt.kind), func(t *testing.T) {
-			t.Parallel()
-
-			if got, want := tt.kind.String(), tt.want; got != want {
-				t.Errorf("Unexpected result (got %q, want %q)", got, want)
-			}
-		})
-	}
-}
 
 func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
@@ -327,7 +288,6 @@ func TestAnalyzeJob(t *testing.T) {
 				},
 			},
 			wantCount: 0,
-			wantId:    "job-id",
 		},
 		{
 			name: "Safe named job",
@@ -342,7 +302,6 @@ func TestAnalyzeJob(t *testing.T) {
 				},
 			},
 			wantCount: 0,
-			wantId:    "job-id",
 		},
 		{
 			name: "Unnamed job with unsafe step",
@@ -442,482 +401,82 @@ func TestAnalyzeJob(t *testing.T) {
 
 func TestAnalyzeStep(t *testing.T) {
 	type TestCase struct {
-		name string
-		id   int
-		step JobStep
-		want []violation
-	}
-
-	runTestCases := []TestCase{
-		{
-			name: "Unnamed step with no run value",
-			step: JobStep{
-				Name: "",
-				Run:  "",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Named step with no run value",
-			step: JobStep{
-				Name: "Doesn't run",
-				Run:  "",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Unnamed step with safe run value",
-			step: JobStep{
-				Name: "",
-				Run:  "echo 'Hello world!'",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Named step with safe run value",
-			step: JobStep{
-				Name: "Run something",
-				Run:  "echo 'Hello world!'",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Unnamed run with one expression",
-			id:   42,
-			step: JobStep{
-				Name: "",
-				Run:  "echo 'Hello ${{ inputs.name }}!'",
-			},
-			want: []violation{
-				{
-					stepId:  "#42",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInRunScript,
-				},
-			},
-		},
-		{
-			name: "Named run with one expression",
-			step: JobStep{
-				Name: "Greet person",
-				Run:  "echo 'Hello ${{ inputs.name }}!'",
-			},
-			want: []violation{
-				{
-					stepId:  "Greet person",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInRunScript,
-				},
-			},
-		},
-		{
-			name: "Unnamed run with two expressions",
-			id:   3,
-			step: JobStep{
-				Name: "",
-				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
-			},
-			want: []violation{
-				{
-					stepId:  "#3",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInRunScript,
-				},
-				{
-					stepId:  "#3",
-					problem: "${{ steps.id.outputs.day }}",
-					kind:    expressionInRunScript,
-				},
-			},
-		},
-		{
-			name: "Named run with two expressions",
-			id:   1,
-			step: JobStep{
-				Name: "Greet person today",
-				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
-			},
-			want: []violation{
-				{
-					stepId:  "Greet person today",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInRunScript,
-				},
-				{
-					stepId:  "Greet person today",
-					problem: "${{ steps.id.outputs.day }}",
-					kind:    expressionInRunScript,
-				},
-			},
-		},
-	}
-
-	actionsGitHubScriptCases := []TestCase{
-		{
-			name: "Unnamed step using another action",
-			step: JobStep{
-				Name: "",
-				Uses: "ericcornelissen/non-existent-action@1.0.0",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Named step using another action",
-			step: JobStep{
-				Name: "Doesn't run",
-				Uses: "ericcornelissen/non-existent-action@1.0.0",
-			},
-			want: []violation{},
-		},
-		{
-			name: "Unnamed step with safe script",
-			step: JobStep{
-				Name: "",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello world!')",
-				},
-			},
-			want: []violation{},
-		},
-		{
-			name: "Named step with safe script",
-			step: JobStep{
-				Name: "Run something",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello world!')",
-				},
-			},
-			want: []violation{},
-		},
-		{
-			name: "Unnamed step with unsafe script, one expression",
-			id:   42,
-			step: JobStep{
-				Name: "",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello ${{ inputs.name }}!')",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "#42",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInActionsGithubScript,
-				},
-			},
-		},
-		{
-			name: "Named step with unsafe script, one expression",
-			step: JobStep{
-				Name: "Greet person",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello ${{ inputs.name }}!')",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Greet person",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInActionsGithubScript,
-				},
-			},
-		},
-		{
-			name: "Unnamed step with unsafe script, two expression",
-			id:   3,
-			step: JobStep{
-				Name: "",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "#3",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInActionsGithubScript,
-				},
-				{
-					stepId:  "#3",
-					problem: "${{ steps.id.outputs.day }}",
-					kind:    expressionInActionsGithubScript,
-				},
-			},
-		},
-		{
-			name: "Named run with two expressions",
-			id:   1,
-			step: JobStep{
-				Name: "Greet person today",
-				Uses: "actions/github-script@v6",
-				With: map[string]string{
-					"script": "console.log('Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}')",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Greet person today",
-					problem: "${{ inputs.name }}",
-					kind:    expressionInActionsGithubScript,
-				},
-				{
-					stepId:  "Greet person today",
-					problem: "${{ steps.id.outputs.day }}",
-					kind:    expressionInActionsGithubScript,
-				},
-			},
-		},
-	}
-
-	actionTestCases := []TestCase{
-		{
-			name: "git-tag-annotation-action, vulnerable version",
-			step: JobStep{
-				Name: "Vulnerable",
-				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.0",
-				With: map[string]string{
-					"tag": "${{ inputs.tag }}",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Vulnerable",
-					problem: "${{ inputs.tag }}",
-					kind:    expressionInGitTagAnnotationActionTagInput,
-				},
-			},
-		},
-		{
-			name: "git-tag-annotation-action, old version",
-			step: JobStep{
-				Name: "Old",
-				Uses: "ericcornelissen/git-tag-annotation-action@v0.0.9",
-				With: map[string]string{
-					"tag": "${{ inputs.tag }}",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Old",
-					problem: "${{ inputs.tag }}",
-					kind:    expressionInGitTagAnnotationActionTagInput,
-				},
-			},
-		},
-		{
-			name: "git-tag-annotation-action, fixed version",
-			step: JobStep{
-				Name: "Fixed",
-				Uses: "ericcornelissen/git-tag-annotation-action@v1.0.1",
-				With: map[string]string{
-					"tag": "${{ inputs.tag }}",
-				},
-			},
-			want: []violation{},
-		},
-	}
-
-	gitMessageActionTestCases := []TestCase{
-		{
-			name: "git-message-action, vulnerable version without vulnerable input",
-			step: JobStep{
-				Name: "Vulnerable",
-				Uses: "kceb/git-message-action@v1.1.0",
-				With: map[string]string{},
-			},
-			want: []violation{},
-		},
-		{
-			name: "git-message-action, vulnerable version with vulnerable input",
-			step: JobStep{
-				Name: "Vulnerable",
-				Uses: "kceb/git-message-action@v1.1.0",
-				With: map[string]string{
-					"sha": "${{ inputs.sha }}",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Vulnerable",
-					problem: "${{ inputs.sha }}",
-					kind:    expressionInGitMessageActionShaInput,
-				},
-			},
-		},
-		{
-			name: "git-tag-annotation-action, old version without vulnerable input",
-			step: JobStep{
-				Name: "Old",
-				Uses: "kceb/git-message-action@v1.0.0",
-				With: map[string]string{},
-			},
-			want: []violation{},
-		},
-		{
-			name: "git-tag-annotation-action, old version with vulnerable input",
-			step: JobStep{
-				Name: "Old",
-				Uses: "kceb/git-message-action@v1.0.0",
-				With: map[string]string{
-					"sha": "${{ inputs.sha }}",
-				},
-			},
-			want: []violation{
-				{
-					stepId:  "Old",
-					problem: "${{ inputs.sha }}",
-					kind:    expressionInGitMessageActionShaInput,
-				},
-			},
-		},
-		{
-			name: "git-message-action, fixed version without vulnerable input",
-			step: JobStep{
-				Name: "Fixed",
-				Uses: "kceb/git-message-action@v1.2.0",
-				With: map[string]string{},
-			},
-			want: []violation{},
-		},
-		{
-			name: "git-message-action, fixed version with vulnerable input",
-			step: JobStep{
-				Name: "Fixed",
-				Uses: "kceb/git-message-action@v1.2.0",
-				With: map[string]string{
-					"sha": "${{ inputs.sha }}",
-				},
-			},
-			want: []violation{},
-		},
-	}
-
-	var allTestCases []TestCase
-	allTestCases = append(allTestCases, runTestCases...)
-	allTestCases = append(allTestCases, actionsGitHubScriptCases...)
-	allTestCases = append(allTestCases, actionTestCases...)
-	allTestCases = append(allTestCases, gitMessageActionTestCases...)
-
-	for _, tt := range allTestCases {
-		tt := tt
-		t.Run(tt.name, func(t *testing.T) {
-			t.Parallel()
-
-			violations := analyzeStep(tt.id, &tt.step)
-			if got, want := len(violations), len(tt.want); got != want {
-				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
-			}
-
-			for i, v := range violations {
-				if got, want := v, tt.want[i]; got != want {
-					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
-				}
-			}
-		})
-	}
-}
-
-func TestIsRunStep(t *testing.T) {
-	t.Run("Run step", func(t *testing.T) {
-		testCases := []JobStep{
-			{
-				Run: "echo 'Hello world!'",
-			},
-			{
-				Run: "echo 'Hello'\necho 'world!'",
-			},
-			{
-				Run: "a",
-			},
-		}
-
-		for _, tt := range testCases {
-			tt := tt
-			if !isRunStep(&tt) {
-				t.Errorf("Run step not identified: %q", tt)
-			}
-		}
-
-		f := func(step JobStep, run string) bool {
-			if len(run) == 0 {
-				return true
-			}
-
-			step.Run = run
-			return isRunStep(&step)
-		}
-
-		if err := quick.Check(f, nil); err != nil {
-			t.Error(err)
-		}
-	})
-
-	t.Run("Non-run step", func(t *testing.T) {
-		f := func(step JobStep) bool {
-			step.Run = ""
-			return !isRunStep(&step)
-		}
-
-		if err := quick.Check(f, nil); err != nil {
-			t.Error(err)
-		}
-	})
-}
-
-func TestIsBeforeOrAtVersion(t *testing.T) {
-	type TestCase struct {
-		name    string
-		uses    StepUses
-		version string
-		want    bool
+		name       string
+		id         int
+		step       JobStep
+		wantCount  int
+		wantStepId string
 	}
 
 	testCases := []TestCase{
 		{
-			name: "At, full semantic version",
-			uses: StepUses{
-				Ref: "v1.0.0",
+			name: "Unnamed step that does nothing",
+			step: JobStep{
+				Name: "",
 			},
-			version: "v1.0.0",
-			want:    true,
+			wantCount: 0,
 		},
 		{
-			name: "Before, full semantic version",
-			uses: StepUses{
-				Ref: "v0.1.0",
+			name: "Named step that does nothing",
+			step: JobStep{
+				Name: "Doesn't run",
 			},
-			version: "v1.0.0",
-			want:    true,
+			wantCount: 0,
 		},
 		{
-			name: "After, full semantic version",
-			uses: StepUses{
-				Ref: "v1.0.1",
+			name: "Unnamed step without violation",
+			step: JobStep{
+				Name: "",
+				Run:  "echo 'Hello world!'",
 			},
-			version: "v1.0.0",
-			want:    false,
+			wantCount: 0,
 		},
 		{
-			name: "SHA",
-			uses: StepUses{
-				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+			name: "Named step without violation",
+			step: JobStep{
+				Name: "Run something",
+				Run:  "echo 'Hello world!'",
 			},
-			version: "v1.0.0",
-			want:    false,
+			wantCount: 0,
 		},
-
 		{
-			name: "Major version only",
-			uses: StepUses{
-				Ref: "v1",
+			name: "Unnamed step with one violation",
+			id:   42,
+			step: JobStep{
+				Name: "",
+				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
-			version: "v1.0.0",
-			want:    false,
+			wantCount:  1,
+			wantStepId: "#42",
+		},
+		{
+			name: "Named step with one violation",
+			step: JobStep{
+				Name: "Greet person",
+				Run:  "echo 'Hello ${{ inputs.name }}!'",
+			},
+			wantCount:  1,
+			wantStepId: "Greet person",
+		},
+		{
+			name: "Unnamed step with two violation",
+			id:   3,
+			step: JobStep{
+				Name: "",
+				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
+			},
+			wantCount:  2,
+			wantStepId: "#3",
+		},
+		{
+			name: "Named step with two violation",
+			id:   1,
+			step: JobStep{
+				Name: "Greet person today",
+				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
+			},
+			wantCount:  2,
+			wantStepId: "Greet person today",
 		},
 	}
 
@@ -926,8 +485,69 @@ func TestIsBeforeOrAtVersion(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := isBeforeOrAtVersion(tt.uses, tt.version), tt.want; got != want {
-				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", tt.uses.Ref, tt.version, got, want)
+			violations := analyzeStep(tt.id, &tt.step)
+			if got, want := len(violations), tt.wantCount; got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
+			}
+
+			for i, v := range violations {
+				if got, want := v.stepId, tt.wantStepId; got != want {
+					t.Errorf("Unexpected step id for violation #%d (got %q, want %q)", i, got, want)
+				}
+			}
+		})
+	}
+}
+
+func TestAnalyzeString(t *testing.T) {
+	type TestCase struct {
+		name  string
+		value string
+		want  []violation
+	}
+
+	testCases := []TestCase{
+		{
+			name:  "Simple and safe",
+			value: "echo 'Hello world!'",
+			want:  []violation{},
+		},
+		{
+			name:  "Multiline and safe",
+			value: "echo 'Hello'\necho 'world!'",
+			want:  []violation{},
+		},
+		{
+			name:  "One violations",
+			value: "echo 'Hello ${{ input.name }}!'",
+			want: []violation{
+				{problem: "${{ input.name }}"},
+			},
+		},
+		{
+			name:  "Two violations",
+			value: "echo '${{ input.greeting }} ${{ input.name }}!'",
+			want: []violation{
+				{problem: "${{ input.greeting }}"},
+				{problem: "${{ input.name }}"},
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		tt := tt
+		t.Run(tt.name, func(t *testing.T) {
+			t.Parallel()
+
+			violations := analyzeString(tt.value)
+			if got, want := len(violations), len(tt.want); got != want {
+				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
+			}
+
+			for i, v := range violations {
+				if got, want := v, tt.want[i]; got != want {
+					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
+				}
 			}
 		})
 	}

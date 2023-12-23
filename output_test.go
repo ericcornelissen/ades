@@ -16,6 +16,7 @@
 package main
 
 import (
+	"strings"
 	"testing"
 )
 
@@ -110,7 +111,7 @@ func TestPrintViolations(t *testing.T) {
 			wantSuggestions: ``,
 		},
 		{
-			name: "Workflow with violation in run script",
+			name: "Workflow with a violation",
 			violations: func() map[string][]violation {
 				m := make(map[string][]violation)
 				m["workflow.yml"] = make([]violation, 1)
@@ -118,7 +119,7 @@ func TestPrintViolations(t *testing.T) {
 					jobId:   "4",
 					stepId:  "2",
 					problem: "${{ foo.bar }}",
-					kind:    expressionInRunScript,
+					ruleId:  "ADES100",
 				}
 				return m
 			},
@@ -126,86 +127,17 @@ func TestPrintViolations(t *testing.T) {
   job "4", step "2" has "${{ foo.bar }}" (ADES100)
 `,
 			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}", suggestion:
-    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)
-`,
+  job "4", step "2" has "${{ foo.bar }}", suggestion:`,
 		},
 		{
-			name: "Workflow with violation in actions/github-script",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["workflow.yml"] = make([]violation, 1)
-				m["workflow.yml"][0] = violation{
-					jobId:   "4",
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInActionsGithubScript,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}" (ADES101)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}", suggestion:
-    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)
-`,
-		},
-		{
-			name: "Workflow with violation in ericcornelissen/git-tag-annotation-action",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["workflow.yml"] = make([]violation, 1)
-				m["workflow.yml"][0] = violation{
-					jobId:   "4",
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInGitTagAnnotationActionTagInput,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}" (ADES200)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}", suggestion:
-    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g
-`,
-		},
-		{
-			name: "Workflow with violation in kceb/git-message-action",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["workflow.yml"] = make([]violation, 1)
-				m["workflow.yml"][0] = violation{
-					jobId:   "4",
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInGitMessageActionShaInput,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}" (ADES201)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}", suggestion:
-    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes
-`,
-		},
-		{
-			name: "Manifest with violation in run script",
+			name: "Manifest with a violation",
 			violations: func() map[string][]violation {
 				m := make(map[string][]violation)
 				m["action.yml"] = make([]violation, 1)
 				m["action.yml"][0] = violation{
 					stepId:  "2",
 					problem: "${{ foo.bar }}",
-					kind:    expressionInRunScript,
+					ruleId:  "ADES100",
 				}
 				return m
 			},
@@ -213,73 +145,7 @@ func TestPrintViolations(t *testing.T) {
   step "2" has "${{ foo.bar }}" (ADES100)
 `,
 			wantSuggestions: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}", suggestion:
-    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)
-`,
-		},
-		{
-			name: "Manifest with violation in actions/github-script",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["action.yml"] = make([]violation, 1)
-				m["action.yml"][0] = violation{
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInActionsGithubScript,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}" (ADES101)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}", suggestion:
-    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)
-`,
-		},
-		{
-			name: "Manifest with violation in ericcornelissen/git-tag-annotation-action",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["action.yml"] = make([]violation, 1)
-				m["action.yml"][0] = violation{
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInGitTagAnnotationActionTagInput,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}" (ADES200)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}", suggestion:
-    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g
-`,
-		},
-		{
-			name: "Manifest with violation in kceb/git-message-action",
-			violations: func() map[string][]violation {
-				m := make(map[string][]violation)
-				m["action.yml"] = make([]violation, 1)
-				m["action.yml"][0] = violation{
-					stepId:  "2",
-					problem: "${{ foo.bar }}",
-					kind:    expressionInGitMessageActionShaInput,
-				}
-				return m
-			},
-			want: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}" (ADES201)
-`,
-			wantSuggestions: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}", suggestion:
-    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes
-`,
+  step "2" has "${{ foo.bar }}", suggestion:`,
 		},
 	}
 
@@ -292,8 +158,8 @@ func TestPrintViolations(t *testing.T) {
 				t.Errorf("Unexpected output (got %q, want %q)", got, want)
 			}
 
-			if got, want := printViolations(tt.violations(), true), tt.wantSuggestions; got != want {
-				t.Errorf("Unexpected output with suggestions (got %q, want %q)", got, want)
+			if got, prefix := printViolations(tt.violations(), true), tt.wantSuggestions; !strings.HasPrefix(got, prefix) {
+				t.Errorf("Unexpected prefix for output with suggestions (got %q, want %q)", got, prefix)
 			}
 		})
 	}

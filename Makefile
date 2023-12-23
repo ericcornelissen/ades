@@ -90,7 +90,7 @@ vet: ## Vet the source code
 	@go run github.com/alexkohler/unimport .
 	@go run github.com/go-critic/go-critic/cmd/gocritic check .
 	@go run github.com/gordonklaus/ineffassign .
-	@go run github.com/jgautheron/goconst/cmd/goconst .
+	@go run github.com/jgautheron/goconst/cmd/goconst -set-exit-status .
 	@go run github.com/kisielk/errcheck .
 	@go run github.com/kunwardeep/paralleltest -i .
 	@go run github.com/kyoh86/looppointer/cmd/looppointer .
