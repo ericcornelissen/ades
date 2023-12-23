@@ -17,3 +17,37 @@ If you decide to make a contribution, please read the [DCO] and use the followin
 
 [dco]: ./DCO.txt
 [signoff]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff
+
+---
+
+## Adding a Rule
+
+To add a rule you need to add some information and logic to the `rules.go` file, and corresponding
+tests to the `rules_test.go` file. The details depend on whether it's a rule for actions (i.e. steps
+with `uses:`) or for other steps, but defining the rule is the same regardless.
+
+To define a rule you need to create an instance of the `rule` type. This involves giving the rule an
+id, title, and description as well as a function to extract what needs to be analyzed and a function
+that builds a suggestion for fixing a violation. The id, title, and description are simple text
+values. The extraction function needs to return a string to be analyzed for a given `JobStep`. The
+suggestion functions needs to return a suggestion string for a given `violation`.
+
+Note that if multiple things could be checked for one action or step construct, they should be
+defined as separate rules.
+
+### Action Rules
+
+If the rule is for an action you need to specify when the rule applies, usually in terms of the ref
+that is used. Defining this is part of the `actionRule` type. You also need to add the action (if it
+isn't already) and rule to the `actionRules` map.
+
+### Step Rules
+
+If the rule is for other steps you need to specify when the rule applies. Defining this is part of
+the `stepRule` type. You also need to add the rule to the `stepRules` slice.
+
+### Testing
+
+Every new rule needs to be tested. The rule id, title, and description are tested automatically. The
+`appliesTo`, `extractFrom`, and `suggestion` functions require dedicated tests. For this, it is
+recommended to follow the lead of the tests for existing rules.
