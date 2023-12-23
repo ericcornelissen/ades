@@ -84,9 +84,9 @@ vet: ## Vet the source code
 	@echo 'Vetting...'
 	@go vet .
 	@go run 4d63.com/gochecknoinits .
-	@go run github.com/alexkohler/dogsled/cmd/dogsled .
-	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret .
-	@go run github.com/alexkohler/prealloc .
+	@go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status .
+	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 .
+	@go run github.com/alexkohler/prealloc -set_exit_status .
 	@go run github.com/alexkohler/unimport .
 	@go run github.com/go-critic/go-critic/cmd/gocritic check .
 	@go run github.com/gordonklaus/ineffassign .
@@ -100,8 +100,8 @@ vet: ## Vet the source code
 	@go run github.com/remyoudompheng/go-misc/deadcode .
 	@go run github.com/tetafro/godot/cmd/godot .
 	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck .
-	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow .
 	@go run go.uber.org/nilaway/cmd/nilaway .
+	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow .
 	@go run honnef.co/go/tools/cmd/staticcheck .
 	@go run mvdan.cc/unparam .
 
