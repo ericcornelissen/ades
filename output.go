@@ -84,36 +84,14 @@ func printViolation(v *violation, suggestions bool) string {
 	}
 
 	if suggestions {
-		sb.WriteString(", suggestion:")
-		sb.WriteRune('\n')
-		switch v.kind {
-		case expressionInRunScript, expressionInActionsGithubScript:
-			envVarName := getVariableNameForExpression(v.problem)
+		r, _ := findRule(v.ruleId)
+		suggestion := r.suggestion(v)
 
-			replacement := fmt.Sprintf("$%s", envVarName)
-			if v.kind == expressionInActionsGithubScript {
-				replacement = fmt.Sprintf("process.env.%s", envVarName)
-			}
-
-			sb.WriteString(fmt.Sprintf("    1. Set `%s: %s` in the step's `env` map\n", envVarName, v.problem))
-			sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `%s`", v.problem, replacement))
-			sb.WriteRune('\n')
-			sb.WriteString("       (make sure to keep the behavior of the script the same)")
-		case expressionInGitTagAnnotationActionTagInput:
-			sb.WriteString("    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g")
-		case expressionInGitMessageActionShaInput:
-			sb.WriteString("    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes")
-		}
+		sb.WriteString(", suggestion:\n")
+		sb.WriteString(suggestion)
 	} else {
-		sb.WriteString(fmt.Sprintf(" (%s)", v.kind))
+		sb.WriteString(fmt.Sprintf(" (%s)", v.ruleId))
 	}
 
 	return sb.String()
-}
-
-func getVariableNameForExpression(expression string) (name string) {
-	name = expression[strings.LastIndex(expression, ".")+1:]
-	name = strings.TrimRight(name, "}")
-	name = strings.TrimSpace(name)
-	return strings.ToUpper(name)
 }

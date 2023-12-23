@@ -85,12 +85,12 @@ func run() int {
 	}
 
 	if *flagExplain != "" {
-		explanation, err := explain(*flagExplain)
+		explanation, err := explainRule(*flagExplain)
 		if err != nil {
 			fmt.Printf("Unknown rule %q\n", *flagExplain)
 			return exitError
 		} else {
-			fmt.Print(explanation)
+			fmt.Println(explanation)
 			return exitSuccess
 		}
 	}
