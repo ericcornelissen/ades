@@ -36,10 +36,10 @@ type WorkflowJob struct {
 
 // JobStep is a (simplified) representation of a workflow job step object.
 type JobStep struct {
+	With map[string]string `yaml:"with"`
 	Name string            `yaml:"name"`
 	Run  string            `yaml:"run"`
 	Uses string            `yaml:"uses"`
-	With map[string]string `yaml:"with"`
 }
 
 // ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.

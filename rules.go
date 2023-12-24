@@ -23,11 +23,11 @@ import (
 )
 
 type rule struct {
+	extractFrom func(step *JobStep) string
+	suggestion  func(v *violation) string
 	id          string
 	title       string
 	description string
-	extractFrom func(step *JobStep) string
-	suggestion  func(v *violation) string
 }
 
 type actionRule struct {
