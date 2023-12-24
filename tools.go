@@ -27,6 +27,7 @@ import (
 	_ "github.com/alexkohler/nakedret/v2/cmd/nakedret"
 	_ "github.com/alexkohler/prealloc"
 	_ "github.com/alexkohler/unimport"
+	_ "github.com/dkorunic/betteralign/cmd/betteralign"
 	_ "github.com/go-critic/go-critic/cmd/gocritic"
 	_ "github.com/google/go-licenses"
 	_ "github.com/gordonklaus/ineffassign"
