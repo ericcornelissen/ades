@@ -9,7 +9,7 @@ require (
 	github.com/alexkohler/prealloc v1.0.0
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/dkorunic/betteralign v0.3.3
-	github.com/go-critic/go-critic v0.10.0
+	github.com/go-critic/go-critic v0.11.0
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
@@ -27,7 +27,7 @@ require (
 	github.com/tomarrell/wrapcheck/v2 v2.8.1
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
 	golang.org/x/mod v0.14.0
-	golang.org/x/tools v0.16.0
+	golang.org/x/tools v0.16.1
 	golang.org/x/vuln v1.0.1
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.4.6
