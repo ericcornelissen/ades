@@ -2,8 +2,16 @@
 
 # Release Guidelines
 
-To release a new version of the `ades` project follow the steps found in this file (using v23.12 as
-an example):
+To release a new version of the `ades` project follow the description in this file.
+
+## Preferred
+
+Run `make release` and follow the instructions it gives.
+
+## Fallback
+
+The following is a full step-by-step walkthrough of how to create a release for `ades` (using v23.12
+as an example):
 
 1. Make sure that your local copy of the repository is up-to-date, sync:
 
@@ -23,8 +31,9 @@ an example):
 
    ```diff
      func version() {
-   -   fmt.Println("v23.11")
-   +   fmt.Println("v23.12")
+   -   versionString := "v23.11"
+   +   versionString := "v23.12"
+       fmt.Println(versionString)
      }
    ```
 

@@ -75,6 +75,40 @@ fmt-check: ## Check the source code formatting
 	@test -z "$$(gofmt -l .)"
 	@test -z "$$(go run golang.org/x/tools/cmd/goimports -l .)"
 
+.PHONY: release
+release:
+	@echo 'On main and not dirty?'
+	@test "$$(git branch --show-current)" = 'main'
+	@test "$$(git status --porcelain)" = ''
+
+	@echo 'Is main up-to-date?'
+	@git fetch
+	@test "$$(git rev-parse HEAD)" = "$$(git rev-parse FETCH_HEAD)"
+
+	@echo 'Preparing for version bump...'
+	@sed -i main.go -e "s/versionString := \"v[0-9][0-9][.][0-9][0-9]\"/versionString := \"v$$(date '+%y.%m')\"/"
+	@sed -i test/flags-info.txtar -e "s/stdout 'v[0-9][0-9][.][0-9][0-9]'/stdout 'v$$(date '+%y.%m')'/"
+
+	@echo 'Committing version bump...'
+	@git checkout -b version-bump
+	@git add 'main.go' 'test/flags-info.txtar'
+	@git commit --signoff --message 'version bump'
+
+	@echo 'Pushing version-bump branch...'
+	@git push origin version-bump
+
+	@echo ''
+	@echo 'Next, you should open a Pull Request to merge the branch version-bump into main and'
+	@echo 'merge it if all checks succeeds. After merging run:'
+	@echo ''
+	@echo '    git checkout main'
+	@echo '    git pull origin main'
+	@echo "    git tag v$$(date '+%y.%m')"
+	@echo "    git push origin v$$(date '+%y.%m')"
+	@echo ''
+	@echo 'After that a release should be created automatically. If not, follow the instructions in'
+	@echo 'RELEASE.md.'
+
 .PHONY: run
 run: ## Run the project on itself
 	@go run .
