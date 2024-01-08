@@ -1,6 +1,6 @@
 # Help
 exec ades -help
-stdout 'find problematic use of template variables in GitHub Action workflows\n'
+stdout 'find dangerous uses of expressions in GitHub Action workflows\n'
 ! stderr .
 
 # Legal
