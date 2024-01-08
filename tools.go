@@ -41,6 +41,7 @@ import (
 	_ "github.com/remyoudompheng/go-misc/deadcode"
 	_ "github.com/tetafro/godot/cmd/godot"
 	_ "github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck"
+	_ "github.com/ultraware/whitespace/cmd/whitespace"
 	_ "go.uber.org/nilaway/cmd/nilaway"
 	_ "golang.org/x/tools/cmd/goimports"
 	_ "golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow"
