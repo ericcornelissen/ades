@@ -1,28 +1,28 @@
 # Safe manifest
 stdin safe/action.yml
-exec ades -stdin
+exec ades -
 ! stdout .
 ! stderr .
 
 # Safe workflow
 stdin .github/workflows/safe.yml
-exec ades -stdin
+exec ades -
 ! stdout .
 ! stderr .
 
 # Unsafe manifest
 stdin unsafe/action.yml
-! exec ades -stdin
+! exec ades -
 ! stderr .
 
 # Unsafe workflow
 stdin .github/workflows/unsafe.yml
-! exec ades -stdin
+! exec ades -
 ! stderr .
 
 # Not yaml
 stdin not-yaml.txt
-! exec ades -stdin
+! exec ades -
 stdout 'Could not parse input, is it YAML?'
 ! stderr .
 
