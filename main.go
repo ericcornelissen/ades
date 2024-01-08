@@ -1,4 +1,4 @@
-// Copyright (C) 2023  Eric Cornelissen
+// Copyright (C) 2024  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -304,7 +304,7 @@ func tryWorkflow(data []byte) ([]violation, error) {
 }
 
 func legal() {
-	fmt.Println(`ades  Copyright (C) 2023  Eric Cornelissen
+	fmt.Println(`ades  Copyright (C) 2024  Eric Cornelissen
 This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
 This is free software, and you are welcome to redistribute it under certain
 conditions; see the GPL v3.0 for details.`)
