@@ -335,5 +335,6 @@ Exit Codes:
 }
 
 func version() {
-	fmt.Println("v23.12")
+	versionString := "v23.12"
+	fmt.Println(versionString)
 }
