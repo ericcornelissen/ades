@@ -49,11 +49,6 @@ var (
 		false,
 		"Show legal information and exit",
 	)
-	flagStdin = flag.Bool(
-		"stdin",
-		false,
-		"Read workflow or manifest from stdin",
-	)
 	flagSuggestions = flag.Bool(
 		"suggestions",
 		false,
@@ -95,25 +90,26 @@ func run() int {
 		}
 	}
 
-	var ok bool
-	var targets []string
-	var report map[string]map[string][]violation
+	targets := flag.Args()
+	if len(targets) == 0 {
+		wd, err := os.Getwd()
+		if err != nil {
+			fmt.Printf("Unexpected error getting working directory: %s", err)
+			return exitError
+		}
 
-	if *flagStdin {
+		targets = []string{wd}
+	}
+
+	var (
+		ok     bool
+		report map[string]map[string][]violation
+	)
+
+	if targets[0] == "-" {
 		targets = []string{"stdin"}
 		report, ok = runOnStdin()
 	} else {
-		targets = flag.Args()
-		if len(targets) == 0 {
-			wd, err := os.Getwd()
-			if err != nil {
-				fmt.Printf("Unexpected error getting working directory: %s", err)
-				return exitError
-			}
-
-			targets = []string{wd}
-		}
-
 		report, ok = runOnTargets(targets)
 	}
 
@@ -327,9 +323,9 @@ Flags:
   -help              Show this help message and exit.
   -json              Output results in JSON format.
   -legal             Show legal information and exit.
-  -stdin             Read workflow or manifest from stdin.
   -suggestions       Show suggested fixes inline.
   -version           Show the program version and exit.
+  -                  Read workflow or manifest from stdin.
 
 Exit Codes:
 
