@@ -71,7 +71,12 @@ as an example):
 
 1. Create a [GitHub Release] for the [git tag] of the new release. The release title should be
    "Release {_version_}" (e.g. "Release v23.12"). The release text should be "{_version_}" (e.g.
-   "v23.12"). The release artifact should follow the previous release as closely as possible.
+   "v23.12"). The release artifacts should be the contents of the `_compiled/` directory after
+   running:
+
+   ```shell
+   make release-compile
+   ```
 
 1. Publish to [Docker Hub], first with a version tag:
 

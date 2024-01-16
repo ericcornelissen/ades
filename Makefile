@@ -42,6 +42,7 @@ build: ## Build the ades binary for the current platform
 clean: ## Reset the project to a clean state
 	@echo 'Cleaning...'
 	@git clean -fx \
+		_compiled/ \
 		ades \
 		cover.*
 
@@ -94,7 +95,7 @@ fmt-check: ## Check the source code formatting
 	@test -z "$$(gofmt -l .)"
 	@test -z "$$(go run golang.org/x/tools/cmd/goimports -l .)"
 
-.PHONY: release
+.PHONY: release release-compile
 release:
 	@echo 'On main and not dirty?'
 	@test "$$(git branch --show-current)" = 'main'
@@ -127,6 +128,63 @@ release:
 	@echo ''
 	@echo 'After that a release should be created automatically. If not, follow the instructions in'
 	@echo 'RELEASE.md.'
+
+release-compile:
+	@mkdir _compiled/
+
+	@echo 'Compiling for darwin/amd64...'
+	@env GOOS=darwin GOARCH=amd64 go build -o 'ades'
+	@tar -czf 'ades_darwin_amd64.tar.gz' 'ades'
+	@mv 'ades_darwin_amd64.tar.gz' '_compiled/'
+
+	@echo 'Compiling for darwin/arm64...'
+	@env GOOS=darwin GOARCH=arm64 go build -o 'ades'
+	@tar -czf 'ades_darwin_arm64.tar.gz' 'ades'
+	@mv 'ades_darwin_arm64.tar.gz' '_compiled/'
+
+	@echo 'Compiling for linux/386...'
+	@env GOOS=linux GOARCH=386 go build -o 'ades'
+	@tar -czf 'ades_linux_386.tar.gz' 'ades'
+	@mv 'ades_linux_386.tar.gz' '_compiled/'
+
+	@echo 'Compiling for linux/amd64...'
+	@env GOOS=linux GOARCH=amd64 go build -o 'ades'
+	@tar -czf 'ades_linux_amd64.tar.gz' 'ades'
+	@mv 'ades_linux_amd64.tar.gz' '_compiled/'
+
+	@echo 'Compiling for linux/arm...'
+	@env GOOS=linux GOARCH=arm go build -o 'ades'
+	@tar -czf 'ades_linux_arm.tar.gz' 'ades'
+	@mv 'ades_linux_arm.tar.gz' '_compiled/'
+
+	@echo 'Compiling for linux/arm64...'
+	@env GOOS=linux GOARCH=arm64 go build -o 'ades'
+	@tar -czf 'ades_linux_arm64.tar.gz' 'ades'
+	@mv 'ades_linux_arm64.tar.gz' '_compiled/'
+
+	@echo 'Compiling for windows/386...'
+	@env GOOS=windows GOARCH=386 go build -o 'ades'
+	@mv 'ades' 'ades.exe'
+	@zip -9q 'ades_windows_386.zip' 'ades.exe'
+	@mv 'ades_windows_386.zip' '_compiled/'
+
+	@echo 'Compiling for windows/amd64...'
+	@env GOOS=windows GOARCH=amd64 go build -o 'ades'
+	@mv 'ades' 'ades.exe'
+	@zip -9q 'ades_windows_amd64.zip' 'ades.exe'
+	@mv 'ades_windows_amd64.zip' '_compiled/'
+
+	@echo 'Compiling for windows/arm...'
+	@env GOOS=windows GOARCH=arm go build -o 'ades'
+	@mv 'ades' 'ades.exe'
+	@zip -9q 'ades_windows_arm.zip' 'ades.exe'
+	@mv 'ades_windows_arm.zip' '_compiled/'
+
+	@echo 'Compiling for windows/arm64...'
+	@env GOOS=windows GOARCH=arm64 go build -o 'ades'
+	@mv 'ades' 'ades.exe'
+	@zip -9q 'ades_windows_arm64.zip' 'ades.exe'
+	@mv 'ades_windows_arm64.zip' '_compiled/'
 
 .PHONY: run
 run: ## Run the project on itself
