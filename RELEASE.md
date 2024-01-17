@@ -71,8 +71,8 @@ as an example):
 
 1. Create a [GitHub Release] for the [git tag] of the new release. The release title should be
    "Release {_version_}" (e.g. "Release v23.12"). The release text should be "{_version_}" (e.g.
-   "v23.12"). The release artifacts should be the contents of the `_compiled/` directory after
-   running:
+   "v23.12"). The release artifacts should be the contents of the `_compiled/` directory (including
+   checksums) after running:
 
    ```shell
    make release-compile
