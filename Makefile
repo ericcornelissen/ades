@@ -186,6 +186,9 @@ release-compile:
 	@zip -9q 'ades_windows_arm64.zip' 'ades.exe'
 	@mv 'ades_windows_arm64.zip' '_compiled/'
 
+	@echo 'Computing checksums...'
+	@cd _compiled/ && shasum --algorithm 512 ./* >'checksums-sha512.txt'
+
 .PHONY: run
 run: ## Run the project on itself
 	@go run .
