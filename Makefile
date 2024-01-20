@@ -217,6 +217,7 @@ vet: ## Vet the source code
 	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 .
 	@go run github.com/alexkohler/prealloc -set_exit_status .
 	@go run github.com/alexkohler/unimport .
+	@go run github.com/butuzov/ireturn/cmd/ireturn .
 	@go run github.com/catenacyber/perfsprint .
 	@go run github.com/dkorunic/betteralign/cmd/betteralign .
 	@go run github.com/go-critic/go-critic/cmd/gocritic check .
