@@ -21,7 +21,7 @@ require (
 	github.com/kyoh86/looppointer v0.2.1
 	github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06
 	github.com/nishanths/exhaustive v0.12.0
-	github.com/polyfloyd/go-errorlint v1.4.7
+	github.com/polyfloyd/go-errorlint v1.4.8
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/rogpeppe/go-internal v1.12.0
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
