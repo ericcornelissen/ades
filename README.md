@@ -20,6 +20,12 @@ You can also use the containerized version of the CLI, for example using Docker:
 docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
 ```
 
+Or you can use Go to build from source and run the CLI directly, for example using `go run`:
+
+```shell
+go run github.com/ericcornelissen/ades@latest .
+```
+
 ### Features
 
 - Scan workflow files and action manifests.
