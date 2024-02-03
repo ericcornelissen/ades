@@ -59,9 +59,12 @@ func printJson(rawViolations map[string]map[string][]violation) string {
 }
 
 func printViolations(violations map[string][]violation, suggestions bool) string {
+	clean := true
+
 	var sb strings.Builder
 	for file, fileViolations := range violations {
 		if cnt := len(fileViolations); cnt > 0 {
+			clean = false
 			sb.WriteString(fmt.Sprintf("Detected %d violation(s) in %q:", cnt, file))
 			sb.WriteRune('\n')
 			for _, violation := range fileViolations {
@@ -72,7 +75,11 @@ func printViolations(violations map[string][]violation, suggestions bool) string
 		}
 	}
 
-	return sb.String()
+	if clean {
+		return "Ok\n"
+	} else {
+		return sb.String()
+	}
 }
 
 func printViolation(v *violation, suggestions bool) string {

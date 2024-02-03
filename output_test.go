@@ -97,8 +97,10 @@ func TestPrintViolations(t *testing.T) {
 			violations: func() map[string][]violation {
 				return make(map[string][]violation)
 			},
-			want:            ``,
-			wantSuggestions: ``,
+			want: `Ok
+`,
+			wantSuggestions: `Ok
+`,
 		},
 		{
 			name: "File without violations",
@@ -107,8 +109,10 @@ func TestPrintViolations(t *testing.T) {
 				m["workflow.yml"] = make([]violation, 0)
 				return m
 			},
-			want:            ``,
-			wantSuggestions: ``,
+			want: `Ok
+`,
+			wantSuggestions: `Ok
+`,
 		},
 		{
 			name: "Workflow with a violation",
