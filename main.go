@@ -113,6 +113,10 @@ func run() int {
 		report, ok = runOnTargets(targets)
 	}
 
+	if !ok {
+		return exitError
+	}
+
 	if *flagJson {
 		fmt.Println(printJson(report))
 	} else {
@@ -127,10 +131,6 @@ func run() int {
 			violations := report[target]
 			fmt.Print(printViolations(violations, *flagSuggestions))
 		}
-	}
-
-	if !ok {
-		return exitError
 	}
 
 	for _, targetViolations := range report {

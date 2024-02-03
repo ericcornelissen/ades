@@ -2,38 +2,43 @@
 mkdir empty
 
 exec ades 'empty'
-! stdout .
+stdout 'Ok'
 ! stderr .
 
 # Safe project
 exec ades 'safe'
-! stdout .
+stdout 'Ok'
 ! stderr .
 
 # Unsafe manifest (.yml)
 ! exec ades 'manifests/action.yml'
 stdout 'manifests/action.yml'
+! stdout 'Ok'
 ! stderr .
 
 # Unsafe manifest (.yaml)
 ! exec ades 'manifests/action.yaml'
 stdout 'manifests/action.yaml'
+! stdout 'Ok'
 ! stderr .
 
 # Unsafe workflow (.yml)
 ! exec ades 'workflows/.github/workflows/unsafe.yml'
 stdout 'workflows/.github/workflows/unsafe.yml'
+! stdout 'Ok'
 ! stderr .
 
 # Unsafe workflow (.yaml)
 ! exec ades 'workflows/.github/workflows/unsafe.yaml'
 stdout 'workflows/.github/workflows/unsafe.yaml'
+! stdout 'Ok'
 ! stderr .
 
 # Unsafe project
 ! exec ades 'workflows'
 stdout '.github/workflows/unsafe.yml'
 stdout '.github/workflows/unsafe.yaml'
+! stdout 'Ok'
 ! stderr .
 
 # Multiple targets

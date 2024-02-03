@@ -1,29 +1,32 @@
 # Safe manifest
 stdin safe/action.yml
 exec ades -
-! stdout .
+stdout 'Ok'
 ! stderr .
 
 # Safe workflow
 stdin .github/workflows/safe.yml
 exec ades -
-! stdout .
+stdout 'Ok'
 ! stderr .
 
 # Unsafe manifest
 stdin unsafe/action.yml
 ! exec ades -
+! stdout 'Ok'
 ! stderr .
 
 # Unsafe workflow
 stdin .github/workflows/unsafe.yml
 ! exec ades -
+! stdout 'Ok'
 ! stderr .
 
 # Not yaml
 stdin not-yaml.txt
 ! exec ades -
 stdout 'Could not parse input, is it YAML?'
+! stdout 'Ok'
 ! stderr .
 
 
