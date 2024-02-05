@@ -10,7 +10,7 @@ require (
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/butuzov/ireturn v0.2.2
 	github.com/catenacyber/perfsprint v0.6.0
-	github.com/dkorunic/betteralign v0.3.4
+	github.com/dkorunic/betteralign v0.4.0
 	github.com/go-critic/go-critic v0.11.0
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
