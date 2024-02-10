@@ -46,7 +46,6 @@ func analyzeWorkflow(workflow *Workflow) []violation {
 	}
 
 	for id, job := range workflow.Jobs {
-		job := job
 		violations = append(violations, analyzeJob(id, &job)...)
 	}
 
@@ -71,7 +70,6 @@ func analyzeJob(id string, job *WorkflowJob) []violation {
 func analyzeSteps(steps []JobStep) []violation {
 	violations := make([]violation, 0)
 	for i, step := range steps {
-		step := step
 		violations = append(violations, analyzeStep(i, &step)...)
 	}
 

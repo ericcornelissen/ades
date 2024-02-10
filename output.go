@@ -68,7 +68,6 @@ func printViolations(violations map[string][]violation, suggestions bool) string
 			sb.WriteString(fmt.Sprintf("Detected %d violation(s) in %q:", cnt, file))
 			sb.WriteRune('\n')
 			for _, violation := range fileViolations {
-				violation := violation
 				sb.WriteString(printViolation(&violation, suggestions))
 				sb.WriteRune('\n')
 			}
