@@ -125,7 +125,6 @@ jobs:
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
@@ -206,7 +205,6 @@ jobs:
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
@@ -307,7 +305,6 @@ runs:
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
@@ -368,7 +365,6 @@ runs:
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
@@ -453,7 +449,6 @@ func TestParseUses(t *testing.T) {
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 
@@ -505,7 +500,6 @@ func TestParseUses(t *testing.T) {
 		}
 
 		for _, tt := range testCases {
-			tt := tt
 			t.Run(tt.name, func(t *testing.T) {
 				t.Parallel()
 

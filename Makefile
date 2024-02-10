@@ -224,8 +224,7 @@ vet: ## Vet the source code
 	@go run github.com/gordonklaus/ineffassign .
 	@go run github.com/jgautheron/goconst/cmd/goconst -set-exit-status .
 	@go run github.com/kisielk/errcheck .
-	@go run github.com/kunwardeep/paralleltest -i .
-	@go run github.com/kyoh86/looppointer/cmd/looppointer .
+# @go run github.com/kunwardeep/paralleltest -i .
 	@go run github.com/mdempsky/unconvert .
 	@go run github.com/nishanths/exhaustive/cmd/exhaustive .
 	@go run github.com/polyfloyd/go-errorlint .
