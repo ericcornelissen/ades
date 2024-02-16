@@ -16,9 +16,9 @@
 FROM docker.io/golang:1.22.0 AS build
 
 WORKDIR /src
-COPY Makefile go.mod go.sum *.go ./
+COPY go.mod go.sum *.go ./
 
-RUN make build
+RUN go run tasks.go build
 
 # ---
 
