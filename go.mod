@@ -17,7 +17,7 @@ require (
 	github.com/gtramontina/ooze v0.2.0
 	github.com/jgautheron/goconst v1.6.0
 	github.com/kisielk/errcheck v1.7.0
-	github.com/kunwardeep/paralleltest v1.0.9
+	github.com/kunwardeep/paralleltest v1.0.10
 	github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06
 	github.com/nishanths/exhaustive v0.12.0
 	github.com/polyfloyd/go-errorlint v1.4.8
