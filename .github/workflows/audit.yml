@@ -1,6 +1,11 @@
 name: Audit
 on:
-  pull_request: ~
+  pull_request:
+    paths:
+    - .github/workflows/audit.yml
+    - '*.go'
+    - go.mod
+    - go.sum
   push:
     branches:
     - main
