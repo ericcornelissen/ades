@@ -11,7 +11,7 @@ require (
 	github.com/butuzov/ireturn v0.3.0
 	github.com/catenacyber/perfsprint v0.6.0
 	github.com/dkorunic/betteralign v0.3.4
-	github.com/go-critic/go-critic v0.11.0
+	github.com/go-critic/go-critic v0.11.1
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
@@ -50,7 +50,7 @@ require (
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-toolsmith/astcast v1.1.0 // indirect
 	github.com/go-toolsmith/astcopy v1.1.0 // indirect
-	github.com/go-toolsmith/astequal v1.1.0 // indirect
+	github.com/go-toolsmith/astequal v1.2.0 // indirect
 	github.com/go-toolsmith/astfmt v1.1.0 // indirect
 	github.com/go-toolsmith/astp v1.1.0 // indirect
 	github.com/go-toolsmith/pkgload v1.2.2 // indirect
@@ -59,6 +59,7 @@ require (
 	github.com/gobwas/glob v0.2.3 // indirect
 	github.com/godbus/dbus/v5 v5.1.0 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
+	github.com/google/go-cmp v0.6.0 // indirect
 	github.com/google/licenseclassifier v0.0.0-20210722185704-3043a050f148 // indirect
 	github.com/google/renameio/v2 v2.0.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
