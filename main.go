@@ -103,7 +103,7 @@ func run() int {
 
 	var (
 		ok     bool
-		report map[string]map[string][]violation
+		report map[string]map[string][]Violation
 	)
 
 	if targets[0] == "-" {
@@ -144,13 +144,13 @@ func run() int {
 	return exitSuccess
 }
 
-func runOnStdin() (map[string]map[string][]violation, bool) {
+func runOnStdin() (map[string]map[string][]Violation, bool) {
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		return nil, false
 	}
 
-	violations := make(map[string][]violation)
+	violations := make(map[string][]Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
 		fmt.Println("Could not parse input, is it YAML?")
 		return nil, false
@@ -161,21 +161,21 @@ func runOnStdin() (map[string]map[string][]violation, bool) {
 		violations["stdin"] = manifestViolations
 	}
 
-	report := make(map[string]map[string][]violation)
+	report := make(map[string]map[string][]Violation)
 	report["stdin"] = violations
 
 	return report, true
 }
 
-func runOnTargets(targets []string) (map[string]map[string][]violation, bool) {
-	report, hasError := make(map[string]map[string][]violation), false
+func runOnTargets(targets []string) (map[string]map[string][]Violation, bool) {
+	report, hasError := make(map[string]map[string][]Violation), false
 	for _, target := range targets {
 		violations, err := runOnTarget(target)
 		if err == nil {
 			for file, fileViolations := range violations {
 				targetViolations, ok := report[target]
 				if !ok {
-					targetViolations = make(map[string][]violation)
+					targetViolations = make(map[string][]Violation)
 					report[target] = targetViolations
 				}
 
@@ -190,7 +190,7 @@ func runOnTargets(targets []string) (map[string]map[string][]violation, bool) {
 	return report, !hasError
 }
 
-func runOnTarget(target string) (map[string][]violation, error) {
+func runOnTarget(target string) (map[string][]Violation, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
 		return nil, fmt.Errorf("could not process %s: %v", target, err)
@@ -204,7 +204,7 @@ func runOnTarget(target string) (map[string][]violation, error) {
 			return nil, err
 		}
 
-		violations := make(map[string][]violation)
+		violations := make(map[string][]Violation)
 		violations[target] = fileViolations
 		return violations, nil
 	}
@@ -215,8 +215,8 @@ const (
 	workflowsDir = "workflows"
 )
 
-func runOnRepository(target string) (map[string][]violation, error) {
-	violations := make(map[string][]violation)
+func runOnRepository(target string) (map[string][]Violation, error) {
+	violations := make(map[string][]Violation)
 
 	if fileViolations, err := runOnFile(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
@@ -264,7 +264,7 @@ var (
 	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
 )
 
-func runOnFile(target string) ([]violation, error) {
+func runOnFile(target string) ([]Violation, error) {
 	absolutePath, err := filepath.Abs(target)
 	if err != nil {
 		return nil, errors.Join(errNotFound, err)
@@ -285,22 +285,22 @@ func runOnFile(target string) ([]violation, error) {
 	}
 }
 
-func tryManifest(data []byte) ([]violation, error) {
+func tryManifest(data []byte) ([]Violation, error) {
 	manifest, err := ParseManifest(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return analyzeManifest(&manifest), nil
+	return AnalyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(data []byte) ([]violation, error) {
+func tryWorkflow(data []byte) ([]Violation, error) {
 	workflow, err := ParseWorkflow(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return analyzeWorkflow(&workflow), nil
+	return AnalyzeWorkflow(&workflow), nil
 }
 
 func legal() {

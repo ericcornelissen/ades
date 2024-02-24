@@ -20,27 +20,32 @@ import (
 	"regexp"
 )
 
-type violation struct {
-	jobId   string
-	stepId  string
-	problem string
-	ruleId  string
+type Violation struct {
+	JobId   string
+	StepId  string
+	Problem string
+	RuleId  string
 }
 
 var (
 	ghaExpressionRegExp = regexp.MustCompile(`\$\{\{.*?\}\}`)
 )
 
-func analyzeManifest(manifest *Manifest) []violation {
-	if manifest != nil && manifest.Runs.Using == "composite" {
-		return analyzeSteps(manifest.Runs.Steps)
-	} else {
-		return make([]violation, 0)
+func AnalyzeManifest(manifest *Manifest) []Violation {
+	violations := make([]Violation, 0)
+	if manifest == nil {
+		return violations
 	}
+
+	if manifest.Runs.Using != "composite" {
+		return violations
+	}
+
+	return analyzeSteps(manifest.Runs.Steps)
 }
 
-func analyzeWorkflow(workflow *Workflow) []violation {
-	violations := make([]violation, 0)
+func AnalyzeWorkflow(workflow *Workflow) []Violation {
+	violations := make([]Violation, 0)
 	if workflow == nil {
 		return violations
 	}
@@ -52,23 +57,23 @@ func analyzeWorkflow(workflow *Workflow) []violation {
 	return violations
 }
 
-func analyzeJob(id string, job *WorkflowJob) []violation {
+func analyzeJob(id string, job *WorkflowJob) []Violation {
 	name := job.Name
 	if name == "" {
 		name = id
 	}
 
-	violations := make([]violation, 0)
-	for _, v := range analyzeSteps(job.Steps) {
-		v.jobId = name
-		violations = append(violations, v)
+	violations := make([]Violation, 0)
+	for _, violation := range analyzeSteps(job.Steps) {
+		violation.JobId = name
+		violations = append(violations, violation)
 	}
 
 	return violations
 }
 
-func analyzeSteps(steps []JobStep) []violation {
-	violations := make([]violation, 0)
+func analyzeSteps(steps []JobStep) []Violation {
+	violations := make([]Violation, 0)
 	for i, step := range steps {
 		violations = append(violations, analyzeStep(i, &step)...)
 	}
@@ -76,7 +81,7 @@ func analyzeSteps(steps []JobStep) []violation {
 	return violations
 }
 
-func analyzeStep(id int, step *JobStep) []violation {
+func analyzeStep(id int, step *JobStep) []Violation {
 	name := step.Name
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
@@ -99,11 +104,11 @@ func analyzeStep(id int, step *JobStep) []violation {
 		}
 	}
 
-	violations := make([]violation, 0)
+	violations := make([]Violation, 0)
 	for _, rule := range rules {
 		for _, violation := range analyzeString(rule.extractFrom(step)) {
-			violation.ruleId = rule.id
-			violation.stepId = name
+			violation.RuleId = rule.id
+			violation.StepId = name
 			violations = append(violations, violation)
 		}
 	}
@@ -111,12 +116,12 @@ func analyzeStep(id int, step *JobStep) []violation {
 	return violations
 }
 
-func analyzeString(s string) []violation {
-	violations := make([]violation, 0)
+func analyzeString(s string) []Violation {
+	violations := make([]Violation, 0)
 	if matches := ghaExpressionRegExp.FindAll([]byte(s), len(s)); matches != nil {
 		for _, problem := range matches {
-			violations = append(violations, violation{
-				problem: string(problem),
+			violations = append(violations, Violation{
+				Problem: string(problem),
 			})
 		}
 	}

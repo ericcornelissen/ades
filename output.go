@@ -34,7 +34,7 @@ type jsonViolation struct {
 	Problem string `json:"problem"`
 }
 
-func printJson(rawViolations map[string]map[string][]violation) string {
+func printJson(rawViolations map[string]map[string][]Violation) string {
 	violations := make([]jsonViolation, 0)
 	for target, targetViolations := range rawViolations {
 		for file, fileViolations := range targetViolations {
@@ -42,9 +42,9 @@ func printJson(rawViolations map[string]map[string][]violation) string {
 				violations = append(violations, jsonViolation{
 					Target:  target,
 					File:    file,
-					Job:     fileViolation.jobId,
-					Step:    fileViolation.stepId,
-					Problem: fileViolation.problem,
+					Job:     fileViolation.JobId,
+					Step:    fileViolation.StepId,
+					Problem: fileViolation.Problem,
 				})
 			}
 		}
@@ -58,7 +58,7 @@ func printJson(rawViolations map[string]map[string][]violation) string {
 	return string(jsonBytes)
 }
 
-func printViolations(violations map[string][]violation, suggestions bool) string {
+func printViolations(violations map[string][]Violation, suggestions bool) string {
 	clean := true
 
 	var sb strings.Builder
@@ -81,22 +81,22 @@ func printViolations(violations map[string][]violation, suggestions bool) string
 	}
 }
 
-func printViolation(v *violation, suggestions bool) string {
+func printViolation(violation *Violation, suggestions bool) string {
 	var sb strings.Builder
-	if v.jobId == "" {
-		sb.WriteString(fmt.Sprintf("  step %q has %q", v.stepId, v.problem))
+	if violation.JobId == "" {
+		sb.WriteString(fmt.Sprintf("  step %q has %q", violation.StepId, violation.Problem))
 	} else {
-		sb.WriteString(fmt.Sprintf("  job %q, step %q has %q", v.jobId, v.stepId, v.problem))
+		sb.WriteString(fmt.Sprintf("  job %q, step %q has %q", violation.JobId, violation.StepId, violation.Problem))
 	}
 
 	if suggestions {
-		r, _ := findRule(v.ruleId)
-		suggestion := r.suggestion(v)
+		r, _ := findRule(violation.RuleId)
+		suggestion := r.suggestion(violation)
 
 		sb.WriteString(", suggestion:\n")
 		sb.WriteString(suggestion)
 	} else {
-		sb.WriteString(fmt.Sprintf(" (%s)", v.ruleId))
+		sb.WriteString(fmt.Sprintf(" (%s)", violation.RuleId))
 	}
 
 	return sb.String()
