@@ -120,7 +120,7 @@ func TestAnalyzeManifest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := analyzeManifest(&tt.manifest)
+			violations := AnalyzeManifest(&tt.manifest)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -128,7 +128,7 @@ func TestAnalyzeManifest(t *testing.T) {
 	}
 
 	t.Run("nil pointer", func(t *testing.T) {
-		violations := analyzeManifest(nil)
+		violations := AnalyzeManifest(nil)
 		if got, want := len(violations), 0; got != want {
 			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 		}
@@ -248,7 +248,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := analyzeWorkflow(&tt.workflow)
+			violations := AnalyzeWorkflow(&tt.workflow)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, tt.want)
 			}
@@ -256,7 +256,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 	}
 
 	t.Run("nil pointer", func(t *testing.T) {
-		violations := analyzeWorkflow(nil)
+		violations := AnalyzeWorkflow(nil)
 		if got, want := len(violations), 0; got != want {
 			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 		}
@@ -387,8 +387,8 @@ func TestAnalyzeJob(t *testing.T) {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 
-			for i, v := range violations {
-				if got, want := v.jobId, tt.wantId; got != want {
+			for i, violation := range violations {
+				if got, want := violation.JobId, tt.wantId; got != want {
 					t.Errorf("Unexpected job ID for violation %d (got %q, want %q)", i, got, want)
 				}
 			}
@@ -486,8 +486,8 @@ func TestAnalyzeStep(t *testing.T) {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 
-			for i, v := range violations {
-				if got, want := v.stepId, tt.wantStepId; got != want {
+			for i, violation := range violations {
+				if got, want := violation.StepId, tt.wantStepId; got != want {
 					t.Errorf("Unexpected step id for violation #%d (got %q, want %q)", i, got, want)
 				}
 			}
@@ -499,33 +499,33 @@ func TestAnalyzeString(t *testing.T) {
 	type TestCase struct {
 		name  string
 		value string
-		want  []violation
+		want  []Violation
 	}
 
 	testCases := []TestCase{
 		{
 			name:  "Simple and safe",
 			value: "echo 'Hello world!'",
-			want:  []violation{},
+			want:  []Violation{},
 		},
 		{
 			name:  "Multiline and safe",
 			value: "echo 'Hello'\necho 'world!'",
-			want:  []violation{},
+			want:  []Violation{},
 		},
 		{
 			name:  "One violations",
 			value: "echo 'Hello ${{ input.name }}!'",
-			want: []violation{
-				{problem: "${{ input.name }}"},
+			want: []Violation{
+				{Problem: "${{ input.name }}"},
 			},
 		},
 		{
 			name:  "Two violations",
 			value: "echo '${{ input.greeting }} ${{ input.name }}!'",
-			want: []violation{
-				{problem: "${{ input.greeting }}"},
-				{problem: "${{ input.name }}"},
+			want: []Violation{
+				{Problem: "${{ input.greeting }}"},
+				{Problem: "${{ input.name }}"},
 			},
 		},
 	}
@@ -539,8 +539,8 @@ func TestAnalyzeString(t *testing.T) {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
 
-			for i, v := range violations {
-				if got, want := v, tt.want[i]; got != want {
+			for i, violation := range violations {
+				if got, want := violation, tt.want[i]; got != want {
 					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
 				}
 			}

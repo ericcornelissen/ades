@@ -24,7 +24,7 @@ import (
 
 type rule struct {
 	extractFrom func(step *JobStep) string
-	suggestion  func(v *violation) string
+	suggestion  func(violation *Violation) string
 	id          string
 	title       string
 	description string
@@ -74,8 +74,8 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["script"]
 		},
-		suggestion: func(v *violation) string {
-			return scriptSuggestion(v.problem, "process.env.")
+		suggestion: func(violation *Violation) string {
+			return scriptSuggestion(violation.Problem, "process.env.")
 		},
 	},
 }
@@ -94,7 +94,7 @@ mitigate this, upgrade the action to a non-vulnerable version.`,
 		extractFrom: func(step *JobStep) string {
 			return step.With["tag"]
 		},
-		suggestion: func(_ *violation) string {
+		suggestion: func(_ *Violation) string {
 			return "    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g"
 		},
 	},
@@ -114,7 +114,7 @@ To mitigate this, upgrade the action to a non-vulnerable version.`,
 		extractFrom: func(step *JobStep) string {
 			return step.With["sha"]
 		},
-		suggestion: func(_ *violation) string {
+		suggestion: func(_ *Violation) string {
 			return "    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes"
 		},
 	},
@@ -163,8 +163,8 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.Run
 		},
-		suggestion: func(v *violation) string {
-			return scriptSuggestion(v.problem, "$")
+		suggestion: func(violation *Violation) string {
+			return scriptSuggestion(violation.Problem, "$")
 		},
 	},
 }

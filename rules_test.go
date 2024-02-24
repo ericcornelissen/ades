@@ -52,14 +52,14 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	})
 
 	t.Run("Suggestion", func(t *testing.T) {
-		v := violation{
-			jobId:   "4",
-			stepId:  "2",
-			problem: "${{ foo.bar }}",
-			ruleId:  "ADES101",
+		violation := Violation{
+			JobId:   "4",
+			StepId:  "2",
+			Problem: "${{ foo.bar }}",
+			RuleId:  "ADES101",
 		}
 
-		got := actionRuleActionsGitHubScript.rule.suggestion(&v)
+		got := actionRuleActionsGitHubScript.rule.suggestion(&violation)
 		want := `    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
        (make sure to keep the behavior of the script the same)`
@@ -132,14 +132,14 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	})
 
 	t.Run("Suggestion", func(t *testing.T) {
-		v := violation{
-			jobId:   "4",
-			stepId:  "2",
-			problem: "${{ foo.bar }}",
-			ruleId:  "ADES101",
+		violation := Violation{
+			JobId:   "4",
+			StepId:  "2",
+			Problem: "${{ foo.bar }}",
+			RuleId:  "ADES101",
 		}
 
-		got := actionRuleEriccornelissenGitTagAnnotationAction.rule.suggestion(&v)
+		got := actionRuleEriccornelissenGitTagAnnotationAction.rule.suggestion(&violation)
 		want := "    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g"
 
 		if got != want {
@@ -210,14 +210,14 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	})
 
 	t.Run("Suggestion", func(t *testing.T) {
-		v := violation{
-			jobId:   "4",
-			stepId:  "2",
-			problem: "${{ foo.bar }}",
-			ruleId:  "ADES101",
+		violation := Violation{
+			JobId:   "4",
+			StepId:  "2",
+			Problem: "${{ foo.bar }}",
+			RuleId:  "ADES101",
 		}
 
-		got := actionRuleKcebGitMessageAction.rule.suggestion(&v)
+		got := actionRuleKcebGitMessageAction.rule.suggestion(&violation)
 		want := "    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes"
 
 		if got != want {
@@ -265,14 +265,14 @@ func TestStepRuleRun(t *testing.T) {
 	})
 
 	t.Run("Suggestion", func(t *testing.T) {
-		v := violation{
-			jobId:   "4",
-			stepId:  "2",
-			problem: "${{ foo.bar }}",
-			ruleId:  "ADES101",
+		violation := Violation{
+			JobId:   "4",
+			StepId:  "2",
+			Problem: "${{ foo.bar }}",
+			RuleId:  "ADES101",
 		}
 
-		got := stepRuleRun.rule.suggestion(&v)
+		got := stepRuleRun.rule.suggestion(&violation)
 		want := `    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
     2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
        (make sure to keep the behavior of the script the same)`
