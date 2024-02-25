@@ -27,4 +27,4 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Audit
-      run: make audit
+      run: go run tasks.go audit
