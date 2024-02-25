@@ -22,7 +22,7 @@
 
 //go:build mutation
 
-package main_test
+package ades_test
 
 import (
 	"testing"

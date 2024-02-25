@@ -35,12 +35,12 @@ func TestMain(m *testing.M) {
 
 func TestCli(t *testing.T) {
 	testscript.Run(t, testscript.Params{
-		Dir: "test",
+		Dir: "../../test",
 	})
 }
 
 func TestJsonSchema(t *testing.T) {
-	schema, err := jsonschema.Compile("schema.json")
+	schema, err := jsonschema.Compile("../../schema.json")
 	if err != nil {
 		t.Fatalf("schema.json is not a valid JSON Schema: %v", err)
 	}

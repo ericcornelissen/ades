@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package ades
 
 import (
 	"fmt"
@@ -296,32 +296,44 @@ func isBeforeVersion(uses *StepUses, version string) bool {
 	return semver.Compare(version, uses.Ref) > 0
 }
 
-func explainRule(ruleId string) (string, error) {
-	r, ok := findRule(ruleId)
-	if !ok {
-		return "", fmt.Errorf("unknown rule %q", ruleId)
+// Explain returns an explanation for a rule.
+func Explain(ruleId string) (string, error) {
+	r, err := findRule(ruleId)
+	if err != nil {
+		return "", err
 	}
 
 	explanation := fmt.Sprintf("%s - %s\n%s", r.id, r.title, r.description)
 	return explanation, nil
 }
 
-func findRule(ruleId string) (rule, bool) {
+// Suggestion returns a suggestion for the violation.
+func Suggestion(violation *Violation) (string, error) {
+	ruleId := violation.RuleId
+	r, err := findRule(ruleId)
+	if err != nil {
+		return "", err
+	}
+
+	return r.suggestion(violation), nil
+}
+
+func findRule(ruleId string) (rule, error) {
 	for _, rs := range actionRules {
 		for _, r := range rs {
 			if r.rule.id == ruleId {
-				return r.rule, true
+				return r.rule, nil
 			}
 		}
 	}
 
 	for _, r := range stepRules {
 		if r.rule.id == ruleId {
-			return r.rule, true
+			return r.rule, nil
 		}
 	}
 
-	return rule{}, false
+	return rule{}, fmt.Errorf("unknown rule %q", ruleId)
 }
 
 func suggestJavaScriptEnv(violation *Violation) string {

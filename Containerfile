@@ -16,6 +16,8 @@
 FROM docker.io/golang:1.22.0 AS build
 
 WORKDIR /src
+
+COPY cmd/ ./cmd/
 COPY Makefile go.mod go.sum *.go ./
 
 RUN make build

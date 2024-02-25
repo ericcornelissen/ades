@@ -39,7 +39,7 @@ audit-capabilities: ## Audit for capabilities
 
 audit-vulnerabilities: ## Audit for vulnerabilities
 	@echo 'Checking vulnerabilities...'
-	@go run golang.org/x/vuln/cmd/govulncheck .
+	@go run golang.org/x/vuln/cmd/govulncheck ./...
 
 update-capabilities:
 	@echo 'Updating capabilities...'
@@ -50,14 +50,14 @@ update-capabilities:
 .PHONY: build
 build: ## Build the ades binary for the current platform
 	@echo 'Building...'
-	@go build .
+	@go build ./cmd/ades
 
 .PHONY: clean
 clean: ## Reset the project to a clean state
 	@echo 'Cleaning...'
 	@git clean -fx \
 		_compiled/ \
-		ades \
+		ades* \
 		cover.*
 
 .PHONY: compliance
@@ -65,7 +65,7 @@ compliance: ## Check license compliance
 	@echo 'Checking license compliance...'
 	@go run github.com/google/go-licenses check \
 		--allowed_licenses BSD-3-Clause,GPL-3.0,MIT \
-		.
+		./...
 
 .PHONY: container
 container: ## Build the ades container for the current platform
@@ -77,7 +77,7 @@ container: ## Build the ades container for the current platform
 .PHONY: coverage
 coverage: ## Run all tests and generate a coverage report
 	@echo 'Testing...'
-	@go test -coverprofile cover.out .
+	@go test -coverprofile cover.out ./...
 	@echo 'Generating coverage report...'
 	@go tool cover -html cover.out -o cover.html
 
@@ -107,6 +107,7 @@ fmt: ## Format the source code
 fmt-check: ## Check the source code formatting
 	@echo 'Checking formatting...'
 	@test -z "$$(gofmt -l .)"
+	@test -z "$$(gofmt -l -r 'interface{} -> any' .)"
 	@test -z "$$(go run golang.org/x/tools/cmd/goimports -l .)"
 
 .PHONY: release release-compile
@@ -147,55 +148,55 @@ release-compile:
 	@mkdir _compiled/
 
 	@echo 'Compiling for darwin/amd64...'
-	@env GOOS=darwin GOARCH=amd64 go build -o 'ades'
+	@env GOOS=darwin GOARCH=amd64 go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_darwin_amd64.tar.gz' 'ades'
 	@mv 'ades_darwin_amd64.tar.gz' '_compiled/'
 
 	@echo 'Compiling for darwin/arm64...'
-	@env GOOS=darwin GOARCH=arm64 go build -o 'ades'
+	@env GOOS=darwin GOARCH=arm64 go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_darwin_arm64.tar.gz' 'ades'
 	@mv 'ades_darwin_arm64.tar.gz' '_compiled/'
 
 	@echo 'Compiling for linux/386...'
-	@env GOOS=linux GOARCH=386 go build -o 'ades'
+	@env GOOS=linux GOARCH=386 go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_linux_386.tar.gz' 'ades'
 	@mv 'ades_linux_386.tar.gz' '_compiled/'
 
 	@echo 'Compiling for linux/amd64...'
-	@env GOOS=linux GOARCH=amd64 go build -o 'ades'
+	@env GOOS=linux GOARCH=amd64 go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_linux_amd64.tar.gz' 'ades'
 	@mv 'ades_linux_amd64.tar.gz' '_compiled/'
 
 	@echo 'Compiling for linux/arm...'
-	@env GOOS=linux GOARCH=arm go build -o 'ades'
+	@env GOOS=linux GOARCH=arm go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_linux_arm.tar.gz' 'ades'
 	@mv 'ades_linux_arm.tar.gz' '_compiled/'
 
 	@echo 'Compiling for linux/arm64...'
-	@env GOOS=linux GOARCH=arm64 go build -o 'ades'
+	@env GOOS=linux GOARCH=arm64 go build -o 'ades' ./cmd/ades
 	@tar -czf 'ades_linux_arm64.tar.gz' 'ades'
 	@mv 'ades_linux_arm64.tar.gz' '_compiled/'
 
 	@echo 'Compiling for windows/386...'
-	@env GOOS=windows GOARCH=386 go build -o 'ades'
+	@env GOOS=windows GOARCH=386 go build -o 'ades' ./cmd/ades
 	@mv 'ades' 'ades.exe'
 	@zip -9q 'ades_windows_386.zip' 'ades.exe'
 	@mv 'ades_windows_386.zip' '_compiled/'
 
 	@echo 'Compiling for windows/amd64...'
-	@env GOOS=windows GOARCH=amd64 go build -o 'ades'
+	@env GOOS=windows GOARCH=amd64 go build -o 'ades' ./cmd/ades
 	@mv 'ades' 'ades.exe'
 	@zip -9q 'ades_windows_amd64.zip' 'ades.exe'
 	@mv 'ades_windows_amd64.zip' '_compiled/'
 
 	@echo 'Compiling for windows/arm...'
-	@env GOOS=windows GOARCH=arm go build -o 'ades'
+	@env GOOS=windows GOARCH=arm go build -o 'ades' ./cmd/ades
 	@mv 'ades' 'ades.exe'
 	@zip -9q 'ades_windows_arm.zip' 'ades.exe'
 	@mv 'ades_windows_arm.zip' '_compiled/'
 
 	@echo 'Compiling for windows/arm64...'
-	@env GOOS=windows GOARCH=arm64 go build -o 'ades'
+	@env GOOS=windows GOARCH=arm64 go build -o 'ades' ./cmd/ades
 	@mv 'ades' 'ades.exe'
 	@zip -9q 'ades_windows_arm64.zip' 'ades.exe'
 	@mv 'ades_windows_arm64.zip' '_compiled/'
@@ -205,12 +206,12 @@ release-compile:
 
 .PHONY: run
 run: ## Run the project on itself
-	@go run .
+	@go run ./cmd/ades
 
 .PHONY: test
 test: ## Run all tests
 	@echo 'Testing...'
-	@go test .
+	@go test ./...
 
 .PHONY: test-mutation
 test-mutation: ## Run mutation tests
@@ -220,37 +221,38 @@ test-mutation: ## Run mutation tests
 .PHONY: test-randomized
 test-randomized: ## Run tests in a random order
 	@echo 'Testing (random order)...'
-	@go test -shuffle=on .
+	@go test -shuffle=on ./...
 
 .PHONY: vet
 vet: ## Vet the source code
 	@echo 'Vetting...'
-	@go vet .
-	@go run 4d63.com/gochecknoinits .
-	@go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status .
-	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 .
-	@go run github.com/alexkohler/prealloc -set_exit_status .
-	@go run github.com/alexkohler/unimport .
-	@go run github.com/butuzov/ireturn/cmd/ireturn .
-	@go run github.com/catenacyber/perfsprint .
-	@go run github.com/dkorunic/betteralign/cmd/betteralign .
-	@go run github.com/go-critic/go-critic/cmd/gocritic check .
-	@go run github.com/gordonklaus/ineffassign .
-	@go run github.com/jgautheron/goconst/cmd/goconst -set-exit-status .
-	@go run github.com/kisielk/errcheck .
-	@go run github.com/kunwardeep/paralleltest -i -ignoreloopVar .
-	@go run github.com/mdempsky/unconvert .
-	@go run github.com/nishanths/exhaustive/cmd/exhaustive .
-	@go run github.com/polyfloyd/go-errorlint .
+	@go vet ./...
+	@go run 4d63.com/gochecknoinits ./...
+	@go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status ./...
+	@go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 ./...
+	@go run github.com/alexkohler/prealloc -set_exit_status ./...
+	@go run github.com/alexkohler/unimport ./...
+	@go run github.com/butuzov/ireturn/cmd/ireturn ./...
+	@go run github.com/catenacyber/perfsprint ./...
+	@go run github.com/dkorunic/betteralign/cmd/betteralign ./...
+	@go run github.com/go-critic/go-critic/cmd/gocritic check ./...
+	@go run github.com/gordonklaus/ineffassign ./...
+	@go run github.com/jgautheron/goconst/cmd/goconst -set-exit-status ./...
+	@go run github.com/kisielk/errcheck ./...
+	@go run github.com/kunwardeep/paralleltest -i -ignoreloopVar ./...
+	@go run github.com/mdempsky/unconvert ./...
+	@go run github.com/nishanths/exhaustive/cmd/exhaustive ./...
+	@go run github.com/polyfloyd/go-errorlint ./...
 	@go run github.com/remyoudompheng/go-misc/deadcode .
+	@go run github.com/remyoudompheng/go-misc/deadcode ./cmd/ades
 	@go run github.com/rhysd/actionlint/cmd/actionlint
 	@go run github.com/tetafro/godot/cmd/godot .
-	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck .
-	@go run github.com/ultraware/whitespace/cmd/whitespace .
-	@go run go.uber.org/nilaway/cmd/nilaway .
-	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow .
-	@go run honnef.co/go/tools/cmd/staticcheck .
-	@go run mvdan.cc/unparam .
+	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck ./...
+	@go run github.com/ultraware/whitespace/cmd/whitespace ./...
+	@go run go.uber.org/nilaway/cmd/nilaway ./...
+	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow ./...
+	@go run honnef.co/go/tools/cmd/staticcheck ./...
+	@go run mvdan.cc/unparam ./...
 
 .PHONY: verify
 verify: build compliance fmt-check test run vet ## Verify project is in a good state

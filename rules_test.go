@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package ades
 
 import (
 	"regexp"
@@ -436,15 +436,7 @@ func TestStepRuleRun(t *testing.T) {
 }
 
 func TestAllRules(t *testing.T) {
-	testCases := make([]rule, 0)
-	for _, rules := range actionRules {
-		for _, rule := range rules {
-			testCases = append(testCases, rule.rule)
-		}
-	}
-	for _, rule := range stepRules {
-		testCases = append(testCases, rule.rule)
-	}
+	testCases := allRules()
 
 	t.Run("id", func(t *testing.T) {
 		idExpr := regexp.MustCompile(`ADES\d{3}`)
@@ -500,32 +492,14 @@ func TestAllRules(t *testing.T) {
 	})
 }
 
-func TestExplainRule(t *testing.T) {
+func TestExplain(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		for _, rs := range actionRules {
-			for _, r := range rs {
-				tt := r.rule.id
-				t.Run(tt, func(t *testing.T) {
-					t.Parallel()
-
-					explanation, err := explainRule(tt)
-					if err != nil {
-						t.Fatalf("Unexpected error: %#v", err)
-					}
-
-					if explanation == "" {
-						t.Error("Unexpected empty explanation")
-					}
-				})
-			}
-		}
-
-		for _, r := range stepRules {
-			tt := r.rule.id
+		for _, r := range allRules() {
+			tt := r.id
 			t.Run(tt, func(t *testing.T) {
 				t.Parallel()
 
-				explanation, err := explainRule(tt)
+				explanation, err := Explain(tt)
 				if err != nil {
 					t.Fatalf("Unexpected error: %#v", err)
 				}
@@ -547,7 +521,53 @@ func TestExplainRule(t *testing.T) {
 			t.Run(tt, func(t *testing.T) {
 				t.Parallel()
 
-				_, err := explainRule(tt)
+				_, err := Explain(tt)
+				if err == nil {
+					t.Fatal("Expected an error, got none")
+				}
+			})
+		}
+	})
+}
+
+func TestSuggestion(t *testing.T) {
+	t.Run("Existing rules", func(t *testing.T) {
+		for _, r := range allRules() {
+			tt := r.id
+			violation := Violation{
+				RuleId: tt,
+			}
+
+			t.Run(tt, func(t *testing.T) {
+				t.Parallel()
+
+				suggestion, err := Suggestion(&violation)
+				if err != nil {
+					t.Fatalf("Unexpected error: %#v", err)
+				}
+
+				if suggestion == "" {
+					t.Error("Unexpected empty suggestion")
+				}
+			})
+		}
+	})
+
+	t.Run("Missing rules", func(t *testing.T) {
+		testCases := []string{
+			"ADES000",
+			"foobar",
+		}
+
+		for _, tt := range testCases {
+			violation := Violation{
+				RuleId: tt,
+			}
+
+			t.Run(tt, func(t *testing.T) {
+				t.Parallel()
+
+				_, err := Suggestion(&violation)
 				if err == nil {
 					t.Fatal("Expected an error, got none")
 				}
@@ -564,8 +584,8 @@ func TestFindRule(t *testing.T) {
 				t.Run(tt, func(t *testing.T) {
 					t.Parallel()
 
-					r, ok := findRule(tt)
-					if !ok {
+					r, err := findRule(tt)
+					if err != nil {
 						t.Fatalf("Couldn't find rule %q", tt)
 					}
 
@@ -581,8 +601,8 @@ func TestFindRule(t *testing.T) {
 			t.Run(tt, func(t *testing.T) {
 				t.Parallel()
 
-				r, ok := findRule(tt)
-				if !ok {
+				r, err := findRule(tt)
+				if err != nil {
 					t.Fatalf("Couldn't find rule %q", tt)
 				}
 
@@ -603,8 +623,8 @@ func TestFindRule(t *testing.T) {
 			t.Run(tt, func(t *testing.T) {
 				t.Parallel()
 
-				_, ok := findRule(tt)
-				if ok {
+				_, err := findRule(tt)
+				if err == nil {
 					t.Fatalf("Expectedly found a rule for %q", tt)
 				}
 			})
@@ -672,4 +692,20 @@ func TestIsBeforeVersion(t *testing.T) {
 			}
 		})
 	}
+}
+
+func allRules() []rule {
+	rules := make([]rule, 0)
+
+	for _, rs := range actionRules {
+		for _, r := range rs {
+			rules = append(rules, r.rule)
+		}
+	}
+
+	for _, r := range stepRules {
+		rules = append(rules, r.rule)
+	}
+
+	return rules
 }

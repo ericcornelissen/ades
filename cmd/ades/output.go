@@ -20,6 +20,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/ericcornelissen/ades"
 )
 
 type jsonOutput struct {
@@ -34,7 +36,7 @@ type jsonViolation struct {
 	Problem string `json:"problem"`
 }
 
-func printJson(rawViolations map[string]map[string][]Violation) string {
+func printJson(rawViolations map[string]map[string][]ades.Violation) string {
 	violations := make([]jsonViolation, 0)
 	for target, targetViolations := range rawViolations {
 		for file, fileViolations := range targetViolations {
@@ -58,7 +60,7 @@ func printJson(rawViolations map[string]map[string][]Violation) string {
 	return string(jsonBytes)
 }
 
-func printViolations(violations map[string][]Violation, suggestions bool) string {
+func printViolations(violations map[string][]ades.Violation, suggestions bool) string {
 	clean := true
 
 	var sb strings.Builder
@@ -81,7 +83,7 @@ func printViolations(violations map[string][]Violation, suggestions bool) string
 	}
 }
 
-func printViolation(violation *Violation, suggestions bool) string {
+func printViolation(violation *ades.Violation, suggestions bool) string {
 	var sb strings.Builder
 	if violation.JobId == "" {
 		sb.WriteString(fmt.Sprintf("  step %q has %q", violation.StepId, violation.Problem))
@@ -90,8 +92,7 @@ func printViolation(violation *Violation, suggestions bool) string {
 	}
 
 	if suggestions {
-		r, _ := findRule(violation.RuleId)
-		suggestion := r.suggestion(violation)
+		suggestion, _ := ades.Suggestion(violation)
 
 		sb.WriteString(", suggestion:\n")
 		sb.WriteString(suggestion)
