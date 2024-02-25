@@ -229,9 +229,10 @@ vet: ## Vet the source code
 	@go run github.com/nishanths/exhaustive/cmd/exhaustive .
 	@go run github.com/polyfloyd/go-errorlint .
 	@go run github.com/remyoudompheng/go-misc/deadcode .
+	@go run github.com/rhysd/actionlint/cmd/actionlint
 	@go run github.com/tetafro/godot/cmd/godot .
 	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck .
-	@go run github.com/ultraware/whitespace/cmd/whitespace ./...
+	@go run github.com/ultraware/whitespace/cmd/whitespace .
 	@go run go.uber.org/nilaway/cmd/nilaway .
 	@go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow .
 	@go run honnef.co/go/tools/cmd/staticcheck .
