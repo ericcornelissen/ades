@@ -23,7 +23,7 @@ docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades .
 Or you can use Go to build from source and run the CLI directly, for example using `go run`:
 
 ```shell
-go run github.com/ericcornelissen/ades@latest .
+go run github.com/ericcornelissen/ades/cmd/ades@latest .
 ```
 
 ### Features

@@ -32,6 +32,11 @@
 !capabilities.json
 
 # Source
+!cmd/
+cmd/**
+!cmd/ades/
+cmd/ades/**
+!cmd/ades/*.go
 !Containerfile
 !Containerfile.dev
 !Makefile

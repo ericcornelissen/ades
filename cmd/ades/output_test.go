@@ -18,49 +18,51 @@ package main
 import (
 	"strings"
 	"testing"
+
+	"github.com/ericcornelissen/ades"
 )
 
 func TestPrintJson(t *testing.T) {
 	type TestCase struct {
 		name       string
-		violations func() map[string]map[string][]Violation
+		violations func() map[string]map[string][]ades.Violation
 		want       string
 	}
 
 	testCases := []TestCase{
 		{
 			name: "No targets",
-			violations: func() map[string]map[string][]Violation {
-				return make(map[string]map[string][]Violation)
+			violations: func() map[string]map[string][]ades.Violation {
+				return make(map[string]map[string][]ades.Violation)
 			},
 			want: `{"problems":[]}`,
 		},
 		{
 			name: "target without files",
-			violations: func() map[string]map[string][]Violation {
-				m := make(map[string]map[string][]Violation)
-				m["foobar"] = make(map[string][]Violation)
+			violations: func() map[string]map[string][]ades.Violation {
+				m := make(map[string]map[string][]ades.Violation)
+				m["foobar"] = make(map[string][]ades.Violation)
 				return m
 			},
 			want: `{"problems":[]}`,
 		},
 		{
 			name: "target with files without violations",
-			violations: func() map[string]map[string][]Violation {
-				m := make(map[string]map[string][]Violation)
-				m["foo"] = make(map[string][]Violation)
-				m["foo"]["bar"] = make([]Violation, 0)
+			violations: func() map[string]map[string][]ades.Violation {
+				m := make(map[string]map[string][]ades.Violation)
+				m["foo"] = make(map[string][]ades.Violation)
+				m["foo"]["bar"] = make([]ades.Violation, 0)
 				return m
 			},
 			want: `{"problems":[]}`,
 		},
 		{
 			name: "target with files with violations",
-			violations: func() map[string]map[string][]Violation {
-				m := make(map[string]map[string][]Violation)
-				m["foo"] = make(map[string][]Violation)
-				m["foo"]["bar"] = make([]Violation, 1)
-				m["foo"]["bar"][0] = Violation{
+			violations: func() map[string]map[string][]ades.Violation {
+				m := make(map[string]map[string][]ades.Violation)
+				m["foo"] = make(map[string][]ades.Violation)
+				m["foo"]["bar"] = make([]ades.Violation, 1)
+				m["foo"]["bar"][0] = ades.Violation{
 					JobId:   "4",
 					StepId:  "2",
 					Problem: "${{ foo.bar }}",
@@ -85,7 +87,7 @@ func TestPrintJson(t *testing.T) {
 func TestPrintViolations(t *testing.T) {
 	type TestCase struct {
 		name            string
-		violations      func() map[string][]Violation
+		violations      func() map[string][]ades.Violation
 		want            string
 		wantSuggestions string
 	}
@@ -93,8 +95,8 @@ func TestPrintViolations(t *testing.T) {
 	testCases := []TestCase{
 		{
 			name: "No files",
-			violations: func() map[string][]Violation {
-				return make(map[string][]Violation)
+			violations: func() map[string][]ades.Violation {
+				return make(map[string][]ades.Violation)
 			},
 			want: `Ok
 `,
@@ -103,9 +105,9 @@ func TestPrintViolations(t *testing.T) {
 		},
 		{
 			name: "File without violations",
-			violations: func() map[string][]Violation {
-				m := make(map[string][]Violation)
-				m["workflow.yml"] = make([]Violation, 0)
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation)
+				m["workflow.yml"] = make([]ades.Violation, 0)
 				return m
 			},
 			want: `Ok
@@ -115,10 +117,10 @@ func TestPrintViolations(t *testing.T) {
 		},
 		{
 			name: "Workflow with a violation",
-			violations: func() map[string][]Violation {
-				m := make(map[string][]Violation)
-				m["workflow.yml"] = make([]Violation, 1)
-				m["workflow.yml"][0] = Violation{
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation)
+				m["workflow.yml"] = make([]ades.Violation, 1)
+				m["workflow.yml"][0] = ades.Violation{
 					JobId:   "4",
 					StepId:  "2",
 					Problem: "${{ foo.bar }}",
@@ -134,10 +136,10 @@ func TestPrintViolations(t *testing.T) {
 		},
 		{
 			name: "Manifest with a violation",
-			violations: func() map[string][]Violation {
-				m := make(map[string][]Violation)
-				m["action.yml"] = make([]Violation, 1)
-				m["action.yml"][0] = Violation{
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation)
+				m["action.yml"] = make([]ades.Violation, 1)
+				m["action.yml"][0] = ades.Violation{
 					StepId:  "2",
 					Problem: "${{ foo.bar }}",
 					RuleId:  "ADES100",

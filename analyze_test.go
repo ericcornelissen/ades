@@ -13,7 +13,7 @@
 // You should have received a copy of the GNU General Public License
 // along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-package main
+package ades
 
 import (
 	"testing"
@@ -474,6 +474,34 @@ func TestAnalyzeStep(t *testing.T) {
 			},
 			wantCount:  2,
 			wantStepId: "Greet person today",
+		},
+		{
+			name: "Uses step with unknown action",
+			id:   1,
+			step: JobStep{
+				Uses: "this/is-not@a-real-action",
+			},
+			wantCount: 0,
+		},
+		{
+			name: "Uses step with known action, no violations",
+			id:   1,
+			step: JobStep{
+				Uses: "actions/github-script@v6",
+			},
+			wantCount: 0,
+		},
+		{
+			name: "Uses step with known action, no violations",
+			id:   1,
+			step: JobStep{
+				Uses: "actions/github-script@v6",
+				With: map[string]string{
+					"script": "console.log('Hello ${{ inputs.name }}')",
+				},
+			},
+			wantCount:  1,
+			wantStepId: "#1",
 		},
 	}
 

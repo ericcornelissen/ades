@@ -20,4 +20,4 @@
 // It is primarily intended to be used as a CLI application, but also exports
 // its functionality for programmatic use. For programmatic use, note that this
 // project does not use semantic versioning.
-package main
+package ades

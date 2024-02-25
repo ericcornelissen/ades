@@ -25,6 +25,8 @@ import (
 	"path/filepath"
 	"regexp"
 	"strings"
+
+	"github.com/ericcornelissen/ades"
 )
 
 const (
@@ -80,7 +82,7 @@ func run() int {
 	}
 
 	if *flagExplain != "" {
-		explanation, err := explainRule(*flagExplain)
+		explanation, err := ades.Explain(*flagExplain)
 		if err != nil {
 			fmt.Printf("Unknown rule %q\n", *flagExplain)
 			return exitError
@@ -103,7 +105,7 @@ func run() int {
 
 	var (
 		ok     bool
-		report map[string]map[string][]Violation
+		report map[string]map[string][]ades.Violation
 	)
 
 	if targets[0] == "-" {
@@ -144,13 +146,13 @@ func run() int {
 	return exitSuccess
 }
 
-func runOnStdin() (map[string]map[string][]Violation, bool) {
+func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
 		return nil, false
 	}
 
-	violations := make(map[string][]Violation)
+	violations := make(map[string][]ades.Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
 		fmt.Println("Could not parse input, is it YAML?")
 		return nil, false
@@ -161,21 +163,21 @@ func runOnStdin() (map[string]map[string][]Violation, bool) {
 		violations["stdin"] = manifestViolations
 	}
 
-	report := make(map[string]map[string][]Violation)
+	report := make(map[string]map[string][]ades.Violation)
 	report["stdin"] = violations
 
 	return report, true
 }
 
-func runOnTargets(targets []string) (map[string]map[string][]Violation, bool) {
-	report, hasError := make(map[string]map[string][]Violation), false
+func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, bool) {
+	report, hasError := make(map[string]map[string][]ades.Violation), false
 	for _, target := range targets {
 		violations, err := runOnTarget(target)
 		if err == nil {
 			for file, fileViolations := range violations {
 				targetViolations, ok := report[target]
 				if !ok {
-					targetViolations = make(map[string][]Violation)
+					targetViolations = make(map[string][]ades.Violation)
 					report[target] = targetViolations
 				}
 
@@ -190,7 +192,7 @@ func runOnTargets(targets []string) (map[string]map[string][]Violation, bool) {
 	return report, !hasError
 }
 
-func runOnTarget(target string) (map[string][]Violation, error) {
+func runOnTarget(target string) (map[string][]ades.Violation, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
 		return nil, fmt.Errorf("could not process %s: %v", target, err)
@@ -204,7 +206,7 @@ func runOnTarget(target string) (map[string][]Violation, error) {
 			return nil, err
 		}
 
-		violations := make(map[string][]Violation)
+		violations := make(map[string][]ades.Violation)
 		violations[target] = fileViolations
 		return violations, nil
 	}
@@ -215,8 +217,8 @@ const (
 	workflowsDir = "workflows"
 )
 
-func runOnRepository(target string) (map[string][]Violation, error) {
-	violations := make(map[string][]Violation)
+func runOnRepository(target string) (map[string][]ades.Violation, error) {
+	violations := make(map[string][]ades.Violation)
 
 	if fileViolations, err := runOnFile(path.Join(target, "action.yml")); err == nil {
 		violations["action.yml"] = fileViolations
@@ -264,7 +266,7 @@ var (
 	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
 )
 
-func runOnFile(target string) ([]Violation, error) {
+func runOnFile(target string) ([]ades.Violation, error) {
 	absolutePath, err := filepath.Abs(target)
 	if err != nil {
 		return nil, errors.Join(errNotFound, err)
@@ -285,22 +287,22 @@ func runOnFile(target string) ([]Violation, error) {
 	}
 }
 
-func tryManifest(data []byte) ([]Violation, error) {
-	manifest, err := ParseManifest(data)
+func tryManifest(data []byte) ([]ades.Violation, error) {
+	manifest, err := ades.ParseManifest(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return AnalyzeManifest(&manifest), nil
+	return ades.AnalyzeManifest(&manifest), nil
 }
 
-func tryWorkflow(data []byte) ([]Violation, error) {
-	workflow, err := ParseWorkflow(data)
+func tryWorkflow(data []byte) ([]ades.Violation, error) {
+	workflow, err := ades.ParseWorkflow(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return AnalyzeWorkflow(&workflow), nil
+	return ades.AnalyzeWorkflow(&workflow), nil
 }
 
 func legal() {

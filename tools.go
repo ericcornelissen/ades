@@ -19,7 +19,7 @@
 
 //go:build tools
 
-package main
+package ades
 
 import (
 	_ "4d63.com/gochecknoinits"
