@@ -40,6 +40,7 @@ import (
 	_ "github.com/nishanths/exhaustive/cmd/exhaustive"
 	_ "github.com/polyfloyd/go-errorlint"
 	_ "github.com/remyoudompheng/go-misc/deadcode"
+	_ "github.com/rhysd/actionlint/cmd/actionlint"
 	_ "github.com/tetafro/godot/cmd/godot"
 	_ "github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck"
 	_ "github.com/ultraware/whitespace/cmd/whitespace"
