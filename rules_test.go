@@ -16,6 +16,7 @@
 package main
 
 import (
+	"regexp"
 	"testing"
 	"testing/quick"
 )
@@ -226,6 +227,108 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	})
 }
 
+func TestActionRulesRootsIssueCloser(t *testing.T) {
+	t.Run("issue-close-message", func(t *testing.T) {
+		t.Run("Applies to", func(t *testing.T) {
+			f := func(uses StepUses, ref string) bool {
+				uses.Name = "roots/issue-closer"
+				uses.Ref = ref
+				return actionRuleRootsIssueCloserIssueCloseMessage.appliesTo(&uses)
+			}
+
+			if err := quick.Check(f, nil); err != nil {
+				t.Error(err)
+			}
+		})
+
+		t.Run("Extract from", func(t *testing.T) {
+			withIssueCloseMessage := func(step JobStep, message string) bool {
+				step.With["issue-close-message"] = message
+				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == message
+			}
+			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
+				t.Error(err)
+			}
+
+			withoutIssueCloseMessage := func(step JobStep) bool {
+				delete(step.With, "issue-close-message")
+				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == ""
+			}
+			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
+				t.Error(err)
+			}
+		})
+
+		t.Run("Suggestion", func(t *testing.T) {
+			violation := Violation{
+				JobId:   "3",
+				StepId:  "14",
+				Problem: "${{ hello.world }}",
+				RuleId:  "ADES101",
+			}
+
+			got := actionRuleRootsIssueCloserIssueCloseMessage.rule.suggestion(&violation)
+			want := `    1. Set ` + "`" + `WORLD: ${{ hello.world }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
+    2. Replace all occurrences of ` + "`" + `${{ hello.world }}` + "`" + ` by ` + "`" + `${process.env.WORLD}` + "`" + `
+       (make sure to keep the behavior of the script the same)`
+
+			if got != want {
+				t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
+			}
+		})
+	})
+
+	t.Run("pr-close-message", func(t *testing.T) {
+		t.Run("Applies to", func(t *testing.T) {
+			f := func(uses StepUses, ref string) bool {
+				uses.Name = "roots/issue-closer"
+				uses.Ref = ref
+				return actionRuleRootsIssueCloserPrCloseMessage.appliesTo(&uses)
+			}
+
+			if err := quick.Check(f, nil); err != nil {
+				t.Error(err)
+			}
+		})
+
+		t.Run("Extract from", func(t *testing.T) {
+			withIssueCloseMessage := func(step JobStep, message string) bool {
+				step.With["pr-close-message"] = message
+				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == message
+			}
+			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
+				t.Error(err)
+			}
+
+			withoutIssueCloseMessage := func(step JobStep) bool {
+				delete(step.With, "pr-close-message")
+				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == ""
+			}
+			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
+				t.Error(err)
+			}
+		})
+
+		t.Run("Suggestion", func(t *testing.T) {
+			violation := Violation{
+				JobId:   "3",
+				StepId:  "14",
+				Problem: "${{ hello.world }}",
+				RuleId:  "ADES101",
+			}
+
+			got := actionRuleRootsIssueCloserPrCloseMessage.rule.suggestion(&violation)
+			want := `    1. Set ` + "`" + `WORLD: ${{ hello.world }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
+    2. Replace all occurrences of ` + "`" + `${{ hello.world }}` + "`" + ` by ` + "`" + `${process.env.WORLD}` + "`" + `
+       (make sure to keep the behavior of the script the same)`
+
+			if got != want {
+				t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
+			}
+		})
+	})
+}
+
 func TestStepRuleRun(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		runSteps := func(step JobStep, run string) bool {
@@ -279,6 +382,71 @@ func TestStepRuleRun(t *testing.T) {
 
 		if got != want {
 			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
+		}
+	})
+}
+
+func TestAllRules(t *testing.T) {
+	testCases := make([]rule, 0)
+	for _, rules := range actionRules {
+		for _, rule := range rules {
+			testCases = append(testCases, rule.rule)
+		}
+	}
+	for _, rule := range stepRules {
+		testCases = append(testCases, rule.rule)
+	}
+
+	t.Run("id", func(t *testing.T) {
+		idExpr := regexp.MustCompile(`ADES\d{3}`)
+
+		ids := make([]string, 0)
+		for _, tt := range testCases {
+			id := tt.id
+			ids = append(ids, id)
+
+			t.Run(tt.title, func(t *testing.T) {
+				t.Parallel()
+
+				if !idExpr.MatchString(id) {
+					t.Errorf("The ID did not match the expected format (got %q)", id)
+				}
+			})
+		}
+
+		t.Run("unique", func(t *testing.T) {
+			uniqueIds := make(map[string]any, len(ids))
+			for _, id := range ids {
+				if _, ok := uniqueIds[id]; ok {
+					t.Errorf("Found repeated ID %q", id)
+				}
+
+				uniqueIds[id] = true
+			}
+		})
+	})
+
+	t.Run("description", func(t *testing.T) {
+		for _, tt := range testCases {
+			t.Run(tt.title, func(t *testing.T) {
+				t.Parallel()
+
+				if len(tt.description) == 0 {
+					t.Error("The description must not be empty")
+				}
+			})
+		}
+	})
+
+	t.Run("title", func(t *testing.T) {
+		for _, tt := range testCases {
+			t.Run(tt.id, func(t *testing.T) {
+				t.Parallel()
+
+				if len(tt.title) == 0 {
+					t.Error("The title must not be empty")
+				}
+			})
 		}
 	})
 }

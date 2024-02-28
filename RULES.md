@@ -62,6 +62,62 @@ it can be made safer by converting it into:
 #                       | Note: the use of backticks is required in this example (for interpolation)
 ```
 
+## ADES102 - Expression in `roots/issue-closer` issue close message
+
+When a workflow expression appears in the issue close message of `roots/issue-closer` it is
+interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: roots/issue-closer@v1
+  with:
+    issue-close-message: Closing ${{ github.event.issue.title }}
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: roots/issue-closer@v1
+  env:
+    NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
+  with:
+    issue-close-message: Closing ${process.env.NAME}
+  #                              ^^^^^^^^^^^^^^^^^^^
+  #                              | Replace the expression with the environment variable
+```
+
+## ADES103 - Expression in `roots/issue-closer` pull request close message
+
+When a workflow expression appears in the pull request close message of `roots/issue-closer` it is
+interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: roots/issue-closer@v1
+  with:
+    pr-close-message: Closing ${{ github.event.issue.title }}
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: roots/issue-closer@v1
+  env:
+    NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
+  with:
+    pr-close-message: Closing ${process.env.NAME}
+  #                           ^^^^^^^^^^^^^^^^^^^
+  #                           | Replace the expression with the environment variable
+```
+
 ## ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When a workflow expression is used in the tag input for `ericcornelissen/git-tag-annotation-action`
