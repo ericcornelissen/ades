@@ -74,9 +74,7 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["script"]
 		},
-		suggestion: func(violation *Violation) string {
-			return scriptSuggestion(violation.Problem, "process.env.")
-		},
+		suggestion: suggestJavaScriptEnv,
 	},
 }
 
@@ -120,6 +118,78 @@ To mitigate this, upgrade the action to a non-vulnerable version.`,
 	},
 }
 
+var actionRuleRootsIssueCloserIssueCloseMessage = actionRule{
+	appliesTo: func(_ *StepUses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES102",
+		title: "Expression in 'roots/issue-closer' issue close message",
+		description: `
+When a workflow expression appears in the issue close message of 'roots/issue-closer' it is
+interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: roots/issue-closer@v1
+      env:
+        NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
+      with:
+        issue-close-message: Closing ${process.env.NAME}
+      #                              ^^^^^^^^^^^^^^^^^^^
+      #                              | Replace the expression with the environment variable`,
+		extractFrom: func(step *JobStep) string {
+			return step.With["issue-close-message"]
+		},
+		suggestion: suggestJavaScriptLiteralEnv,
+	},
+}
+
+var actionRuleRootsIssueCloserPrCloseMessage = actionRule{
+	appliesTo: func(_ *StepUses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES103",
+		title: "Expression in 'roots/issue-closer' pull request close message",
+		description: `
+When a workflow expression appears in the pull request close message of 'roots/issue-closer' it is
+interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: roots/issue-closer@v1
+      with:
+        pr-close-message: Closing ${{ github.event.issue.title }}
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: roots/issue-closer@v1
+      env:
+        NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
+      with:
+        pr-close-message: Closing ${process.env.NAME}
+      #                           ^^^^^^^^^^^^^^^^^^^
+      #                           | Replace the expression with the environment variable`,
+		extractFrom: func(step *JobStep) string {
+			return step.With["pr-close-message"]
+		},
+		suggestion: suggestJavaScriptLiteralEnv,
+	},
+}
+
 var actionRules = map[string][]actionRule{
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
@@ -129,6 +199,10 @@ var actionRules = map[string][]actionRule{
 	},
 	"kceb/git-message-action": {
 		actionRuleKcebGitMessageAction,
+	},
+	"roots/issue-closer": {
+		actionRuleRootsIssueCloserIssueCloseMessage,
+		actionRuleRootsIssueCloserPrCloseMessage,
 	},
 }
 
@@ -163,9 +237,7 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.Run
 		},
-		suggestion: func(violation *Violation) string {
-			return scriptSuggestion(violation.Problem, "$")
-		},
+		suggestion: suggestShellEnv,
 	},
 }
 
@@ -211,11 +283,23 @@ func findRule(ruleId string) (rule, bool) {
 	return rule{}, false
 }
 
-func scriptSuggestion(problem, tmp string) string {
+func suggestJavaScriptEnv(violation *Violation) string {
+	return suggestUseEnv(violation.Problem, "process.env.", "")
+}
+
+func suggestJavaScriptLiteralEnv(violation *Violation) string {
+	return suggestUseEnv(violation.Problem, "${process.env.", "}")
+}
+
+func suggestShellEnv(violation *Violation) string {
+	return suggestUseEnv(violation.Problem, "$", "")
+}
+
+func suggestUseEnv(problem, pre, post string) string {
 	var sb strings.Builder
 
 	name := getVariableNameForExpression(problem)
-	replacement := fmt.Sprintf("%s%s", tmp, name)
+	replacement := pre + name + post
 
 	sb.WriteString(fmt.Sprintf("    1. Set `%s: %s` in the step's `env` map", name, problem))
 	sb.WriteRune('\n')

@@ -30,7 +30,8 @@ To define a rule you need to create an instance of the `rule` type. This involve
 id, title, and description as well as a function to extract what needs to be analyzed and a function
 that builds a suggestion for fixing a violation. The id, title, and description are simple text
 values. The extraction function needs to return a string to be analyzed for a given `JobStep`. The
-suggestion functions needs to return a suggestion string for a given `violation`.
+suggestion functions needs to return a suggestion string for a given `Violation`. Lastly, you need
+to add the rule to the `RULES.md` documentation file in the same format as the `--explain` output.
 
 Note that if multiple things could be checked for one action or step construct, they should be
 defined as separate rules.
