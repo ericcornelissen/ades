@@ -118,6 +118,36 @@ it can be made safer by converting it into:
   #                           | Replace the expression with the environment variable
 ```
 
+## ADES104 - Expression in `sergeysova/jq-action` command
+
+When a workflow expression appears in the command  input of `sergeysova/jq-action` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: sergeysova/jq-action@v2
+  with:
+    cmd: jq .version ${{ github.event.inputs.file }} -r
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: sergeysova/jq-action@v2
+  env
+    FILE: ${{ github.event.inputs.file }} # <- Assign the expression to an environment variable
+  with:
+  #                  | Note: use double quotes to avoid argument splitting
+  #                  v
+    cmd: jq .version "$FILE" -r
+  #                   ^^^^^
+  #                   | Replace the expression with the environment variable
+```
+
 ## ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When a workflow expression is used in the tag input for `ericcornelissen/git-tag-annotation-action`

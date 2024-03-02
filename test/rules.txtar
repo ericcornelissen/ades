@@ -22,6 +22,12 @@ stdout 'ADES102'
 stdout 'ADES103'
 ! stderr .
 
+# ADES104
+! exec ades ades104.yml
+! stdout 'Ok'
+stdout 'ADES104'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -78,6 +84,17 @@ jobs:
     - uses: roots/issue-closer@v1
       with:
         pr-close-message: Closing ${{ github.event.issue.title }}
+-- ades104.yml --
+name: Example workflow with a ADES104 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: sergeysova/jq-action@v2
+      with:
+        cmd: jq .version ${{ github.event.inputs.file }} -r
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]

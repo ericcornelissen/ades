@@ -329,6 +329,55 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 	})
 }
 
+func TestActionRuleSergeysovaJqAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses StepUses) bool {
+			uses.Name = "sergeysova/jq-action"
+			return actionRuleSergeysovaJqAction.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		withCmd := func(step JobStep, cmd string) bool {
+			step.With["cmd"] = cmd
+			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == cmd
+		}
+		if err := quick.Check(withCmd, nil); err != nil {
+			t.Error(err)
+		}
+
+		withoutCmd := func(step JobStep) bool {
+			delete(step.With, "cmd")
+			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(withoutCmd, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Suggestion", func(t *testing.T) {
+		violation := Violation{
+			JobId:   "3",
+			StepId:  "14",
+			Problem: "${{ github.event.inputs.file }}",
+			RuleId:  "ADES101",
+		}
+
+		got := actionRuleSergeysovaJqAction.rule.suggestion(&violation)
+		want := `    1. Set ` + "`" + `FILE: ${{ github.event.inputs.file }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
+    2. Replace all occurrences of ` + "`" + `${{ github.event.inputs.file }}` + "`" + ` by ` + "`" + `$FILE` + "`" + `
+       (make sure to keep the behavior of the script the same)`
+
+		if got != want {
+			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
+		}
+	})
+}
+
 func TestStepRuleRun(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		runSteps := func(step JobStep, run string) bool {
