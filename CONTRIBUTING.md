@@ -50,5 +50,6 @@ the `stepRule` type. You also need to add the rule to the `stepRules` slice.
 ### Testing
 
 Every new rule needs to be tested. The rule id, title, and description are tested automatically. The
-`appliesTo`, `extractFrom`, and `suggestion` functions require dedicated tests. For this, it is
-recommended to follow the lead of the tests for existing rules.
+`appliesTo`, `extractFrom`, and `suggestion` functions require dedicated unit tests. For this, it is
+recommended to follow the lead of the tests for existing rules. Additionally, a test case should be
+added to the `test/rules.txtar` test file.
