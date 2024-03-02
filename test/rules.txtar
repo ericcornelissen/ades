@@ -1,0 +1,102 @@
+# ADES100
+! exec ades ades100.yml
+! stdout 'Ok'
+stdout 'ADES100'
+! stderr .
+
+# ADES101
+! exec ades ades101.yml
+! stdout 'Ok'
+stdout 'ADES101'
+! stderr .
+
+# ADES102
+! exec ades ades102.yml
+! stdout 'Ok'
+stdout 'ADES102'
+! stderr .
+
+# ADES103
+! exec ades ades103.yml
+! stdout 'Ok'
+stdout 'ADES103'
+! stderr .
+
+# ADES200
+! exec ades ades200.yml
+! stdout 'Ok'
+stdout 'ADES200'
+! stderr .
+
+# ADES201
+! exec ades ades201.yml
+! stdout 'Ok'
+stdout 'ADES201'
+! stderr .
+
+
+-- ades100.yml --
+name: Example workflow with a ADES100 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo 'Hello ${{ inputs.name }}'
+-- ades101.yml --
+name: Example workflow with a ADES101 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v6
+      with:
+        script: console.log('Hello ${{ inputs.name }}')
+-- ades102.yml --
+name: Example workflow with a ADES102 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ades103.yml --
+name: Example workflow with a ADES103 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer@v1
+      with:
+        pr-close-message: Closing ${{ github.event.issue.title }}
+-- ades200.yml --
+name: Example workflow with a ADES200 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: ericcornelissen/git-tag-annotation-action@v1.0.0
+      with:
+        tag: ${{ input.tag }}
+-- ades201.yml --
+name: Example workflow with a ADES200 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: kceb/git-message-action@v1.1.0
+      with:
+        sha: ${{ input.sha }}
