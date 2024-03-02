@@ -190,6 +190,44 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleSergeysovaJqAction = actionRule{
+	appliesTo: func(_ *StepUses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES104",
+		title: "Expression in 'sergeysova/jq-action' command",
+		description: `
+When a workflow expression appears in the command input of 'sergeysova/jq-action' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: sergeysova/jq-action@v2
+      with:
+        cmd: jq .version ${{ github.event.inputs.file }} -r
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: sergeysova/jq-action@v2
+      env
+        FILE: ${{ github.event.inputs.file }} # <- Assign the expression to an environment variable
+      with:
+      #                  | Note: use double quotes to avoid argument splitting
+      #                  v
+        cmd: jq .version "$FILE" -r
+      #                   ^^^^^
+      #                   | Replace the expression with the environment variable`,
+		extractFrom: func(step *JobStep) string {
+			return step.With["cmd"]
+		},
+		suggestion: suggestShellEnv,
+	},
+}
+
 var actionRules = map[string][]actionRule{
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
@@ -203,6 +241,9 @@ var actionRules = map[string][]actionRule{
 	"roots/issue-closer": {
 		actionRuleRootsIssueCloserIssueCloseMessage,
 		actionRuleRootsIssueCloserPrCloseMessage,
+	},
+	"sergeysova/jq-action": {
+		actionRuleSergeysovaJqAction,
 	},
 }
 
