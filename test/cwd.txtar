@@ -13,19 +13,15 @@ exec ades
 stdout 'Ok'
 ! stderr .
 
-# Unsafe manifest (.yml)
-cd ../action-yml
+# Unsafe manifests
+cd ../manifests
 
 ! exec ades
 stdout 'action.yml'
-! stdout 'Ok'
-! stderr .
-
-# Unsafe manifest (.yaml)
-cd ../action-yaml
-
-! exec ades
 stdout 'action.yaml'
+stdout 'but/nested/action.yml'
+stdout 'nested-too/action.yaml'
+! stdout '.git/action.yml'
 ! stdout 'Ok'
 ! stderr .
 
@@ -42,8 +38,8 @@ stdout '.github/workflows/unsafe.yaml'
 cd ../invalid-manifest
 
 exec ades
-stdout 'Could not process manifest ''action.yml'''
-stdout 'Could not process manifest ''action.yaml'''
+stdout 'Could not process manifest "action.yml"'
+stdout 'Could not process manifest "action.yaml"'
 ! stderr .
 
 # Invalid workflow
@@ -54,7 +50,7 @@ stdout 'Could not process workflow syntax-error.yml'
 ! stderr .
 
 
--- action-yml/action.yml --
+-- manifests/action.yml --
 name: Example unsafe action
 description: Sample action for testing _ades_
 
@@ -73,7 +69,7 @@ runs:
     run: echo 'Hello .yml'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
--- action-yaml/action.yaml --
+-- manifests/action.yaml --
 name: Example unsafe action
 description: Sample action for testing _ades_
 
@@ -92,6 +88,52 @@ runs:
     run: echo 'Hello .yaml'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
+-- manifests/but/nested/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- manifests/nested-too/action.yaml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yaml'
+  - name: Unsafe run
+    run: echo 'Hello ${{ inputs.name }}'
+-- manifests/.git/action.yml --
+name: Fake manifest to test that the .git/ directory is ignored.
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - run: echo 'Hello ${{ inputs.name }}'
 -- invalid-manifest/action.yml --
 name: Example action manifest with a syntax error
 description: Sample action for testing _ades_
@@ -158,6 +200,63 @@ runs:
     uses: actions/checkout@v4
   - name: Safe run
     run: echo 'Hello .yml'
+-- safe/action.yaml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yaml'
+-- safe/but/nested/action.yml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yml'
+-- safe/nested-too/action.yaml --
+name: Example safe action
+description: Sample action for testing _ades_
+
+inputs:
+  name:
+    description: The name of the person to greet.
+    required: false
+    default: GeT_RiGhT
+
+runs:
+  using: composite
+  steps:
+  - name: Checkout repository
+    uses: actions/checkout@v4
+  - name: Safe run
+    run: echo 'Hello .yaml'
+-- safe/not-an-manifest.yml --
+runs:
+  using: composite
+  steps:
+  - name: Doesn't matter
+    run: ${{ inputs.command }}
 -- workflows/.github/workflows/unsafe.yml --
 name: Example unsafe workflow
 on: [push]
