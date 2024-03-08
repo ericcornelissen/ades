@@ -38,6 +38,21 @@ stdout '.github/workflows/unsafe.yaml'
 ! stdout 'Ok'
 ! stderr .
 
+# Invalid manifest
+cd ../invalid-manifest
+
+exec ades
+stdout 'Could not process manifest ''action.yml'''
+stdout 'Could not process manifest ''action.yaml'''
+! stderr .
+
+# Invalid workflow
+cd ../invalid-workflow
+
+exec ades
+stdout 'Could not process workflow syntax-error.yml'
+! stderr .
+
 
 -- action-yml/action.yml --
 name: Example unsafe action
@@ -77,6 +92,33 @@ runs:
     run: echo 'Hello .yaml'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
+-- invalid-manifest/action.yml --
+name: Example action manifest with a syntax error
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe run
+   run: echo 'Hello ${{ inputs.name }}'
+-- invalid-manifest/action.yaml --
+name: Example action manifest with a syntax error
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe run
+   run: echo 'Hello ${{ inputs.name }}'
+-- invalid-workflow/.github/workflows/syntax-error.yml --
+name: Example workflow with a syntax error
+on: [push]
+
+jobs:
+  example:
+    steps:
+    - name: Safe run
+     run: echo 'Hello ${{ inputs.name }}'
 -- safe/.github/workflows/safe.yml --
 name: Example safe workflow
 on: [push]
