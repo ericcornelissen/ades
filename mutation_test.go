@@ -31,5 +31,8 @@ import (
 )
 
 func TestMutation(t *testing.T) {
-	ooze.Release(t)
+	ooze.Release(
+		t,
+		ooze.IgnoreSourceFiles("^web/.*\\.go$"),
+	)
 }

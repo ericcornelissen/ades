@@ -1,0 +1,29 @@
+name: Website
+on:
+  push:
+    branches:
+    - main
+
+permissions: read-all
+
+jobs:
+  publish:
+    name: Publish
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: write
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      with:
+        persist-credentials: false
+    - name: Build
+      run: |
+        cd web
+        make build
+    - name: Deploy
+      uses: JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e # v4.5.0
+      with:
+        branch: gh-pages
+        folder: web
+        single-commit: true
