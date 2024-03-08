@@ -20,8 +20,8 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/fs"
 	"os"
-	"path"
 	"path/filepath"
 	"regexp"
 	"strings"
@@ -220,41 +220,61 @@ const (
 func runOnRepository(target string) (map[string][]ades.Violation, error) {
 	violations := make(map[string][]ades.Violation)
 
-	if fileViolations, err := runOnFile(path.Join(target, "action.yml")); err == nil {
-		violations["action.yml"] = fileViolations
-	} else if !errors.Is(err, errNotFound) {
-		fmt.Printf("Could not process manifest 'action.yml': %v\n", err)
-	}
+	fsys := os.DirFS(target)
+	_ = fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
 
-	if fileViolations, err := runOnFile(path.Join(target, "action.yaml")); err == nil {
-		violations["action.yaml"] = fileViolations
-	} else if !errors.Is(err, errNotFound) {
-		fmt.Printf("Could not process manifest 'action.yaml': %v\n", err)
-	}
-
-	workflowsPath := path.Join(target, githubDir, workflowsDir)
-	workflows, err := os.ReadDir(workflowsPath)
-	if err != nil && !errors.Is(err, os.ErrNotExist) {
-		return violations, fmt.Errorf("could not read workflows directory: %v", err)
-	}
-
-	for _, entry := range workflows {
 		if entry.IsDir() {
-			continue
+			if path == ".git" {
+				return fs.SkipDir
+			}
+
+			return nil
 		}
 
-		if ext := path.Ext(entry.Name()); ext != ".yml" && ext != ".yaml" {
-			continue
+		if name := filepath.Base(path); !ghaManifestFileRegExp.MatchString(name) {
+			return nil
 		}
 
-		workflowPath := path.Join(workflowsPath, entry.Name())
-		if workflowViolations, err := runOnFile(workflowPath); err == nil {
-			targetRelativePath := path.Join(githubDir, workflowsDir, entry.Name())
-			violations[targetRelativePath] = workflowViolations
+		fullPath := filepath.Join(target, path)
+		if fileViolations, err := runOnFile(fullPath); err == nil {
+			violations[path] = fileViolations
+		} else {
+			fmt.Printf("Could not process manifest %q: %v\n", path, err)
+		}
+
+		return nil
+	})
+
+	workflowsPath := filepath.Join(githubDir, workflowsDir)
+	_ = fs.WalkDir(fsys, workflowsPath, func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return nil
+		}
+
+		if entry.IsDir() {
+			if path == workflowsPath {
+				return nil
+			}
+
+			return fs.SkipDir
+		}
+
+		if ext := filepath.Ext(entry.Name()); ext != ".yml" && ext != ".yaml" {
+			return nil
+		}
+
+		fullPath := filepath.Join(target, path)
+		if workflowViolations, err := runOnFile(fullPath); err == nil {
+			violations[path] = workflowViolations
 		} else {
 			fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
 		}
-	}
+
+		return nil
+	})
 
 	return violations, nil
 }
@@ -278,7 +298,7 @@ func runOnFile(target string) ([]ades.Violation, error) {
 	}
 
 	switch {
-	case strings.HasSuffix(absolutePath, path.Join(githubDir, workflowsDir, path.Base(target))):
+	case strings.HasSuffix(absolutePath, filepath.Join(githubDir, workflowsDir, filepath.Base(target))):
 		return tryWorkflow(data)
 	case ghaManifestFileRegExp.MatchString(target):
 		return tryManifest(data)
