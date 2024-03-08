@@ -245,6 +245,7 @@ vet: ## Vet the source code
 	@go run github.com/polyfloyd/go-errorlint ./...
 	@go run github.com/remyoudompheng/go-misc/deadcode .
 	@go run github.com/remyoudompheng/go-misc/deadcode ./cmd/ades
+	@go run github.com/remyoudompheng/go-misc/deadcode ./web
 	@go run github.com/rhysd/actionlint/cmd/actionlint
 	@go run github.com/tetafro/godot/cmd/godot .
 	@go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck ./...
