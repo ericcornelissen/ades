@@ -121,12 +121,12 @@ release:
 	@test "$$(git rev-parse HEAD)" = "$$(git rev-parse FETCH_HEAD)"
 
 	@echo 'Preparing for version bump...'
-	@sed -i main.go -e "s/versionString := \"v[0-9][0-9][.][0-9][0-9]\"/versionString := \"v$$(date '+%y.%m')\"/"
+	@sed -i cmd/ades/main.go -e "s/versionString := \"v[0-9][0-9][.][0-9][0-9]\"/versionString := \"v$$(date '+%y.%m')\"/"
 	@sed -i test/flags-info.txtar -e "s/stdout 'v[0-9][0-9][.][0-9][0-9]'/stdout 'v$$(date '+%y.%m')'/"
 
 	@echo 'Committing version bump...'
 	@git checkout -b version-bump
-	@git add 'main.go' 'test/flags-info.txtar'
+	@git add 'cmd/ades/main.go' 'test/flags-info.txtar'
 	@git commit --signoff --message 'version bump'
 
 	@echo 'Pushing version-bump branch...'

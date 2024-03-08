@@ -10,7 +10,7 @@ cmp stdout $WORK/snapshots/legal-stdout.txt
 
 # Version
 exec ades -version
-stdout 'v24.02'
+stdout 'v24.03'
 ! stderr .
 
 
