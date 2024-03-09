@@ -18,37 +18,6 @@
 const input = document.getElementById("workflow-input");
 const results = document.getElementById("results");
 
-const RULE_LINKS = new Map([
-  [
-    "ADES100",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades100---expression-in-run-directive",
-  ],
-  [
-    "ADES101",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades101---expression-in-actionsgithub-script-script",
-  ],
-  [
-    "ADES102",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades102---expression-in-rootsissue-closer-issue-close-message",
-  ],
-  [
-    "ADES103",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades103---expression-in-rootsissue-closer-pull-request-close-message",
-  ],
-  [
-    "ADES104",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades104---expression-in-sergeysovajq-action-command",
-  ],
-  [
-    "ADES200",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades200---expression-in-ericcornelissengit-tag-annotation-action-tag-input",
-  ],
-  [
-    "ADES201",
-    "https://github.com/ericcornelissen/ades/blob/main/RULES.md#ades201---expression-in-kcebgit-message-action-sha-input",
-  ],
-]);
-
 async function loadWasm() {
   const go = new Go();
 
@@ -67,7 +36,7 @@ async function loadWasm() {
 
 const htmlEncode = {
   ruleId: (ruleId) => {
-    const link = RULE_LINKS.get(ruleId);
+    const link = `https://github.com/ericcornelissen/ades/blob/main/RULES.md#${ruleId}`;
     return `<a href="${link}" rel="noopener" target="_blank">${ruleId}</a>`;
   },
   violation: (violation) => {
