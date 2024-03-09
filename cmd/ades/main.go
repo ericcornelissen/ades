@@ -96,7 +96,7 @@ func run() int {
 	if len(targets) == 0 {
 		wd, err := os.Getwd()
 		if err != nil {
-			fmt.Printf("Unexpected error getting working directory: %s", err)
+			fmt.Printf("Could not get working directory, use explicit target instead (error: %s)\n", err)
 			return exitError
 		}
 
@@ -149,12 +149,13 @@ func run() int {
 func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
+		fmt.Printf("Could not read from stdin (error: %s)\n", err)
 		return nil, false
 	}
 
 	violations := make(map[string][]ades.Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
-		fmt.Println("Could not parse input, is it YAML?")
+		fmt.Printf("Could not parse input (error: %s)\n", err)
 		return nil, false
 	} else if len(workflowViolations) != 0 {
 		violations["stdin"] = workflowViolations
