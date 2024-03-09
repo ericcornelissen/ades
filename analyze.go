@@ -21,10 +21,11 @@ import (
 )
 
 type Violation struct {
-	JobId   string
-	StepId  string
-	Problem string
-	RuleId  string
+	JobId     string
+	StepId    string
+	Problem   string
+	RuleId    string
+	stepIndex int
 }
 
 var (
@@ -75,7 +76,10 @@ func analyzeJob(id string, job *WorkflowJob) []Violation {
 func analyzeSteps(steps []JobStep) []Violation {
 	violations := make([]Violation, 0)
 	for i, step := range steps {
-		violations = append(violations, analyzeStep(i, &step)...)
+		for _, violation := range analyzeStep(i, &step) {
+			violation.stepIndex = i
+			violations = append(violations, violation)
+		}
 	}
 
 	return violations

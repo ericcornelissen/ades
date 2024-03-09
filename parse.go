@@ -37,6 +37,7 @@ type WorkflowJob struct {
 // JobStep is a (simplified) representation of a workflow job step object.
 type JobStep struct {
 	With map[string]string `yaml:"with"`
+	Env  map[string]string `yaml:"env"`
 	Name string            `yaml:"name"`
 	Run  string            `yaml:"run"`
 	Uses string            `yaml:"uses"`
@@ -54,7 +55,9 @@ func ParseWorkflow(data []byte) (Workflow, error) {
 
 // Manifest is a (simplified) representation of a GitHub Actions Action manifest.
 type Manifest struct {
-	Runs ManifestRuns `yaml:"runs"`
+	Name        string       `yaml:"name"`
+	Description string       `yaml:"description"`
+	Runs        ManifestRuns `yaml:"runs"`
 }
 
 // ManifestRuns is a (simplified) representation of an Action manifest's `runs:` object.
