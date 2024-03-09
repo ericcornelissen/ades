@@ -5,8 +5,8 @@ cmp stdout $WORK/snapshots/ades100-stdout.txt
 
 # Non-existent rule
 ! exec ades -explain 'foobar'
-stdout 'Unknown rule "foobar"'
-! stderr .
+! stdout .
+stderr 'Unknown rule "foobar"'
 
 
 -- snapshots/ades100-stdout.txt --
