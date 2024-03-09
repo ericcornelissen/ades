@@ -38,16 +38,14 @@ stdout '.github/workflows/unsafe.yaml'
 cd ../invalid-manifest
 
 exec ades
-stdout 'Could not process manifest "action.yml"'
-stdout 'Could not process manifest "action.yaml"'
-! stderr .
+stderr 'Could not process manifest "action.yml"'
+stderr 'Could not process manifest "action.yaml"'
 
 # Invalid workflow
 cd ../invalid-workflow
 
 exec ades
-stdout 'Could not process workflow syntax-error.yml'
-! stderr .
+stderr 'Could not process workflow syntax-error.yml'
 
 
 -- manifests/action.yml --

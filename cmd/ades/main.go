@@ -84,7 +84,7 @@ func run() int {
 	if *flagExplain != "" {
 		explanation, err := ades.Explain(*flagExplain)
 		if err != nil {
-			fmt.Printf("Unknown rule %q\n", *flagExplain)
+			fmt.Fprintf(os.Stderr, "Unknown rule %q\n", *flagExplain)
 			return exitError
 		} else {
 			fmt.Println(explanation)
@@ -96,7 +96,7 @@ func run() int {
 	if len(targets) == 0 {
 		wd, err := os.Getwd()
 		if err != nil {
-			fmt.Printf("Could not get working directory, use explicit target instead (error: %s)\n", err)
+			fmt.Fprintf(os.Stderr, "Could not get working directory, use explicit target instead (error: %s)\n", err)
 			return exitError
 		}
 
@@ -155,7 +155,7 @@ func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
 
 	violations := make(map[string][]ades.Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
-		fmt.Printf("Could not parse input (error: %s)\n", err)
+		fmt.Fprintf(os.Stderr, "Could not parse input (error: %s)\n", err)
 		return nil, false
 	} else if len(workflowViolations) != 0 {
 		violations["stdin"] = workflowViolations
@@ -185,7 +185,7 @@ func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, boo
 				targetViolations[file] = fileViolations
 			}
 		} else {
-			fmt.Printf("An unexpected error occurred: %s\n", err)
+			fmt.Fprintf(os.Stderr, "An unexpected error occurred: %s\n", err)
 			hasError = true
 		}
 	}
@@ -243,7 +243,7 @@ func runOnRepository(target string) (map[string][]ades.Violation, error) {
 		if fileViolations, err := runOnFile(fullPath); err == nil {
 			violations[path] = fileViolations
 		} else {
-			fmt.Printf("Could not process manifest %q: %v\n", path, err)
+			fmt.Fprintf(os.Stderr, "Could not process manifest %q: %v\n", path, err)
 		}
 
 		return nil
@@ -271,7 +271,7 @@ func runOnRepository(target string) (map[string][]ades.Violation, error) {
 		if workflowViolations, err := runOnFile(fullPath); err == nil {
 			violations[path] = workflowViolations
 		} else {
-			fmt.Printf("Could not process workflow %s: %v\n", entry.Name(), err)
+			fmt.Fprintf(os.Stderr, "Could not process workflow %s: %v\n", entry.Name(), err)
 		}
 
 		return nil
