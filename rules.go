@@ -25,6 +25,7 @@ import (
 type rule struct {
 	extractFrom func(step *JobStep) string
 	suggestion  func(violation *Violation) string
+	fix         func(violation *Violation, workflow *Manifest) bool
 	id          string
 	title       string
 	description string
@@ -75,6 +76,7 @@ it can be made safer by converting it into:
 			return step.With["script"]
 		},
 		suggestion: suggestJavaScriptEnv,
+		fix:        noFix,
 	},
 }
 
@@ -95,6 +97,7 @@ mitigate this, upgrade the action to a non-vulnerable version.`,
 		suggestion: func(_ *Violation) string {
 			return "    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g"
 		},
+		fix: noFix,
 	},
 }
 
@@ -115,6 +118,7 @@ To mitigate this, upgrade the action to a non-vulnerable version.`,
 		suggestion: func(_ *Violation) string {
 			return "    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes"
 		},
+		fix: noFix,
 	},
 }
 
@@ -151,6 +155,27 @@ it can be made safer by converting it into:
 			return step.With["issue-close-message"]
 		},
 		suggestion: suggestJavaScriptLiteralEnv,
+		fix: func(violation *Violation, manifest *Manifest) bool {
+			step := &manifest.Runs.Steps[violation.stepIndex]
+			name := getVariableNameForExpression(violation.Problem)
+			if _, ok := step.Env[name]; ok {
+				return false
+			}
+
+			if step.Env == nil {
+				step.Env = make(map[string]string, 1)
+			}
+
+			step.Env[name] = violation.Problem
+
+			replacement := fmt.Sprintf("${process.env.%s}", name)
+			original := step.With["issue-close-message"]
+			updated := strings.Replace(original, violation.Problem, replacement, 1)
+
+			step.With["issue-close-message"] = updated
+
+			return true
+		},
 	},
 }
 
@@ -187,6 +212,7 @@ it can be made safer by converting it into:
 			return step.With["pr-close-message"]
 		},
 		suggestion: suggestJavaScriptLiteralEnv,
+		fix:        noFix,
 	},
 }
 
@@ -225,6 +251,7 @@ it can be made safer by converting it into:
 			return step.With["cmd"]
 		},
 		suggestion: suggestShellEnv,
+		fix:        noFix,
 	},
 }
 
@@ -279,6 +306,7 @@ it can be made safer by converting it into:
 			return step.Run
 		},
 		suggestion: suggestShellEnv,
+		fix:        noFix,
 	},
 }
 
@@ -316,6 +344,22 @@ func Suggestion(violation *Violation) (string, error) {
 	}
 
 	return r.suggestion(violation), nil
+}
+
+// Fix resolve the violation in the manifest if that is supported. The return value indicates
+// whether or not the violation was fixed.
+func Fix(violation *Violation, manifest *Manifest) bool {
+	ruleId := violation.RuleId
+	r, err := findRule(ruleId)
+	if err != nil {
+		return false
+	}
+
+	return r.fix(violation, manifest)
+}
+
+func noFix(_ *Violation, _ *Manifest) bool {
+	return false
 }
 
 func findRule(ruleId string) (rule, error) {

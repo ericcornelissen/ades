@@ -1,0 +1,45 @@
+# ADES100 - Manifest (no fix)
+! exec ades -fix-experimental ADES100/action.yml
+! stdout 'Ok'
+! stderr .
+
+# ADES102 - Manifest
+exec ades -fix-experimental ADES102/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/action.yml .want/ADES102/action.yml
+
+-- ADES100/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe run
+    run: |
+      echo 'Hello ${{ inputs.name }}'
+-- ADES102/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- .want/ADES102/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+runs:
+  using: composite
+  steps:
+    - with:
+        issue-close-message: Closing ${process.env.TITLE}
+      env:
+        TITLE: ${{ github.event.issue.title }}
+      name: Unsafe uses
+      run: ""
+      uses: roots/issue-closer@v1

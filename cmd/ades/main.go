@@ -16,6 +16,7 @@
 package main
 
 import (
+	"bytes"
 	"errors"
 	"flag"
 	"fmt"
@@ -27,6 +28,7 @@ import (
 	"strings"
 
 	"github.com/ericcornelissen/ades"
+	"gopkg.in/yaml.v3"
 )
 
 const (
@@ -40,6 +42,11 @@ var (
 		"explain",
 		"",
 		"Explain the given violation",
+	)
+	flagFix = flag.Bool(
+		"fix-experimental",
+		false,
+		"Automatically fix violations if possible",
 	)
 	flagJson = flag.Bool(
 		"json",
@@ -119,6 +126,14 @@ func run() int {
 		return exitError
 	}
 
+	if *flagFix {
+		var err error
+		report, err = fix(report)
+		if err != nil {
+			return exitError
+		}
+	}
+
 	if *flagJson {
 		fmt.Println(printJson(report))
 	} else {
@@ -144,6 +159,59 @@ func run() int {
 	}
 
 	return exitSuccess
+}
+
+func fix(reports map[string]map[string][]ades.Violation) (map[string]map[string][]ades.Violation, error) {
+	updated := make(map[string]map[string][]ades.Violation, len(reports))
+	for target, report := range reports {
+		for file, violations := range report {
+			fh, err := os.OpenFile(file, os.O_RDWR, 0o644)
+			if err != nil {
+				return nil, fmt.Errorf("could not open %q: %v", file, err)
+			}
+			defer func() { _ = fh.Close() }()
+
+			var buf bytes.Buffer
+			_, err = buf.ReadFrom(fh)
+			if err != nil {
+				return nil, fmt.Errorf("could not read %q: %v", file, err)
+			}
+
+			manifest, _ := ades.ParseManifest(buf.Bytes())
+
+			_, _ = fh.Seek(0, 0)
+			_ = fh.Truncate(0)
+
+			for _, violation := range violations {
+				ok := ades.Fix(&violation, &manifest)
+				if ok {
+					encoder := yaml.NewEncoder(fh)
+					encoder.SetIndent(2)
+					err := encoder.Encode(manifest)
+					if err != nil {
+						return nil, fmt.Errorf("could not encode %q: %v", file, err)
+					}
+					_ = encoder.Close()
+				} else {
+					x, ok := updated[target]
+					if !ok {
+						x = make(map[string][]ades.Violation, len(report))
+						updated[target] = x
+					}
+
+					y, ok := x[file]
+					if !ok {
+						x[file] = make([]ades.Violation, 0)
+						y = x[file]
+					}
+
+					x[file] = append(y, violation)
+				}
+			}
+		}
+	}
+
+	return updated, nil
 }
 
 func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
@@ -341,13 +409,14 @@ Usage:
 
 Flags:
 
-  -explain ADESxxx   Explain the given violation.
-  -help              Show this help message and exit.
-  -json              Output results in JSON format.
-  -legal             Show legal information and exit.
-  -suggestions       Show suggested fixes inline.
-  -version           Show the program version and exit.
-  -                  Read workflow or manifest from stdin.
+  -explain ADESxxx    Explain the given violation.
+  -fix-experimental   Automatically fix violations if possible.
+  -help               Show this help message and exit.
+  -json               Output results in JSON format.
+  -legal              Show legal information and exit.
+  -suggestions        Show suggested fixes inline.
+  -version            Show the program version and exit.
+  -                   Read workflow or manifest from stdin.
 
 Exit Codes:
 
