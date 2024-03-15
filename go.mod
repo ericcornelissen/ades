@@ -12,7 +12,7 @@ require (
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.4.1
 	github.com/go-critic/go-critic v0.11.2
-	github.com/google/capslock v0.2.1
+	github.com/google/capslock v0.2.2
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
@@ -31,7 +31,7 @@ require (
 	github.com/ultraware/whitespace v0.1.0
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
 	golang.org/x/mod v0.16.0
-	golang.org/x/tools v0.19.0
+	golang.org/x/tools v0.19.1-0.20240311201356-ca94c9663f9a
 	golang.org/x/vuln v1.0.4
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.4.7
