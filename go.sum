@@ -70,8 +70,8 @@ github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7 h1:uSoVVbwJiQipAclBb
 github.com/alcortesm/tgz v0.0.0-20161220082320-9c5fe88206d7/go.mod h1:6zEj6s6u/ghQa61ZWa/C2Aw3RkjiTBOix7dkqa1VLIs=
 github.com/alexkohler/dogsled v0.0.0-20210716154023-34d2ab9edb3d h1:VUC2VxJrY61sjClv49v315EqueruBC4Qb7okvLOt4EA=
 github.com/alexkohler/dogsled v0.0.0-20210716154023-34d2ab9edb3d/go.mod h1:JKZcwNsCuXMHGReMjwEWL8XLJjcgLm7dtLcBZMEZlDo=
-github.com/alexkohler/nakedret/v2 v2.0.1 h1:DLFVWaHbEntNHBYGhPX+AhCM1gCErTs35IFWPh6Bnn0=
-github.com/alexkohler/nakedret/v2 v2.0.1/go.mod h1:2b8Gkk0GsOrqQv/gPWjNLDSKwG8I5moSXG1K4VIBcTQ=
+github.com/alexkohler/nakedret/v2 v2.0.3 h1:PKK36FqXcDs0VIifnVjn3rPzM8O3lOJ2NVIdDqf/Jx8=
+github.com/alexkohler/nakedret/v2 v2.0.3/go.mod h1:DElDQL4kzpb9POK7PkMFjX/6VB4N0AbvPYcSbslvokg=
 github.com/alexkohler/prealloc v1.0.0 h1:Hbq0/3fJPQhNkN0dR95AVrr6R7tou91y0uHG5pOcUuw=
 github.com/alexkohler/prealloc v1.0.0/go.mod h1:VetnK3dIgFBBKmg0YnD9F9x6Icjd+9cvfHR56wJVlKE=
 github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406 h1:5qYQDJAjMgBsrql8MGR7d+XNx/r4zH0PWaTq04k9TIA=
