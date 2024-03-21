@@ -16,7 +16,7 @@ require (
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
-	github.com/jgautheron/goconst v1.6.0
+	github.com/jgautheron/goconst v1.7.1
 	github.com/kisielk/errcheck v1.7.0
 	github.com/kunwardeep/paralleltest v1.0.10
 	github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06
