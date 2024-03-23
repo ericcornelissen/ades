@@ -16,7 +16,6 @@
  */
 
 const input = document.getElementById("workflow-input");
-const results = document.getElementById("results");
 
 async function loadWasm() {
   const go = new Go();
@@ -37,19 +36,51 @@ async function loadWasm() {
 const htmlEncode = {
   ruleId: (ruleId) => {
     const link = `https://github.com/ericcornelissen/ades/blob/main/RULES.md#${ruleId}`;
-    return `<a href="${link}" rel="noopener" target="_blank">${ruleId}</a>`;
+
+    const a = document.createElement("a");
+    a.setAttribute("href", link);
+    a.setAttribute("rel", "noopener");
+    a.setAttribute("target", "_blank");
+    a.innerText = ruleId;
+    return a;
   },
   violation: (violation) => {
-    const ruleId = `[${htmlEncode.ruleId(violation.ruleId)}]`;
-    const job = violation.job ? `In job '<code>${violation.job}</code>',` : "";
-    const step = `step '<code>${violation.step}</code>',`;
-    const problem = `found '<code>${violation.problem}</code>'`;
-    return `<li>${ruleId} ${job} ${step} ${problem}.</li>`
+    const li = document.createElement("li");
+
+    li.appendChild(document.createTextNode("["));
+    li.appendChild(htmlEncode.ruleId(violation.ruleId));
+    li.appendChild(document.createTextNode("]"));
+
+    if (violation.job) {
+      const job = document.createElement("code");
+      job.innerText = violation.job;
+      li.appendChild(document.createTextNode(" In job '"));
+      li.appendChild(job);
+      li.appendChild(document.createTextNode("',"));
+    }
+
+    const step = document.createElement("code");
+    step.innerText = violation.step;
+    li.appendChild(document.createTextNode(" step '"));
+    li.appendChild(step);
+    li.appendChild(document.createTextNode("',"));
+
+    const found = document.createElement("code");
+    found.innerText = violation.problem;
+    li.appendChild(document.createTextNode(" found '"));
+    li.appendChild(found);
+    li.appendChild(document.createTextNode("'."));
+
+    return li;
   }
 }
 
 function runAnalysis() {
-  results.innerHTML = `<p class="working">Working...</p>`;
+  const working = document.createElement("p");
+  working.classList.add("working");
+  working.innerText = "Working...";
+
+  setResult(working);
 
   const source = getSource();
   ades(source);
@@ -59,19 +90,62 @@ function getSource() {
   return input.value.trim();
 }
 
-function showError(what, details) {
-  results.innerHTML = `<div class="error"><span class="title">Error:</span> <span class="what">${what}</span><p class="details">${details}`;
+function showError(summary, full) {
+  const title = document.createElement("span");
+  title.classList.add("title");
+  title.innerText = "Error:";
+
+  const what = document.createElement("span");
+  what.classList.add("what");
+  what.innerText = summary;
+
+  const details = document.createElement("p");
+  details.classList.add("details");
+  details.innerText = full;
+
+  const error = document.createElement("div");
+  error.classList.add("error");
+  error.appendChild(title);
+  error.appendChild(document.createTextNode(" "));
+  error.appendChild(what);
+  error.appendChild(details);
+
+  setResult(error);
 }
 
 function showResult(violations) {
   const count = violations.length;
   if (count === 0) {
-    results.innerHTML = "No problems detected";
+    const text = document.createElement("span");
+    text.innerText = "No problems detected";
+
+    setResult(text);
   } else {
-    const listItems = violations.map(htmlEncode.violation).join("");
-    const problems = count === 1 ? "problem" : "problems";
-    results.innerHTML = `<div class="result"><span class="title">Found ${count} ${problems}</span><ul>${listItems}</ul></div>`;
+    const title = document.createElement("span");
+    title.classList.add("title");
+    title.innerText = `Found ${count} ${count === 1 ? "problem" : "problems"}`;
+
+    const ul = document.createElement("ul");
+    for (const li of violations.map(htmlEncode.violation)) {
+      ul.appendChild(li);
+    }
+
+    setResult(title, ul);
   }
+}
+
+function setResult(...children) {
+  const results = document.getElementById("results");
+  const parent = results.parentNode;
+  parent.removeChild(results);
+
+  const newResults = document.createElement("div");
+  newResults.setAttribute("id", "results");
+  for (const child of children) {
+    newResults.appendChild(child);
+  }
+
+  parent.appendChild(newResults);
 }
 
 function main() {
