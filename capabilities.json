@@ -1,6 +1,926 @@
 {
 	"capabilityInfo": [
 		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget os.Stat",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "67",
+						"column": "13"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
+					"site": {
+						"filename": "main.go",
+						"line": "115",
+						"column": "28"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "os.Stat",
+					"site": {
+						"filename": "main.go",
+						"line": "197",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget os.Stat",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
+					"site": {
+						"filename": "main.go",
+						"line": "115",
+						"column": "28"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "os.Stat",
+					"site": {
+						"filename": "main.go",
+						"line": "197",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnFile os.ReadFile",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile"
+				},
+				{
+					"name": "os.ReadFile",
+					"site": {
+						"filename": "main.go",
+						"line": "296",
+						"column": "26"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository os.DirFS",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository"
+				},
+				{
+					"name": "os.DirFS",
+					"site": {
+						"filename": "main.go",
+						"line": "224",
+						"column": "18"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 github.com/ericcornelissen/ades/cmd/ades.runOnFile os.ReadFile",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "243",
+						"column": "38"
+					}
+				},
+				{
+					"name": "os.ReadFile",
+					"site": {
+						"filename": "main.go",
+						"line": "296",
+						"column": "26"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2 (*os.unixDirent).Name",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2"
+				},
+				{
+					"name": "(*os.unixDirent).Name",
+					"site": {
+						"filename": "main.go",
+						"line": "266",
+						"column": "36"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin io.ReadAll (*os.File).Read",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin"
+				},
+				{
+					"name": "io.ReadAll",
+					"site": {
+						"filename": "main.go",
+						"line": "150",
+						"column": "25"
+					}
+				},
+				{
+					"name": "(*os.File).Read",
+					"site": {
+						"filename": "io.go",
+						"line": "712",
+						"column": "19"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget os.Stat",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget"
+				},
+				{
+					"name": "os.Stat",
+					"site": {
+						"filename": "main.go",
+						"line": "197",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget os.Stat",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "os.Stat",
+					"site": {
+						"filename": "main.go",
+						"line": "197",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "67",
+						"column": "13"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "main.go",
+						"line": "97",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run"
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "main.go",
+						"line": "97",
+						"column": "22"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile"
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository"
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "243",
+						"column": "38"
+					}
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "243",
+						"column": "38"
+					}
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2 github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "271",
+						"column": "42"
+					}
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "205",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile path/filepath.Abs path/filepath.abs path/filepath.unixAbs os.Getwd",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "205",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.Abs",
+					"site": {
+						"filename": "main.go",
+						"line": "291",
+						"column": "35"
+					}
+				},
+				{
+					"name": "path/filepath.abs",
+					"site": {
+						"filename": "path.go",
+						"line": "295",
+						"column": "12"
+					}
+				},
+				{
+					"name": "path/filepath.unixAbs",
+					"site": {
+						"filename": "path_unix.go",
+						"line": "42",
+						"column": "16"
+					}
+				},
+				{
+					"name": "os.Getwd",
+					"site": {
+						"filename": "path.go",
+						"line": "302",
+						"column": "21"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "67",
+						"column": "13"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
+					"site": {
+						"filename": "main.go",
+						"line": "115",
+						"column": "28"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository",
+					"site": {
+						"filename": "main.go",
+						"line": "203",
+						"column": "25"
+					}
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
+					"site": {
+						"filename": "main.go",
+						"line": "115",
+						"column": "28"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository",
+					"site": {
+						"filename": "main.go",
+						"line": "203",
+						"column": "25"
+					}
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository"
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1"
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2"
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "258",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository",
+					"site": {
+						"filename": "main.go",
+						"line": "203",
+						"column": "25"
+					}
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_OPERATING_SYSTEM",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 (*os.unixDirent).IsDir",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository",
+					"site": {
+						"filename": "main.go",
+						"line": "203",
+						"column": "25"
+					}
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "(*os.unixDirent).IsDir",
+					"site": {
+						"filename": "main.go",
+						"line": "230",
+						"column": "17"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
 			"packageName": "ades",
 			"capability": "CAPABILITY_UNSAFE_POINTER",
 			"depPath": "github.com/ericcornelissen/ades.Suggestion github.com/ericcornelissen/ades.suggestJavaScriptEnv github.com/ericcornelissen/ades.suggestUseEnv (*strings.Builder).WriteRune (*strings.Builder).copyCheck",
@@ -241,6 +1161,202 @@
 			"capabilityType": "CAPABILITY_TYPE_DIRECT"
 		},
 		{
+			"packageName": "main",
+			"capability": "CAPABILITY_UNSAFE_POINTER",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.init regexp.MustCompile regexp.Compile regexp.compile regexp.onePassPrefix (*strings.Builder).WriteRune (*strings.Builder).copyCheck",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.init"
+				},
+				{
+					"name": "regexp.MustCompile",
+					"site": {
+						"filename": "main.go",
+						"line": "287",
+						"column": "44"
+					}
+				},
+				{
+					"name": "regexp.Compile",
+					"site": {
+						"filename": "regexp.go",
+						"line": "315",
+						"column": "24"
+					}
+				},
+				{
+					"name": "regexp.compile",
+					"site": {
+						"filename": "regexp.go",
+						"line": "135",
+						"column": "16"
+					}
+				},
+				{
+					"name": "regexp.onePassPrefix",
+					"site": {
+						"filename": "regexp.go",
+						"line": "203",
+						"column": "73"
+					}
+				},
+				{
+					"name": "(*strings.Builder).WriteRune",
+					"site": {
+						"filename": "onepass.go",
+						"line": "60",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(*strings.Builder).copyCheck",
+					"site": {
+						"filename": "builder.go",
+						"line": "106",
+						"column": "13"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_UNSAFE_POINTER",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printViolations (*strings.Builder).WriteRune (*strings.Builder).copyCheck",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "67",
+						"column": "13"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printViolations",
+					"site": {
+						"filename": "main.go",
+						"line": "134",
+						"column": "29"
+					}
+				},
+				{
+					"name": "(*strings.Builder).WriteRune",
+					"site": {
+						"filename": "output.go",
+						"line": "71",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(*strings.Builder).copyCheck",
+					"site": {
+						"filename": "builder.go",
+						"line": "106",
+						"column": "13"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_UNSAFE_POINTER",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printViolation (*strings.Builder).WriteString (*strings.Builder).copyCheck",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printViolation"
+				},
+				{
+					"name": "(*strings.Builder).WriteString",
+					"site": {
+						"filename": "output.go",
+						"line": "89",
+						"column": "17"
+					}
+				},
+				{
+					"name": "(*strings.Builder).copyCheck",
+					"site": {
+						"filename": "builder.go",
+						"line": "115",
+						"column": "13"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_UNSAFE_POINTER",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printViolations (*strings.Builder).WriteRune (*strings.Builder).copyCheck",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printViolations"
+				},
+				{
+					"name": "(*strings.Builder).WriteRune",
+					"site": {
+						"filename": "output.go",
+						"line": "71",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(*strings.Builder).copyCheck",
+					"site": {
+						"filename": "builder.go",
+						"line": "106",
+						"column": "13"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_UNSAFE_POINTER",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printViolations (*strings.Builder).WriteRune (*strings.Builder).copyCheck",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printViolations",
+					"site": {
+						"filename": "main.go",
+						"line": "134",
+						"column": "29"
+					}
+				},
+				{
+					"name": "(*strings.Builder).WriteRune",
+					"site": {
+						"filename": "output.go",
+						"line": "71",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(*strings.Builder).copyCheck",
+					"site": {
+						"filename": "builder.go",
+						"line": "106",
+						"column": "13"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
 			"packageName": "ades",
 			"capability": "CAPABILITY_REFLECT",
 			"depPath": "github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
@@ -327,12 +1443,788 @@
 			],
 			"packageDir": "github.com/ericcornelissen/ades",
 			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.init encoding/json.init reflect.TypeFor[encoding.TextMarshaler]",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.init"
+				},
+				{
+					"name": "encoding/json.init"
+				},
+				{
+					"name": "reflect.TypeFor[encoding.TextMarshaler]",
+					"site": {
+						"filename": "encode.go",
+						"line": "373",
+						"column": "61"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "67",
+						"column": "13"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "123",
+						"column": "24"
+					}
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "59",
+						"column": "30"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).marshal",
+					"site": {
+						"filename": "encode.go",
+						"line": "163",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).reflectValue",
+					"site": {
+						"filename": "encode.go",
+						"line": "297",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode$bound",
+					"site": {
+						"filename": "encode.go",
+						"line": "321",
+						"column": "17"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "59",
+						"column": "30"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).marshal",
+					"site": {
+						"filename": "encode.go",
+						"line": "163",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).reflectValue",
+					"site": {
+						"filename": "encode.go",
+						"line": "297",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode$bound",
+					"site": {
+						"filename": "encode.go",
+						"line": "321",
+						"column": "17"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "123",
+						"column": "24"
+					}
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "59",
+						"column": "30"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).marshal",
+					"site": {
+						"filename": "encode.go",
+						"line": "163",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*encoding/json.encodeState).reflectValue",
+					"site": {
+						"filename": "encode.go",
+						"line": "297",
+						"column": "16"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode$bound",
+					"site": {
+						"filename": "encode.go",
+						"line": "321",
+						"column": "17"
+					}
+				},
+				{
+					"name": "(encoding/json.floatEncoder).encode"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository io/fs.WalkDir github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository"
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "main.go",
+						"line": "225",
+						"column": "16"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "243",
+						"column": "38"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1 github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$1"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "243",
+						"column": "38"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2 github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnRepository$2"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "271",
+						"column": "42"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "163",
+						"column": "39"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "205",
+						"column": "35"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
+					"site": {
+						"filename": "main.go",
+						"line": "176",
+						"column": "33"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
+					"site": {
+						"filename": "main.go",
+						"line": "205",
+						"column": "35"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "305",
+						"column": "21"
+					}
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/ades.ParseManifest gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "312",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "69",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capability": "CAPABILITY_REFLECT",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow github.com/ericcornelissen/ades.ParseWorkflow gopkg.in/yaml.v3.Unmarshal gopkg.in/yaml.v3.unmarshal (*gopkg.in/yaml.v3.decoder).unmarshal (reflect.Value).Set",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.ParseWorkflow",
+					"site": {
+						"filename": "main.go",
+						"line": "321",
+						"column": "37"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.Unmarshal",
+					"site": {
+						"filename": "parse.go",
+						"line": "48",
+						"column": "26"
+					}
+				},
+				{
+					"name": "gopkg.in/yaml.v3.unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "89",
+						"column": "18"
+					}
+				},
+				{
+					"name": "(*gopkg.in/yaml.v3.decoder).unmarshal",
+					"site": {
+						"filename": "yaml.go",
+						"line": "167",
+						"column": "14"
+					}
+				},
+				{
+					"name": "(reflect.Value).Set",
+					"site": {
+						"filename": "decode.go",
+						"line": "493",
+						"column": "10"
+					}
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
 		}
 	],
 	"moduleInfo": [
 		{
 			"path": "golang.org/x/mod",
-			"version": "v0.15.0"
+			"version": "v0.16.0"
 		},
 		{
 			"path": "gopkg.in/yaml.v3",
@@ -346,6 +2238,9 @@
 				"mutation_test.go",
 				"tools.go"
 			]
+		},
+		{
+			"path": "github.com/ericcornelissen/ades/cmd/ades"
 		},
 		{
 			"path": "golang.org/x/mod/semver"

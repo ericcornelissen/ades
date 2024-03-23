@@ -34,6 +34,7 @@ audit: audit-capabilities audit-vulnerabilities ## Audit the codebase
 audit-capabilities: ## Audit for capabilities
 	@echo 'Checking capabilities...'
 	@go run github.com/google/capslock/cmd/capslock \
+		-packages ./... \
 		-noisy \
 		-output=compare capabilities.json
 
@@ -44,6 +45,7 @@ audit-vulnerabilities: ## Audit for vulnerabilities
 update-capabilities:
 	@echo 'Updating capabilities...'
 	@go run github.com/google/capslock/cmd/capslock \
+		-packages ./... \
 		-noisy \
 		-output json >capabilities.json
 
