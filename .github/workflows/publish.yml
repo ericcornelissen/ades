@@ -10,12 +10,18 @@ jobs:
   docker-hub:
     name: Docker Hub
     runs-on: ubuntu-22.04
+    permissions:
+      id-token: write # To perform keyless signing with cosign
     environment:
       name: docker
       url: https://hub.docker.com/r/ericornelissen/ades
     steps:
     - name: Checkout repository
       uses: actions/checkout@9bb56186c3b09b4f86b1c65136769dd318469633 # v4.1.2
+    - name: Install cosign
+      uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4 # v3.4.0
+      with:
+        cosign-release: v2.2.3
     - name: Get release version
       id: version
       shell: bash
@@ -27,6 +33,7 @@ jobs:
         username: ${{ vars.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build and push to Docker Hub
+      id: docker
       uses: docker/build-push-action@2cdde995de11925a030ce8070c3d77a52ffcf1c0 # v5.3.0
       with:
         context: .
@@ -35,6 +42,18 @@ jobs:
         tags: >-
           ericornelissen/ades:latest,
           ericornelissen/ades:${{ steps.version.outputs.version }}
+    - name: Sign container image
+      env:
+        DIGEST: ${{ steps.docker.outputs.digest }}
+        REF: ${{ github.sha }}
+        REPO: ${{ github.repository }}
+        WORKFLOW: ${{ github.workflow }}
+      run: |
+        cosign sign --yes \
+          -a "ref=${REF}" \
+          -a "repo=${REPO}" \
+          -a "workflow=${WORKFLOW}" \
+          "docker.io/ericornelissen/ades@${DIGEST}"
   github-release:
     name: GitHub Release
     runs-on: ubuntu-22.04
