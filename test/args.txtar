@@ -48,6 +48,10 @@ stdout '[workflows]'
 stdout '[manifest/action.yml]'
 ! stderr .
 
+# Conservative
+exec ades -conservative 'manifests/action.yml' 'workflows/.github/workflows/unsafe.yml'
+stdout 'Ok'
+! stderr .
 
 -- manifests/action.yml --
 name: Example unsafe action

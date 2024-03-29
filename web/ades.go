@@ -48,7 +48,7 @@ func lintWorkflow(source string) ([]ades.Violation, error) {
 		return nil, err
 	}
 
-	return ades.AnalyzeWorkflow(&workflow), nil
+	return ades.AnalyzeWorkflow(&workflow, ades.AllMatcher), nil
 }
 
 func lintManifest(source string) ([]ades.Violation, error) {
@@ -57,7 +57,7 @@ func lintManifest(source string) ([]ades.Violation, error) {
 		return nil, err
 	}
 
-	return ades.AnalyzeManifest(&manifest), nil
+	return ades.AnalyzeManifest(&manifest, ades.AllMatcher), nil
 }
 
 func analyze(source string) {

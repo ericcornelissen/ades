@@ -23,6 +23,7 @@ func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
 		name     string
 		manifest Manifest
+		matcher  ExprMatcher
 		want     int
 	}
 
@@ -40,7 +41,8 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			want: 0,
+			matcher: AllMatcher,
+			want:    0,
 		},
 		{
 			name: "Safe manifest",
@@ -55,7 +57,8 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			want: 0,
+			matcher: AllMatcher,
+			want:    0,
 		},
 		{
 			name: "Problem in first of two steps in manifest",
@@ -74,7 +77,8 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			want: 1,
+			matcher: AllMatcher,
+			want:    1,
 		},
 		{
 			name: "Problem in second of two steps in manifest",
@@ -93,7 +97,8 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			want: 1,
+			matcher: AllMatcher,
+			want:    1,
 		},
 		{
 			name: "Problem in all steps in manifest",
@@ -112,7 +117,8 @@ func TestAnalyzeManifest(t *testing.T) {
 					},
 				},
 			},
-			want: 2,
+			matcher: AllMatcher,
+			want:    2,
 		},
 	}
 
@@ -120,7 +126,7 @@ func TestAnalyzeManifest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := AnalyzeManifest(&tt.manifest)
+			violations := AnalyzeManifest(&tt.manifest, tt.matcher)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -128,7 +134,7 @@ func TestAnalyzeManifest(t *testing.T) {
 	}
 
 	t.Run("nil pointer", func(t *testing.T) {
-		violations := AnalyzeManifest(nil)
+		violations := AnalyzeManifest(nil, AllMatcher)
 		if got, want := len(violations), 0; got != want {
 			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 		}
@@ -139,6 +145,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 	type TestCase struct {
 		name     string
 		workflow Workflow
+		matcher  ExprMatcher
 		want     int
 	}
 
@@ -158,7 +165,8 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			want: 0,
+			matcher: AllMatcher,
+			want:    0,
 		},
 		{
 			name: "Problem in first of two jobs in workflow",
@@ -184,7 +192,8 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			want: 1,
+			matcher: AllMatcher,
+			want:    1,
 		},
 		{
 			name: "Problem in second of two jobs in workflow",
@@ -210,7 +219,8 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			want: 1,
+			matcher: AllMatcher,
+			want:    1,
 		},
 		{
 			name: "Problem in all jobs in workflow",
@@ -240,7 +250,8 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 				},
 			},
-			want: 3,
+			matcher: AllMatcher,
+			want:    3,
 		},
 	}
 
@@ -248,7 +259,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := AnalyzeWorkflow(&tt.workflow)
+			violations := AnalyzeWorkflow(&tt.workflow, tt.matcher)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, tt.want)
 			}
@@ -256,7 +267,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 	}
 
 	t.Run("nil pointer", func(t *testing.T) {
-		violations := AnalyzeWorkflow(nil)
+		violations := AnalyzeWorkflow(nil, AllMatcher)
 		if got, want := len(violations), 0; got != want {
 			t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 		}
@@ -268,6 +279,7 @@ func TestAnalyzeJob(t *testing.T) {
 		name      string
 		id        string
 		job       WorkflowJob
+		matcher   ExprMatcher
 		wantCount int
 		wantId    string
 	}
@@ -285,6 +297,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -299,6 +312,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -313,6 +327,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 1,
 			wantId:    "job-id",
 		},
@@ -328,6 +343,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 1,
 			wantId:    "Unsafe",
 		},
@@ -351,6 +367,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 1,
 			wantId:    "job-id",
 		},
@@ -373,6 +390,7 @@ func TestAnalyzeJob(t *testing.T) {
 					},
 				},
 			},
+			matcher:   AllMatcher,
 			wantCount: 1,
 			wantId:    "Unsafe",
 		},
@@ -382,7 +400,7 @@ func TestAnalyzeJob(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := analyzeJob(tt.id, &tt.job)
+			violations := analyzeJob(tt.id, &tt.job, tt.matcher)
 			if got, want := len(violations), tt.wantCount; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -401,6 +419,7 @@ func TestAnalyzeStep(t *testing.T) {
 		name       string
 		id         int
 		step       JobStep
+		matcher    ExprMatcher
 		wantCount  int
 		wantStepId string
 	}
@@ -411,6 +430,7 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -418,6 +438,7 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Name: "Doesn't run",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -426,6 +447,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -434,6 +456,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -443,6 +466,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
+			matcher:    AllMatcher,
 			wantCount:  1,
 			wantStepId: "#42",
 		},
@@ -452,6 +476,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
+			matcher:    AllMatcher,
 			wantCount:  1,
 			wantStepId: "Greet person",
 		},
@@ -462,6 +487,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
+			matcher:    AllMatcher,
 			wantCount:  2,
 			wantStepId: "#3",
 		},
@@ -472,6 +498,7 @@ func TestAnalyzeStep(t *testing.T) {
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
+			matcher:    AllMatcher,
 			wantCount:  2,
 			wantStepId: "Greet person today",
 		},
@@ -481,6 +508,7 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Uses: "this/is-not@a-real-action",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -489,6 +517,7 @@ func TestAnalyzeStep(t *testing.T) {
 			step: JobStep{
 				Uses: "actions/github-script@v6",
 			},
+			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		{
@@ -500,6 +529,7 @@ func TestAnalyzeStep(t *testing.T) {
 					"script": "console.log('Hello ${{ inputs.name }}')",
 				},
 			},
+			matcher:    AllMatcher,
 			wantCount:  1,
 			wantStepId: "#1",
 		},
@@ -509,7 +539,7 @@ func TestAnalyzeStep(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := analyzeStep(tt.id, &tt.step)
+			violations := analyzeStep(tt.id, &tt.step, tt.matcher)
 			if got, want := len(violations), tt.wantCount; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
@@ -525,32 +555,37 @@ func TestAnalyzeStep(t *testing.T) {
 
 func TestAnalyzeString(t *testing.T) {
 	type TestCase struct {
-		name  string
-		value string
-		want  []Violation
+		name    string
+		value   string
+		matcher ExprMatcher
+		want    []Violation
 	}
 
 	testCases := []TestCase{
 		{
-			name:  "Simple and safe",
-			value: "echo 'Hello world!'",
-			want:  []Violation{},
+			name:    "Simple and safe",
+			value:   "echo 'Hello world!'",
+			matcher: AllMatcher,
+			want:    []Violation{},
 		},
 		{
-			name:  "Multiline and safe",
-			value: "echo 'Hello'\necho 'world!'",
-			want:  []Violation{},
+			name:    "Multiline and safe",
+			value:   "echo 'Hello'\necho 'world!'",
+			matcher: AllMatcher,
+			want:    []Violation{},
 		},
 		{
-			name:  "One violations",
-			value: "echo 'Hello ${{ input.name }}!'",
+			name:    "One violations",
+			value:   "echo 'Hello ${{ input.name }}!'",
+			matcher: AllMatcher,
 			want: []Violation{
 				{Problem: "${{ input.name }}"},
 			},
 		},
 		{
-			name:  "Two violations",
-			value: "echo '${{ input.greeting }} ${{ input.name }}!'",
+			name:    "Two violations",
+			value:   "echo '${{ input.greeting }} ${{ input.name }}!'",
+			matcher: AllMatcher,
 			want: []Violation{
 				{Problem: "${{ input.greeting }}"},
 				{Problem: "${{ input.name }}"},
@@ -562,7 +597,7 @@ func TestAnalyzeString(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			violations := analyzeString(tt.value)
+			violations := analyzeString(tt.value, tt.matcher)
 			if got, want := len(violations), len(tt.want); got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}

@@ -32,6 +32,7 @@ go run github.com/ericcornelissen/ades/cmd/ades@latest .
 - Report dangerous uses of workflow expressions in [`run:`] directives.
 - Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
 - _(Experimental)_ Report dangerous uses of workflow expressions in known vulnerable actions.
+- Configurable sensitivity.
 - Provides suggested fixes.
 - Machine & human readable output formats.
 
