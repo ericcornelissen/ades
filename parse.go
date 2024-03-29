@@ -75,8 +75,11 @@ func ParseManifest(data []byte) (Manifest, error) {
 
 // StepUses is a structured representation of a workflow job step `uses:` value.
 type StepUses struct {
+	// Name is the name of the Action that is used. Typically <owner>/<repository>.
 	Name string
-	Ref  string
+
+	// Ref is the git reference used for the Action. Typically a tag ref, branch ref, or commit SHA.
+	Ref string
 }
 
 // ParseUses parses a Github Actions workflow job step's `uses:` value.

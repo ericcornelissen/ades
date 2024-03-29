@@ -19,13 +19,27 @@ import (
 	"fmt"
 )
 
+// Violation contain information on problematic GitHub Actions Expressions found in a workflow or
+// manifest.
 type Violation struct {
-	JobId   string
-	StepId  string
+	// JobId is an identifier of a job in a GitHub Actions workflow, either the name or key.
+	//
+	// This will be the zero value if the violation is for a GitHub Actions manifest.
+	JobId string
+
+	// StepId is the identifier of a step in a GitHub Actions workflow or manifest, either the name
+	// or index.
+	StepId string
+
+	// Problem is the problematic GitHub Actions Workflow Expression as observed in the workflow or
+	// manifest.
 	Problem string
-	RuleId  string
+
+	// RuleId is the identifier of the ades rule that produced the violation.
+	RuleId string
 }
 
+// AnalyzeManifest analyses a GitHub Actions manifest for problematic GitHub Actions Expressions.
 func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if manifest == nil {
@@ -39,6 +53,7 @@ func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 	return analyzeSteps(manifest.Runs.Steps, matcher)
 }
 
+// AnalyzeWorkflow analyses a GitHub Actions workflow for problematic GitHub Actions Expressions.
 func AnalyzeWorkflow(workflow *Workflow, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if workflow == nil {
