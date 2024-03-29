@@ -36,6 +36,11 @@ const (
 )
 
 var (
+	flagConservative = flag.Bool(
+		"conservative",
+		false,
+		"Only report expressions known to be controllable by attackers",
+	)
 	flagExplain = flag.String(
 		"explain",
 		"",
@@ -314,7 +319,14 @@ func tryManifest(data []byte) ([]ades.Violation, error) {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return ades.AnalyzeManifest(&manifest), nil
+	var matcher ades.ExprMatcher
+	if *flagConservative {
+		matcher = ades.ConservativeMatcher
+	} else {
+		matcher = ades.AllMatcher
+	}
+
+	return ades.AnalyzeManifest(&manifest, matcher), nil
 }
 
 func tryWorkflow(data []byte) ([]ades.Violation, error) {
@@ -323,7 +335,14 @@ func tryWorkflow(data []byte) ([]ades.Violation, error) {
 		return nil, errors.Join(errNotParsed, err)
 	}
 
-	return ades.AnalyzeWorkflow(&workflow), nil
+	var matcher ades.ExprMatcher
+	if *flagConservative {
+		matcher = ades.ConservativeMatcher
+	} else {
+		matcher = ades.AllMatcher
+	}
+
+	return ades.AnalyzeWorkflow(&workflow, matcher), nil
 }
 
 func legal() {
@@ -342,6 +361,7 @@ Usage:
 
 Flags:
 
+  -conservative      Only report expressions known to be controllable by attackers.
   -explain ADESxxx   Explain the given violation.
   -help              Show this help message and exit.
   -json              Output results in JSON format.
