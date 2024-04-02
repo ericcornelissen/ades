@@ -28,12 +28,12 @@ go run github.com/ericcornelissen/ades/cmd/ades@latest .
 
 ### Features
 
-- Scan workflow files and action manifests.
-- Report dangerous uses of workflow expressions in [`run:`] directives.
-- Report dangerous uses of workflow expressions in [`actions/github-script`] scripts.
+- Scans workflow files and action manifests.
+- Reports dangerous uses of workflow expressions in [`run:`] directives, [`actions/github-script`]
+  scripts, and known problematic action inputs.
 - _(Experimental)_ Report dangerous uses of workflow expressions in known vulnerable actions.
-- Configurable sensitivity.
 - Provides suggested fixes.
+- Configurable sensitivity.
 - Machine & human readable output formats.
 
 ### Rules
