@@ -138,7 +138,7 @@ it can be made safer by converting it into:
 ```yaml
 - name: Example step
   uses: sergeysova/jq-action@v2
-  env
+  env:
     FILE: ${{ github.event.inputs.file }} # <- Assign the expression to an environment variable
   with:
   #                  | Note: use double quotes to avoid argument splitting
