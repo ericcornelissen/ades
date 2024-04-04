@@ -31,8 +31,7 @@ type Violation struct {
 	// or index.
 	StepId string
 
-	// Problem is the problematic GitHub Actions Workflow Expression as observed in the workflow or
-	// manifest.
+	// Problem is the problematic GitHub Actions Expression as observed in the workflow or manifest.
 	Problem string
 
 	// RuleId is the identifier of the ades rule that produced the violation.
