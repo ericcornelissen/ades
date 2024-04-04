@@ -19,15 +19,15 @@ import (
 	"regexp"
 )
 
-// ExprMatcher is the interface for types that can find GitHub Workflow Expressions in strings.
+// ExprMatcher is the interface for types that can find GitHub Actions Expressions in strings.
 type ExprMatcher interface {
-	// FindAll is the function that returns all relevant GitHub Workflow Expressions in the provided
+	// FindAll is the function that returns all relevant GitHub Actions Expressions in the provided
 	// input.
 	FindAll([]byte) [][]byte
 }
 
 var (
-	// AllMatcher is an ExprMatcher that will find all GitHub Workflow Expressions in strings.
+	// AllMatcher is an ExprMatcher that will find all GitHub Actions Expressions in strings.
 	AllMatcher allExprMatcher
 
 	// ConservativeMatcher is an ExprMatcher that will conservatively find GitHub Workflow

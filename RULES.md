@@ -7,8 +7,8 @@ to address it.
 
 ## <a id="ADES100"></a> ADES100 - Expression in `run:` directive
 
-When a workflow expression appears in a `run:` directive you can avoid any potential attacks by
-extracting the expression into an environment variable and using the environment variable instead.
+When an expression appears in a `run:` directive you can avoid any potential attacks by extracting
+the expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -34,8 +34,8 @@ it can be made safer by converting it into:
 
 ## <a id="ADES101"></a> ADES101 - Expression in `actions/github-script` script
 
-When a workflow expression appears in a `actions/github-script` script you can avoid any potential
-attacks by extracting the expression into an environment variable and using the environment variable
+When an expression appears in a `actions/github-script` script you can avoid any potential attacks
+by extracting the expression into an environment variable and using the environment variable
 instead.
 
 For example, given the workflow snippet:
@@ -64,9 +64,9 @@ it can be made safer by converting it into:
 
 ## <a id="ADES102"></a> ADES102 - Expression in `roots/issue-closer` issue close message
 
-When a workflow expression appears in the issue close message of `roots/issue-closer` it is
-interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
-expression into an environment variable and using the environment variable instead.
+When an expression appears in the issue close message of `roots/issue-closer` it is interpreted as
+an ES6-style template literal. You can avoid any potential attacks by extracting the expression into
+an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -92,7 +92,7 @@ it can be made safer by converting it into:
 
 ## <a id="ADES103"></a> ADES103 - Expression in `roots/issue-closer` pull request close message
 
-When a workflow expression appears in the pull request close message of `roots/issue-closer` it is
+When an expression appears in the pull request close message of `roots/issue-closer` it is
 interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -120,7 +120,7 @@ it can be made safer by converting it into:
 
 ## <a id="ADES104"></a> ADES104 - Expression in `sergeysova/jq-action` command
 
-When a workflow expression appears in the command  input of `sergeysova/jq-action` you can avoid any
+When an expression appears in the command input of `sergeysova/jq-action` you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
 
@@ -150,14 +150,14 @@ it can be made safer by converting it into:
 
 ## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
-When a workflow expression is used in the tag input for `ericcornelissen/git-tag-annotation-action`
-in v1.0.0 or earlier it may be used to execute arbitrary shell commands, see [GHSA-hgx2-4pp9-357g].
-To avoid this, upgrade the action to a non-vulnerable version.
+When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in
+v1.0.0 or earlier it may be used to execute arbitrary shell commands, see [GHSA-hgx2-4pp9-357g]. To
+mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-hgx2-4pp9-357g]: https://github.com/ericcornelissen/git-tag-annotation-action/security/advisories/GHSA-hgx2-4pp9-357g
 
 ## <a id="ADES201"></a> ADES201 - Expression in `kceb/git-message-action` sha input
 
-When a workflow expression is used in the sha input for `kceb/git-message-action` in v1.1.0 or
-earlier it may be used to execute arbitrary shell commands (no vulnerability identifier available).
-To mitigate this, upgrade the action to a non-vulnerable version.
+When an expression is used in the sha input for `kceb/git-message-action` in v1.1.0 or earlier it
+may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
+this, upgrade the action to a non-vulnerable version.

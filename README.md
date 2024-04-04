@@ -2,7 +2,7 @@
 
 # Actions Dangerous Expressions Scanner
 
-A simple tool to find dangerous uses of GitHub Actions [Workflow expression]s.
+A simple tool to find dangerous uses of [GitHub Actions Expression]s.
 
 ## Usage
 
@@ -12,7 +12,7 @@ Run the tool from the root of a GitHub repository:
 ades .
 ```
 
-and it will report all detected dangerous uses of workflow expressions.
+and it will report all detected dangerous uses of GitHub Actions Expressions.
 
 You can also use the containerized version of the CLI, for example using Docker:
 
@@ -29,9 +29,9 @@ go run github.com/ericcornelissen/ades/cmd/ades@latest .
 ### Features
 
 - Scans workflow files and action manifests.
-- Reports dangerous uses of workflow expressions in [`run:`] directives, [`actions/github-script`]
-  scripts, and known problematic action inputs.
-- _(Experimental)_ Report dangerous uses of workflow expressions in known vulnerable actions.
+- Reports dangerous uses of expressions in [`run:`] directives, [`actions/github-script`] scripts,
+  and known problematic action inputs.
+- _(Experimental)_ Report dangerous uses of expressions in known vulnerable actions.
 - Provides suggested fixes.
 - Configurable sensitivity.
 - Machine & human readable output formats.
@@ -48,22 +48,22 @@ schema is intended to be stable from one version to the next for longer periods 
 
 ## Background
 
-A [workflow expression] is a string like:
+A [GitHub Actions Expression] is a string like:
 
 ```text
 ${{ <expression> }}
 ```
 
-that may appear in a GitHub Actions workflow and is filled in at runtime. If the value is controlled
-by a malicious actor it could be used to hijack the continuous integration pipeline of a repository.
-GitHub [blogged about this problem] in August of 2023.
+that may appear in a GitHub Actions workflow or manifest and is filled in at runtime. If the value
+is controlled by a malicious actor it could be used to hijack the continuous integration pipeline of
+a repository. GitHub [blogged about this problem] in August of 2023.
 
 ## Philosophy
 
 This project aims to provide a tool aimed at helping developers avoid the problem of injection
-through expressions altogether. Instead of reporting on problematic uses of workflow expressions,
-`ades` reports on all potentially dangerous uses of workflow expressions, nudging developers to use
-safe alternatives from the get-go.
+through expressions altogether. Instead of reporting on known problematic uses of expressions,
+`ades` reports on all potentially dangerous uses of expressions, nudging developers to use safe
+alternatives from the get-go.
 
 The motivation behind this is twofold. First, it makes the tool much simpler and faster. Second, it
 acknowledges that software development is dynamic and making changes some time after a piece of code
@@ -136,8 +136,8 @@ Documentation License v1.3] for the full license text.
 [characterizing the security of github ci workflows]: https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev
 [copying.txt]: ./COPYING.txt
 [cycodelabs/raven]: https://github.com/CycodeLabs/raven
+[github actions expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
 [gnu free documentation license v1.3]: https://www.gnu.org/licenses/fdl-1.3.en.html
 [on the outdatedness of workflows in the github actions ecosystem]: https://www.sciencedirect.com/science/article/pii/S0164121223002224
 [rules.md]: ./RULES.md
 [stepsecurity]: https://www.stepsecurity.io/
-[workflow expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
