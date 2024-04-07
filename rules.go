@@ -287,13 +287,22 @@ var stepRules = []stepRule{
 }
 
 func isBeforeVersion(uses *StepUses, version string) bool {
+	ref := uses.Ref
+	if !strings.HasPrefix(ref, "v") {
+		ref = "v" + ref
+	}
+
+	if !strings.HasPrefix(version, "v") {
+		version = "v" + version
+	}
+
 	// This comparison checks that the `Ref` is a semantic version string, which is currently the
 	// only supported type of `Ref`.
-	if semver.Canonical(uses.Ref) != uses.Ref {
+	if semver.Canonical(ref) != ref {
 		return false
 	}
 
-	return semver.Compare(version, uses.Ref) > 0
+	return semver.Compare(version, ref) > 0
 }
 
 // Explain returns an explanation for a rule.

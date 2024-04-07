@@ -635,50 +635,40 @@ func TestFindRule(t *testing.T) {
 func TestIsBeforeVersion(t *testing.T) {
 	type TestCase struct {
 		name    string
-		uses    StepUses
+		ref     string
 		version string
 		want    bool
 	}
 
 	testCases := []TestCase{
 		{
-			name: "Same version, full semantic version",
-			uses: StepUses{
-				Ref: "v1.0.0",
-			},
-			version: "v1.0.0",
+			name:    "Same version, full semantic version",
+			ref:     "1.0.0",
+			version: "1.0.0",
 			want:    false,
 		},
 		{
-			name: "Before, full semantic version",
-			uses: StepUses{
-				Ref: "v0.1.0",
-			},
-			version: "v1.0.0",
+			name:    "Before, full semantic version",
+			ref:     "0.1.0",
+			version: "1.0.0",
 			want:    true,
 		},
 		{
-			name: "After, full semantic version",
-			uses: StepUses{
-				Ref: "v1.0.1",
-			},
-			version: "v1.0.0",
+			name:    "After, full semantic version",
+			ref:     "1.0.1",
+			version: "1.0.0",
 			want:    false,
 		},
 		{
-			name: "SHA",
-			uses: StepUses{
-				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
-			},
-			version: "v1.0.0",
+			name:    "SHA",
+			ref:     "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+			version: "1.0.0",
 			want:    false,
 		},
 		{
-			name: "Major version only",
-			uses: StepUses{
-				Ref: "v1",
-			},
-			version: "v1.0.0",
+			name:    "Major version only",
+			ref:     "1",
+			version: "1.0.0",
 			want:    false,
 		},
 	}
@@ -687,8 +677,15 @@ func TestIsBeforeVersion(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := isBeforeVersion(&tt.uses, tt.version), tt.want; got != want {
-				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", tt.uses.Ref, tt.version, got, want)
+			variants := make(map[string]string, 2)
+			variants[tt.ref] = tt.version
+			variants["v"+tt.ref] = "v" + tt.version
+
+			for ref, version := range variants {
+				uses := StepUses{Ref: ref}
+				if got, want := isBeforeVersion(&uses, version), tt.want; got != want {
+					t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", ref, version, got, want)
+				}
 			}
 		})
 	}
