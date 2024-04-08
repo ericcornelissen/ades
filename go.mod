@@ -11,7 +11,7 @@ require (
 	github.com/butuzov/ireturn v0.3.0
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.4.1
-	github.com/go-critic/go-critic v0.11.2
+	github.com/go-critic/go-critic v0.11.3
 	github.com/google/capslock v0.2.2
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
