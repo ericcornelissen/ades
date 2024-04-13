@@ -17,6 +17,7 @@ package ades
 
 import (
 	"regexp"
+	"slices"
 	"testing"
 	"testing/quick"
 )
@@ -530,6 +531,48 @@ func TestExplain(t *testing.T) {
 	})
 }
 
+func TestFix(t *testing.T) {
+	t.Run("Existing rules", func(t *testing.T) {
+		for _, r := range allRules() {
+			tt := r.id
+			violation := Violation{
+				RuleId: tt,
+			}
+
+			t.Run(tt, func(t *testing.T) {
+				t.Parallel()
+
+				_, err := Fix(&violation)
+				if err != nil {
+					t.Fatalf("Unexpected error: %#v", err)
+				}
+			})
+		}
+	})
+
+	t.Run("Missing rules", func(t *testing.T) {
+		testCases := []string{
+			"ADES000",
+			"foobar",
+		}
+
+		for _, tt := range testCases {
+			violation := Violation{
+				RuleId: tt,
+			}
+
+			t.Run(tt, func(t *testing.T) {
+				t.Parallel()
+
+				_, err := Fix(&violation)
+				if err == nil {
+					t.Fatal("Expected an error, got none")
+				}
+			})
+		}
+	})
+}
+
 func TestSuggestion(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
 		for _, r := range allRules() {
@@ -689,6 +732,155 @@ func TestIsBeforeVersion(t *testing.T) {
 
 			if got, want := isBeforeVersion(&tt.uses, tt.version), tt.want; got != want {
 				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", tt.uses.Ref, tt.version, got, want)
+			}
+		})
+	}
+}
+
+func TestFixAddEnvVar(t *testing.T) {
+	type (
+		TestWant struct {
+			old []string
+			new string
+		}
+		TestCase struct {
+			step  JobStep
+			name  string
+			value string
+			want  []TestWant
+		}
+	)
+
+	testCases := []TestCase{
+		{
+			step: JobStep{
+				Uses: "foo/bar@v1",
+				Env:  nil,
+			},
+			name:  "no",
+			value: "env yet",
+			want: []TestWant{
+				{
+					old: []string{`\n(\s+)uses:\s*foo/bar@v1.*?\n`},
+					new: "${0}${1}env:\n${1}  no: env yet\n",
+				},
+				{
+					old: []string{`\n(\s+)-(\s+)uses:\s*foo/bar@v1.*?\n`},
+					new: "${0}${1} ${2}env:\n${1} ${2}  no: env yet\n",
+				},
+			},
+		},
+		{
+			step: JobStep{
+				Env: map[string]string{
+					"foo": "bar",
+				},
+			},
+			name:  "one",
+			value: "already",
+			want: []TestWant{
+				{
+					old: []string{`env:\s*\n(?:(\s*)foo\s*:\s*bar\s*\n|)+`},
+					new: "${0}${1}one: already\n",
+				},
+			},
+		},
+		{
+			step: JobStep{
+				Env: map[string]string{
+					"foo":   "bar",
+					"hello": "world!",
+				},
+			},
+			name:  "two",
+			value: "already",
+			want: []TestWant{
+				{
+					old: []string{
+						`env:\s*\n(?:(\s*)foo\s*:\s*bar\s*\n|(\s*)hello\s*:\s*world!\s*\n|)+`,
+						`env:\s*\n(?:(\s*)hello\s*:\s*world!\s*\n|(\s*)foo\s*:\s*bar\s*\n|)+`,
+					},
+					new: "${0}${1}two: already\n",
+				},
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.name+" "+tt.value, func(t *testing.T) {
+			t.Parallel()
+
+			fs := fixAddEnvVar(tt.step, tt.name, tt.value)
+			for i, f := range fs {
+				want := tt.want[i]
+
+				if got, want := f.Old.String(), want.old; !slices.Contains(want, got) {
+					t.Errorf("Incorrect %dth old string (got %q, want one of %v)", i, got, want)
+				}
+
+				if got, want := f.New, want.new; got != want {
+					t.Errorf("Incorrect %dth new string (got %q, want %q)", i, got, want)
+				}
+			}
+		})
+	}
+}
+
+func TestFixReplaceIn(t *testing.T) {
+	type (
+		TestWant struct {
+			old string
+			new string
+		}
+		TestCase struct {
+			s    string
+			old  string
+			new  string
+			want TestWant
+		}
+	)
+
+	testCases := []TestCase{
+		{
+			s:   "hello foobar world!",
+			old: "foobar",
+			new: "foobaz",
+			want: TestWant{
+				old: "hello foobar world!",
+				new: "hello foobaz world!",
+			},
+		},
+		{
+			s:   "Hello world! (Hola mundo!)",
+			old: "!",
+			new: "",
+			want: TestWant{
+				old: `Hello world! \(Hola mundo!\)`,
+				new: "Hello world (Hola mundo)",
+			},
+		},
+		{
+			s:   "This does not contain the string to replace",
+			old: "foobar",
+			new: "foobaz",
+			want: TestWant{
+				old: "This does not contain the string to replace",
+				new: "This does not contain the string to replace",
+			},
+		},
+	}
+
+	for _, tt := range testCases {
+		t.Run(tt.s, func(t *testing.T) {
+			t.Parallel()
+
+			f := fixReplaceIn(tt.s, tt.old, tt.new)
+			if got, want := f.Old.String(), tt.want.old; got != want {
+				t.Errorf("Incorrect old string (got %q, want %q)", got, want)
+			}
+
+			if got, want := f.New, tt.want.new; got != want {
+				t.Errorf("Incorrect new string (got %q, want %q)", got, want)
 			}
 		})
 	}

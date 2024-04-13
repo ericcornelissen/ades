@@ -32,7 +32,7 @@ go run github.com/ericcornelissen/ades/cmd/ades@latest .
 - Reports dangerous uses of expressions in [`run:`] directives, [`actions/github-script`] scripts,
   and known problematic action inputs.
 - _(Experimental)_ Report dangerous uses of expressions in known vulnerable actions.
-- Provides suggested fixes.
+- Provides suggested fixes and _(Experimental)_ fully automated fixes.
 - Configurable sensitivity.
 - Machine & human readable output formats.
 

@@ -46,6 +46,11 @@ var (
 		"",
 		"Explain the given violation",
 	)
+	flagFix = flag.Bool(
+		"fix-experimental",
+		false,
+		"Automatically fix violations if possible",
+	)
 	flagJson = flag.Bool(
 		"json",
 		false,
@@ -122,6 +127,13 @@ func run() int {
 
 	if !ok {
 		return exitError
+	}
+
+	if *flagFix {
+		if err := fix(report); err != nil {
+			fmt.Fprintln(os.Stderr, err)
+			return exitError
+		}
 	}
 
 	if *flagJson {
@@ -345,6 +357,46 @@ func tryWorkflow(data []byte) ([]ades.Violation, error) {
 	return ades.AnalyzeWorkflow(&workflow, matcher), nil
 }
 
+func fix(report map[string]map[string][]ades.Violation) error {
+	for _, report := range report {
+		for file, violations := range report {
+			fh, err := os.OpenFile(file, os.O_RDWR, 0o644)
+			if err != nil {
+				return fmt.Errorf("cannot open %q: %v", file, err)
+			} else {
+				defer func() { _ = fh.Close() }()
+			}
+
+			raw, err := io.ReadAll(fh)
+			if err != nil {
+				return fmt.Errorf("cannot read %q: %v", file, err)
+			}
+
+			var unfixed []ades.Violation
+			for _, violation := range violations {
+				fixes, _ := ades.Fix(&violation)
+				if fixes != nil {
+					for _, fix := range fixes {
+						raw = fix.Old.ReplaceAll(raw, []byte(fix.New))
+					}
+				} else {
+					unfixed = append(unfixed, violation)
+				}
+			}
+
+			if _, err := fh.WriteAt(raw, 0); err != nil {
+				return fmt.Errorf("cannot write to %q: %v", file, err)
+			} else {
+				_ = fh.Close()
+			}
+
+			report[file] = unfixed
+		}
+	}
+
+	return nil
+}
+
 func legal() {
 	fmt.Println(`ades  Copyright (C) 2024  Eric Cornelissen
 This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
@@ -361,14 +413,15 @@ Usage:
 
 Flags:
 
-  -conservative      Only report expressions known to be controllable by attackers.
-  -explain ADESxxx   Explain the given violation.
-  -help              Show this help message and exit.
-  -json              Output results in JSON format.
-  -legal             Show legal information and exit.
-  -suggestions       Show suggested fixes inline.
-  -version           Show the program version and exit.
-  -                  Read workflow or manifest from stdin.
+  -conservative       Only report expressions known to be controllable by attackers.
+  -explain ADESxxx    Explain the given violation.
+  -fix-experimental   Automatically fix violations if possible.
+  -help               Show this help message and exit.
+  -json               Output results in JSON format.
+  -legal              Show legal information and exit.
+  -suggestions        Show suggested fixes inline.
+  -version            Show the program version and exit.
+  -                   Read workflow or manifest from stdin.
 
 Exit Codes:
 

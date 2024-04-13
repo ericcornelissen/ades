@@ -37,6 +37,7 @@ type WorkflowJob struct {
 // JobStep is a (simplified) representation of a workflow job step object.
 type JobStep struct {
 	With map[string]string `yaml:"with"`
+	Env  map[string]string `yaml:"env"`
 	Name string            `yaml:"name"`
 	Run  string            `yaml:"run"`
 	Uses string            `yaml:"uses"`
