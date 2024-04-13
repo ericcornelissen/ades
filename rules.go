@@ -17,6 +17,7 @@ package ades
 
 import (
 	"fmt"
+	"regexp"
 	"strings"
 
 	"golang.org/x/mod/semver"
@@ -25,6 +26,7 @@ import (
 type rule struct {
 	extractFrom func(step *JobStep) string
 	suggestion  func(violation *Violation) string
+	fix         func(violation *Violation) []fix
 	id          string
 	title       string
 	description string
@@ -38,6 +40,14 @@ type actionRule struct {
 type stepRule struct {
 	appliesTo func(step *JobStep) bool
 	rule      rule
+}
+
+type fix struct {
+	// New is the replacement string to fix a violation.
+	New string
+
+	// Old is a regular expression to search and replace with in order to fix a violation.
+	Old regexp.Regexp
 }
 
 var actionRuleActionsGitHubScript = actionRule{
@@ -151,6 +161,29 @@ it can be made safer by converting it into:
 			return step.With["issue-close-message"]
 		},
 		suggestion: suggestJavaScriptLiteralEnv,
+		fix: func(violation *Violation) []fix {
+			var step JobStep
+			switch source := (violation.source).(type) {
+			case *Manifest:
+				step = source.Runs.Steps[violation.stepIndex]
+			case *Workflow:
+				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+			}
+
+			name := getVariableNameForExpression(violation.Problem)
+			if _, ok := step.Env[name]; ok {
+				return nil
+			}
+
+			fixes := fixAddEnvVar(step, name, violation.Problem)
+			fixes = append(fixes, fixReplaceIn(
+				step.With["issue-close-message"],
+				violation.Problem,
+				fmt.Sprintf("${process.env.%s}", name),
+			))
+
+			return fixes
+		},
 	},
 }
 
@@ -318,6 +351,22 @@ func Suggestion(violation *Violation) (string, error) {
 	return r.suggestion(violation), nil
 }
 
+// Fix produces a set of fixes to address the violation if possible. If the return value is nil the
+// violation cannot be fixed automatically.
+func Fix(violation *Violation) ([]fix, error) {
+	ruleId := violation.RuleId
+	r, err := findRule(ruleId)
+	if err != nil {
+		return nil, err
+	}
+
+	if r.fix == nil {
+		return nil, nil
+	}
+
+	return r.fix(violation), nil
+}
+
 func findRule(ruleId string) (rule, error) {
 	for _, rs := range actionRules {
 		for _, r := range rs {
@@ -334,6 +383,42 @@ func findRule(ruleId string) (rule, error) {
 	}
 
 	return rule{}, fmt.Errorf("unknown rule %q", ruleId)
+}
+
+func fixAddEnvVar(step JobStep, name, value string) []fix {
+	if step.Env == nil {
+		return []fix{
+			{
+				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)uses:\s*%s.*?\n`, step.Uses)),
+				New: fmt.Sprintf("${0}${1}env:\n${1}  %s: %s\n", name, value),
+			},
+			{
+				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)-(\s+)uses:\s*%s.*?\n`, step.Uses)),
+				New: fmt.Sprintf("${0}${1} ${2}env:\n${1} ${2}  %s: %s\n", name, value),
+			},
+		}
+	} else {
+		var sb strings.Builder
+		sb.WriteString(`env:\s*\n(?:`)
+		for k, v := range step.Env {
+			sb.WriteString(fmt.Sprintf(`(\s*)%s\s*:\s*%s\s*\n|`, k, v))
+		}
+		sb.WriteString(`)+`)
+
+		return []fix{
+			{
+				Old: *regexp.MustCompile(sb.String()),
+				New: fmt.Sprintf("${0}${1}%s: %s\n", name, value),
+			},
+		}
+	}
+}
+
+func fixReplaceIn(s, old, new string) fix {
+	return fix{
+		Old: *regexp.MustCompile(regexp.QuoteMeta(s)),
+		New: strings.ReplaceAll(s, old, new),
+	}
 }
 
 func suggestJavaScriptEnv(violation *Violation) string {

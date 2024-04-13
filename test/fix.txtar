@@ -1,0 +1,491 @@
+# ADES100 - Manifest (no fix available)
+! exec ades -fix-experimental ADES100/action.yml
+! stdout 'Ok'
+! stderr .
+cmp ADES100/action.yml .want/ADES100/action.yml
+
+# ADES102 - Manifest - with environment variables (#1)
+exec ades -fix-experimental ADES102/manifest/with-env-1/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/with-env-1/action.yml .want/ADES102/manifest/with-env-1/action.yml
+
+# ADES102 - Manifest - with environment variables (#2)
+exec ades -fix-experimental ADES102/manifest/with-env-2/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/with-env-2/action.yml .want/ADES102/manifest/with-env-2/action.yml
+
+# ADES102 - Manifest - without environment variables (#1)
+exec ades -fix-experimental ADES102/manifest/without-env-1/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/without-env-1/action.yml .want/ADES102/manifest/without-env-1/action.yml
+
+# ADES102 - Manifest - without environment variables (#2)
+exec ades -fix-experimental ADES102/manifest/without-env-2/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/without-env-2/action.yml .want/ADES102/manifest/without-env-2/action.yml
+
+# ADES102 - Manifest - name taken
+! exec ades -fix-experimental ADES102/manifest/name-taken/action.yml
+! stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/name-taken/action.yml .want/ADES102/manifest/name-taken/action.yml
+
+# ADES102 - Manifest - unnamed
+exec ades -fix-experimental ADES102/manifest/unnamed/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/unnamed/action.yml .want/ADES102/manifest/unnamed/action.yml
+
+# ADES102 - Manifest - fix + unfixed
+! exec ades -fix-experimental ADES102/manifest/fix-and-unfixed/action.yml
+! stdout 'Ok'
+! stderr .
+cmp ADES102/manifest/fix-and-unfixed/action.yml .want/ADES102/manifest/fix-and-unfixed/action.yml
+
+# ADES102 - Workflow - with environment variables (#1)
+exec ades -fix-experimental ADES102/workflow/with-env-1/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/with-env-1/workflow.yml .want/ADES102/workflow/with-env-1/workflow.yml
+
+# ADES102 - Workflow - with environment variables (#2)
+exec ades -fix-experimental ADES102/workflow/with-env-2/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/with-env-2/workflow.yml .want/ADES102/workflow/with-env-2/workflow.yml
+
+# ADES102 - Workflow - without environment variables (#1)
+exec ades -fix-experimental ADES102/workflow/without-env-1/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/without-env-1/workflow.yml .want/ADES102/workflow/without-env-1/workflow.yml
+
+# ADES102 - Workflow - without environment variables (#2)
+exec ades -fix-experimental ADES102/workflow/without-env-2/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/without-env-2/workflow.yml .want/ADES102/workflow/without-env-2/workflow.yml
+
+# ADES102 - Workflow - name taken
+! exec ades -fix-experimental ADES102/workflow/name-taken/workflow.yml
+! stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/name-taken/workflow.yml .want/ADES102/workflow/name-taken/workflow.yml
+
+# ADES102 - Workflow - unnamed step
+exec ades -fix-experimental ADES102/workflow/unnamed/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/unnamed/workflow.yml .want/ADES102/workflow/unnamed/workflow.yml
+
+# ADES102 - Workflow - fix + unfixed
+! exec ades -fix-experimental ADES102/workflow/fix-and-unfixed/workflow.yml
+! stdout 'Ok'
+! stderr .
+cmp ADES102/workflow/fix-and-unfixed/workflow.yml .want/ADES102/workflow/fix-and-unfixed/workflow.yml
+
+
+-- ADES100/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe run
+    run: |
+      echo 'Hello ${{ inputs.name }}'
+-- ADES102/manifest/with-env-1/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      FOO: BAR
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/with-env-2/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        FOO: BAR
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/without-env-1/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/without-env-2/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/name-taken/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      TITLE: taken
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/unnamed/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - uses: roots/issue-closer@v1
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/manifest/fix-and-unfixed/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - run: echo '${{ github.event.issue.title }}'
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/with-env-1/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        FOO: bar
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/with-env-2/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unsafe uses
+        uses: roots/issue-closer@v1
+        env:
+          FOO: bar
+        with:
+          issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/without-env-1/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/without-env-2/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unsafe uses
+        uses: roots/issue-closer@v1
+        with:
+          issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/name-taken/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        TITLE: taken
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/unnamed/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES102/workflow/fix-and-unfixed/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ github.event.issue.title }}'
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- .want/ADES100/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe run
+    run: |
+      echo 'Hello ${{ inputs.name }}'
+-- .want/ADES102/manifest/with-env-1/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      FOO: BAR
+      TITLE: ${{ github.event.issue.title }}
+    with:
+      issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/manifest/with-env-2/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        FOO: BAR
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/manifest/without-env-1/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      TITLE: ${{ github.event.issue.title }}
+    with:
+      issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/manifest/without-env-2/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/manifest/name-taken/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      TITLE: taken
+    with:
+      issue-close-message: Closing ${{ github.event.issue.title }}
+-- .want/ADES102/manifest/unnamed/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - uses: roots/issue-closer@v1
+    env:
+      TITLE: ${{ github.event.issue.title }}
+    with:
+      issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/manifest/fix-and-unfixed/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - run: echo '${{ github.event.issue.title }}'
+  - name: Unsafe uses
+    uses: roots/issue-closer@v1
+    env:
+      TITLE: ${{ github.event.issue.title }}
+    with:
+      issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/with-env-1/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        FOO: bar
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/with-env-2/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unsafe uses
+        uses: roots/issue-closer@v1
+        env:
+          FOO: bar
+          TITLE: ${{ github.event.issue.title }}
+        with:
+          issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/without-env-1/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/without-env-2/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Unsafe uses
+        uses: roots/issue-closer@v1
+        env:
+          TITLE: ${{ github.event.issue.title }}
+        with:
+          issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/name-taken/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        TITLE: taken
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- .want/ADES102/workflow/unnamed/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer@v1
+      env:
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}
+-- .want/ADES102/workflow/fix-and-unfixed/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ github.event.issue.title }}'
+    - name: Unsafe uses
+      uses: roots/issue-closer@v1
+      env:
+        TITLE: ${{ github.event.issue.title }}
+      with:
+        issue-close-message: Closing ${process.env.TITLE}

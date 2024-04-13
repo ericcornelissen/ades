@@ -22,6 +22,9 @@ import (
 // Violation contain information on problematic GitHub Actions Expressions found in a workflow or
 // manifest.
 type Violation struct {
+	// Source is a reference to the Workflow or Manifest struct in which the violation occurs.
+	source any
+
 	// JobId is an identifier of a job in a GitHub Actions workflow, either the name or key.
 	//
 	// This will be the zero value if the violation is for a GitHub Actions manifest.
@@ -36,6 +39,16 @@ type Violation struct {
 
 	// RuleId is the identifier of the ades rule that produced the violation.
 	RuleId string
+
+	// JobKey is the key of the job in which the violation occurs. Different from JobId in that it
+	// always uniquely identifies the job.
+	//
+	// This will be the zero value if the violation is for a GitHub Actions manifest.
+	jobKey string
+
+	// StepIndex is the index of the step in which the violation occurs. Different from StepId in
+	// that it always uniquely identifies the step.
+	stepIndex int
 }
 
 // AnalyzeManifest analyses a GitHub Actions manifest for problematic GitHub Actions Expressions.
@@ -49,7 +62,12 @@ func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 		return violations
 	}
 
-	return analyzeSteps(manifest.Runs.Steps, matcher)
+	for _, violation := range analyzeSteps(manifest.Runs.Steps, matcher) {
+		violation.source = manifest
+		violations = append(violations, violation)
+	}
+
+	return violations
 }
 
 // AnalyzeWorkflow analyses a GitHub Actions workflow for problematic GitHub Actions Expressions.
@@ -60,7 +78,10 @@ func AnalyzeWorkflow(workflow *Workflow, matcher ExprMatcher) []Violation {
 	}
 
 	for id, job := range workflow.Jobs {
-		violations = append(violations, analyzeJob(id, &job, matcher)...)
+		for _, violation := range analyzeJob(id, &job, matcher) {
+			violation.source = workflow
+			violations = append(violations, violation)
+		}
 	}
 
 	return violations
@@ -74,6 +95,7 @@ func analyzeJob(id string, job *WorkflowJob, matcher ExprMatcher) []Violation {
 
 	violations := make([]Violation, 0)
 	for _, violation := range analyzeSteps(job.Steps, matcher) {
+		violation.jobKey = id
 		violation.JobId = name
 		violations = append(violations, violation)
 	}
@@ -118,6 +140,7 @@ func analyzeStep(id int, step *JobStep, matcher ExprMatcher) []Violation {
 		for _, violation := range analyzeString(rule.extractFrom(step), matcher) {
 			violation.RuleId = rule.id
 			violation.StepId = name
+			violation.stepIndex = id
 			violations = append(violations, violation)
 		}
 	}

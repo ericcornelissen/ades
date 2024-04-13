@@ -130,6 +130,12 @@ func TestAnalyzeManifest(t *testing.T) {
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
 			}
+
+			for _, violation := range violations {
+				if got, want := violation.source, &tt.manifest; got != want {
+					t.Errorf("Violation source is not the manifest (got %v, want %v)", got, want)
+				}
+			}
 		})
 	}
 
@@ -262,6 +268,12 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			violations := AnalyzeWorkflow(&tt.workflow, tt.matcher)
 			if got, want := len(violations), tt.want; got != want {
 				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, tt.want)
+			}
+
+			for _, violation := range violations {
+				if got, want := violation.source, &tt.workflow; got != want {
+					t.Errorf("Violation source is not the workflow (got %v, want %v)", got, want)
+				}
 			}
 		})
 	}
@@ -406,6 +418,10 @@ func TestAnalyzeJob(t *testing.T) {
 			}
 
 			for i, violation := range violations {
+				if got, want := violation.jobKey, tt.id; got != want {
+					t.Errorf("Unexpected job key for violation %d (got %q, want %q)", i, got, want)
+				}
+
 				if got, want := violation.JobId, tt.wantId; got != want {
 					t.Errorf("Unexpected job ID for violation %d (got %q, want %q)", i, got, want)
 				}
@@ -545,6 +561,10 @@ func TestAnalyzeStep(t *testing.T) {
 			}
 
 			for i, violation := range violations {
+				if got, want := violation.stepIndex, tt.id; got != want {
+					t.Errorf("Unexpected step index for violation #%d (got %q, want %q)", i, got, want)
+				}
+
 				if got, want := violation.StepId, tt.wantStepId; got != want {
 					t.Errorf("Unexpected step id for violation #%d (got %q, want %q)", i, got, want)
 				}
