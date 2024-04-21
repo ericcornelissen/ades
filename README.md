@@ -106,7 +106,15 @@ problematic expressions in `run:` scripts and will completely miss others, for e
 An open source tool developed by a commercial company. It aims to find misconfigurations in GitHub
 Actions Workflows (not Actions). Among other checks it looks for a couple known problematic uses of
 expressions involving the `github` context. As a result it will report fewer expressions overall
-(fewer _false positives_) but miss many more compared to `ades` (more _false positives_).
+(fewer _false positives_) but miss some compared to `ades` (more _false positives_).
+
+### [BoostSecurity.io/poutine]
+
+An open source tool developed by a commercial company. It aims to find misconfigurations in CI/CD
+pipeline configurations including GitHub Actions Workflows. Among other checks it looks for a couple
+known problematic uses of expressions involving the `github` context. As a result it will report
+fewer expressions overall (fewer _false positives_) but miss some compared to `ades` (more
+_false positives_).
 
 ### Other
 
@@ -133,6 +141,7 @@ Documentation License v1.3] for the full license text.
 [argus: a framework for staged static taint analysis of github workflows and actions]: https://www.usenix.org/conference/usenixsecurity23/presentation/muralee
 [automatic security assessment of github actions workflows]: https://dl.acm.org/doi/abs/10.1145/3560835.3564554
 [blogged about this problem]: https://github.blog/2023-08-09-four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
+[boostsecurity.io/poutine]: https://github.com/boostsecurityio/poutine
 [characterizing the security of github ci workflows]: https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev
 [copying.txt]: ./COPYING.txt
 [cycodelabs/raven]: https://github.com/CycodeLabs/raven
