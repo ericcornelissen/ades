@@ -40,7 +40,6 @@ cmd/ades/**
 !cmd/ades/*.go
 !Containerfile
 !Containerfile.dev
-!Makefile
 !go.mod
 !go.sum
 !schema.json

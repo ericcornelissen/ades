@@ -20,6 +20,34 @@ If you decide to make a contribution, please read the [DCO] and use the followin
 
 ---
 
+## Tasks
+
+This project uses a custom Go-based task runner to run common tasks. To get started run:
+
+```shell
+go run tasks.go
+```
+
+For example, you can run one task as:
+
+```shell
+go run tasks.go verify
+```
+
+We recommend configuring the following command alias:
+
+```shell
+alias gask='go run tasks.go'
+```
+
+Which would allow you to run:
+
+```shell
+gask verify
+```
+
+---
+
 ## Adding a Rule
 
 To add a rule you need to add some information and logic to the `rules.go` file, and corresponding

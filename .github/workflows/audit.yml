@@ -27,7 +27,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Audit
-      run: make audit-capabilities
+      run: go run tasks.go audit-capabilities
   vulnerabilities:
     name: Vulnerabilities
     runs-on: ubuntu-22.04
@@ -39,4 +39,4 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Audit
-      run: make audit-vulnerabilities
+      run: go run tasks.go audit-vulnerabilities

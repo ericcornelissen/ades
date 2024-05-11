@@ -22,9 +22,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Build
-      run: |
-        cd web
-        make build
+      run: go run tasks.go web-build
     - name: Deploy
       uses: JamesIves/github-pages-deploy-action@ec9c88baef04b842ca6f0a132fd61c762aa6c1b0 # v4.6.0
       with:

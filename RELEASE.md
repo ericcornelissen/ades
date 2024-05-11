@@ -6,7 +6,7 @@ To release a new version of the `ades` project follow the description in this fi
 
 ## Preferred
 
-Run `make release` and follow the instructions it gives.
+Run `go run tasks.go release` and follow the instructions it gives.
 
 ## Fallback
 
@@ -75,20 +75,20 @@ as an example):
    checksums) after running:
 
    ```shell
-   make release-compile
+   go run tasks.go build-all
    ```
 
 1. Publish to [Docker Hub], first with a version tag:
 
    ```shell
-   make container CONTAINER_TAG=v23.12
+   env CONTAINER_TAG=v23.12 go run tasks.go container
    docker push ericornelissen/ades:v23.12
    ```
 
    then the `latest` tag:
 
    ```shell
-   make container CONTAINER_TAG=latest
+   env CONTAINER_TAG=latest go run tasks.go container
    docker push ericornelissen/ades:latest
    ```
 

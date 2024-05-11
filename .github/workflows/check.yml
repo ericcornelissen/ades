@@ -19,7 +19,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Build binary
-      run: make build
+      run: go run tasks.go build
   compliance:
     name: Compliance
     runs-on: ubuntu-22.04
@@ -33,7 +33,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Check compliance
-      run: make compliance
+      run: go run tasks.go compliance
   container:
     name: Container
     runs-on: ubuntu-22.04
@@ -53,7 +53,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Build container with ${{ matrix.engine }}
-      run: make container
+      run: go run tasks.go container
       env:
         CONTAINER_ENGINE: ${{ matrix.engine }}
     - name: Test run container with ${{ matrix.engine }}
@@ -66,8 +66,12 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
+    - name: Install Go
+      uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
+      with:
+        go-version-file: go.mod
     - name: Build
-      run: make dev-img
+      run: go run tasks.go dev-img
   format:
     name: Format
     runs-on: ubuntu-22.04
@@ -81,7 +85,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Check source code formatting
-      run: make fmt-check
+      run: go run tasks.go format-check
   reproducible:
     name: Reproducible build
     runs-on: ubuntu-22.04
@@ -95,7 +99,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Check reproducibility
-      run: make reproducible
+      run: go run tasks.go reproducible
   test-unit:
     name: Unit test
     runs-on: ubuntu-22.04
@@ -109,7 +113,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Run tests
-      run: make test-randomized
+      run: go run tasks.go test-randomized
   test-dogfeed:
     name: Dogfeed
     runs-on: ubuntu-22.04
@@ -123,7 +127,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Run on this repository
-      run: make run
+      run: go run tasks.go dogfeed
   test-mutation:
     name: Mutation test
     runs-on: ubuntu-22.04
@@ -137,7 +141,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Run mutation tests
-      run: make test-mutation
+      run: go run tasks.go test-mutation
   vet:
     name: Vet
     runs-on: ubuntu-22.04
@@ -151,7 +155,7 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Vet source code
-      run: make vet
+      run: go run tasks.go vet
   web:
     name: Web
     runs-on: ubuntu-22.04
@@ -165,6 +169,4 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Build web app
-      run: |
-        cd web
-        make build
+      run: go run tasks.go web-build
