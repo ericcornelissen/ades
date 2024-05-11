@@ -206,6 +206,13 @@ release-compile:
 	@echo 'Computing checksums...'
 	@cd _compiled/ && shasum --algorithm 512 ./* >'checksums-sha512.txt'
 
+.PHONY: reproducible
+reproducible:
+	@make build
+	@shasum ades | tee checksums.txt
+	@make clean build
+	@shasum --check checksums.txt --strict
+
 .PHONY: run
 run: ## Run the project on itself
 	@go run ./cmd/ades

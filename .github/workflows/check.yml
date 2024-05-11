@@ -94,16 +94,8 @@ jobs:
       uses: actions/setup-go@cdcb36043654635271a94b9a6d1392de5bb323a7 # v5.0.1
       with:
         go-version-file: go.mod
-    - name: Build
-      run: make build
-    - name: Compute checksum
-      run: shasum ades | tee checksums.txt
-    - name: Clear build
-      run: make clean
-    - name: Rebuild
-      run: make build
-    - name: Verify checksum
-      run: shasum --check checksums.txt --strict
+    - name: Check reproducibility
+      run: make reproducible
   test-unit:
     name: Unit test
     runs-on: ubuntu-22.04
