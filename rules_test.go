@@ -685,41 +685,89 @@ func TestIsBeforeVersion(t *testing.T) {
 
 	testCases := []TestCase{
 		{
-			name: "Same version, full semantic version",
+			name: "Full version, exact same version",
 			uses: StepUses{
-				Ref: "v1.0.0",
+				Ref: "v1.2.3",
 			},
-			version: "v1.0.0",
+			version: "v1.2.3",
 			want:    false,
 		},
 		{
-			name: "Before, full semantic version",
+			name: "Full version, earlier major version",
 			uses: StepUses{
 				Ref: "v0.1.0",
 			},
-			version: "v1.0.0",
+			version: "v1.2.3",
 			want:    true,
 		},
 		{
-			name: "After, full semantic version",
+			name: "Full version, earlier minor version",
 			uses: StepUses{
-				Ref: "v1.0.1",
+				Ref: "v1.1.0",
 			},
-			version: "v1.0.0",
+			version: "v1.2.3",
+			want:    true,
+		},
+		{
+			name: "Full version, earlier patch version",
+			uses: StepUses{
+				Ref: "v1.2.1",
+			},
+			version: "v1.2.3",
+			want:    true,
+		},
+		{
+			name: "Full version, later major version",
+			uses: StepUses{
+				Ref: "v2.0.0",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		{
+			name: "Full version, later minor version",
+			uses: StepUses{
+				Ref: "v1.3.0",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		{
+			name: "Full version, later patch version",
+			uses: StepUses{
+				Ref: "v1.2.4",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		{
+			name: "Major version only, earlier major version",
+			uses: StepUses{
+				Ref: "v1",
+			},
+			version: "v2.1.0",
+			want:    true,
+		},
+		{
+			name: "Major version only, same major version",
+			uses: StepUses{
+				Ref: "v2",
+			},
+			version: "v2.1.0",
+			want:    false,
+		},
+		{
+			name: "Major version only, later major version",
+			uses: StepUses{
+				Ref: "v3",
+			},
+			version: "v2.1.0",
 			want:    false,
 		},
 		{
 			name: "SHA",
 			uses: StepUses{
 				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
-			},
-			version: "v1.0.0",
-			want:    false,
-		},
-		{
-			name: "Major version only",
-			uses: StepUses{
-				Ref: "v1",
 			},
 			version: "v1.0.0",
 			want:    false,
