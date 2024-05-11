@@ -72,7 +72,7 @@ jobs:
       run: |
         echo "version=${GITHUB_REF#refs/tags/}" >>"$GITHUB_OUTPUT"
     - name: Compile
-      run: make release-compile
+      run: go run tasks.go build-all
     - name: Create GitHub release
       uses: ncipollo/release-action@2c591bcc8ecdcd2db72b97d6147f871fcd833ba5 # v1.14.0
       with:
