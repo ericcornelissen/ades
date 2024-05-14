@@ -9,7 +9,7 @@ permissions: read-all
 jobs:
   docker-hub:
     name: Docker Hub
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       id-token: write # To perform keyless signing with cosign
     environment:
@@ -56,7 +56,7 @@ jobs:
           "docker.io/ericornelissen/ades@${DIGEST}"
   github-release:
     name: GitHub Release
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     permissions:
       attestations: write # To create GitHub Attestations
       contents: write # To create a GitHub Release
