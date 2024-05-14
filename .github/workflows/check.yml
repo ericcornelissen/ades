@@ -10,7 +10,7 @@ permissions: read-all
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -22,7 +22,7 @@ jobs:
       run: go run tasks.go build
   compliance:
     name: Compliance
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
@@ -36,7 +36,7 @@ jobs:
       run: go run tasks.go compliance
   container:
     name: Container
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -62,7 +62,7 @@ jobs:
         CONTAINER_ENGINE: ${{ matrix.engine }}
   development-image:
     name: Development image
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout repository
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -74,7 +74,7 @@ jobs:
       run: go run tasks.go dev-img
   format:
     name: Format
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
@@ -88,7 +88,7 @@ jobs:
       run: go run tasks.go format-check
   reproducible:
     name: Reproducible build
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
@@ -102,7 +102,7 @@ jobs:
       run: go run tasks.go reproducible
   test-unit:
     name: Unit test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
@@ -116,7 +116,7 @@ jobs:
       run: go run tasks.go test-randomized
   test-dogfeed:
     name: Dogfeed
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - test-unit
     steps:
@@ -130,7 +130,7 @@ jobs:
       run: go run tasks.go dogfeed
   test-mutation:
     name: Mutation test
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - test-unit
     steps:
@@ -144,7 +144,7 @@ jobs:
       run: go run tasks.go test-mutation
   vet:
     name: Vet
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
@@ -158,7 +158,7 @@ jobs:
       run: go run tasks.go vet
   web:
     name: Web
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
     needs:
     - build
     steps:
