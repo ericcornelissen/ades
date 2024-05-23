@@ -58,7 +58,9 @@ jobs:
     name: GitHub Release
     runs-on: ubuntu-22.04
     permissions:
+      attestations: write # To create GitHub Attestations
       contents: write # To create a GitHub Release
+      id-token: write # To perform keyless signing with cosign for attestations
     steps:
     - name: Checkout repository
       uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4.1.4
@@ -80,3 +82,7 @@ jobs:
         name: Release ${{ steps.version.outputs.version }}
         body: ${{ steps.version.outputs.version }}
         artifacts: ./_compiled/*
+    - name: Attest build provenance
+      uses: actions/attest-build-provenance@173725a1209d09b31f9d30a3890cf2757ebbff0d # v1.1.2
+      with:
+        subject-path: ./_compiled/*
