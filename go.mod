@@ -31,8 +31,8 @@ require (
 	github.com/ultraware/whitespace v0.1.0
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
 	golang.org/x/mod v0.17.0
-	golang.org/x/tools v0.21.0
-	golang.org/x/vuln v1.1.0
+	golang.org/x/tools v0.21.1-0.20240514024235-59d9797072e7
+	golang.org/x/vuln v1.1.1
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.4.7
 	mvdan.cc/unparam v0.0.0-20230917202934-3ee2d22f45fb
