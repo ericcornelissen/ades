@@ -21,7 +21,7 @@ require (
 	github.com/kunwardeep/paralleltest v1.0.10
 	github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06
 	github.com/nishanths/exhaustive v0.12.0
-	github.com/polyfloyd/go-errorlint v1.5.1
+	github.com/polyfloyd/go-errorlint v1.5.2
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/rhysd/actionlint v1.7.1
 	github.com/rogpeppe/go-internal v1.12.0
