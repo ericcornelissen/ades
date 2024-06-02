@@ -170,7 +170,7 @@ func TaskBuildAll(t *T) error {
 		return err
 	}
 
-	return os.WriteFile("./_compiled/checksums-shas512.txt", []byte(out), permFile)
+	return os.WriteFile("./_compiled/checksums-sha512.txt", []byte(out), permFile)
 }
 
 // Reset the project to a clean state.
