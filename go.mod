@@ -30,8 +30,8 @@ require (
 	github.com/tomarrell/wrapcheck/v2 v2.8.1
 	github.com/ultraware/whitespace v0.1.0
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
-	golang.org/x/mod v0.17.0
-	golang.org/x/tools v0.21.1-0.20240514024235-59d9797072e7
+	golang.org/x/mod v0.18.0
+	golang.org/x/tools v0.22.0
 	golang.org/x/vuln v1.1.1
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.4.7
@@ -100,13 +100,13 @@ require (
 	github.com/xanzy/ssh-agent v0.2.1 // indirect
 	go.opencensus.io v0.24.0 // indirect
 	go.uber.org/automaxprocs v1.5.3 // indirect
-	golang.org/x/crypto v0.23.0 // indirect
+	golang.org/x/crypto v0.24.0 // indirect
 	golang.org/x/exp v0.0.0-20240416160154-fe59bbe5cc7f // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240213143201-ec583247a57a // indirect
-	golang.org/x/net v0.25.0 // indirect
+	golang.org/x/net v0.26.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
-	golang.org/x/sys v0.20.0 // indirect
-	golang.org/x/text v0.15.0 // indirect
+	golang.org/x/sys v0.21.0 // indirect
+	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/protobuf v1.34.0 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
