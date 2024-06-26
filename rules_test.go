@@ -765,6 +765,78 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		{
+			name: "Major+minor version, earlier major version and earlier minor version",
+			uses: StepUses{
+				Ref: "v1.1",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		{
+			name: "Major+minor version, earlier major version and same minor version",
+			uses: StepUses{
+				Ref: "v1.2",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		{
+			name: "Major+minor version, earlier major version and later minor version",
+			uses: StepUses{
+				Ref: "v1.3",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		{
+			name: "Major+minor version, same major version and earlier minor version",
+			uses: StepUses{
+				Ref: "v2.1",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		{
+			name: "Major+minor version, same major version and same minor version",
+			uses: StepUses{
+				Ref: "v2.2",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		{
+			name: "Major+minor version, same major version and later minor version",
+			uses: StepUses{
+				Ref: "v2.3",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		{
+			name: "Major+minor version, later major version and earlier minor version",
+			uses: StepUses{
+				Ref: "v3.1",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		{
+			name: "Major+minor version, later major version and same minor version",
+			uses: StepUses{
+				Ref: "v3.2",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		{
+			name: "Major+minor version, later major version and later minor version",
+			uses: StepUses{
+				Ref: "v3.3",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		{
 			name: "SHA",
 			uses: StepUses{
 				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
