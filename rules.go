@@ -324,11 +324,14 @@ func isBeforeVersion(uses *StepUses, version string) bool {
 		return false
 	}
 
-	if semver.Canonical(uses.Ref) != uses.Ref {
+	switch {
+	case semver.Canonical(uses.Ref) == uses.Ref:
+		return semver.Compare(uses.Ref, version) < 0
+	case semver.MajorMinor(uses.Ref) == uses.Ref:
+		return semver.Compare(uses.Ref, semver.MajorMinor(version)) < 0
+	default:
 		return semver.Compare(uses.Ref, semver.Major(version)) < 0
 	}
-
-	return semver.Compare(uses.Ref, version) < 0
 }
 
 // Explain returns an explanation for a rule.
