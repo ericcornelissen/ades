@@ -12,7 +12,7 @@ require (
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.4.4
 	github.com/go-critic/go-critic v0.11.4
-	github.com/google/capslock v0.2.2
+	github.com/google/capslock v0.2.3
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
@@ -107,7 +107,7 @@ require (
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.21.0 // indirect
 	golang.org/x/text v0.16.0 // indirect
-	google.golang.org/protobuf v1.34.0 // indirect
+	google.golang.org/protobuf v1.34.2 // indirect
 	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
