@@ -405,7 +405,7 @@ conditions; see the GPL v3.0 for details.`)
 }
 
 func usage() {
-	fmt.Println(`find dangerous uses of expressions in GitHub Action workflows
+	fmt.Println(`find dangerous uses of expressions in GitHub Action workflows and manifests
 
 Usage:
 
