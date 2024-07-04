@@ -379,7 +379,7 @@ func TaskRelease(t *T) error {
 	return nil
 }
 
-// Check if the build is reproducible.
+// Check if the binary is reproducible.
 func TaskReproducible(t *T) error {
 	var (
 		build    = "go build ./cmd/ades"
@@ -400,6 +400,51 @@ func TaskReproducible(t *T) error {
 
 	if checksum1 != checksum2 {
 		return errors.New("Build did not reproduce")
+	}
+
+	return nil
+}
+
+// Check if the container is reproducible.
+func TaskReproducibleContainer(t *T) error {
+	var (
+		engine    = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
+		tag1      = "docker.io/ericornelissen/ades:a"
+		tag2      = "docker.io/ericornelissen/ades:b"
+		buildCmd  = "%s build --no-cache --file Containerfile --tag %s ."
+		removeCmd = "%s rmi %s"
+	)
+
+	t.Log("Initial container build...")
+	cmd := fmt.Sprintf(buildCmd, engine, tag1)
+	if err := t.Exec(cmd); err != nil {
+		return err
+	}
+
+	t.Log("Reproducing container build...")
+	cmd = fmt.Sprintf(buildCmd, engine, tag2)
+	if err := t.Exec(cmd); err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = t.ExecF(
+			io.Discard,
+			fmt.Sprintf(removeCmd, engine, tag1),
+			fmt.Sprintf(removeCmd, engine, tag2),
+		)
+	}()
+
+	t.Log("Check...")
+	cmd = fmt.Sprintf(
+		"go run github.com/reproducible-containers/diffoci/cmd/diffoci diff --semantic %s://%s %s://%s",
+		engine,
+		tag1,
+		engine,
+		tag2,
+	)
+	if err := t.Exec(cmd); err != nil {
+		return err
 	}
 
 	return nil
