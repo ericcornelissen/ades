@@ -20,6 +20,8 @@ jobs:
         go-version-file: go.mod
     - name: Build binary
       run: go run tasks.go build
+    - name: Build all release binaries
+      run: go run tasks.go build-all
   compliance:
     name: Compliance
     runs-on: ubuntu-22.04
