@@ -247,7 +247,7 @@ func TaskDevEnv(t *T) error {
 	var (
 		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
 		build  = fmt.Sprintf(
-			"%s run -it --rm --workdir '/ades' --mount 'type=bind,source=%s,target=/ades' --name ades-dev-env ades-dev-img",
+			"%s run -it --rm -p 8080:8080 --workdir '/ades' --mount 'type=bind,source=%s,target=/ades' --name ades-dev-env ades-dev-img",
 			engine,
 			wd,
 		)
