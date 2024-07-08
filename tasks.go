@@ -79,12 +79,16 @@ func TaskAuditVulnerabilities(t *T) error {
 
 // Build the ades binary for the current platform.
 func TaskBuild(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Building...")
 	return t.Exec(`go build ./cmd/ades`)
 }
 
 // Build the ades binary for all supported platforms.
 func TaskBuildAll(t *T) error {
+	TaskVersion(t)
+
 	type Target struct {
 		GOOS   string
 		GOARCH string
@@ -178,6 +182,7 @@ func TaskClean(t *T) error {
 	var (
 		items = []string{
 			"_compiled/",
+			"cmd/ades/version.txt",
 			"web/node_modules/",
 			"web/ades.wasm",
 			"web/COPYING.txt",
@@ -229,6 +234,8 @@ func TaskContainer(t *T) error {
 
 // Run all tests and generate a coverage report.
 func TaskCoverage(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Generating coverage report...")
 	return t.Exec(
 		"go test -coverprofile cover.out ./...",
@@ -271,6 +278,7 @@ func TaskDevImg(t *T) error {
 
 // Run the project on itself.
 func TaskDogfeed(t *T) error {
+	TaskVersion(t)
 	return t.Exec(`go run ./cmd/ades`)
 }
 
@@ -317,9 +325,9 @@ func TaskRelease(t *T) error {
 		return errors.New("not on " + baseBranch)
 	}
 
-	if out, err := t.ExecS(`git status --porcelain`); err != nil {
+	if isDirty, err := checkDirty(t); err != nil {
 		return err
-	} else if out != "" {
+	} else if isDirty {
 		return errors.New("workspace is dirty")
 	}
 
@@ -381,6 +389,8 @@ func TaskRelease(t *T) error {
 
 // Check if the build is reproducible.
 func TaskReproducible(t *T) error {
+	TaskVersion(t)
+
 	var (
 		build    = "go build ./cmd/ades"
 		checksum = "shasum --algorithm 512 ades"
@@ -407,18 +417,24 @@ func TaskReproducible(t *T) error {
 
 // Run all tests.
 func TaskTest(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Testing...")
 	return t.Exec(`go test ./...`)
 }
 
 // Run mutation tests.
 func TaskTestMutation(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Mutation testing...")
 	return t.Exec(`go test -tags=mutation`)
 }
 
 // Run tests in a random order.
 func TaskTestRandomized(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Testing (random order)...")
 	return t.Exec(`go test -shuffle=on ./...`)
 }
@@ -453,6 +469,8 @@ func TaskVerify(t *T) error {
 
 // Vet the source code.
 func TaskVet(t *T) error {
+	TaskVersion(t)
+
 	t.Log("Vetting...")
 	return t.Exec(
 		"go vet ./...",
@@ -487,6 +505,31 @@ func TaskVet(t *T) error {
 	)
 }
 
+// Determine the current version string for the binary.
+func TaskVersion(t *T) error {
+	var (
+		version = "UNKNOWN"
+		dirty   = "-no-vcs"
+	)
+
+	if tags, err := t.ExecS(`git describe --tags`); err == nil {
+		version = tags
+	}
+
+	if isDirty, err := checkDirty(t); err == nil {
+		if isDirty {
+			dirty = "-dirty"
+		} else {
+			dirty = ""
+		}
+	}
+
+	versionStr := fmt.Sprintf("%s%s", version, dirty)
+	os.WriteFile("./cmd/ades/version.txt", []byte(versionStr), permFile)
+
+	return nil
+}
+
 // Build the ades web application.
 func TaskWebBuild(t *T) error {
 	goroot, err := t.ExecS("go env GOROOT")
@@ -518,6 +561,15 @@ func TaskWebServe(t *T) error {
 	}
 
 	return t.Exec("npx http-server . --port 8080")
+}
+
+func checkDirty(t *T) (bool, error) {
+	status, err := t.ExecS(`git status --porcelain`)
+	if err != nil {
+		return false, err
+	}
+
+	return strings.TrimSpace(status) != "", nil
 }
 
 // -------------------------------------------------------------------------------------------------
