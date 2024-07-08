@@ -16,6 +16,7 @@
 package main
 
 import (
+	_ "embed"
 	"errors"
 	"flag"
 	"fmt"
@@ -430,7 +431,9 @@ Exit Codes:
   2   Problems detected`)
 }
 
+//go:embed version.txt
+var versionString string
+
 func version() {
-	versionString := "v24.06"
 	fmt.Println(versionString)
 }
