@@ -16,6 +16,7 @@
  */
 
 const input = document.getElementById("workflow-input");
+const conservative = document.getElementById("option-conservative");
 
 async function loadWasm() {
   const go = new Go();
@@ -83,11 +84,18 @@ function runAnalysis() {
   setResult(working);
 
   const source = getSource();
-  ades(source);
+  const options = getOptions();
+  ades(source, options);
 }
 
 function getSource() {
   return input.value.trim();
+}
+
+function getOptions() {
+  return {
+    conservative: conservative.checked,
+  };
 }
 
 function showError(summary, full) {
@@ -154,6 +162,7 @@ function main() {
   window.showResult = showResult;
 
   input.addEventListener("keyup", runAnalysis);
+  conservative.addEventListener("click", runAnalysis);
 
   loadWasm();
 }

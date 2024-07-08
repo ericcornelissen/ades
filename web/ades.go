@@ -25,6 +25,16 @@ import (
 
 var window = js.Global().Get("window")
 
+type options struct {
+	conservative bool
+}
+
+func parseOptions(opts js.Value) options {
+	return options{
+		conservative: opts.Get("conservative").Bool(),
+	}
+}
+
 func fail(description string, err error) {
 	window.Call("showError", description, err.Error())
 }
@@ -42,28 +52,38 @@ func encodeErrorAsMap(violation *ades.Violation) map[string]any {
 	return obj
 }
 
-func lintWorkflow(source string) ([]ades.Violation, error) {
+func lintWorkflow(source string, opts *options) ([]ades.Violation, error) {
 	workflow, err := ades.ParseWorkflow([]byte(source))
 	if err != nil {
 		return nil, err
 	}
 
-	return ades.AnalyzeWorkflow(&workflow, ades.AllMatcher), nil
+	var matcher ades.ExprMatcher = ades.AllMatcher
+	if opts.conservative {
+		matcher = ades.ConservativeMatcher
+	}
+
+	return ades.AnalyzeWorkflow(&workflow, matcher), nil
 }
 
-func lintManifest(source string) ([]ades.Violation, error) {
+func lintManifest(source string, opts *options) ([]ades.Violation, error) {
 	manifest, err := ades.ParseManifest([]byte(source))
 	if err != nil {
 		return nil, err
 	}
 
-	return ades.AnalyzeManifest(&manifest, ades.AllMatcher), nil
+	var matcher ades.ExprMatcher = ades.AllMatcher
+	if opts.conservative {
+		matcher = ades.ConservativeMatcher
+	}
+
+	return ades.AnalyzeManifest(&manifest, matcher), nil
 }
 
-func analyze(source string) {
-	violations, err := lintWorkflow(source)
+func analyze(source string, opts *options) {
+	violations, err := lintWorkflow(source, opts)
 	if err != nil || len(violations) == 0 {
-		violations, err = lintManifest(source)
+		violations, err = lintManifest(source, opts)
 	}
 
 	if err != nil {
@@ -82,7 +102,8 @@ func analyze(source string) {
 
 func runAdes(_this js.Value, args []js.Value) any {
 	source := args[0].String()
-	analyze(source)
+	opts := parseOptions(args[1])
+	analyze(source, &opts)
 
 	return nil
 }
@@ -91,7 +112,9 @@ func main() {
 	window.Set("ades", js.FuncOf(runAdes))
 
 	initialSource := window.Call("getSource").String()
-	analyze(initialSource)
+	rawOpts := window.Call("getOptions")
+	opts := parseOptions(rawOpts)
+	analyze(initialSource, &opts)
 
 	// Keep the program alive
 	select {}
