@@ -16,6 +16,7 @@
 package ades
 
 import (
+	"fmt"
 	"regexp"
 	"slices"
 	"testing"
@@ -837,12 +838,66 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		{
-			name: "SHA",
+			name: "SHA without annotation",
 			uses: StepUses{
 				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 			},
 			version: "v1.0.0",
 			want:    false,
+		},
+		{
+			name: "SHA with annotation that is not a version",
+			uses: StepUses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "I'm just a comment",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		{
+			name: "SHA with annotation, later version",
+			uses: StepUses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v1.1.0",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		{
+			name: "SHA with annotation, same version",
+			uses: StepUses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v1.0.0",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		{
+			name: "SHA with annotation, earlier version",
+			uses: StepUses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v0.1.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		{
+			name: "semver ref and annotation, ref later",
+			uses: StepUses{
+				Ref:        "v1.1.0",
+				Annotation: "v0.1.0",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		{
+			name: "semver ref and annotation, ref earlier",
+			uses: StepUses{
+				Ref:        "v0.1.0",
+				Annotation: "v1.1.0",
+			},
+			version: "v1.0.0",
+			want:    true,
 		},
 	}
 
@@ -851,7 +906,12 @@ func TestIsBeforeVersion(t *testing.T) {
 			t.Parallel()
 
 			if got, want := isBeforeVersion(&tt.uses, tt.version), tt.want; got != want {
-				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", tt.uses.Ref, tt.version, got, want)
+				ref := tt.uses.Ref
+				if tt.uses.Annotation != "" {
+					ref = fmt.Sprintf("%s (%s)", tt.uses.Ref, tt.uses.Annotation)
+				}
+
+				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", ref, tt.version, got, want)
 			}
 		})
 	}

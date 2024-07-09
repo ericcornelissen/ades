@@ -36,11 +36,44 @@ type WorkflowJob struct {
 
 // JobStep is a (simplified) representation of a workflow job step object.
 type JobStep struct {
-	With map[string]string `yaml:"with"`
-	Env  map[string]string `yaml:"env"`
-	Name string            `yaml:"name"`
-	Run  string            `yaml:"run"`
-	Uses string            `yaml:"uses"`
+	With        map[string]string `yaml:"with"`
+	Env         map[string]string `yaml:"env"`
+	Name        string            `yaml:"name"`
+	Run         string            `yaml:"run"`
+	Uses        string            `yaml:"uses"`
+	UsesComment string            `yaml:"-"`
+}
+
+func (step *JobStep) UnmarshalYAML(node *yaml.Node) error {
+	for i := range node.Content {
+		if i%2 == 1 {
+			continue
+		}
+
+		key := node.Content[i].Value
+		value := node.Content[i+1]
+
+		var err error
+		switch key {
+		case "env":
+			err = value.Decode(&step.Env)
+		case "name":
+			step.Name = value.Value
+		case "run":
+			step.Run = value.Value
+		case "uses":
+			step.Uses = value.Value
+			step.UsesComment = strings.TrimLeft(value.LineComment, "# ")
+		case "with":
+			err = value.Decode(&step.With)
+		}
+
+		if err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 // ParseWorkflow parses a GitHub Actions workflow file into a Workflow struct.
@@ -81,6 +114,9 @@ type StepUses struct {
 
 	// Ref is the git reference used for the Action. Typically a tag ref, branch ref, or commit SHA.
 	Ref string
+
+	// Annotation is the comment after the `uses:` value, if any.
+	Annotation string
 }
 
 // ParseUses parses a Github Actions workflow job step's `uses:` value.
@@ -94,5 +130,6 @@ func ParseUses(step *JobStep) (StepUses, error) {
 
 	uses.Name = step.Uses[:i]
 	uses.Ref = step.Uses[i+1:]
+	uses.Annotation = step.UsesComment
 	return uses, nil
 }

@@ -320,17 +320,21 @@ var stepRules = []stepRule{
 }
 
 func isBeforeVersion(uses *StepUses, version string) bool {
-	if !semver.IsValid(uses.Ref) {
-		return false
+	ref := uses.Ref
+	if !semver.IsValid(ref) {
+		ref = uses.Annotation
+		if !semver.IsValid(ref) {
+			return false
+		}
 	}
 
 	switch {
-	case semver.Canonical(uses.Ref) == uses.Ref:
-		return semver.Compare(uses.Ref, version) < 0
-	case semver.MajorMinor(uses.Ref) == uses.Ref:
-		return semver.Compare(uses.Ref, semver.MajorMinor(version)) < 0
+	case semver.Canonical(ref) == ref:
+		return semver.Compare(ref, version) < 0
+	case semver.MajorMinor(ref) == ref:
+		return semver.Compare(ref, semver.MajorMinor(version)) < 0
 	default:
-		return semver.Compare(uses.Ref, semver.Major(version)) < 0
+		return semver.Compare(ref, semver.Major(version)) < 0
 	}
 }
 
