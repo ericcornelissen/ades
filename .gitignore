@@ -17,6 +17,7 @@
 !.editorconfig
 !.gitattributes
 !.gitignore
+!.wrapcheck.yml
 
 # Docs
 !CONTRIBUTING.md

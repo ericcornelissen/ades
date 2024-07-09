@@ -122,6 +122,28 @@ jobs:
 					},
 				},
 			},
+			{
+				name: "No names",
+				yaml: `
+jobs:
+  example:
+    steps:
+    - uses: actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b # v4
+`,
+				want: Workflow{
+					Jobs: map[string]WorkflowJob{
+						"example": {
+							Name: "",
+							Steps: []JobStep{
+								{
+									Uses:        "actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b",
+									UsesComment: "v4",
+								},
+							},
+						},
+					},
+				},
+			},
 		}
 
 		for _, tt := range testCases {
@@ -163,6 +185,10 @@ jobs:
 							t.Errorf("Unexpected uses for job %q step %d (got %q, want %q)", k, i, got, want)
 						}
 
+						if got, want := step.UsesComment, want.UsesComment; got != want {
+							t.Errorf("Unexpected uses comment for job %q step %d (got %q, want %q)", k, i, got, want)
+						}
+
 						if got, want := step.With["script"], want.With["script"]; got != want {
 							t.Errorf("Unexpected with for job %q step %d (got %q, want %q)", k, i, got, want)
 						}
@@ -191,6 +217,15 @@ jobs: 3.14
 jobs:
   example:
     steps: 42
+`,
+			},
+			{
+				name: "Invalid 'env' value",
+				yaml: `
+jobs:
+  example:
+    steps:
+    - env: 1.618
 `,
 			},
 			{
@@ -446,6 +481,18 @@ func TestParseUses(t *testing.T) {
 					Ref:  "7",
 				},
 			},
+			{
+				name: "with comment",
+				step: JobStep{
+					Uses:        "actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b",
+					UsesComment: "v4",
+				},
+				want: StepUses{
+					Name:       "actions/checkout",
+					Ref:        "0ad4b8fadaa221de15dcec353f45205ec38ea70b",
+					Annotation: "v4",
+				},
+			},
 		}
 
 		for _, tt := range testCases {
@@ -463,6 +510,10 @@ func TestParseUses(t *testing.T) {
 
 				if got, want := uses.Ref, tt.want.Ref; got != want {
 					t.Fatalf("Unexpected ref (got %q, want %q)", got, want)
+				}
+
+				if got, want := uses.Annotation, tt.want.Annotation; got != want {
+					t.Fatalf("Unexpected annotation (got %q, want %q)", got, want)
 				}
 			})
 		}

@@ -51,7 +51,7 @@ type Violation struct {
 	stepIndex int
 }
 
-// AnalyzeManifest analyses a GitHub Actions manifest for problematic GitHub Actions Expressions.
+// AnalyzeManifest analyzes a GitHub Actions manifest for problematic GitHub Actions Expressions.
 func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if manifest == nil {
@@ -70,7 +70,7 @@ func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 	return violations
 }
 
-// AnalyzeWorkflow analyses a GitHub Actions workflow for problematic GitHub Actions Expressions.
+// AnalyzeWorkflow analyzes a GitHub Actions workflow for problematic GitHub Actions Expressions.
 func AnalyzeWorkflow(workflow *Workflow, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if workflow == nil {
