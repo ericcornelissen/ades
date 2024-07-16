@@ -80,7 +80,7 @@ func TaskAuditVulnerabilities(t *T) error {
 // Build the ades binary for the current platform.
 func TaskBuild(t *T) error {
 	t.Log("Building...")
-	return t.Exec(`go build ./cmd/ades`)
+	return t.Exec(`go build -trimpath ./cmd/ades`)
 }
 
 // Build the ades binary for all supported platforms.
@@ -382,18 +382,51 @@ func TaskRelease(t *T) error {
 // Check if the binary is reproducible.
 func TaskReproducible(t *T) error {
 	var (
-		build    = "go build ./cmd/ades"
-		checksum = "shasum --algorithm 512 ades"
+		checksum       = "shasum --algorithm 512 ades"
+		tempDirPattern = "ades-repro-*"
+		copyProjectTo  = "cp -R . %s"
 	)
 
 	t.Log("Initial build...")
-	checksum1, err := t.ExecS(build, checksum)
+	location, err := os.MkdirTemp(os.TempDir(), tempDirPattern)
+	if err != nil {
+		return err
+	} else {
+		defer os.RemoveAll(location)
+	}
+
+	if err := t.ExecF(io.Discard, fmt.Sprintf(copyProjectTo, location)); err != nil {
+		return err
+	}
+
+	t.Cd(location)
+	if err := TaskBuild(t); err != nil {
+		return err
+	}
+
+	checksum1, err := t.ExecS(checksum)
 	if err != nil {
 		return err
 	}
 
 	t.Log("Reproducing build...")
-	checksum2, err := t.ExecS(build, checksum)
+	location, err = os.MkdirTemp(os.TempDir(), tempDirPattern)
+	if err != nil {
+		return err
+	} else {
+		defer os.RemoveAll(location)
+	}
+
+	if err := t.ExecF(io.Discard, fmt.Sprintf(copyProjectTo, location)); err != nil {
+		return err
+	}
+
+	t.Cd(location)
+	if err := TaskBuild(t); err != nil {
+		return err
+	}
+
+	checksum2, err := t.ExecS(checksum)
 	if err != nil {
 		return err
 	}
