@@ -33,7 +33,7 @@ require (
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
 	golang.org/x/mod v0.19.0
 	golang.org/x/tools v0.23.0
-	golang.org/x/vuln v1.1.1
+	golang.org/x/vuln v1.1.3
 	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.4.7
 	mvdan.cc/unparam v0.0.0-20230917202934-3ee2d22f45fb
@@ -146,6 +146,7 @@ require (
 	golang.org/x/net v0.27.0 // indirect
 	golang.org/x/sync v0.7.0 // indirect
 	golang.org/x/sys v0.22.0 // indirect
+	golang.org/x/telemetry v0.0.0-20240522233618-39ace7a40ae7 // indirect
 	golang.org/x/text v0.16.0 // indirect
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
