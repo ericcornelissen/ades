@@ -583,6 +583,40 @@ func TaskWebBuild(t *T) error {
 	return t.Exec(buildWasm, copyLicense, copyWasmExec)
 }
 
+// Check if the WASM binary is reproducible.
+func TaskWebReproducible(t *T) error {
+	var (
+		checksum = "shasum --algorithm 512 ades.wasm"
+	)
+
+	t.Log("Initial web build...")
+	if err := TaskWebBuild(t); err != nil {
+		return err
+	}
+
+	checksum1, err := t.ExecS(checksum)
+	if err != nil {
+		return err
+	}
+
+	t.Cd("..")
+	t.Log("Reproducing web build...")
+	if err := TaskWebBuild(t); err != nil {
+		return err
+	}
+
+	checksum2, err := t.ExecS(checksum)
+	if err != nil {
+		return err
+	}
+
+	if checksum1 != checksum2 {
+		return errors.New("Web build did not reproduce")
+	}
+
+	return nil
+}
+
 // Serve the ades web application.
 func TaskWebServe(t *T) error {
 	if err := t.Run(TaskWebBuild); err != nil {
