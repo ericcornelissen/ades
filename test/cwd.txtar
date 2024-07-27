@@ -292,4 +292,4 @@ print("Beep boop I'm a helper script")
 -- workflows/.github/workflows/also.yml/not-a-workflow.foo --
 I'm also not a workflow and I shouldn't be analyzed.
 -- workflows/.github/workflows/also.yaml/not-a-workflow.bar --
-I'm definitly not a workflow and I shouldn't be analyzed.
+I'm definitely not a workflow and I shouldn't be analyzed.

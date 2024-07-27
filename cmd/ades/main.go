@@ -119,7 +119,6 @@ func run() int {
 	)
 
 	if targets[0] == "-" {
-		targets = []string{"stdin"}
 		report, err = runOnStdin()
 	} else {
 		report, err = runOnTargets(targets)
@@ -140,16 +139,17 @@ func run() int {
 	if *flagJson {
 		fmt.Println(printJson(report))
 	} else {
-		for i, target := range targets {
-			if i > 0 {
+		separator := false
+		for target, violations := range report {
+			if separator {
 				fmt.Println( /* empty line between targets */ )
 			}
 			if len(targets) > 1 {
 				fmt.Printf("[%s]\n", target)
 			}
 
-			violations := report[target]
 			fmt.Print(printViolations(violations, *flagSuggestions))
+			separator = true
 		}
 	}
 
@@ -194,13 +194,13 @@ func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, err
 			return nil, fmt.Errorf("an unexpected error occurred: %s", err)
 		}
 
-		for file, fileViolations := range violations {
-			targetViolations, ok := report[target]
-			if !ok {
-				targetViolations = make(map[string][]ades.Violation)
-				report[target] = targetViolations
-			}
+		targetViolations, ok := report[target]
+		if !ok {
+			targetViolations = make(map[string][]ades.Violation)
+			report[target] = targetViolations
+		}
 
+		for file, fileViolations := range violations {
 			targetViolations[file] = fileViolations
 		}
 	}
