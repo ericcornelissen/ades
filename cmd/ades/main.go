@@ -114,18 +114,19 @@ func run() int {
 	}
 
 	var (
-		ok     bool
+		err    error
 		report map[string]map[string][]ades.Violation
 	)
 
 	if targets[0] == "-" {
 		targets = []string{"stdin"}
-		report, ok = runOnStdin()
+		report, err = runOnStdin()
 	} else {
-		report, ok = runOnTargets(targets)
+		report, err = runOnTargets(targets)
 	}
 
-	if !ok {
+	if err != nil {
+		fmt.Fprintln(os.Stderr, err.Error())
 		return exitError
 	}
 
@@ -163,17 +164,15 @@ func run() int {
 	return exitSuccess
 }
 
-func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
+func runOnStdin() (map[string]map[string][]ades.Violation, error) {
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		fmt.Printf("Could not read from stdin (error: %s)\n", err)
-		return nil, false
+		return nil, fmt.Errorf("could not read from stdin: %s", err)
 	}
 
 	violations := make(map[string][]ades.Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
-		fmt.Fprintf(os.Stderr, "Could not parse input (error: %s)\n", err)
-		return nil, false
+		return nil, fmt.Errorf("could not parse input: %s", err)
 	} else if len(workflowViolations) != 0 {
 		violations["stdin"] = workflowViolations
 	} else {
@@ -184,30 +183,29 @@ func runOnStdin() (map[string]map[string][]ades.Violation, bool) {
 	report := make(map[string]map[string][]ades.Violation)
 	report["stdin"] = violations
 
-	return report, true
+	return report, nil
 }
 
-func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, bool) {
-	report, hasError := make(map[string]map[string][]ades.Violation), false
+func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, error) {
+	report := make(map[string]map[string][]ades.Violation)
 	for _, target := range targets {
 		violations, err := runOnTarget(target)
-		if err == nil {
-			for file, fileViolations := range violations {
-				targetViolations, ok := report[target]
-				if !ok {
-					targetViolations = make(map[string][]ades.Violation)
-					report[target] = targetViolations
-				}
+		if err != nil {
+			return nil, fmt.Errorf("an unexpected error occurred: %s", err)
+		}
 
-				targetViolations[file] = fileViolations
+		for file, fileViolations := range violations {
+			targetViolations, ok := report[target]
+			if !ok {
+				targetViolations = make(map[string][]ades.Violation)
+				report[target] = targetViolations
 			}
-		} else {
-			fmt.Fprintf(os.Stderr, "An unexpected error occurred: %s\n", err)
-			hasError = true
+
+			targetViolations[file] = fileViolations
 		}
 	}
 
-	return report, !hasError
+	return report, nil
 }
 
 func runOnTarget(target string) (map[string][]ades.Violation, error) {

@@ -26,7 +26,7 @@ stdin .github/workflows/unsafe.yml
 stdin not-yaml.txt
 ! exec ades -
 ! stdout 'Ok'
-stderr 'Could not parse input'
+stderr 'could not parse input'
 
 
 -- not-yaml.txt --
