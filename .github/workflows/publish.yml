@@ -34,7 +34,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build and push to Docker Hub
       id: docker
-      uses: docker/build-push-action@94f8f8c2eec4bc3f1d78c1755580779804cb87b2 # v6.0.1
+      uses: docker/build-push-action@16ebe778df0e7752d2cfcbd924afdbbd89c1a755 # v6.6.1
       with:
         context: .
         file: Containerfile
