@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.22.0
+go 1.22.1
 
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3
@@ -35,14 +35,14 @@ require (
 	golang.org/x/tools v0.24.0
 	golang.org/x/vuln v1.1.1
 	gopkg.in/yaml.v3 v3.0.1
-	honnef.co/go/tools v0.4.7
+	honnef.co/go/tools v0.5.1
 	mvdan.cc/unparam v0.0.0-20230917202934-3ee2d22f45fb
 )
 
 require (
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20230306123547-8075edf89bb0 // indirect
-	github.com/BurntSushi/toml v1.3.2 // indirect
+	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
 	github.com/KimMachineGun/automemlimit v0.6.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Microsoft/hcsshim v0.11.4 // indirect
