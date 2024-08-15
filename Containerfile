@@ -13,7 +13,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM docker.io/golang:1.22.0 AS build
+FROM docker.io/golang:1.22.1 AS build
 
 WORKDIR /src
 
