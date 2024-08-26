@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.22.1
+go 1.23.0
 
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3
