@@ -12,7 +12,7 @@ require (
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.5.1
 	github.com/go-critic/go-critic v0.11.4
-	github.com/google/capslock v0.2.4
+	github.com/google/capslock v0.2.5
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
