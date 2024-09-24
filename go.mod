@@ -25,7 +25,7 @@ require (
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/reproducible-containers/diffoci v0.1.4
 	github.com/rhysd/actionlint v1.7.1
-	github.com/rogpeppe/go-internal v1.12.0
+	github.com/rogpeppe/go-internal v1.13.1
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.16
 	github.com/tomarrell/wrapcheck/v2 v2.9.0
