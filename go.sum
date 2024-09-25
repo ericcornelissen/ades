@@ -377,8 +377,8 @@ github.com/mattn/go-colorable v0.1.13/go.mod h1:7S9/ev0klgBDR4GtXTXX8a3vIGJpMovk
 github.com/mattn/go-isatty v0.0.16/go.mod h1:kYGgaQfpe5nmfYZH+SKPsOc2e4SrIfOl2e/yFXSvRLM=
 github.com/mattn/go-isatty v0.0.20 h1:xfD0iDuEKnDkl03q4limB+vH+GxLEtL/jb4xVJSWWEY=
 github.com/mattn/go-isatty v0.0.20/go.mod h1:W+V8PltTTMOvKvAeJH7IuucS94S2C6jfK/D7dTCTo3Y=
-github.com/mattn/go-runewidth v0.0.15 h1:UNAjwbU9l54TA3KzvqLGxwWjHmMgBUVhBiTjelZgg3U=
-github.com/mattn/go-runewidth v0.0.15/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
+github.com/mattn/go-runewidth v0.0.16 h1:E5ScNMtiwvlvB5paMFdw9p4kSQzbXFikJ5SQO6TULQc=
+github.com/mattn/go-runewidth v0.0.16/go.mod h1:Jdepj2loyihRzMpdS35Xk/zdY8IAYHsh153qUoGf23w=
 github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06 h1:GC1BHRdynugzxNoEphewRqF4qcD/zzqQYsls4KXFtT8=
 github.com/mdempsky/unconvert v0.0.0-20230907125504-415706980c06/go.mod h1:DuAZxNOBRkxMjbchCclLZxb/18Qb46cU26hBsomVuow=
 github.com/mdlayher/netlink v1.7.2 h1:/UtM3ofJap7Vl4QWCPDGXY8d3GIY2UGSDbK+QWmY8/g=
@@ -449,8 +449,8 @@ github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e h1:eTWZyPUn
 github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e/go.mod h1:80FQABjoFzZ2M5uEa6FUaJYEmqU2UOKojlFVak1UAwI=
 github.com/reproducible-containers/diffoci v0.1.4 h1:DagtsVTsfKqCOc/oL97dvkdKxvGc7nCpwFnbo7F4Fx8=
 github.com/reproducible-containers/diffoci v0.1.4/go.mod h1:auL7XjKWh8OgOCGxbjOeNPqP2EX1tesOK98g49nxJY4=
-github.com/rhysd/actionlint v1.7.1 h1:WJaDzyT1StBWVKGSsZPYnbV0HF9Y9/vD6KFdZQL42qE=
-github.com/rhysd/actionlint v1.7.1/go.mod h1:lNjNNlZY0BdBl8l837Z9ZiBpu8v+5lzfoJQFdSk4xss=
+github.com/rhysd/actionlint v1.7.2 h1:C82TYZNZzoqzki+Wt2vptlWs5irZxBlpbVqgU4Rxu6Q=
+github.com/rhysd/actionlint v1.7.2/go.mod h1:rl+8ZoX1rqnbcMWKaTyOHmw08mmb/zlmG/Zu1fY47F4=
 github.com/rivo/uniseg v0.2.0/go.mod h1:J6wj4VEh+S6ZtnVlnTBMWIodfgj8LQOQFoIToxlJtxc=
 github.com/rivo/uniseg v0.4.7 h1:WUdvkW8uEhrYfLC4ZzdpI2ztxP1I582+49Oc5Mq64VQ=
 github.com/rivo/uniseg v0.4.7/go.mod h1:FN3SvrM+Zdj16jyLfmOkMNblXMcoc8DfTHruCPUcx88=
