@@ -24,7 +24,7 @@ require (
 	github.com/polyfloyd/go-errorlint v1.5.1
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/reproducible-containers/diffoci v0.1.4
-	github.com/rhysd/actionlint v1.7.1
+	github.com/rhysd/actionlint v1.7.3
 	github.com/rogpeppe/go-internal v1.13.1
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.16
@@ -96,7 +96,7 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.13 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.15 // indirect
+	github.com/mattn/go-runewidth v0.0.16 // indirect
 	github.com/mitchellh/go-homedir v1.1.0 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/locker v1.0.1 // indirect
