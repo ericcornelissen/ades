@@ -24,7 +24,7 @@ jobs:
     - name: Build
       run: go run tasks.go web-build
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@ec9c88baef04b842ca6f0a132fd61c762aa6c1b0 # v4.6.0
+      uses: JamesIves/github-pages-deploy-action@881db5376404c5c8d621010bcbec0310b58d5e29 # v4.6.8
       with:
         branch: gh-pages
         folder: web
