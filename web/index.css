@@ -16,7 +16,13 @@
  */
 
 html {
+  background-color: #FFF;
   min-height: 100%;
+}
+@media (prefers-color-scheme: dark) {
+  html {
+    filter: invert(1);
+  }
 }
 
 body {
