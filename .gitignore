@@ -54,11 +54,7 @@ test/**
 # Website
 !web/
 web/**
-!web/.npmrc
-!web/Makefile
 !web/ades.go
 !web/index.css
 !web/index.html
 !web/index.js
-!web/package-lock.json
-!web/package.json

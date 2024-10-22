@@ -20,7 +20,7 @@
 FROM docker.io/golang:1.23.0-alpine3.19
 
 RUN apk add --no-cache \
-	bash git npm perl-utils zip \
+	bash git perl-utils python3 zip \
 	&& \
 	echo "alias gask='go run tasks.go'" >~/.bashrc \
 	&& \
