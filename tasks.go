@@ -178,7 +178,6 @@ func TaskClean(t *T) error {
 	var (
 		items = []string{
 			"_compiled/",
-			"web/node_modules/",
 			"web/ades.wasm",
 			"web/COPYING.txt",
 			"web/wasm_exec.js",
@@ -625,11 +624,7 @@ func TaskWebServe(t *T) error {
 
 	t.Log("Serving locally...")
 	t.Cd(webDir)
-	if err := t.Exec("npm install"); err != nil {
-		return err
-	}
-
-	return t.Exec("npx http-server . --port 8080")
+	return t.Exec("python3 -m http.server 8080")
 }
 
 // -------------------------------------------------------------------------------------------------
