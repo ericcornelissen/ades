@@ -101,14 +101,7 @@ will report fewer expressions overall (fewer _false positives_), but it might al
 problematic expressions in `run:` scripts and will completely miss others, for example in
 `actions/github-script` scripts, when compared to `ades` (more _false positives_).
 
-### [CycodeLabs/raven]
-
-An open source tool developed by a commercial company. It aims to find misconfigurations in GitHub
-Actions Workflows (not Actions). Among other checks it looks for a couple known problematic uses of
-expressions involving the `github` context. As a result it will report fewer expressions overall
-(fewer _false positives_) but miss some compared to `ades` (more _false positives_).
-
-### [BoostSecurity.io/poutine]
+### [`poutine`]
 
 An open source tool developed by a commercial company. It aims to find misconfigurations in CI/CD
 pipeline configurations including GitHub Actions Workflows. Among other checks it looks for a couple
@@ -116,15 +109,38 @@ known problematic uses of expressions involving the `github` context. As a resul
 fewer expressions overall (fewer _false positives_) but miss some compared to `ades` (more
 _false positives_).
 
-### Other
+### [Raven]
 
-There's other work being done in the scope of securing GitHub Actions Workflows and Actions that do
-not focus on expression but are still worth mentioning:
+An open source tool developed by a commercial company. It aims to find misconfigurations in GitHub
+Actions Workflows (not Actions). Among other checks it looks for a couple known problematic uses of
+expressions involving the `github` context. As a result it will report fewer expressions overall
+(fewer _false positives_) but miss some compared to `ades` (more _false positives_).
 
-- [`aeisenberg/codeql-actions-queries` (CodeQL queries for GitHub Actions)]
+### [`zizmor`]
+
+An open source tool that aims to find security issues in GitHub Actions CI/CD setups. It reports
+various kinds of potential security problems including dangerous uses of expressions ("template
+injection"). Similar to `ades`, it will report on most uses of expressions but only in `run:` and
+`actions/github-script` scripts expect for a small allowlist of known safe expressions. It does
+distinguish between expressions known to be attacker controlled and only potentially attacker
+controlled with different "severities".
+
+### Others
+
+There's other work being done in the scope of GitHub Actions security that do not focus on
+expression but are still worth mentioning:
+
+- [`actionlint`]
+- [`aeisenberg/codeql-actions-queries`]  (CodeQL queries for GitHub Actions)
+- [Ambush From All Sides: Understanding Security Threats in Open-Source Software CI/CD Pipelines]
 - [A Preliminary Study of GitHub Actions Dependencies]
+- [Catching Smells in the Act: A GitHub Actions Workflow Investigation]
 - [Characterizing the Security of Github CI Workflows]
+- [Continuous Intrusion: Characterizing the Security of Continuous Integration Services]
+- [GitHub Actions Attack Diagram]
+- [Mitigating Security Issues in GitHub Actions]
 - [On the outdatedness of workflows in the GitHub Actions ecosystem]
+- [Quantifying Security Issues in Reusable JavaScript Actions in GitHub Workflows]
 - [StepSecurity]
 
 ## License
@@ -133,20 +149,28 @@ The software is available under the `GPL-3.0-or-later` license, see [COPYING.txt
 license text. The documentation is available under the `GFDL-1.3-or-later` license, see [GNU Free
 Documentation License v1.3] for the full license text.
 
+[`actionlint`]: https://github.com/rhysd/actionlint
 [`actions/github-script`]: https://github.com/actions/github-script
-[`aeisenberg/codeql-actions-queries` (codeql queries for github actions)]: https://github.com/aeisenberg/codeql-actions-queries
+[`aeisenberg/codeql-actions-queries`]: https://github.com/aeisenberg/codeql-actions-queries
+[`poutine`]: https://github.com/boostsecurityio/poutine
 [`run:`]: https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
 [`schema.json`]: ./schema.json
+[`zizmor`]: https://github.com/woodruffw/zizmor
+[ambush from all sides: understanding security threats in open-source software ci/cd pipelines]: https://ieeexplore.ieee.org/abstract/document/10061526
 [a preliminary study of github actions dependencies]: https://ceur-ws.org/Vol-3483/paper7.pdf
 [argus: a framework for staged static taint analysis of github workflows and actions]: https://www.usenix.org/conference/usenixsecurity23/presentation/muralee
 [automatic security assessment of github actions workflows]: https://dl.acm.org/doi/abs/10.1145/3560835.3564554
 [blogged about this problem]: https://github.blog/2023-08-09-four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
-[boostsecurity.io/poutine]: https://github.com/boostsecurityio/poutine
+[catching smells in the act: a github actions workflow investigation]: https://azaidman.github.io/publications/khatamiSCAM2024b.pdf
 [characterizing the security of github ci workflows]: https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev
+[continuous intrusion: characterizing the security of continuous integration services]: https://ieeexplore.ieee.org/abstract/document/10179471
 [copying.txt]: ./COPYING.txt
-[cycodelabs/raven]: https://github.com/CycodeLabs/raven
+[raven]: https://github.com/CycodeLabs/raven
+[github actions attack diagram]: https://github.com/jstawinski/GitHub-Actions-Attack-Diagram
 [github actions expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
 [gnu free documentation license v1.3]: https://www.gnu.org/licenses/fdl-1.3.en.html
+[mitigating security issues in gitHub actions]: https://dl.acm.org/doi/abs/10.1145/3643662.3643961
 [on the outdatedness of workflows in the github actions ecosystem]: https://www.sciencedirect.com/science/article/pii/S0164121223002224
+[quantifying security issues in reusable javascript actions in github workflows]: https://dl.acm.org/doi/abs/10.1145/3643991.3644899
 [rules.md]: ./RULES.md
 [stepsecurity]: https://www.stepsecurity.io/
