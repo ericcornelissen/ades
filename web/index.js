@@ -85,7 +85,7 @@ function runAnalysis() {
 
   const source = getSource();
   const options = getOptions();
-  ades(source, options);
+  if (globalThis.ades) ades(source, options);
 }
 
 function getSource() {
@@ -161,7 +161,7 @@ function main() {
   window.showError = showError;
   window.showResult = showResult;
 
-  input.addEventListener("keyup", runAnalysis);
+  input.addEventListener("input", runAnalysis);
   conservative.addEventListener("click", runAnalysis);
 
   loadWasm();

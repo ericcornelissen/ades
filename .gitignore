@@ -47,6 +47,7 @@ cmd/ades/**
 !*.go
 
 # Test
+!gremlins.min.js
 !test/
 test/**
 !test/*.txtar

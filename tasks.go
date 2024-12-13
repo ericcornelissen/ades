@@ -628,6 +628,16 @@ func TaskWebServe(t *T) error {
 	return http.ListenAndServe(":8080", nil)
 }
 
+// Run tests for the website.
+func TaskWebTest(t *T) error {
+	if err := t.Run(TaskWebBuild); err != nil {
+		return err
+	}
+
+	t.Log("Testing web...")
+	return t.Exec(`go test -tags=web`)
+}
+
 // -------------------------------------------------------------------------------------------------
 
 // T is a type passed to Task functions to perform common tasks.
