@@ -30,6 +30,7 @@ import (
 	"go/token"
 	"io"
 	"io/fs"
+	"net/http"
 	"os"
 	"os/exec"
 	"regexp"
@@ -623,8 +624,8 @@ func TaskWebServe(t *T) error {
 	}
 
 	t.Log("Serving locally...")
-	t.Cd(webDir)
-	return t.Exec("python3 -m http.server 8080")
+	http.Handle("/", http.FileServer(http.Dir("web")))
+	return http.ListenAndServe(":8080", nil)
 }
 
 // -------------------------------------------------------------------------------------------------
