@@ -73,40 +73,122 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	})
 }
 
-func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
+func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			uses StepUses
 			want bool
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Last vulnerable version",
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
 				uses: StepUses{
-					Ref: "v1.0.0",
+					Ref: "v2.0.0",
 				},
 				want: true,
 			},
-			{
-				name: "Old version",
-				uses: StepUses{
-					Ref: "v0.0.9",
-				},
-				want: true,
-			},
-			{
-				name: "New version",
+			"Old version": {
 				uses: StepUses{
 					Ref: "v1.0.1",
+				},
+				want: true,
+			},
+			"First fixed version": {
+				uses: StepUses{
+					Ref: "v2.0.1",
+				},
+				want: false,
+			},
+			"New version": {
+				uses: StepUses{
+					Ref: "v3.0.0",
 				},
 				want: false,
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&tt.uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s, got %t", tt.uses.Ref, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		withSummary := func(step JobStep, summary string) bool {
+			step.With["summary"] = summary
+			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == summary
+		}
+		if err := quick.Check(withSummary, nil); err != nil {
+			t.Error(err)
+		}
+
+		withoutSummary := func(step JobStep) bool {
+			delete(step.With, "summary")
+			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(withoutSummary, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Suggestion", func(t *testing.T) {
+		violation := Violation{
+			JobId:   "4",
+			StepId:  "2",
+			Problem: "${{ foo.bar }}",
+			RuleId:  "ADES202",
+		}
+
+		got := actionRuleAtlassianGajiraCreate.rule.suggestion(&violation)
+		want := "    1. Upgrade to a non-vulnerable version, see GHSA-4xqx-pqpj-9fqw"
+
+		if got != want {
+			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
+		}
+	})
+}
+
+func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			uses StepUses
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
+				uses: StepUses{
+					Ref: "v1.0.0",
+				},
+				want: true,
+			},
+			"Old version": {
+				uses: StepUses{
+					Ref: "v0.0.9",
+				},
+				want: true,
+			},
+			"First fixed version": {
+				uses: StepUses{
+					Ref: "v1.0.1",
+				},
+				want: false,
+			},
+			"New version": {
+				uses: StepUses{
+					Ref: "v1.1.0",
+				},
+				want: false,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&tt.uses), tt.want; got != want {
@@ -139,7 +221,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 			JobId:   "4",
 			StepId:  "2",
 			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES101",
+			RuleId:  "ADES200",
 		}
 
 		got := actionRuleEriccornelissenGitTagAnnotationAction.rule.suggestion(&violation)
@@ -154,37 +236,39 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			uses StepUses
 			want bool
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Last vulnerable version",
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
 				uses: StepUses{
 					Ref: "v1.1.0",
 				},
 				want: true,
 			},
-			{
-				name: "Old version",
+			"Old version": {
 				uses: StepUses{
 					Ref: "v1.0.0",
 				},
 				want: true,
 			},
-			{
-				name: "New version",
+			"First fixed version": {
 				uses: StepUses{
 					Ref: "v1.2.0",
 				},
 				want: false,
 			},
+			"New version": {
+				uses: StepUses{
+					Ref: "v1.3.0",
+				},
+				want: false,
+			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleKcebGitMessageAction.appliesTo(&tt.uses), tt.want; got != want {
@@ -217,7 +301,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 			JobId:   "4",
 			StepId:  "2",
 			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES101",
+			RuleId:  "ADES201",
 		}
 
 		got := actionRuleKcebGitMessageAction.rule.suggestion(&violation)
@@ -266,7 +350,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 				JobId:   "3",
 				StepId:  "14",
 				Problem: "${{ hello.world }}",
-				RuleId:  "ADES101",
+				RuleId:  "ADES102",
 			}
 
 			got := actionRuleRootsIssueCloserIssueCloseMessage.rule.suggestion(&violation)
@@ -316,7 +400,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 				JobId:   "3",
 				StepId:  "14",
 				Problem: "${{ hello.world }}",
-				RuleId:  "ADES101",
+				RuleId:  "ADES103",
 			}
 
 			got := actionRuleRootsIssueCloserPrCloseMessage.rule.suggestion(&violation)
@@ -366,7 +450,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 			JobId:   "3",
 			StepId:  "14",
 			Problem: "${{ github.event.inputs.file }}",
-			RuleId:  "ADES101",
+			RuleId:  "ADES104",
 		}
 
 		got := actionRuleSergeysovaJqAction.rule.suggestion(&violation)
@@ -423,7 +507,7 @@ func TestStepRuleRun(t *testing.T) {
 			JobId:   "4",
 			StepId:  "2",
 			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES101",
+			RuleId:  "ADES100",
 		}
 
 		got := stepRuleRun.rule.suggestion(&violation)
@@ -678,175 +762,153 @@ func TestFindRule(t *testing.T) {
 
 func TestIsBeforeVersion(t *testing.T) {
 	type TestCase struct {
-		name    string
 		uses    StepUses
 		version string
 		want    bool
 	}
 
-	testCases := []TestCase{
-		{
-			name: "Full version, exact same version",
+	testCases := map[string]TestCase{
+		"Full version, exact same version": {
 			uses: StepUses{
 				Ref: "v1.2.3",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
-		{
-			name: "Full version, earlier major version",
+		"Full version, earlier major version": {
 			uses: StepUses{
 				Ref: "v0.1.0",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
-		{
-			name: "Full version, earlier minor version",
+		"Full version, earlier minor version": {
 			uses: StepUses{
 				Ref: "v1.1.0",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
-		{
-			name: "Full version, earlier patch version",
+		"Full version, earlier patch version": {
 			uses: StepUses{
 				Ref: "v1.2.1",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
-		{
-			name: "Full version, later major version",
+		"Full version, later major version": {
 			uses: StepUses{
 				Ref: "v2.0.0",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
-		{
-			name: "Full version, later minor version",
+		"Full version, later minor version": {
 			uses: StepUses{
 				Ref: "v1.3.0",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
-		{
-			name: "Full version, later patch version",
+		"Full version, later patch version": {
 			uses: StepUses{
 				Ref: "v1.2.4",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
-		{
-			name: "Major version only, earlier major version",
+		"Major version only, earlier major version": {
 			uses: StepUses{
 				Ref: "v1",
 			},
 			version: "v2.1.0",
 			want:    true,
 		},
-		{
-			name: "Major version only, same major version",
+		"Major version only, same major version": {
 			uses: StepUses{
 				Ref: "v2",
 			},
 			version: "v2.1.0",
 			want:    false,
 		},
-		{
-			name: "Major version only, later major version",
+		"Major version only, later major version": {
 			uses: StepUses{
 				Ref: "v3",
 			},
 			version: "v2.1.0",
 			want:    false,
 		},
-		{
-			name: "Major+minor version, earlier major version and earlier minor version",
+		"Major+minor version, earlier major version and earlier minor version": {
 			uses: StepUses{
 				Ref: "v1.1",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
-		{
-			name: "Major+minor version, earlier major version and same minor version",
+		"Major+minor version, earlier major version and same minor version": {
 			uses: StepUses{
 				Ref: "v1.2",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
-		{
-			name: "Major+minor version, earlier major version and later minor version",
+		"Major+minor version, earlier major version and later minor version": {
 			uses: StepUses{
 				Ref: "v1.3",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
-		{
-			name: "Major+minor version, same major version and earlier minor version",
+		"Major+minor version, same major version and earlier minor version": {
 			uses: StepUses{
 				Ref: "v2.1",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
-		{
-			name: "Major+minor version, same major version and same minor version",
+		"Major+minor version, same major version and same minor version": {
 			uses: StepUses{
 				Ref: "v2.2",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
-		{
-			name: "Major+minor version, same major version and later minor version",
+		"Major+minor version, same major version and later minor version": {
 			uses: StepUses{
 				Ref: "v2.3",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
-		{
-			name: "Major+minor version, later major version and earlier minor version",
+		"Major+minor version, later major version and earlier minor version": {
 			uses: StepUses{
 				Ref: "v3.1",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
-		{
-			name: "Major+minor version, later major version and same minor version",
+		"Major+minor version, later major version and same minor version": {
 			uses: StepUses{
 				Ref: "v3.2",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
-		{
-			name: "Major+minor version, later major version and later minor version",
+		"Major+minor version, later major version and later minor version": {
 			uses: StepUses{
 				Ref: "v3.3",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
-		{
-			name: "SHA without annotation",
+		"SHA without annotation": {
 			uses: StepUses{
 				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 			},
 			version: "v1.0.0",
 			want:    false,
 		},
-		{
-			name: "SHA with annotation that is not a version",
+		"SHA with annotation that is not a version": {
 			uses: StepUses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "I'm just a comment",
@@ -854,8 +916,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			version: "v1.0.0",
 			want:    false,
 		},
-		{
-			name: "SHA with annotation, later version",
+		"SHA with annotation, later version": {
 			uses: StepUses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v1.1.0",
@@ -863,8 +924,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			version: "v1.0.0",
 			want:    false,
 		},
-		{
-			name: "SHA with annotation, same version",
+		"SHA with annotation, same version": {
 			uses: StepUses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v1.0.0",
@@ -872,8 +932,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			version: "v1.0.0",
 			want:    false,
 		},
-		{
-			name: "SHA with annotation, earlier version",
+		"SHA with annotation, earlier version": {
 			uses: StepUses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v0.1.0",
@@ -881,8 +940,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			version: "v1.0.0",
 			want:    true,
 		},
-		{
-			name: "semver ref and annotation, ref later",
+		"semver ref and annotation, ref later": {
 			uses: StepUses{
 				Ref:        "v1.1.0",
 				Annotation: "v0.1.0",
@@ -890,8 +948,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			version: "v1.0.0",
 			want:    false,
 		},
-		{
-			name: "semver ref and annotation, ref earlier",
+		"semver ref and annotation, ref earlier": {
 			uses: StepUses{
 				Ref:        "v0.1.0",
 				Annotation: "v1.1.0",
@@ -901,8 +958,8 @@ func TestIsBeforeVersion(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			if got, want := isBeforeVersion(&tt.uses, tt.version), tt.want; got != want {
