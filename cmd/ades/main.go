@@ -21,9 +21,12 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
+	"slices"
+	"sort"
 	"strings"
 
 	"github.com/ericcornelissen/ades"
@@ -64,7 +67,7 @@ var (
 	flagSuggestions = flag.Bool(
 		"suggestions",
 		false,
-		"Show suggested fixes inline",
+		"No effect (deprecated)",
 	)
 	flagVersion = flag.Bool(
 		"version",
@@ -89,6 +92,11 @@ func run() int {
 	if *flagVersion {
 		version()
 		return exitSuccess
+	}
+
+	if *flagSuggestions {
+		fmt.Fprintln(os.Stderr, "The -suggestions flag is deprecated and will be removed in the future")
+		fmt.Fprintln(os.Stderr, "")
 	}
 
 	if *flagExplain != "" {
@@ -139,8 +147,13 @@ func run() int {
 	if *flagJson {
 		fmt.Println(printJson(report))
 	} else {
+		targets := slices.Collect(maps.Keys(report))
+		sort.Strings(targets)
+
 		separator := false
-		for target, violations := range report {
+		for _, target := range targets {
+			violations := report[target]
+
 			if separator {
 				fmt.Println( /* empty line between targets */ )
 			}
@@ -148,7 +161,7 @@ func run() int {
 				fmt.Printf("[%s]\n", target)
 			}
 
-			fmt.Print(printViolations(violations, *flagSuggestions))
+			fmt.Print(printProjectViolations(violations))
 			separator = true
 		}
 	}
@@ -156,6 +169,11 @@ func run() int {
 	for _, targetViolations := range report {
 		for _, fileViolations := range targetViolations {
 			if len(fileViolations) > 0 {
+				if !(*flagJson) {
+					fmt.Println()
+					fmt.Println("Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')")
+				}
+
 				return exitViolations
 			}
 		}
@@ -417,7 +435,7 @@ Flags:
   -help               Show this help message and exit.
   -json               Output results in JSON format.
   -legal              Show legal information and exit.
-  -suggestions        Show suggested fixes inline.
+  -suggestions        No effect (deprecated).
   -version            Show the program version and exit.
   -                   Read workflow or manifest from stdin.
 

@@ -52,7 +52,13 @@ jobs:
       run: echo 'Hello ${{ inputs.name }}'
 -- snapshots/yml-stdout.txt --
 Detected 1 violation(s) in ".github/workflows/action.yml":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
+  1 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
 -- snapshots/yaml-stdout.txt --
 Detected 1 violation(s) in ".github/workflows/action.yaml":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
+  1 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')

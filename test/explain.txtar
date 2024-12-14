@@ -12,8 +12,8 @@ stderr 'Unknown rule "foobar"'
 -- snapshots/ades100-stdout.txt --
 ADES100 - Expression in 'run:' directive
 
-When an expression appears in a 'run:' directive you can avoid any potential attacks by extracting
-the expression into an environment variable and using the environment variable instead.
+When an expression appears in a 'run:' directive you can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 

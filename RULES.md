@@ -7,8 +7,8 @@ to address it.
 
 ## <a id="ADES100"></a> ADES100 - Expression in `run:` directive
 
-When an expression appears in a `run:` directive you can avoid any potential attacks by extracting
-the expression into an environment variable and using the environment variable instead.
+When an expression appears in a `run:` directive you can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -34,9 +34,8 @@ it can be made safer by converting it into:
 
 ## <a id="ADES101"></a> ADES101 - Expression in `actions/github-script` script
 
-When an expression appears in a `actions/github-script` script you can avoid any potential attacks
-by extracting the expression into an environment variable and using the environment variable
-instead.
+When an expression appears in a `actions/github-script` script you can avoid potential attacks by
+extracting the expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -65,8 +64,8 @@ it can be made safer by converting it into:
 ## <a id="ADES102"></a> ADES102 - Expression in `roots/issue-closer` issue close message
 
 When an expression appears in the issue close message of `roots/issue-closer` it is interpreted as
-an ES6-style template literal. You can avoid any potential attacks by extracting the expression into
-an environment variable and using the environment variable instead.
+an ES6-style template literal. You can avoid potential attacks by extracting the expression into an
+environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -93,7 +92,7 @@ it can be made safer by converting it into:
 ## <a id="ADES103"></a> ADES103 - Expression in `roots/issue-closer` pull request close message
 
 When an expression appears in the pull request close message of `roots/issue-closer` it is
-interpreted as an ES6-style template literal. You can avoid any potential attacks by extracting the
+interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
