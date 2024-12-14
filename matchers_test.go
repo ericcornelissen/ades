@@ -296,8 +296,8 @@ func TestConservativeMatcher(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.value, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			s := fmt.Sprintf("echo '%s'", tt.value)

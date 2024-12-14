@@ -160,3 +160,11 @@ mitigate this, upgrade the action to a non-vulnerable version.
 When an expression is used in the sha input for `kceb/git-message-action` in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
 this, upgrade the action to a non-vulnerable version.
+
+## <a id="ADES202"></a> ADES202 - Expression in `atlassian/gajira-create` summary input
+
+When an expression is used in the summary input for `atlassian/gajira-create` in v2.0.0 or earlier
+it may be used to execute arbitrary JavaScript code, see [GHSA-4xqx-pqpj-9fqw]. To mitigate this,
+upgrade the action to a non-vulnerable version.
+
+[GHSA-4xqx-pqpj-9fqw]: https://github.com/advisories/GHSA-4xqx-pqpj-9fqw

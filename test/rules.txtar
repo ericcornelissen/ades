@@ -40,6 +40,12 @@ stdout 'ADES200'
 stdout 'ADES201'
 ! stderr .
 
+# ADES202
+! exec ades ades202.yml
+! stdout 'Ok'
+stdout 'ADES202'
+! stderr .
+
 
 -- ades100.yml --
 name: Example workflow with a ADES100 violation
@@ -107,7 +113,7 @@ jobs:
       with:
         tag: ${{ input.tag }}
 -- ades201.yml --
-name: Example workflow with a ADES200 violation
+name: Example workflow with a ADES201 violation
 on: [push]
 
 jobs:
@@ -117,3 +123,17 @@ jobs:
     - uses: kceb/git-message-action@v1.1.0
       with:
         sha: ${{ input.sha }}
+-- ades202.yml --
+name: Example workflow with a ADES202 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: atlassian/gajira-create@v2.0.0
+      with:
+        summary: |
+          ${{ github.event.issue.title }}
+          description: |
+          ${{ github.event.issue.body }}

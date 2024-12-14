@@ -87,6 +87,26 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleAtlassianGajiraCreate = actionRule{
+	appliesTo: func(uses *StepUses) bool {
+		return isBeforeVersion(uses, "v2.0.1")
+	},
+	rule: rule{
+		id:    "ADES202",
+		title: "Expression in 'atlassian/gajira-create' summary input",
+		description: `
+When an expression is used in the summary input for 'atlassian/gajira-create' in v2.0.0 or earlier
+it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To mitigate this,
+upgrade the action to a non-vulnerable version.`,
+		extractFrom: func(step *JobStep) string {
+			return step.With["summary"]
+		},
+		suggestion: func(_ *Violation) string {
+			return "    1. Upgrade to a non-vulnerable version, see GHSA-4xqx-pqpj-9fqw"
+		},
+	},
+}
+
 var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 	appliesTo: func(uses *StepUses) bool {
 		return isBeforeVersion(uses, "v1.0.1")
@@ -263,6 +283,9 @@ it can be made safer by converting it into:
 var actionRules = map[string][]actionRule{
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
+	},
+	"atlassian/gajira-create": {
+		actionRuleAtlassianGajiraCreate,
 	},
 	"ericcornelissen/git-tag-annotation-action": {
 		actionRuleEriccornelissenGitTagAnnotationAction,
