@@ -53,6 +53,7 @@ exec ades -conservative 'manifests/action.yml' 'workflows/.github/workflows/unsa
 stdout 'Ok'
 ! stderr .
 
+
 -- manifests/action.yml --
 name: Example unsafe action
 description: Sample action for testing _ades_

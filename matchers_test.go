@@ -121,164 +121,176 @@ func TestConservativeMatcher(t *testing.T) {
 		want  []string
 	}
 
-	testCases := []TestCase{
-		{
+	testCases := map[string]TestCase{
+		"github.event.issue.title": {
 			value: "${{ github.event.issue.title }}",
 			want: []string{
 				"${{ github.event.issue.title }}",
 			},
 		},
-		{
+		"github.event.issue.body": {
 			value: "${{ github.event.issue.body }}",
 			want: []string{
 				"${{ github.event.issue.body }}",
 			},
 		},
-		{
+		"github.event.discussion.title": {
 			value: "${{ github.event.discussion.title }}",
 			want: []string{
 				"${{ github.event.discussion.title }}",
 			},
 		},
-		{
+		"github.event.discussion.body": {
 			value: "${{ github.event.discussion.body }}",
 			want: []string{
 				"${{ github.event.discussion.body }}",
 			},
 		},
-		{
+		"github.event.comment.body": {
 			value: "${{ github.event.comment.body }}",
 			want: []string{
 				"${{ github.event.comment.body }}",
 			},
 		},
-		{
+		"github.event.review.body": {
 			value: "${{ github.event.review.body }}",
 			want: []string{
 				"${{ github.event.review.body }}",
 			},
 		},
-		{
+		"github.event.review_comment.body": {
 			value: "${{ github.event.review_comment.body }}",
 			want: []string{
 				"${{ github.event.review_comment.body }}",
 			},
 		},
-		{
+		"github.event.pages[*].page_name": {
 			value: "${{ github.event.pages[0].page_name }}",
 			want: []string{
 				"${{ github.event.pages[0].page_name }}",
 			},
 		},
-		{
+		"github.event.commits[*].message": {
 			value: "${{ github.event.commits[1].message }}",
 			want: []string{
 				"${{ github.event.commits[1].message }}",
 			},
 		},
-		{
+		"github.event.commits[*].author.email": {
 			value: "${{ github.event.commits[2].author.email }}",
 			want: []string{
 				"${{ github.event.commits[2].author.email }}",
 			},
 		},
-		{
+		"github.event.commits[*].author.name": {
 			value: "${{ github.event.commits[3].author.name }}",
 			want: []string{
 				"${{ github.event.commits[3].author.name }}",
 			},
 		},
-		{
+		"github.event.head_commit.message": {
 			value: "${{ github.event.head_commit.message }}",
 			want: []string{
 				"${{ github.event.head_commit.message }}",
 			},
 		},
-		{
+		"github.event.head_commit.author.email": {
 			value: "${{ github.event.head_commit.author.email }}",
 			want: []string{
 				"${{ github.event.head_commit.author.email }}",
 			},
 		},
-		{
+		"github.event.head_commit.author.name": {
 			value: "${{ github.event.head_commit.author.name }}",
 			want: []string{
 				"${{ github.event.head_commit.author.name }}",
 			},
 		},
-		{
+		"github.event.head_commit.committer.email": {
 			value: "${{ github.event.head_commit.committer.email }}",
 			want: []string{
 				"${{ github.event.head_commit.committer.email }}",
 			},
 		},
-		{
+		"github.event.workflow_run.head_branch": {
 			value: "${{ github.event.workflow_run.head_branch }}",
 			want: []string{
 				"${{ github.event.workflow_run.head_branch }}",
 			},
 		},
-		{
+		"github.event.workflow_run.head_commit.message": {
 			value: "${{ github.event.workflow_run.head_commit.message }}",
 			want: []string{
 				"${{ github.event.workflow_run.head_commit.message }}",
 			},
 		},
-		{
+		"github.event.workflow_run.head_commit.author.email": {
 			value: "${{ github.event.workflow_run.head_commit.author.email }}",
 			want: []string{
 				"${{ github.event.workflow_run.head_commit.author.email }}",
 			},
 		},
-		{
+		"github.event.workflow_run.head_commit.author.name": {
 			value: "${{ github.event.workflow_run.head_commit.author.name }}",
 			want: []string{
 				"${{ github.event.workflow_run.head_commit.author.name }}",
 			},
 		},
-		{
+		"github.event.pull_request.title": {
 			value: "${{ github.event.pull_request.title }}",
 			want: []string{
 				"${{ github.event.pull_request.title }}",
 			},
 		},
-		{
+		"github.event.pull_request.body": {
 			value: "${{ github.event.pull_request.body }}",
 			want: []string{
 				"${{ github.event.pull_request.body }}",
 			},
 		},
-		{
+		"github.event.pull_request.head.label": {
 			value: "${{ github.event.pull_request.head.label }}",
 			want: []string{
 				"${{ github.event.pull_request.head.label }}",
 			},
 		},
-		{
+		"github.event.pull_request.head.repo.default_branch": {
 			value: "${{ github.event.pull_request.head.repo.default_branch }}",
 			want: []string{
 				"${{ github.event.pull_request.head.repo.default_branch }}",
 			},
 		},
-		{
+		"github.head_ref": {
 			value: "${{ github.head_ref }}",
 			want: []string{
 				"${{ github.head_ref }}",
 			},
 		},
-		{
+		"github.event.pull_request.head.ref": {
 			value: "${{ github.event.pull_request.head.ref }}",
 			want: []string{
 				"${{ github.event.pull_request.head.ref }}",
 			},
 		},
-		{
+		"github.event.workflow_run.pull_requests[*].head.ref": {
 			value: "${{ github.event.workflow_run.pull_requests[4].head.ref }}",
 			want: []string{
 				"${{ github.event.workflow_run.pull_requests[4].head.ref }}",
 			},
 		},
-		{
+		"two, both are dangerous": {
+			value: "${{ github.event.pull_request.head.ref || github.head_ref }}",
+			want: []string{
+				"${{ github.event.pull_request.head.ref || github.head_ref }}",
+			},
+		},
+		"two, only one is dangerous": {
+			value: "${{ github.event.pull_request.head.ref || inputs.backup }}",
+			want: []string{
+				"${{ github.event.pull_request.head.ref || inputs.backup }}",
+			},
+		},
+		"not conservatively dangerous": {
 			value: "${{ input.greeting }}",
 			want:  []string{},
 		},

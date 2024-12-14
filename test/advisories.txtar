@@ -1,0 +1,823 @@
+# GHSA-7x29-qqmq-v6qc
+! exec ades 'GHSA-7x29-qqmq-v6qc/'
+! stdout 'Ok'
+! exec ades -conservative 'GHSA-7x29-qqmq-v6qc/'
+! stdout 'Ok'
+
+# GHSA-xj87-mqvh-88w2
+! exec ades 'GHSA-xj87-mqvh-88w2/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-xj87-mqvh-88w2/'
+stdout 'Ok'
+
+# GHSA-ghm2-rq8q-wrhc
+! exec ades 'GHSA-ghm2-rq8q-wrhc/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-ghm2-rq8q-wrhc/'
+stdout 'Ok'
+
+# GHSA-mcph-m25j-8j63
+! exec ades 'GHSA-mcph-m25j-8j63/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-mcph-m25j-8j63/'
+stdout 'Ok'
+
+# GHSA-8v8w-v8xg-79rf
+! exec ades 'GHSA-8v8w-v8xg-79rf/'
+! stdout 'Ok'
+! exec ades -conservative 'GHSA-8v8w-v8xg-79rf/'
+! stdout 'Ok'
+
+# GHSA-hw6r-g8gj-2987
+! exec ades 'GHSA-hw6r-g8gj-2987/'
+! stdout 'Ok'
+! exec ades -conservative 'GHSA-hw6r-g8gj-2987/'
+! stdout 'Ok'
+
+# GHSA-rg3q-prf8-qxmp
+! exec ades 'GHSA-rg3q-prf8-qxmp/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-rg3q-prf8-qxmp/'
+stdout 'Ok'
+
+# GHSA-6q4m-7476-932w
+! exec ades 'GHSA-6q4m-7476-932w/'
+! stdout 'Ok'
+! exec ades -conservative 'GHSA-6q4m-7476-932w/'
+! stdout 'Ok'
+
+
+-- GHSA-7x29-qqmq-v6qc/action.yml --
+# Ultralytics YOLO 🚀, AGPL-3.0 License https://ultralytics.com/license
+
+name: "Ultralytics Actions"
+author: "Ultralytics"
+description: "Optimize code and docs with official Ultralytics Actions for syntax, spelling, and link checks."
+branding:
+  icon: "code"
+  color: "blue"
+inputs:
+  token:
+    description: "GitHub token"
+    required: true
+  python:
+    description: "Run Python formatting"
+    required: false
+    default: "false"
+  markdown:
+    description: "Run Markdown formatting (deprecated in favor of prettier)"
+    required: false
+    default: "false"
+  prettier:
+    description: "Run Prettier formatting for JavaScript, JSX, Angular, Vue, Flow, TypeScript, CSS, HTML, JSON, GraphQL, Markdown, YAML"
+    required: false
+    default: "false"
+  spelling:
+    description: "Run Spelling checks"
+    required: false
+    default: "false"
+  links:
+    description: "Run Broken Links checks"
+    required: false
+    default: "false"
+  summary:
+    description: "Run PR Summary"
+    required: false
+    default: "false"
+  openai_api_key:
+    description: "OpenAI API Key"
+    required: false
+  openai_azure_api_key:
+    description: "OpenAI Azure API Key"
+    required: false
+  openai_azure_endpoint:
+    description: "OpenAI Azure Endpoint"
+    required: false
+  openai_model:
+    description: "OpenAI Model"
+    required: false
+    default: "gpt-4o-2024-05-13"
+runs:
+  using: "composite"
+  steps:
+    - name: Print Action Information
+      run: |
+        echo "github.event_name: ${{ github.event_name }}"  # i.e. "pull_request"
+        echo "github.event.action: ${{ github.event.action }}"  # i.e. "opened" or "closed"
+        echo "github.repository: ${{ github.repository }}"
+        echo "github.event.pull_request.number: ${{ github.event.pull_request.number }}"
+        echo "github.event.pull_request.head.repo.full_name: ${{ github.event.pull_request.head.repo.full_name }}"
+        echo "github.actor: ${{ github.actor }}"
+        echo "github.event.pull_request.head.ref: ${{ github.event.pull_request.head.ref }}"
+        echo "github.ref: ${{ github.ref }}"
+        echo "github.head_ref: ${{ github.head_ref }}"
+        echo "github.base_ref: ${{ github.base_ref }}"
+      shell: bash
+
+    - name: Checkout Repository
+      if: github.event.action != 'closed'
+      uses: actions/checkout@v4
+      with:
+        repository: ${{ github.event.pull_request.head.repo.full_name || github.repository }}
+        token: ${{ inputs.token }}
+        ref: ${{ github.head_ref || github.ref }}
+        fetch-depth: 0
+
+    - name: Install Dependencies
+      # Note tomli required for codespell with pyproject.toml
+      if: github.event.action != 'closed'
+      run: |
+        pip install -q \
+        ruff docformatter codespell tomli
+        # mdformat-gfm mdformat-frontmatter mdformat-mkdocs
+      shell: bash
+
+    # Python formatting ------------------------------------------------------------------------------------------------
+    # Note on sorting Python imports https://stackoverflow.com/questions/77876253/sort-imports-alphabetically-with-ruff
+    - name: Run Python
+      if: inputs.python == 'true' && github.event.action != 'closed'
+      run: |
+        ruff format \
+        --line-length 120 \
+        . || true
+        ruff check \
+        --fix \
+        --extend-select I \
+        . || true
+        docformatter \
+        --wrap-summaries 120 \
+        --wrap-descriptions 120 \
+        --in-place \
+        --pre-summary-newline \
+        --close-quotes-on-newline \
+        --recursive \
+        .
+      shell: bash
+      continue-on-error: true
+
+    # Markdown formatting ----------------------------------------------------------------------------------------------
+    - name: Run Mdformat
+      if: inputs.markdown == 'true' && github.event.action != 'closed'
+      run: |
+        curl -s "https://raw.githubusercontent.com/ultralytics/actions/main/utils/update_markdown_code_blocks.py" | python -
+        # mdformat . --number --wrap no
+        # find . -name "*.md" ! -path "./docs/*" -exec mdformat --number --wrap no {} +
+      shell: bash
+      continue-on-error: true
+
+    # Prettier (JavaScript, JSX, Angular, Vue, Flow, TypeScript, CSS, HTML, JSON, GraphQL, Markdown, YAML) -------------
+    - name: Run Prettier
+      if: (inputs.prettier == 'true' || inputs.markdown == 'true') && github.event.action != 'closed'
+      run: |
+        npm install --global prettier
+        # npx prettier --write "**/*.{js,jsx,ts,tsx,css,less,scss,json,md,mdx,yml,yaml,html,vue,svelte}"
+        npx prettier --write "**/*.{yml,yaml}"
+        find . -name "*.md" ! -path "*/docs/*" -exec npx prettier --write {} +
+        find ./docs -name "*.md" ! -path "*/reference/*" -exec npx prettier --tab-width 4 --write {} + || true  # error if no /docs dir
+      shell: bash
+      continue-on-error: true
+
+    - name: Update unordered Markdown list indents to 4 spaces for MkDocs compatibility
+      if: (inputs.prettier == 'true' || inputs.markdown == 'true') && github.event.action != 'closed'
+      run: |
+        from pathlib import Path
+        for file in Path("./docs").rglob('*.md'):
+            content = file.read_text()
+            updated_content = content.replace("| - ","| -   ").replace('-   ', '- ').replace("** ","**   ").replace("*   ","* ")
+            file.write_text(updated_content)
+      shell: python
+      continue-on-error: true
+
+    # Spelling ---------------------------------------------------------------------------------------------------------
+    - name: Run Codespell
+      if: inputs.spelling == 'true' && github.event.action != 'closed'
+      run: |
+        codespell \
+          --write-changes \
+          --ignore-words-list "crate,nd,ned,strack,dota,ane,segway,fo,gool,winn,commend,bloc,nam,afterall" \
+          --skip "*.pt,*.pth,*.torchscript,*.onnx,*.tflite,*.pb,*.bin,*.param,*.mlmodel,*.engine,*.npy,*.data*,*.csv,*pnnx*,*venv*,*translat*,__pycache__*,*.ico,*.jpg,*.png,*.mp4,*.mov,/runs,/.git,./docs/??/*.md,./docs/mkdocs_??.yml"
+      shell: bash
+      continue-on-error: true
+
+    # Commit Changes ---------------------------------------------------------------------------------------------------
+    - name: Commit and Push Changes
+      if: github.event.action != 'closed'
+      run: |
+        git add .
+        git reset HEAD -- .github/workflows/  # workflow changes are not permitted with default token
+        if ! git diff --staged --quiet; then
+          git config --global user.name "UltralyticsAssistant"
+          git config --global user.email "web@ultralytics.com"
+          git commit -m "Auto-format by https://ultralytics.com/actions"
+          git push
+        else
+          echo "No changes to commit"
+        fi
+      shell: bash
+      continue-on-error: false
+
+    # PR Summary -------------------------------------------------------------------------------------------------------
+    - name: PR Summary
+      if: inputs.summary == 'true' && (github.event_name == 'pull_request' || github.event_name == 'pull_request_target') && github.event.action != 'synchronize'
+      env:
+        REPO_NAME: ${{ github.repository }}
+        PR_NUMBER: ${{ github.event.pull_request.number }}
+        GITHUB_TOKEN: ${{ inputs.token }}
+        OPENAI_API_KEY: ${{ inputs.openai_api_key }}
+        OPENAI_AZURE_API_KEY: ${{ inputs.openai_azure_api_key }}
+        OPENAI_AZURE_ENDPOINT: ${{ inputs.openai_azure_endpoint }}
+        OPENAI_MODEL: ${{ inputs.openai_model }}
+      # Note file must be run remotely using requests, not with "python utils/run_pr_summary.py"
+      run: |
+        pip install -q openai requests
+        curl -s "https://raw.githubusercontent.com/ultralytics/actions/main/utils/run_pr_summary.py" | python -
+      shell: bash
+      continue-on-error: true
+
+    # Broken links -----------------------------------------------------------------------------------------------------
+    - name: Broken Link Checker
+      if: inputs.links == 'true' && github.event.action != 'closed'
+      uses: lycheeverse/lychee-action@v1.10.0
+      with:
+        # Check all markdown and html files in repo. Ignores the following status codes to reduce false positives:
+        #   - 403(OpenVINO, "forbidden")
+        #   - 429(Instagram, "too many requests")
+        #   - 500(Zenodo, "cached")
+        #   - 502(Zenodo, "bad gateway")
+        #   - 999(LinkedIn, "unknown status code")
+        args: |
+          --scheme https
+          --timeout 60
+          --insecure
+          --accept 403,429,500,502,999
+          --exclude-all-private
+          --exclude "https?://(www\.)?(github\.com|linkedin\.com|twitter\.com|instagram\.com|kaggle\.com|fonts\.gstatic\.com|url\.com)"
+          "./**/*.md"
+          "./**/*.html"
+        token: ${{ inputs.token }}
+        output: ../lychee/results.md
+        fail: true
+      continue-on-error: false
+-- GHSA-xj87-mqvh-88w2/action.yml --
+name: 'fish-shop/syntax-check'
+description: 'A GitHub action for syntax checking fish shell files'
+branding:
+  icon: 'check'
+  color: 'green'
+inputs:
+  pattern:
+    description: 'File name pattern'
+    required: false
+    default: '**.fish'
+runs:
+  using: "composite"
+  steps:
+    - run: |
+        set -gx TERM xterm-256color
+
+        set -l passes 0
+        set -l failures 0
+
+        for file in ${{ inputs.pattern }}
+            echo -n "  "
+            set output (fish --no-execute $file 2>&1)
+            if test $status -ne 0
+                set_color red; and echo -n "✖"; and set_color normal
+                echo " $file"
+                for line in (string split $output)
+                    echo "      $line"
+                end
+                set failures (math $failures + 1)
+            else
+                set_color green; and echo -n "✔"; and set_color normal
+                echo " $file"
+                set passes (math $passes + 1)
+            end
+        end
+
+        set -l total (math $passes + $failures)
+
+        echo
+        set_color green; and echo -n "passed: $passes"; and set_color normal
+        echo -n "  "
+        set_color red; and echo -n "failed: $failures"; and set_color normal
+        echo "  of $total files"
+        echo
+
+        if test $failures -gt 0
+            set_color red; and echo "$failures of $total failed."
+        else
+            set_color green; and echo "All of $total files passed!"
+        end
+
+        exit $failures
+      shell: fish {0}
+-- GHSA-ghm2-rq8q-wrhc/.github/workflows/example.yml --
+jobs:
+  job:
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Change text file
+        run: |
+          echo "Modified" > new.txt
+
+      - name: Change file in directory
+        run: |
+          echo "Changed" > test_directory/new.txt
+
+      - name: Verify Changed files
+        uses: tj-actions/verify-changed-files@v16
+        id: verify-changed-files
+        with:
+          files: |
+             *.txt
+             test_directory
+             action.yml
+             **/*.{jpeg,py}
+             !*.sql
+
+      - name: Run step only when any of the above files change.
+        if: steps.verify-changed-files.outputs.files_changed == 'true'
+        run: |
+          echo "Changed files: ${{ steps.verify-changed-files.outputs.changed_files }}"
+        # Outputs: "Changed files: new.txt test_directory/new.txt"
+-- GHSA-mcph-m25j-8j63/.github/workflows/example.yml --
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  # ------------------------------------------------------------------------------------------------------------------------------------------------
+  # Event `pull_request`: Compare the last commit of the main branch or last remote commit of the PR branch -> to the current commit of a PR branch.
+  # ------------------------------------------------------------------------------------------------------------------------------------------------
+  changed_files:
+    runs-on: ubuntu-latest  # windows-latest || macos-latest
+    name: Test changed-files
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # OR "2" -> To retrieve the preceding commit.
+
+      # Example 1
+      - name: Get changed files
+        id: changed-files
+        uses: tj-actions/changed-files@v40
+
+        # To compare changes between the current commit and the last pushed remote commit set `since_last_remote_commit: true`. e.g
+        # with:
+        #   since_last_remote_commit: true
+
+      - name: List all changed files
+        run: |
+          for file in ${{ steps.changed-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      # Example 2
+      - name: Get all changed markdown files
+        id: changed-markdown-files
+        uses: tj-actions/changed-files@v40
+        with:
+          # Avoid using single or double quotes for multiline patterns
+          files: |
+             **.md
+
+      - name: List all changed files markdown files
+        if: steps.changed-markdown-files.outputs.any_changed == 'true'
+        run: |
+          for file in ${{ steps.changed-markdown-files.outputs.all_changed_files }}; do
+            echo "$file was changed"
+          done
+
+      # Example 3
+      - name: Get all test, doc and src files that have changed
+        id: changed-files-yaml
+        uses: tj-actions/changed-files@v40
+        with:
+          files_yaml: |
+            doc:
+              - '**.md'
+              - docs/**
+              - README.md
+            test:
+              - test/**
+              - '!test/**.md'
+            src:
+              - src/**
+          # Optionally set `files_yaml_from_source_file` to read the YAML from a file. e.g `files_yaml_from_source_file: .github/changed-files.yml`
+
+      - name: Run step if test file(s) change
+        # NOTE: Ensure all outputs are prefixed by the same key used above e.g. `test_(...)` | `doc_(...)` | `src_(...)` when trying to access the `any_changed` output.
+        if: steps.changed-files-yaml.outputs.test_any_changed == 'true'
+        run: |
+          echo "One or more test file(s) has changed."
+          echo "List all the files that have changed: ${{ steps.changed-files-yaml.outputs.test_all_changed_files }}"
+
+      - name: Run step if doc file(s) change
+        if: steps.changed-files-yaml.outputs.doc_any_changed == 'true'
+        run: |
+          echo "One or more doc file(s) has changed."
+          echo "List all the files that have changed: ${{ steps.changed-files-yaml.outputs.doc_all_changed_files }}"
+
+      # Example 3
+      - name: Get changed files in the docs folder
+        id: changed-files-specific
+        uses: tj-actions/changed-files@v40
+        with:
+          files: docs/*.{js,html}  # Alternatively using: `docs/**`
+          files_ignore: docs/static.js
+
+      - name: Run step if any file(s) in the docs folder change
+        if: steps.changed-files-specific.outputs.any_changed == 'true'
+        run: |
+          echo "One or more files in the docs folder has changed."
+          echo "List all the files that have changed: ${{ steps.changed-files-specific.outputs.all_changed_files }}"
+-- GHSA-8v8w-v8xg-79rf/action.yml --
+name: Branch Names
+description: Retrieve github branch or tag information without the /ref/* prefix
+author: tj-actions
+inputs:
+  strip_tag_prefix:
+    description: 'The prefix that should be stripped from the tag e.g `v` -> with a tag `v0.0.1` -> returns `0.0.1`'
+    default: ''
+    required: false
+
+outputs:
+  is_default:
+    value: ${{ steps.default.outputs.is_default }}
+    description: 'Returns `"true"` if the current branch is the default else `"false"`.'
+  is_tag:
+    value: ${{ steps.tag.outputs.is_tag }}
+    description: 'Returns `"true"` if the current branch is a tag else `"false"`.'
+  default_branch:
+    value: ${{ steps.default.outputs.default_branch }}
+    description: 'The default branch name e.g `main` OR `master`'
+  current_branch:
+    value: ${{ steps.current_branch.outputs.current_branch }}
+    description: 'The current branch name regardless of event_type e.g `main`, `feature/test`'
+  base_ref_branch:
+    value: ${{ steps.branch.outputs.base_ref_branch }}
+    description: 'The target branch of a pull request or tag e.g `main`'
+  head_ref_branch:
+    value: ${{ steps.branch.outputs.head_ref_branch }}
+    description: 'The source branch of a pull request e.g `feature/test`'
+  ref_branch:
+    value: ${{ steps.branch.outputs.ref_branch }}
+    description: 'The branch that triggered the workflow run. e.g `1/merge`, `main`'
+  tag:
+    value: ${{ steps.tag.outputs.tag }}
+    description: 'The tag that triggered the workflow run. e.g `v0.0.1`, `0.0.1`'
+
+runs:
+  using: "composite"
+  steps:
+    - id: branch
+      run: |
+        # "Set branch names..."
+        if [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
+          BASE_REF=$(printf "%q" "${{ github.event.pull_request.base.ref || github.base_ref }}")
+          HEAD_REF=$(printf "%q" "${{ github.event.pull_request.head.ref || github.head_ref }}")
+          REF=$(printf "%q" "${{ github.ref }}")
+
+          BASE_REF=${BASE_REF/refs\/heads\//}
+          HEAD_REF=${HEAD_REF/refs\/heads\//}
+          REF_BRANCH=${REF/refs\/pull\//}
+          REF_BRANCH=${REF_BRANCH/refs\/heads\//}
+
+          echo "base_ref_branch=$(eval printf "%s" "$BASE_REF")" >> "$GITHUB_OUTPUT"
+          echo "head_ref_branch=$(eval printf "%s" "$HEAD_REF")" >> "$GITHUB_OUTPUT"
+          echo "ref_branch=$(eval printf "%s" "$REF_BRANCH")" >> "$GITHUB_OUTPUT"
+        else
+          BASE_REF=$(printf "%q" "${{ github.event.base_ref }}")
+          BASE_REF=${BASE_REF/refs\/heads\/${{ inputs.strip_tag_prefix }}/}
+
+          echo "base_ref_branch=$(eval printf "%s" "$BASE_REF")" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+    - id: current_branch
+      run: |
+        # "Set the current branch name..."
+        if [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
+          if [[ ${{ github.event_name }} == *"pull_request"* ]]; then
+            echo "current_branch=${{ steps.branch.outputs.head_ref_branch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "current_branch=${{ steps.branch.outputs.ref_branch }}" >> "$GITHUB_OUTPUT"
+          fi
+        fi
+      shell: bash
+    - id: default
+      run: |
+        # "Set the default branch name..."
+        if [[ "${{ github.ref }}" != "refs/tags/"* ]]; then
+          if [[ "${{ steps.current_branch.outputs.current_branch }}" == "${{ github.event.repository.default_branch }}" && "${{ github.event.pull_request.head.repo.fork }}" != "true" ]]; then
+            echo "is_default=true" >> "$GITHUB_OUTPUT"
+            echo "default_branch=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_default=false" >> "$GITHUB_OUTPUT"
+            echo "default_branch=${{ github.event.repository.default_branch }}" >> "$GITHUB_OUTPUT"
+          fi
+        fi
+      shell: bash
+    - id: tag
+      run: |
+        # "Set the tag name..."
+        if [[ "${{ github.ref }}" == "refs/tags/"* ]]; then
+          REF=$(printf "%q" "${{ github.ref }}")
+          TAG=${REF/refs\/tags\/${{ inputs.strip_tag_prefix }}/}
+
+          echo "tag=$(eval printf "%s" "$TAG")" >> "$GITHUB_OUTPUT"
+          echo "is_tag=true" >> "$GITHUB_OUTPUT"
+        else
+          echo "is_tag=false" >> "$GITHUB_OUTPUT"
+        fi
+      shell: bash
+
+branding:
+  icon: git-branch
+  color: white
+-- GHSA-hw6r-g8gj-2987/.github/actions/filter-test-configs/action.yml --
+name: Filter test configs matrix
+
+description: |
+  Apply filter to the test configs matrix to keep only entries specified
+  by the PR test-config labels. If no test-config label is set, the same
+  test configs matrix is returned untouched.
+
+inputs:
+  github-token:
+    description: GITHUB_TOKEN
+    required: true
+  test-matrix:
+    required: true
+    type: string
+    description: JSON description of what test configs to run.
+
+outputs:
+  test-matrix:
+    description: The filtered test configs matrix.
+    value: ${{ steps.filter.outputs.test-matrix }}
+  is-test-matrix-empty:
+    description: True if the filtered test configs matrix is empty. False otherwise.
+    value: ${{ steps.filter.outputs.is-test-matrix-empty }}
+  keep-going:
+    description: True if keep-going label was on PR.
+    value: ${{ steps.filter.outputs.keep-going }}
+  reenabled-issues:
+    description: Comma separated list of issue numbers that should correspond to disable test issues that the PR fixes
+    value: ${{ steps.filter.outputs.reenabled-issues }}
+
+runs:
+  using: composite
+  steps:
+    - uses: nick-fields/retry@3e91a01664abd3c5cd539100d10d33b9c5b68482
+      name: Setup dependencies
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+      with:
+        shell: bash
+        timeout_minutes: 10
+        max_attempts: 5
+        retry_wait_seconds: 30
+        command: |
+          set -eux
+          python3 -m pip install requests==2.26.0 pyyaml==6.0
+
+    - name: Parse ref
+      id: parse-ref
+      shell: bash
+      run: |
+        set -x
+
+        # Use relative path here as this could be checked out anywhere, not necessarily
+        # in runner workspace
+        python3 "${GITHUB_ACTION_PATH}/../../scripts/parse_ref.py"
+
+    - name: Get the job name
+      id: get-job-name
+      continue-on-error: true
+      shell: bash
+      run: |
+        set -x
+
+        # TODO: This is a very hacky way to get the job name. GitHub runner has the info
+        # but doesn't expose it in anyway. The job name is part of the job message the
+        # runner receives, so it's there and printed out to the diag log. Below is the
+        # code responsible for printing it. Need to check with GitHub to see if they can
+        # expose this variable as part of GitHub context.
+        # https://github.com/actions/runner/blob/main/src/Runner.Worker/JobExtension.cs#L345
+        pushd "${{ runner.workspace }}/../../_diag"
+        pwd
+
+        LOG_FILE=$(grep -l -r "${{ github.sha }}" *.log | tail -n 1)
+        if [ -n "${LOG_FILE}" ]; then
+          # For some reasons, awk {print $2} on Linux and Windows (bash) work correctly while it
+          # needs to be awk {print $3} on MacOS
+          case ${RUNNER_OS} in
+            macOS)
+              JOB_NAME=$(grep -r "\"jobDisplayName\"" "${LOG_FILE}" | awk -F '[:]' '{print $3}' | sed 's/"//g' | xargs)
+              ;;
+            *)
+              JOB_NAME=$(grep -r "\"jobDisplayName\"" "${LOG_FILE}" | awk -F '[:]' '{print $2}' | sed 's/"//g' | xargs)
+              ;;
+          esac
+          echo "job-name=${JOB_NAME}" >> "${GITHUB_OUTPUT}"
+        fi
+
+        popd
+
+    - name: Select all requested test configurations
+      shell: bash
+      env:
+        GITHUB_TOKEN: ${{ inputs.github-token }}
+        JOB_NAME: ${{ steps.get-job-name.outputs.job-name }}
+      id: filter
+      run: |
+        echo "Workflow: ${GITHUB_WORKFLOW}"
+        echo "Job name: ${JOB_NAME}"
+
+        # Use relative path here as this could be checked out anywhere, not necessarily
+        # in runner workspace
+        python3 "${GITHUB_ACTION_PATH}/../../scripts/filter_test_configs.py" \
+          --workflow "${GITHUB_WORKFLOW}" \
+          --job-name "${JOB_NAME}" \
+          --test-matrix "${{ inputs.test-matrix }}" \
+          --pr-number "${{ github.event.pull_request.number }}" \
+          --tag "${{ steps.parse-ref.outputs.tag }}" \
+          --event-name "${{ github.event_name }}" \
+          --schedule "${{ github.event.schedule }}" \
+          --branch "${{ github.event.workflow_run.head_branch }}"
+
+    - name: Print the filtered test matrix
+      shell: bash
+      run: |
+        echo "Filtered matrix:"
+        echo "${{ steps.filter.outputs.test-matrix }}"
+
+        echo
+        echo "Is the current job unstable? ${{ steps.filter.outputs.is-unstable }}"
+
+        echo
+        echo "Is keep-going label set? ${{ steps.filter.outputs.keep-going }}"
+
+        echo
+        echo "Renabled issues? ${{ steps.filter.outputs.reenabled-issues }}"
+-- GHSA-rg3q-prf8-qxmp/action.yml --
+name: "Check WIP"
+description: "Checks for WIP patterns in Titles"
+branding:
+  icon: box
+  color: blue
+inputs:
+  title:
+    description: "Text to perform pattern match against"
+    required: true
+    default: "${{ github.event.pull_request.title }}"
+  regex:
+    description: "Regex pattern to match in title"
+    required: true
+    # starts with zero or more leading whitespace chars, WIP and zero or more colons
+    default: "^[[:space:]]*(WIP)+(:)*"
+runs:
+  using: "composite"
+  steps:
+    - shell: bash
+      run: |
+        set -ex
+
+        # TODO (@mgasch): make configurable
+        # case-insensitive
+        shopt -s nocasematch
+
+        if [[ '${{ inputs.title }}' =~ ${{ inputs.regex }} ]]; then
+          echo "::error::Title marked as work in progress"
+          exit 1
+        else
+          echo "::debug::Title not marked as work in progress"
+        fi
+
+        # unset nocasematch option
+        shopt -u nocasematch
+-- GHSA-6q4m-7476-932w/action.yml --
+name: "GitHub Slug Action"
+description: "GitHub Action to expose slug value of environment variables inside your GitHub workflow"
+author: "Romain Lespinasse"
+branding:
+  icon: "minimize"
+  color: "blue"
+inputs:
+  prefix:
+    description: "Value to prepend to each generated variable"
+    default: ""
+    required: false
+  slug-maxlength:
+    description: "Max length of the slugified values"
+    default: "63"
+    required: true
+  short-length:
+    description: "Length of the shortify values (git default if empty)"
+    required: false
+runs:
+  using: "composite"
+  steps:
+    - run: $GITHUB_ACTION_PATH/preflight.sh
+      id: prefligth
+      shell: bash
+      env:
+        INPUT_SLUG_MAXLENGTH: ${{ inputs.slug-maxlength }}
+        INPUT_SHORT_LENGTH: ${{ inputs.short-length }}
+
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_REPOSITORY
+        value: ${{ github.repository }}
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_REF
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_HEAD_REF
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_BASE_REF
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+
+    # Specific values
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_EVENT_REF
+        value: ${{ github.event.ref }}
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+
+    # Calculated values
+    - id: get-github-ref-name
+      run: |
+        refname="${{ github.head_ref || github.ref_name }}"
+        if [ -f "$GITHUB_OUTPUT" ]; then
+          echo "github-ref-name=${refname}" >> "$GITHUB_OUTPUT"
+        else
+          echo "::set-output name=github-ref-name::${refname}"
+        fi
+      shell: bash
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_REF_NAME
+        value: ${{ steps.get-github-ref-name.outputs.github-ref-name }}
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+    - id: get-github-repository-owner-part
+      run: |
+        ownerpart=$(echo $GITHUB_REPOSITORY | cut -d/ -f1)
+        if [ -f "$GITHUB_OUTPUT" ]; then
+          echo "github-repository-owner-part=${ownerpart}" >> "$GITHUB_OUTPUT"
+        else
+          echo "::set-output name=github-repository-owner-part::${ownerpart}"
+        fi
+      shell: bash
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_REPOSITORY_OWNER_PART
+        value: ${{ steps.get-github-repository-owner-part.outputs.github-repository-owner-part }}
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+    - id: get-github-repository-name-part
+      run: |
+        namepart=$(echo $GITHUB_REPOSITORY | cut -d/ -f2)
+        if [ -f "$GITHUB_OUTPUT" ]; then
+          echo "github-repository-name-part=${namepart}" >> "$GITHUB_OUTPUT"
+        else
+          echo "::set-output name=github-repository-name-part::${namepart}"
+        fi
+      shell: bash
+    - uses: rlespinasse/slugify-value@v1.4.0
+      with:
+        key: GITHUB_REPOSITORY_NAME_PART
+        value: ${{ steps.get-github-repository-name-part.outputs.github-repository-name-part }}
+        prefix: ${{ inputs.prefix }}
+        slug-maxlength: ${{ inputs.slug-maxlength }}
+
+    # Short
+    - uses: rlespinasse/shortify-git-revision@v1.6.0
+      with:
+        name: GITHUB_SHA
+        short-on-error: true
+        length: ${{ steps.prefligth.outputs.PREFLIGHT_SHORT_LENGTH }}
+        prefix: ${{ inputs.prefix }}
+    - uses: rlespinasse/shortify-git-revision@v1.6.0
+      with:
+        name: GITHUB_EVENT_PULL_REQUEST_HEAD_SHA
+        revision: ${{ github.event.pull_request.head.sha }}
+        short-on-error: true
+        length: ${{ steps.prefligth.outputs.PREFLIGHT_SHORT_LENGTH }}
+        prefix: ${{ inputs.prefix }}
