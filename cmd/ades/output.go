@@ -18,6 +18,8 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"maps"
+	"slices"
 	"sort"
 	"strings"
 
@@ -60,19 +62,20 @@ func printJson(rawViolations map[string]map[string][]ades.Violation) string {
 	return string(jsonBytes)
 }
 
-func printViolations(violations map[string][]ades.Violation, suggestions bool) string {
+func printProjectViolations(violations map[string][]ades.Violation) string {
 	clean := true
 
+	files := slices.Collect(maps.Keys(violations))
+	sort.Strings(files)
+
 	var sb strings.Builder
-	for file, fileViolations := range violations {
+	for _, file := range files {
+		fileViolations := violations[file]
 		if cnt := len(fileViolations); cnt > 0 {
 			clean = false
 			sb.WriteString(fmt.Sprintf("Detected %d violation(s) in %q:", cnt, file))
 			sb.WriteRune('\n')
-			for _, violation := range fileViolations {
-				sb.WriteString(printViolation(&violation, suggestions))
-				sb.WriteRune('\n')
-			}
+			sb.WriteString(printFileViolations(fileViolations))
 		}
 	}
 
@@ -83,21 +86,35 @@ func printViolations(violations map[string][]ades.Violation, suggestions bool) s
 	}
 }
 
-func printViolation(violation *ades.Violation, suggestions bool) string {
-	var sb strings.Builder
-	if violation.JobId == "" {
-		sb.WriteString(fmt.Sprintf("  step %q has %q", violation.StepId, violation.Problem))
-	} else {
-		sb.WriteString(fmt.Sprintf("  job %q, step %q has %q", violation.JobId, violation.StepId, violation.Problem))
+func printFileViolations(violations []ades.Violation) string {
+	byJob := make(map[string][]ades.Violation, len(violations))
+	for _, violation := range violations {
+		jobId := violation.JobId
+		if _, ok := byJob[jobId]; !ok {
+			byJob[jobId] = make([]ades.Violation, 0)
+		}
+
+		byJob[jobId] = append(byJob[jobId], violation)
 	}
 
-	if suggestions {
-		suggestion, _ := ades.Suggestion(violation)
+	jobs := slices.Collect(maps.Keys(byJob))
+	sort.Strings(jobs)
 
-		sb.WriteString(", suggestion:\n")
-		sb.WriteString(suggestion)
-	} else {
-		sb.WriteString(fmt.Sprintf(" (%s)", violation.RuleId))
+	var sb strings.Builder
+	for _, job := range jobs {
+		violations := byJob[job]
+
+		if job != "" {
+			sb.WriteString("  ")
+			sb.WriteString(fmt.Sprintf("%d in job %q:", len(violations), job))
+			sb.WriteRune('\n')
+		}
+
+		for _, violation := range violations {
+			sb.WriteString("    ")
+			sb.WriteString(fmt.Sprintf("step %q contains %q (%s)", violation.StepId, violation.Problem, violation.RuleId))
+			sb.WriteRune('\n')
+		}
 	}
 
 	return sb.String()

@@ -36,8 +36,7 @@ cmp stdout $WORK/snapshots/stdin-stdout.txt
 
 # Suggestions
 ! exec ades -suggestions 'project/.github/workflows/workflow.yml'
-cmp stdout $WORK/snapshots/suggestion-stdout.txt
-! stderr .
+cmp stderr $WORK/snapshots/suggestion-stdout.txt
 
 # Not found
 ! exec ades 'does-not-exist'
@@ -95,31 +94,35 @@ jobs:
 {"problems":[{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
 -- snapshots/manifest-stdout.txt --
 Detected 1 violation(s) in "project/action.yml":
-  step "Unsafe run" has "${{ inputs.name }}" (ADES100)
--- snapshots/multiple-stdout.txt --
-[project/action.yml]
-Detected 1 violation(s) in "project/action.yml":
-  step "Unsafe run" has "${{ inputs.name }}" (ADES100)
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
 
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
+-- snapshots/multiple-stdout.txt --
 [project/.github/workflows/workflow.yml]
 Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
-  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}" (ADES101)
+  2 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+    step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
+
+[project/action.yml]
+Detected 1 violation(s) in "project/action.yml":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
 -- snapshots/stdin-stdout.txt --
 Detected 2 violation(s) in "stdin":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
-  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}" (ADES101)
+  2 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+    step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
 -- snapshots/suggestion-stdout.txt --
-Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `$NAME`
-       (make sure to keep the behavior of the script the same)
-  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}", suggestion:
-    1. Set `NAME: ${{ inputs.name }}` in the step's `env` map
-    2. Replace all occurrences of `${{ inputs.name }}` by `process.env.NAME`
-       (make sure to keep the behavior of the script the same)
+The -suggestions flag is deprecated and will be removed in the future
+
 -- snapshots/workflow-stdout.txt --
 Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
-  job "Example unsafe job", step "Unsafe run" has "${{ inputs.name }}" (ADES100)
-  job "Example unsafe job", step "Unsafe GitHub script" has "${{ inputs.name }}" (ADES101)
+  2 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+    step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')

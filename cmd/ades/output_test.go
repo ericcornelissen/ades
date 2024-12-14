@@ -16,7 +16,6 @@
 package main
 
 import (
-	"strings"
 	"testing"
 
 	"github.com/ericcornelissen/ades"
@@ -84,86 +83,179 @@ func TestPrintJson(t *testing.T) {
 	}
 }
 
-func TestPrintViolations(t *testing.T) {
+func TestPrintProjectViolations(t *testing.T) {
 	type TestCase struct {
-		name            string
-		violations      func() map[string][]ades.Violation
-		want            string
-		wantSuggestions string
+		violations func() map[string][]ades.Violation
+		want       string
 	}
 
-	testCases := []TestCase{
-		{
-			name: "No files",
+	testCases := map[string]TestCase{
+		"No files": {
 			violations: func() map[string][]ades.Violation {
 				return make(map[string][]ades.Violation)
 			},
 			want: `Ok
 `,
-			wantSuggestions: `Ok
-`,
 		},
-		{
-			name: "File without violations",
+		"File without violations": {
 			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation)
+				m := make(map[string][]ades.Violation, 1)
 				m["workflow.yml"] = make([]ades.Violation, 0)
 				return m
 			},
 			want: `Ok
 `,
-			wantSuggestions: `Ok
-`,
 		},
-		{
-			name: "Workflow with a violation",
+		"Workflow with a violation": {
 			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation)
-				m["workflow.yml"] = make([]ades.Violation, 1)
-				m["workflow.yml"][0] = ades.Violation{
-					JobId:   "4",
-					StepId:  "2",
-					Problem: "${{ foo.bar }}",
-					RuleId:  "ADES100",
+				m := make(map[string][]ades.Violation, 1)
+				m["workflow.yml"] = []ades.Violation{
+					{
+						JobId:   "4",
+						StepId:  "2",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
 				}
+
 				return m
 			},
 			want: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}" (ADES100)
+  1 in job "4":
+    step "2" contains "${{ foo.bar }}" (ADES100)
 `,
-			wantSuggestions: `Detected 1 violation(s) in "workflow.yml":
-  job "4", step "2" has "${{ foo.bar }}", suggestion:`,
 		},
-		{
-			name: "Manifest with a violation",
+		"Workflow with multiple violations in the same job": {
 			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation)
-				m["action.yml"] = make([]ades.Violation, 1)
-				m["action.yml"][0] = ades.Violation{
-					StepId:  "2",
-					Problem: "${{ foo.bar }}",
-					RuleId:  "ADES100",
+				m := make(map[string][]ades.Violation, 1)
+				m["workflow.yml"] = []ades.Violation{
+					{
+						JobId:   "3",
+						StepId:  "6",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
+					{
+						JobId:   "3",
+						StepId:  "14",
+						Problem: "${{ foo.baz }}",
+						RuleId:  "ADES101",
+					},
 				}
+
+				return m
+			},
+			want: `Detected 2 violation(s) in "workflow.yml":
+  2 in job "3":
+    step "6" contains "${{ foo.bar }}" (ADES100)
+    step "14" contains "${{ foo.baz }}" (ADES101)
+`,
+		},
+		"Workflow with multiple violations in different jobs": {
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation, 1)
+				m["workflow.yml"] = []ades.Violation{
+					{
+						JobId:   "4",
+						StepId:  "2",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
+					{
+						JobId:   "3",
+						StepId:  "14",
+						Problem: "${{ foo.baz }}",
+						RuleId:  "ADES101",
+					},
+				}
+
+				return m
+			},
+			want: `Detected 2 violation(s) in "workflow.yml":
+  1 in job "3":
+    step "14" contains "${{ foo.baz }}" (ADES101)
+  1 in job "4":
+    step "2" contains "${{ foo.bar }}" (ADES100)
+`,
+		},
+		"Manifest with a violation": {
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation, 1)
+				m["action.yml"] = []ades.Violation{
+					{
+						StepId:  "7",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
+				}
+
 				return m
 			},
 			want: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}" (ADES100)
+    step "7" contains "${{ foo.bar }}" (ADES100)
 `,
-			wantSuggestions: `Detected 1 violation(s) in "action.yml":
-  step "2" has "${{ foo.bar }}", suggestion:`,
+		},
+		"Manifest with multiple violations": {
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation, 1)
+				m["action.yml"] = []ades.Violation{
+					{
+						StepId:  "4",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
+					{
+						StepId:  "2",
+						Problem: "${{ foo.baz }}",
+						RuleId:  "ADES101",
+					},
+				}
+
+				return m
+			},
+			want: `Detected 2 violation(s) in "action.yml":
+    step "4" contains "${{ foo.bar }}" (ADES100)
+    step "2" contains "${{ foo.baz }}" (ADES101)
+`,
+		},
+		"Project with multiple workflows": {
+			violations: func() map[string][]ades.Violation {
+				m := make(map[string][]ades.Violation, 2)
+				m["workflow-a.yml"] = []ades.Violation{
+					{
+						JobId:   "4",
+						StepId:  "2",
+						Problem: "${{ foo.bar }}",
+						RuleId:  "ADES100",
+					},
+				}
+				m["workflow-b.yml"] = []ades.Violation{
+					{
+						JobId:   "3",
+						StepId:  "14",
+						Problem: "${{ foo.baz }}",
+						RuleId:  "ADES101",
+					},
+				}
+
+				return m
+			},
+			want: `Detected 1 violation(s) in "workflow-a.yml":
+  1 in job "4":
+    step "2" contains "${{ foo.bar }}" (ADES100)
+Detected 1 violation(s) in "workflow-b.yml":
+  1 in job "3":
+    step "14" contains "${{ foo.baz }}" (ADES101)
+`,
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := printViolations(tt.violations(), false), tt.want; got != want {
-				t.Errorf("Unexpected output (got %q, want %q)", got, want)
-			}
-
-			if got, prefix := printViolations(tt.violations(), true), tt.wantSuggestions; !strings.HasPrefix(got, prefix) {
-				t.Errorf("Unexpected prefix for output with suggestions (got %q, want %q)", got, prefix)
+			if got, want := printProjectViolations(tt.violations()), tt.want; got != want {
+				t.Errorf("Unexpected output\n=== GOT ===\n%s\n=== WANT ===\n%s", got, want)
 			}
 		})
 	}
