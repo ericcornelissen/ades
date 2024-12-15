@@ -23,21 +23,18 @@ import (
 
 func TestPrintJson(t *testing.T) {
 	type TestCase struct {
-		name       string
 		violations func() map[string]map[string][]ades.Violation
 		want       string
 	}
 
-	testCases := []TestCase{
-		{
-			name: "No targets",
+	testCases := map[string]TestCase{
+		"No targets": {
 			violations: func() map[string]map[string][]ades.Violation {
 				return make(map[string]map[string][]ades.Violation)
 			},
 			want: `{"problems":[]}`,
 		},
-		{
-			name: "target without files",
+		"target without files": {
 			violations: func() map[string]map[string][]ades.Violation {
 				m := make(map[string]map[string][]ades.Violation)
 				m["foobar"] = make(map[string][]ades.Violation)
@@ -45,8 +42,7 @@ func TestPrintJson(t *testing.T) {
 			},
 			want: `{"problems":[]}`,
 		},
-		{
-			name: "target with files without violations",
+		"target with files without violations": {
 			violations: func() map[string]map[string][]ades.Violation {
 				m := make(map[string]map[string][]ades.Violation)
 				m["foo"] = make(map[string][]ades.Violation)
@@ -55,8 +51,7 @@ func TestPrintJson(t *testing.T) {
 			},
 			want: `{"problems":[]}`,
 		},
-		{
-			name: "target with files with violations",
+		"target with files with violations": {
 			violations: func() map[string]map[string][]ades.Violation {
 				m := make(map[string]map[string][]ades.Violation)
 				m["foo"] = make(map[string][]ades.Violation)
@@ -72,8 +67,8 @@ func TestPrintJson(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			if got, want := printJson(tt.violations()), tt.want; got != want {
@@ -85,40 +80,33 @@ func TestPrintJson(t *testing.T) {
 
 func TestPrintProjectViolations(t *testing.T) {
 	type TestCase struct {
-		violations func() map[string][]ades.Violation
+		violations map[string][]ades.Violation
 		want       string
 	}
 
 	testCases := map[string]TestCase{
 		"No files": {
-			violations: func() map[string][]ades.Violation {
-				return make(map[string][]ades.Violation)
-			},
+			violations: map[string][]ades.Violation{},
 			want: `Ok
 `,
 		},
 		"File without violations": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["workflow.yml"] = make([]ades.Violation, 0)
-				return m
+			violations: map[string][]ades.Violation{
+				"workflow.yml": {},
 			},
 			want: `Ok
 `,
 		},
 		"Workflow with a violation": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["workflow.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"workflow.yml": {
 					{
 						JobId:   "4",
 						StepId:  "2",
 						Problem: "${{ foo.bar }}",
 						RuleId:  "ADES100",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 1 violation(s) in "workflow.yml":
   1 in job "4":
@@ -126,9 +114,8 @@ func TestPrintProjectViolations(t *testing.T) {
 `,
 		},
 		"Workflow with multiple violations in the same job": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["workflow.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"workflow.yml": {
 					{
 						JobId:   "3",
 						StepId:  "6",
@@ -141,9 +128,7 @@ func TestPrintProjectViolations(t *testing.T) {
 						Problem: "${{ foo.baz }}",
 						RuleId:  "ADES101",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 2 violation(s) in "workflow.yml":
   2 in job "3":
@@ -152,9 +137,8 @@ func TestPrintProjectViolations(t *testing.T) {
 `,
 		},
 		"Workflow with multiple violations in different jobs": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["workflow.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"workflow.yml": {
 					{
 						JobId:   "4",
 						StepId:  "2",
@@ -167,9 +151,7 @@ func TestPrintProjectViolations(t *testing.T) {
 						Problem: "${{ foo.baz }}",
 						RuleId:  "ADES101",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 2 violation(s) in "workflow.yml":
   1 in job "3":
@@ -179,26 +161,22 @@ func TestPrintProjectViolations(t *testing.T) {
 `,
 		},
 		"Manifest with a violation": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["action.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"action.yml": {
 					{
 						StepId:  "7",
 						Problem: "${{ foo.bar }}",
 						RuleId:  "ADES100",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 1 violation(s) in "action.yml":
     step "7" contains "${{ foo.bar }}" (ADES100)
 `,
 		},
 		"Manifest with multiple violations": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 1)
-				m["action.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"action.yml": {
 					{
 						StepId:  "4",
 						Problem: "${{ foo.bar }}",
@@ -209,9 +187,7 @@ func TestPrintProjectViolations(t *testing.T) {
 						Problem: "${{ foo.baz }}",
 						RuleId:  "ADES101",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 2 violation(s) in "action.yml":
     step "4" contains "${{ foo.bar }}" (ADES100)
@@ -219,26 +195,23 @@ func TestPrintProjectViolations(t *testing.T) {
 `,
 		},
 		"Project with multiple workflows": {
-			violations: func() map[string][]ades.Violation {
-				m := make(map[string][]ades.Violation, 2)
-				m["workflow-a.yml"] = []ades.Violation{
+			violations: map[string][]ades.Violation{
+				"workflow-a.yml": {
 					{
 						JobId:   "4",
 						StepId:  "2",
 						Problem: "${{ foo.bar }}",
 						RuleId:  "ADES100",
 					},
-				}
-				m["workflow-b.yml"] = []ades.Violation{
+				},
+				"workflow-b.yml": {
 					{
 						JobId:   "3",
 						StepId:  "14",
 						Problem: "${{ foo.baz }}",
 						RuleId:  "ADES101",
 					},
-				}
-
-				return m
+				},
 			},
 			want: `Detected 1 violation(s) in "workflow-a.yml":
   1 in job "4":
@@ -254,7 +227,7 @@ Detected 1 violation(s) in "workflow-b.yml":
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := printProjectViolations(tt.violations()), tt.want; got != want {
+			if got, want := printProjectViolations(tt.violations), tt.want; got != want {
 				t.Errorf("Unexpected output\n=== GOT ===\n%s\n=== WANT ===\n%s", got, want)
 			}
 		})

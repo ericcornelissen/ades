@@ -529,14 +529,13 @@ func TestAllRules(t *testing.T) {
 
 		ids := make([]string, 0)
 		for _, tt := range testCases {
-			id := tt.id
-			ids = append(ids, id)
+			ids = append(ids, tt.id)
 
 			t.Run(tt.title, func(t *testing.T) {
 				t.Parallel()
 
-				if !idExpr.MatchString(id) {
-					t.Errorf("The ID did not match the expected format (got %q)", id)
+				if !idExpr.MatchString(tt.id) {
+					t.Errorf("The ID did not match the expected format (got %q)", tt.id)
 				}
 			})
 		}
@@ -555,7 +554,7 @@ func TestAllRules(t *testing.T) {
 
 	t.Run("description", func(t *testing.T) {
 		for _, tt := range testCases {
-			t.Run(tt.title, func(t *testing.T) {
+			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
 				if len(tt.description) == 0 {
@@ -580,12 +579,13 @@ func TestAllRules(t *testing.T) {
 
 func TestExplain(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		for _, r := range allRules() {
-			tt := r.id
-			t.Run(tt, func(t *testing.T) {
+		testCases := allRules()
+
+		for _, tt := range testCases {
+			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
-				explanation, err := Explain(tt)
+				explanation, err := Explain(tt.id)
 				if err != nil {
 					t.Fatalf("Unexpected error: %#v", err)
 				}
@@ -598,13 +598,15 @@ func TestExplain(t *testing.T) {
 	})
 
 	t.Run("Missing rules", func(t *testing.T) {
-		testCases := []string{
-			"ADES000",
-			"foobar",
+		type TestCase = string
+
+		testCases := map[string]TestCase{
+			"valid but unknown id": "ADES000",
+			"invalid id":           "foobar",
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				_, err := Explain(tt)
@@ -618,14 +620,15 @@ func TestExplain(t *testing.T) {
 
 func TestFix(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		for _, r := range allRules() {
-			tt := r.id
-			violation := Violation{
-				RuleId: tt,
-			}
+		testCases := allRules()
 
-			t.Run(tt, func(t *testing.T) {
+		for _, tt := range testCases {
+			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
+
+				violation := Violation{
+					RuleId: tt.id,
+				}
 
 				_, err := Fix(&violation)
 				if err != nil {
@@ -636,18 +639,20 @@ func TestFix(t *testing.T) {
 	})
 
 	t.Run("Missing rules", func(t *testing.T) {
-		testCases := []string{
-			"ADES000",
-			"foobar",
+		type TestCase = string
+
+		testCases := map[string]TestCase{
+			"valid but unknown id": "ADES000",
+			"invalid id":           "foobar",
 		}
 
-		for _, tt := range testCases {
-			violation := Violation{
-				RuleId: tt,
-			}
-
-			t.Run(tt, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
+
+				violation := Violation{
+					RuleId: tt,
+				}
 
 				_, err := Fix(&violation)
 				if err == nil {
@@ -660,14 +665,15 @@ func TestFix(t *testing.T) {
 
 func TestSuggestion(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		for _, r := range allRules() {
-			tt := r.id
-			violation := Violation{
-				RuleId: tt,
-			}
+		testCases := allRules()
 
-			t.Run(tt, func(t *testing.T) {
+		for _, tt := range testCases {
+			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
+
+				violation := Violation{
+					RuleId: tt.id,
+				}
 
 				suggestion, err := Suggestion(&violation)
 				if err != nil {
@@ -682,18 +688,20 @@ func TestSuggestion(t *testing.T) {
 	})
 
 	t.Run("Missing rules", func(t *testing.T) {
-		testCases := []string{
-			"ADES000",
-			"foobar",
+		type TestCase = string
+
+		testCases := map[string]TestCase{
+			"valid but unknown id": "ADES000",
+			"invalid id":           "foobar",
 		}
 
-		for _, tt := range testCases {
-			violation := Violation{
-				RuleId: tt,
-			}
-
-			t.Run(tt, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
+
+				violation := Violation{
+					RuleId: tt,
+				}
 
 				_, err := Suggestion(&violation)
 				if err == nil {
@@ -705,36 +713,38 @@ func TestSuggestion(t *testing.T) {
 }
 
 func TestFindRule(t *testing.T) {
-	t.Run("Existing rules", func(t *testing.T) {
-		for _, rs := range actionRules {
-			for _, r := range rs {
-				tt := r.rule.id
-				t.Run(tt, func(t *testing.T) {
+	t.Run("Action rules", func(t *testing.T) {
+		for _, testCases := range actionRules {
+			for _, tt := range testCases {
+				t.Run(tt.rule.id, func(t *testing.T) {
 					t.Parallel()
 
-					r, err := findRule(tt)
+					r, err := findRule(tt.rule.id)
 					if err != nil {
-						t.Fatalf("Couldn't find rule %q", tt)
+						t.Fatalf("Couldn't find rule %q", tt.rule.id)
 					}
 
-					if r.id != tt {
+					if r.id != tt.rule.id {
 						t.Errorf("Unexpected rule found: %#v", r)
 					}
 				})
 			}
 		}
+	})
 
-		for _, r := range stepRules {
-			tt := r.rule.id
-			t.Run(tt, func(t *testing.T) {
+	t.Run("Step rules", func(t *testing.T) {
+		testCases := stepRules
+
+		for _, tt := range testCases {
+			t.Run(tt.rule.id, func(t *testing.T) {
 				t.Parallel()
 
-				r, err := findRule(tt)
+				r, err := findRule(tt.rule.id)
 				if err != nil {
-					t.Fatalf("Couldn't find rule %q", tt)
+					t.Fatalf("Couldn't find rule %q", tt.rule.id)
 				}
 
-				if r.id != tt {
+				if r.id != tt.rule.id {
 					t.Errorf("Unexpected rule found: %#v", r)
 				}
 			})
@@ -742,13 +752,15 @@ func TestFindRule(t *testing.T) {
 	})
 
 	t.Run("Missing rules", func(t *testing.T) {
-		testCases := []string{
-			"ADES000",
-			"foobar",
+		type TestCase = string
+
+		testCases := map[string]TestCase{
+			"valid but unknown id": "ADES000",
+			"invalid id":           "foobar",
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				_, err := findRule(tt)
@@ -988,8 +1000,8 @@ func TestFixAddEnvVar(t *testing.T) {
 		}
 	)
 
-	testCases := []TestCase{
-		{
+	testCases := map[string]TestCase{
+		"no environment variables yet": {
 			step: JobStep{
 				Uses: "foo/bar@v1",
 				Env:  nil,
@@ -1007,7 +1019,7 @@ func TestFixAddEnvVar(t *testing.T) {
 				},
 			},
 		},
-		{
+		"one environment variable already": {
 			step: JobStep{
 				Env: map[string]string{
 					"foo": "bar",
@@ -1022,7 +1034,7 @@ func TestFixAddEnvVar(t *testing.T) {
 				},
 			},
 		},
-		{
+		"two environment variables already": {
 			step: JobStep{
 				Env: map[string]string{
 					"foo":   "bar",
@@ -1043,8 +1055,8 @@ func TestFixAddEnvVar(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name+" "+tt.value, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			fs := fixAddEnvVar(tt.step, tt.name, tt.value)
@@ -1077,8 +1089,8 @@ func TestFixReplaceIn(t *testing.T) {
 		}
 	)
 
-	testCases := []TestCase{
-		{
+	testCases := map[string]TestCase{
+		"basic example": {
 			s:   "hello foobar world!",
 			old: "foobar",
 			new: "foobaz",
@@ -1087,7 +1099,7 @@ func TestFixReplaceIn(t *testing.T) {
 				new: "hello foobaz world!",
 			},
 		},
-		{
+		"example with regular expression meta characters": {
 			s:   "Hello world! (Hola mundo!)",
 			old: "!",
 			new: "",
@@ -1096,7 +1108,7 @@ func TestFixReplaceIn(t *testing.T) {
 				new: "Hello world (Hola mundo)",
 			},
 		},
-		{
+		"example where replacing is a no-op": {
 			s:   "This does not contain the string to replace",
 			old: "foobar",
 			new: "foobaz",
@@ -1107,8 +1119,8 @@ func TestFixReplaceIn(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.s, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			f := fixReplaceIn(tt.s, tt.old, tt.new)

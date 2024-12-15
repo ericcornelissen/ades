@@ -20,14 +20,12 @@ import "testing"
 func TestParseWorkflow(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			yaml string
 			want Workflow
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Workflow with 'run:'",
+		testCases := map[string]TestCase{
+			"Workflow with 'run:'": {
 				yaml: `
 jobs:
   example:
@@ -58,8 +56,7 @@ jobs:
 					},
 				},
 			},
-			{
-				name: "Workflow with 'actions/github-script'",
+			"Workflow with 'actions/github-script'": {
 				yaml: `
 jobs:
   example:
@@ -95,8 +92,7 @@ jobs:
 					},
 				},
 			},
-			{
-				name: "No names",
+			"No names": {
 				yaml: `
 jobs:
   example:
@@ -122,8 +118,7 @@ jobs:
 					},
 				},
 			},
-			{
-				name: "No names",
+			"Version annotation": {
 				yaml: `
 jobs:
   example:
@@ -146,8 +141,8 @@ jobs:
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				workflow, err := ParseWorkflow([]byte(tt.yaml))
@@ -200,27 +195,23 @@ jobs:
 
 	t.Run("Error", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			yaml string
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Invalid 'jobs' value",
+		testCases := map[string]TestCase{
+			"Invalid 'jobs' value": {
 				yaml: `
 jobs: 3.14
 `,
 			},
-			{
-				name: "Invalid 'steps' value",
+			"Invalid 'steps' value": {
 				yaml: `
 jobs:
   example:
     steps: 42
 `,
 			},
-			{
-				name: "Invalid 'env' value",
+			"Invalid 'env' value": {
 				yaml: `
 jobs:
   example:
@@ -228,8 +219,7 @@ jobs:
     - env: 1.618
 `,
 			},
-			{
-				name: "Invalid 'with' value",
+			"Invalid 'with' value": {
 				yaml: `
 jobs:
   example:
@@ -239,8 +229,8 @@ jobs:
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				_, err := ParseWorkflow([]byte(tt.yaml))
@@ -255,14 +245,12 @@ jobs:
 func TestParseManifest(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			yaml string
 			want Manifest
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Non-composite manifest",
+		testCases := map[string]TestCase{
+			"Non-composite manifest": {
 				yaml: `
 runs:
   using: node16
@@ -274,8 +262,7 @@ runs:
 					},
 				},
 			},
-			{
-				name: "Manifest with 'run:'",
+			"Manifest with 'run:'": {
 				yaml: `
 runs:
   using: composite
@@ -303,8 +290,7 @@ runs:
 					},
 				},
 			},
-			{
-				name: "Manifest with 'actions/github-script'",
+			"Manifest with 'actions/github-script'": {
 				yaml: `
 runs:
   using: composite
@@ -339,8 +325,8 @@ runs:
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				manifest, err := ParseManifest([]byte(tt.yaml))
@@ -381,17 +367,14 @@ runs:
 
 	t.Run("Error", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			yaml string
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Invalid 'runs' value",
+		testCases := map[string]TestCase{
+			"Invalid 'runs' value": {
 				yaml: `runs: 3.14`,
 			},
-			{
-				name: "Invalid 'steps' value",
+			"Invalid 'steps' value": {
 				yaml: `
 runs:
   steps: 3.14
@@ -399,8 +382,8 @@ runs:
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				_, err := ParseManifest([]byte(tt.yaml))
@@ -415,14 +398,12 @@ runs:
 func TestParseUses(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			step JobStep
 			want StepUses
 		}
 
-		testCases := []TestCase{
-			{
-				name: "Full version tag",
+		testCases := map[string]TestCase{
+			"Full version tag": {
 				step: JobStep{
 					Uses: "foobar@v1.2.3",
 				},
@@ -431,8 +412,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "v1.2.3",
 				},
 			},
-			{
-				name: "Major version tag",
+			"Major version tag": {
 				step: JobStep{
 					Uses: "hello-world@v2",
 				},
@@ -441,8 +421,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "v2",
 				},
 			},
-			{
-				name: "Full SHA",
+			"Full SHA": {
 				step: JobStep{
 					Uses: "actions/checkout@2a08af6587712680d7d485082f61ed6cdb72280a",
 				},
@@ -451,8 +430,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "2a08af6587712680d7d485082f61ed6cdb72280a",
 				},
 			},
-			{
-				name: "Unconventional tag (no 'v' prefix)",
+			"Unconventional tag (no 'v' prefix)": {
 				step: JobStep{
 					Uses: "actions/upload-artifact@3.1.4",
 				},
@@ -461,8 +439,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "3.1.4",
 				},
 			},
-			{
-				name: "short name",
+			"short name": {
 				step: JobStep{
 					Uses: "a@3.1.4",
 				},
@@ -471,8 +448,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "3.1.4",
 				},
 			},
-			{
-				name: "1 character version",
+			"1 character version": {
 				step: JobStep{
 					Uses: "actions/download-artifact@7",
 				},
@@ -481,8 +457,7 @@ func TestParseUses(t *testing.T) {
 					Ref:  "7",
 				},
 			},
-			{
-				name: "with comment",
+			"with comment": {
 				step: JobStep{
 					Uses:        "actions/checkout@0ad4b8fadaa221de15dcec353f45205ec38ea70b",
 					UsesComment: "v4",
@@ -495,8 +470,8 @@ func TestParseUses(t *testing.T) {
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				uses, err := ParseUses(&tt.step)
@@ -521,37 +496,32 @@ func TestParseUses(t *testing.T) {
 
 	t.Run("Error", func(t *testing.T) {
 		type TestCase struct {
-			name string
 			step JobStep
 		}
 
-		testCases := []TestCase{
-			{
-				name: "No 'uses' value",
+		testCases := map[string]TestCase{
+			"No 'uses' value": {
 				step: JobStep{},
 			},
-			{
-				name: "Invalid 'uses' value",
+			"Invalid 'uses' value": {
 				step: JobStep{
 					Uses: "foobar",
 				},
 			},
-			{
-				name: "Missing version",
+			"Missing version": {
 				step: JobStep{
 					Uses: "foobar@",
 				},
 			},
-			{
-				name: "Missing name",
+			"Missing name": {
 				step: JobStep{
 					Uses: "@v1.2.3",
 				},
 			},
 		}
 
-		for _, tt := range testCases {
-			t.Run(tt.name, func(t *testing.T) {
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
 				_, err := ParseUses(&tt.step)
