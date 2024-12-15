@@ -26,68 +26,68 @@ func TestAllMatcher(t *testing.T) {
 		want  []string
 	}
 
-	testCases := []TestCase{
-		{
+	testCases := map[string]TestCase{
+		"arbitrary expression ": {
 			value: "${{ foo.bar }}",
 			want: []string{
 				"${{ foo.bar }}",
 			},
 		},
-		{
+		"input expression": {
 			value: "${{ input.greeting }}",
 			want: []string{
 				"${{ input.greeting }}",
 			},
 		},
-		{
+		"matrix expression": {
 			value: "${{ matrix.runtime }}",
 			want: []string{
 				"${{ matrix.runtime }}",
 			},
 		},
-		{
+		"vars expression": {
 			value: "${{ vars.command }}",
 			want: []string{
 				"${{ vars.command }}",
 			},
 		},
-		{
+		"secrets expression": {
 			value: "${{ secrets.value }}",
 			want: []string{
 				"${{ secrets.value }}",
 			},
 		},
-		{
+		"github.event.issue.title": {
 			value: "${{ github.event.issue.title }}",
 			want: []string{
 				"${{ github.event.issue.title }}",
 			},
 		},
-		{
+		"github.event.discussion.body": {
 			value: "${{ github.event.discussion.body }}",
 			want: []string{
 				"${{ github.event.discussion.body }}",
 			},
 		},
-		{
+		"github.event.pages[*].page_name": {
 			value: "${{ github.event.pages[0].page_name }}",
 			want: []string{
 				"${{ github.event.pages[0].page_name }}",
 			},
 		},
-		{
+		"github.event.commits[*].author.email": {
 			value: "${{ github.event.commits[1].author.email }}",
 			want: []string{
 				"${{ github.event.commits[1].author.email }}",
 			},
 		},
-		{
+		"github.head_ref": {
 			value: "${{ github.head_ref }}",
 			want: []string{
 				"${{ github.head_ref }}",
 			},
 		},
-		{
+		"github.event.workflow_run.pull_requests[*].head.ref": {
 			value: "${{ github.event.workflow_run.pull_requests[2].head.ref }}",
 			want: []string{
 				"${{ github.event.workflow_run.pull_requests[2].head.ref }}",
@@ -95,8 +95,8 @@ func TestAllMatcher(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.value, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			s := fmt.Sprintf("echo '%s'", tt.value)

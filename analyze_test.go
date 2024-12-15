@@ -21,15 +21,13 @@ import (
 
 func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
-		name     string
 		manifest Manifest
 		matcher  ExprMatcher
 		want     int
 	}
 
-	testCases := []TestCase{
-		{
-			name: "Non-composite manifest",
+	testCases := map[string]TestCase{
+		"Non-composite manifest": {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "node16",
@@ -44,8 +42,7 @@ func TestAnalyzeManifest(t *testing.T) {
 			matcher: AllMatcher,
 			want:    0,
 		},
-		{
-			name: "Safe manifest",
+		"Safe manifest": {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
@@ -60,8 +57,7 @@ func TestAnalyzeManifest(t *testing.T) {
 			matcher: AllMatcher,
 			want:    0,
 		},
-		{
-			name: "Problem in first of two steps in manifest",
+		"Problem in first of two steps in manifest": {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
@@ -80,8 +76,7 @@ func TestAnalyzeManifest(t *testing.T) {
 			matcher: AllMatcher,
 			want:    1,
 		},
-		{
-			name: "Problem in second of two steps in manifest",
+		"Problem in second of two steps in manifest": {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
@@ -100,8 +95,7 @@ func TestAnalyzeManifest(t *testing.T) {
 			matcher: AllMatcher,
 			want:    1,
 		},
-		{
-			name: "Problem in all steps in manifest",
+		"Problem in all steps in manifest": {
 			manifest: Manifest{
 				Runs: ManifestRuns{
 					Using: "composite",
@@ -122,8 +116,8 @@ func TestAnalyzeManifest(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			violations := AnalyzeManifest(&tt.manifest, tt.matcher)
@@ -149,15 +143,13 @@ func TestAnalyzeManifest(t *testing.T) {
 
 func TestAnalyzeWorkflow(t *testing.T) {
 	type TestCase struct {
-		name     string
 		workflow Workflow
 		matcher  ExprMatcher
 		want     int
 	}
 
-	testCases := []TestCase{
-		{
-			name: "Safe workflow",
+	testCases := map[string]TestCase{
+		"Safe workflow": {
 			workflow: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"safe": {
@@ -174,8 +166,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			matcher: AllMatcher,
 			want:    0,
 		},
-		{
-			name: "Problem in first of two jobs in workflow",
+		"Problem in first of two jobs in workflow": {
 			workflow: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"unsafe": {
@@ -201,8 +192,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			matcher: AllMatcher,
 			want:    1,
 		},
-		{
-			name: "Problem in second of two jobs in workflow",
+		"Problem in second of two jobs in workflow": {
 			workflow: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"safe": {
@@ -228,8 +218,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			matcher: AllMatcher,
 			want:    1,
 		},
-		{
-			name: "Problem in all jobs in workflow",
+		"Problem in all jobs in workflow": {
 			workflow: Workflow{
 				Jobs: map[string]WorkflowJob{
 					"unsafe": {
@@ -261,8 +250,8 @@ func TestAnalyzeWorkflow(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			violations := AnalyzeWorkflow(&tt.workflow, tt.matcher)
@@ -288,7 +277,6 @@ func TestAnalyzeWorkflow(t *testing.T) {
 
 func TestAnalyzeJob(t *testing.T) {
 	type TestCase struct {
-		name      string
 		id        string
 		job       WorkflowJob
 		matcher   ExprMatcher
@@ -296,10 +284,9 @@ func TestAnalyzeJob(t *testing.T) {
 		wantId    string
 	}
 
-	testCases := []TestCase{
-		{
-			name: "Safe unnamed job",
-			id:   "job-id",
+	testCases := map[string]TestCase{
+		"Safe unnamed job": {
+			id: "job-id",
 			job: WorkflowJob{
 				Name: "",
 				Steps: []JobStep{
@@ -312,9 +299,8 @@ func TestAnalyzeJob(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Safe named job",
-			id:   "job-id",
+		"Safe named job": {
+			id: "job-id",
 			job: WorkflowJob{
 				Name: "Safe",
 				Steps: []JobStep{
@@ -327,9 +313,8 @@ func TestAnalyzeJob(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Unnamed job with unsafe step",
-			id:   "job-id",
+		"Unnamed job with unsafe step": {
+			id: "job-id",
 			job: WorkflowJob{
 				Name: "",
 				Steps: []JobStep{
@@ -343,9 +328,8 @@ func TestAnalyzeJob(t *testing.T) {
 			wantCount: 1,
 			wantId:    "job-id",
 		},
-		{
-			name: "Named job with unsafe step",
-			id:   "job-id",
+		"Named job with unsafe step": {
+			id: "job-id",
 			job: WorkflowJob{
 				Name: "Unsafe",
 				Steps: []JobStep{
@@ -359,9 +343,8 @@ func TestAnalyzeJob(t *testing.T) {
 			wantCount: 1,
 			wantId:    "Unsafe",
 		},
-		{
-			name: "Unnamed job with unsafe and safe steps",
-			id:   "job-id",
+		"Unnamed job with unsafe and safe steps": {
+			id: "job-id",
 			job: WorkflowJob{
 				Name: "",
 				Steps: []JobStep{
@@ -383,8 +366,7 @@ func TestAnalyzeJob(t *testing.T) {
 			wantCount: 1,
 			wantId:    "job-id",
 		},
-		{
-			name: "Named job with unsafe and safe steps",
+		"Named job with unsafe and safe steps": {
 			job: WorkflowJob{
 				Name: "Unsafe",
 				Steps: []JobStep{
@@ -408,8 +390,8 @@ func TestAnalyzeJob(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			violations := analyzeJob(tt.id, &tt.job, tt.matcher)
@@ -432,7 +414,6 @@ func TestAnalyzeJob(t *testing.T) {
 
 func TestAnalyzeStep(t *testing.T) {
 	type TestCase struct {
-		name       string
 		id         int
 		step       JobStep
 		matcher    ExprMatcher
@@ -440,25 +421,22 @@ func TestAnalyzeStep(t *testing.T) {
 		wantStepId string
 	}
 
-	testCases := []TestCase{
-		{
-			name: "Unnamed step that does nothing",
+	testCases := map[string]TestCase{
+		"Unnamed step that does nothing": {
 			step: JobStep{
 				Name: "",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Named step that does nothing",
+		"Named step that does nothing": {
 			step: JobStep{
 				Name: "Doesn't run",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Unnamed step without violation",
+		"Unnamed step without violation": {
 			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello world!'",
@@ -466,8 +444,7 @@ func TestAnalyzeStep(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Named step without violation",
+		"Named step without violation": {
 			step: JobStep{
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
@@ -475,9 +452,8 @@ func TestAnalyzeStep(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Unnamed step with one violation",
-			id:   42,
+		"Unnamed step with one violation": {
+			id: 42,
 			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -486,8 +462,7 @@ func TestAnalyzeStep(t *testing.T) {
 			wantCount:  1,
 			wantStepId: "#42",
 		},
-		{
-			name: "Named step with one violation",
+		"Named step with one violation": {
 			step: JobStep{
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -496,9 +471,8 @@ func TestAnalyzeStep(t *testing.T) {
 			wantCount:  1,
 			wantStepId: "Greet person",
 		},
-		{
-			name: "Unnamed step with two violation",
-			id:   3,
+		"Unnamed step with two violation": {
+			id: 3,
 			step: JobStep{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
@@ -507,9 +481,8 @@ func TestAnalyzeStep(t *testing.T) {
 			wantCount:  2,
 			wantStepId: "#3",
 		},
-		{
-			name: "Named step with two violation",
-			id:   1,
+		"Named step with two violation": {
+			id: 1,
 			step: JobStep{
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
@@ -518,27 +491,24 @@ func TestAnalyzeStep(t *testing.T) {
 			wantCount:  2,
 			wantStepId: "Greet person today",
 		},
-		{
-			name: "Uses step with unknown action",
-			id:   1,
+		"Uses step with unknown action": {
+			id: 1,
 			step: JobStep{
 				Uses: "this/is-not@a-real-action",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Uses step with known action, no violations",
-			id:   1,
+		"Uses step with known action, no violations": {
+			id: 1,
 			step: JobStep{
 				Uses: "actions/github-script@v6",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		{
-			name: "Uses step with known action, no violations",
-			id:   1,
+		"Uses step with known action, one violation": {
+			id: 1,
 			step: JobStep{
 				Uses: "actions/github-script@v6",
 				With: map[string]string{
@@ -551,8 +521,8 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			violations := analyzeStep(tt.id, &tt.step, tt.matcher)
@@ -575,35 +545,30 @@ func TestAnalyzeStep(t *testing.T) {
 
 func TestAnalyzeString(t *testing.T) {
 	type TestCase struct {
-		name    string
 		value   string
 		matcher ExprMatcher
 		want    []Violation
 	}
 
-	testCases := []TestCase{
-		{
-			name:    "Simple and safe",
+	testCases := map[string]TestCase{
+		"Simple and safe": {
 			value:   "echo 'Hello world!'",
 			matcher: AllMatcher,
 			want:    []Violation{},
 		},
-		{
-			name:    "Multiline and safe",
+		"Multiline and safe": {
 			value:   "echo 'Hello'\necho 'world!'",
 			matcher: AllMatcher,
 			want:    []Violation{},
 		},
-		{
-			name:    "One violations",
+		"One violations": {
 			value:   "echo 'Hello ${{ input.name }}!'",
 			matcher: AllMatcher,
 			want: []Violation{
 				{Problem: "${{ input.name }}"},
 			},
 		},
-		{
-			name:    "Two violations",
+		"Two violations": {
 			value:   "echo '${{ input.greeting }} ${{ input.name }}!'",
 			matcher: AllMatcher,
 			want: []Violation{
@@ -613,8 +578,8 @@ func TestAnalyzeString(t *testing.T) {
 		},
 	}
 
-	for _, tt := range testCases {
-		t.Run(tt.name, func(t *testing.T) {
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
 			violations := analyzeString(tt.value, tt.matcher)
