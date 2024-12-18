@@ -25,7 +25,6 @@ import (
 
 type rule struct {
 	extractFrom func(step *JobStep) string
-	suggestion  func(violation *Violation) string
 	fix         func(violation *Violation) []fix
 	id          string
 	title       string
@@ -83,7 +82,6 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["script"]
 		},
-		suggestion: suggestJavaScriptEnv,
 	},
 }
 
@@ -100,9 +98,6 @@ it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To
 upgrade the action to a non-vulnerable version.`,
 		extractFrom: func(step *JobStep) string {
 			return step.With["summary"]
-		},
-		suggestion: func(_ *Violation) string {
-			return "    1. Upgrade to a non-vulnerable version, see GHSA-4xqx-pqpj-9fqw"
 		},
 	},
 }
@@ -121,9 +116,6 @@ mitigate this, upgrade the action to a non-vulnerable version.`,
 		extractFrom: func(step *JobStep) string {
 			return step.With["tag"]
 		},
-		suggestion: func(_ *Violation) string {
-			return "    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g"
-		},
 	},
 }
 
@@ -140,9 +132,6 @@ may be used to execute arbitrary shell commands (no vulnerability identifier ava
 this, upgrade the action to a non-vulnerable version.`,
 		extractFrom: func(step *JobStep) string {
 			return step.With["sha"]
-		},
-		suggestion: func(_ *Violation) string {
-			return "    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes"
 		},
 	},
 }
@@ -179,7 +168,6 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["issue-close-message"]
 		},
-		suggestion: suggestJavaScriptLiteralEnv,
 		fix: func(violation *Violation) []fix {
 			var step JobStep
 			switch source := (violation.source).(type) {
@@ -238,7 +226,6 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["pr-close-message"]
 		},
-		suggestion: suggestJavaScriptLiteralEnv,
 	},
 }
 
@@ -276,7 +263,6 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.With["cmd"]
 		},
-		suggestion: suggestShellEnv,
 	},
 }
 
@@ -333,7 +319,6 @@ it can be made safer by converting it into:
 		extractFrom: func(step *JobStep) string {
 			return step.Run
 		},
-		suggestion: suggestShellEnv,
 	},
 }
 
@@ -369,17 +354,6 @@ func Explain(ruleId string) (string, error) {
 
 	explanation := fmt.Sprintf("%s - %s\n%s", r.id, r.title, r.description)
 	return explanation, nil
-}
-
-// Suggestion returns a suggestion for the violation.
-func Suggestion(violation *Violation) (string, error) {
-	ruleId := violation.RuleId
-	r, err := findRule(ruleId)
-	if err != nil {
-		return "", err
-	}
-
-	return r.suggestion(violation), nil
 }
 
 // Fix produces a set of fixes to address the violation if possible. If the return value is nil the
@@ -450,33 +424,6 @@ func fixReplaceIn(s, old, new string) fix {
 		Old: *regexp.MustCompile(regexp.QuoteMeta(s)),
 		New: strings.ReplaceAll(s, old, new),
 	}
-}
-
-func suggestJavaScriptEnv(violation *Violation) string {
-	return suggestUseEnv(violation.Problem, "process.env.", "")
-}
-
-func suggestJavaScriptLiteralEnv(violation *Violation) string {
-	return suggestUseEnv(violation.Problem, "${process.env.", "}")
-}
-
-func suggestShellEnv(violation *Violation) string {
-	return suggestUseEnv(violation.Problem, "$", "")
-}
-
-func suggestUseEnv(problem, pre, post string) string {
-	var sb strings.Builder
-
-	name := getVariableNameForExpression(problem)
-	replacement := pre + name + post
-
-	sb.WriteString(fmt.Sprintf("    1. Set `%s: %s` in the step's `env` map", name, problem))
-	sb.WriteRune('\n')
-	sb.WriteString(fmt.Sprintf("    2. Replace all occurrences of `%s` by `%s`", problem, replacement))
-	sb.WriteRune('\n')
-	sb.WriteString("       (make sure to keep the behavior of the script the same)")
-
-	return sb.String()
 }
 
 func getVariableNameForExpression(expression string) string {
