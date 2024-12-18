@@ -30,7 +30,7 @@ require (
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.16
 	github.com/tomarrell/wrapcheck/v2 v2.9.0
-	github.com/ultraware/whitespace v0.1.0
+	github.com/ultraware/whitespace v0.2.0
 	go.uber.org/nilaway v0.0.0-20231204220708-2f6a74d7c0e2
 	golang.org/x/mod v0.22.0
 	golang.org/x/tools v0.28.0
