@@ -55,11 +55,10 @@ tests to the `rules_test.go` file. The details depend on whether it's a rule for
 with `uses:`) or for other steps, but defining the rule is the same regardless.
 
 To define a rule you need to create an instance of the `rule` type. This involves giving the rule an
-id, title, and description as well as a function to extract what needs to be analyzed and a function
-that builds a suggestion for fixing a violation. The id, title, and description are simple text
-values. The extraction function needs to return a string to be analyzed for a given `JobStep`. The
-suggestion functions needs to return a suggestion string for a given `Violation`. Lastly, you need
-to add the rule to the `RULES.md` documentation file in the same format as the `--explain` output.
+id, title, and description as well as a function to extract what needs to be analyzed. The id,
+title, and description are simple text values. The extraction function needs to return a string to
+be analyzed for a given `JobStep`. Lastly, you need to add the rule to the `RULES.md` documentation
+file in the same format as the `--explain` output.
 
 Note that if multiple things could be checked for one action or step construct, they should be
 defined as separate rules.
@@ -78,6 +77,6 @@ the `stepRule` type. You also need to add the rule to the `stepRules` slice.
 ### Testing
 
 Every new rule needs to be tested. The rule id, title, and description are tested automatically. The
-`appliesTo`, `extractFrom`, and `suggestion` functions require dedicated unit tests. For this, it is
-recommended to follow the lead of the tests for existing rules. Additionally, a test case should be
-added to the `test/rules.txtar` test file.
+`appliesTo` and `extractFrom` functions require dedicated unit tests. For this, it is recommended to
+follow the lead of the tests for existing rules. Additionally, a test case should be added to the
+`test/rules.txtar` test file.

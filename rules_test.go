@@ -53,24 +53,6 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 			t.Error(err)
 		}
 	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "4",
-			StepId:  "2",
-			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES101",
-		}
-
-		got := actionRuleActionsGitHubScript.rule.suggestion(&violation)
-		want := `    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `process.env.BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)`
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
-		}
-	})
 }
 
 func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
@@ -133,22 +115,6 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 		}
 		if err := quick.Check(withoutSummary, nil); err != nil {
 			t.Error(err)
-		}
-	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "4",
-			StepId:  "2",
-			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES202",
-		}
-
-		got := actionRuleAtlassianGajiraCreate.rule.suggestion(&violation)
-		want := "    1. Upgrade to a non-vulnerable version, see GHSA-4xqx-pqpj-9fqw"
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
 		}
 	})
 }
@@ -215,22 +181,6 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 			t.Error(err)
 		}
 	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "4",
-			StepId:  "2",
-			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES200",
-		}
-
-		got := actionRuleEriccornelissenGitTagAnnotationAction.rule.suggestion(&violation)
-		want := "    1. Upgrade to a non-vulnerable version, see GHSA-hgx2-4pp9-357g"
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
-		}
-	})
 }
 
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
@@ -295,22 +245,6 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 			t.Error(err)
 		}
 	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "4",
-			StepId:  "2",
-			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES201",
-		}
-
-		got := actionRuleKcebGitMessageAction.rule.suggestion(&violation)
-		want := "    1. Upgrade to a non-vulnerable version, see v1.2.0 release notes"
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
-		}
-	})
 }
 
 func TestActionRulesRootsIssueCloser(t *testing.T) {
@@ -342,24 +276,6 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 			}
 			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
 				t.Error(err)
-			}
-		})
-
-		t.Run("Suggestion", func(t *testing.T) {
-			violation := Violation{
-				JobId:   "3",
-				StepId:  "14",
-				Problem: "${{ hello.world }}",
-				RuleId:  "ADES102",
-			}
-
-			got := actionRuleRootsIssueCloserIssueCloseMessage.rule.suggestion(&violation)
-			want := `    1. Set ` + "`" + `WORLD: ${{ hello.world }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ hello.world }}` + "`" + ` by ` + "`" + `${process.env.WORLD}` + "`" + `
-       (make sure to keep the behavior of the script the same)`
-
-			if got != want {
-				t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
 			}
 		})
 	})
@@ -394,24 +310,6 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 				t.Error(err)
 			}
 		})
-
-		t.Run("Suggestion", func(t *testing.T) {
-			violation := Violation{
-				JobId:   "3",
-				StepId:  "14",
-				Problem: "${{ hello.world }}",
-				RuleId:  "ADES103",
-			}
-
-			got := actionRuleRootsIssueCloserPrCloseMessage.rule.suggestion(&violation)
-			want := `    1. Set ` + "`" + `WORLD: ${{ hello.world }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ hello.world }}` + "`" + ` by ` + "`" + `${process.env.WORLD}` + "`" + `
-       (make sure to keep the behavior of the script the same)`
-
-			if got != want {
-				t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
-			}
-		})
 	})
 }
 
@@ -442,24 +340,6 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 		}
 		if err := quick.Check(withoutCmd, nil); err != nil {
 			t.Error(err)
-		}
-	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "3",
-			StepId:  "14",
-			Problem: "${{ github.event.inputs.file }}",
-			RuleId:  "ADES104",
-		}
-
-		got := actionRuleSergeysovaJqAction.rule.suggestion(&violation)
-		want := `    1. Set ` + "`" + `FILE: ${{ github.event.inputs.file }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ github.event.inputs.file }}` + "`" + ` by ` + "`" + `$FILE` + "`" + `
-       (make sure to keep the behavior of the script the same)`
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
 		}
 	})
 }
@@ -499,24 +379,6 @@ func TestStepRuleRun(t *testing.T) {
 
 		if err := quick.Check(f, nil); err != nil {
 			t.Error(err)
-		}
-	})
-
-	t.Run("Suggestion", func(t *testing.T) {
-		violation := Violation{
-			JobId:   "4",
-			StepId:  "2",
-			Problem: "${{ foo.bar }}",
-			RuleId:  "ADES100",
-		}
-
-		got := stepRuleRun.rule.suggestion(&violation)
-		want := `    1. Set ` + "`" + `BAR: ${{ foo.bar }}` + "`" + ` in the step's ` + "`" + `env` + "`" + ` map
-    2. Replace all occurrences of ` + "`" + `${{ foo.bar }}` + "`" + ` by ` + "`" + `$BAR` + "`" + `
-       (make sure to keep the behavior of the script the same)`
-
-		if got != want {
-			t.Errorf("Unexpected suggestion (got %q, want %q)", got, want)
 		}
 	})
 }
@@ -655,55 +517,6 @@ func TestFix(t *testing.T) {
 				}
 
 				_, err := Fix(&violation)
-				if err == nil {
-					t.Fatal("Expected an error, got none")
-				}
-			})
-		}
-	})
-}
-
-func TestSuggestion(t *testing.T) {
-	t.Run("Existing rules", func(t *testing.T) {
-		testCases := allRules()
-
-		for _, tt := range testCases {
-			t.Run(tt.id, func(t *testing.T) {
-				t.Parallel()
-
-				violation := Violation{
-					RuleId: tt.id,
-				}
-
-				suggestion, err := Suggestion(&violation)
-				if err != nil {
-					t.Fatalf("Unexpected error: %#v", err)
-				}
-
-				if suggestion == "" {
-					t.Error("Unexpected empty suggestion")
-				}
-			})
-		}
-	})
-
-	t.Run("Missing rules", func(t *testing.T) {
-		type TestCase = string
-
-		testCases := map[string]TestCase{
-			"valid but unknown id": "ADES000",
-			"invalid id":           "foobar",
-		}
-
-		for name, tt := range testCases {
-			t.Run(name, func(t *testing.T) {
-				t.Parallel()
-
-				violation := Violation{
-					RuleId: tt,
-				}
-
-				_, err := Suggestion(&violation)
 				if err == nil {
 					t.Fatal("Expected an error, got none")
 				}
