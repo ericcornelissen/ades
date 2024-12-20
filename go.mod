@@ -10,7 +10,7 @@ require (
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/butuzov/ireturn v0.3.0
 	github.com/catenacyber/perfsprint v0.7.1
-	github.com/dkorunic/betteralign v0.6.0
+	github.com/dkorunic/betteralign v0.6.1
 	github.com/go-critic/go-critic v0.11.4
 	github.com/google/capslock v0.2.5
 	github.com/google/go-licenses v1.6.0
@@ -47,9 +47,9 @@ require (
 	github.com/KimMachineGun/automemlimit v0.6.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/Microsoft/hcsshim v0.11.4 // indirect
-	github.com/cilium/ebpf v0.16.0 // indirect
+	github.com/cilium/ebpf v0.17.0 // indirect
 	github.com/containerd/cgroups v1.1.0 // indirect
-	github.com/containerd/cgroups/v3 v3.0.3 // indirect
+	github.com/containerd/cgroups/v3 v3.0.4 // indirect
 	github.com/containerd/console v1.0.3 // indirect
 	github.com/containerd/containerd v1.7.11 // indirect
 	github.com/containerd/continuity v0.4.3 // indirect
@@ -107,6 +107,7 @@ require (
 	github.com/moby/sys/mountinfo v0.6.2 // indirect
 	github.com/moby/sys/sequential v0.5.0 // indirect
 	github.com/moby/sys/signal v0.7.0 // indirect
+	github.com/moby/sys/userns v0.1.0 // indirect
 	github.com/opencontainers/go-digest v1.0.0 // indirect
 	github.com/opencontainers/image-spec v1.1.0-rc5 // indirect
 	github.com/opencontainers/runc v1.1.14 // indirect
@@ -154,7 +155,7 @@ require (
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.59.0 // indirect
-	google.golang.org/protobuf v1.35.2 // indirect
+	google.golang.org/protobuf v1.36.0 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
