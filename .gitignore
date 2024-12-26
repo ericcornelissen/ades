@@ -11,6 +11,7 @@
 !.github/workflows/publish.yml
 !.github/workflows/semgrep.yml
 !.github/workflows/website.yml
+!.github/codeql.yml
 !.github/dependabot.yml
 
 # Config
