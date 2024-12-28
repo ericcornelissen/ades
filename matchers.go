@@ -16,6 +16,7 @@
 package ades
 
 import (
+	"bytes"
 	"regexp"
 )
 
@@ -35,18 +36,54 @@ var (
 	ConservativeMatcher conservativeExprMatcher
 )
 
-var allExprRegExp = regexp.MustCompile(`\$\{\{.*?\}\}`)
+var allExprRegExp = regexp.MustCompile(`\${{.*?}}`)
 
 type allExprMatcher struct{}
 
 func (m allExprMatcher) FindAll(v []byte) [][]byte {
+	if allExprRegExp.Find(stripSafe(v)) == nil {
+		return nil
+	}
+
 	return allExprRegExp.FindAll(v, len(v))
 }
 
-var conservativeExprRegExp = regexp.MustCompile(`\$\{\{.+?(github\.event\.issue\.title|github\.event\.issue\.body|github\.event\.discussion\.title|github\.event\.discussion\.body|github\.event\.comment\.body|github\.event\.review\.body|github\.event\.review_comment\.body|github\.event\.pages\[\d+\]\.page_name|github\.event\.commits\[\d+\]\.message|github\.event\.commits\[\d+\]\.author\.email|github\.event\.commits\[\d+\]\.author\.name|github\.event\.head_commit\.message|github\.event\.head_commit\.author\.email|github\.event\.head_commit\.author\.name|github\.event\.head_commit\.committer\.email|github\.event\.workflow_run\.head_branch|github\.event\.workflow_run\.head_commit\.message|github\.event\.workflow_run\.head_commit\.author\.email|github\.event\.workflow_run\.head_commit\.author\.name|github\.event\.pull_request\.title|github\.event\.pull_request\.body|github\.event\.pull_request\.head\.label|github\.event\.pull_request\.head\.repo\.default_branch|github\.head_ref|github\.event\.pull_request\.head\.ref|github\.event\.workflow_run\.pull_requests\[\d+\]\.head\.ref).+?\}\}`)
+var conservativeExprRegExp = regexp.MustCompile(`\${{.+?(github\.event\.issue\.title|github\.event\.issue\.body|github\.event\.discussion\.title|github\.event\.discussion\.body|github\.event\.comment\.body|github\.event\.review\.body|github\.event\.review_comment\.body|github\.event\.pages\[\d+\]\.page_name|github\.event\.commits\[\d+\]\.message|github\.event\.commits\[\d+\]\.author\.email|github\.event\.commits\[\d+\]\.author\.name|github\.event\.head_commit\.message|github\.event\.head_commit\.author\.email|github\.event\.head_commit\.author\.name|github\.event\.head_commit\.committer\.email|github\.event\.workflow_run\.head_branch|github\.event\.workflow_run\.head_commit\.message|github\.event\.workflow_run\.head_commit\.author\.email|github\.event\.workflow_run\.head_commit\.author\.name|github\.event\.pull_request\.title|github\.event\.pull_request\.body|github\.event\.pull_request\.head\.label|github\.event\.pull_request\.head\.repo\.default_branch|github\.head_ref|github\.event\.pull_request\.head\.ref|github\.event\.workflow_run\.pull_requests\[\d+\]\.head\.ref).+?}}`)
 
 type conservativeExprMatcher struct{}
 
 func (m conservativeExprMatcher) FindAll(v []byte) [][]byte {
+	if conservativeExprRegExp.Find(stripSafe(v)) == nil {
+		return nil
+	}
+
 	return conservativeExprRegExp.FindAll(v, len(v))
+}
+
+var (
+	boundary = `[\s,|&!=()<>]`
+	leading  = `(?P<leading>\${{(.*?` + boundary + `|))`
+	trailing = `(?P<trailing>(` + boundary + `.*?|)}})`
+
+	LiteralInExprRegExp      = regexp.MustCompile(leading + `(true|false|null|-?\d+(\.\d+)?|0x[0-9A-Fa-f]+|-?\d+\.\d+e-?\d+|'[^']+')` + trailing)
+	SafeFunctionInExprRegExp = regexp.MustCompile(leading + `((always|cancelled|contains|endsWith|failure|hashFiles|success|startsWith)\(([^,]*,)*[^,)]*\)|(format|fromJSON|join|toJSON)\([\s,]*\))` + trailing)
+
+	EmptyExprRegExp = regexp.MustCompile(`\${{` + boundary + `*}}`)
+)
+
+func stripSafe(v []byte) []byte {
+	exps := []regexp.Regexp{
+		*LiteralInExprRegExp,
+		*SafeFunctionInExprRegExp,
+	}
+
+	var r []byte
+	for !bytes.Equal(v, r) {
+		r = v
+		for _, exp := range exps {
+			v = exp.ReplaceAll(v, []byte("$leading$trailing"))
+		}
+	}
+
+	return EmptyExprRegExp.ReplaceAll(v, nil)
 }
