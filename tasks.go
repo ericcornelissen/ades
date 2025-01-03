@@ -1,6 +1,6 @@
 // MIT No Attribution
 //
-// Copyright (c) 2024 Eric Cornelissen
+// Copyright (c) 2024-2025 Eric Cornelissen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ import (
 	"os"
 	"os/exec"
 	"regexp"
+	"runtime"
 	"strings"
 )
 
@@ -43,14 +44,18 @@ const (
 	ENV_CONTAINER_TAG        = "CONTAINER_TAG"
 )
 
-var (
+const (
 	buildAllDir = "_compiled"
 	webDir      = "web"
 )
 
-var (
+const (
 	permFile fs.FileMode = 0o664
 	permDir  fs.FileMode = 0o755
+)
+
+var (
+	GO_VERSION = runtime.Version()[2:]
 )
 
 // Audit the codebase.
@@ -218,8 +223,9 @@ func TaskContainer(t *T) error {
 		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
 		tag    = t.Env(ENV_CONTAINER_TAG, "latest")
 		build  = fmt.Sprintf(
-			"%s build --file Containerfile --tag ericornelissen/ades:%s .",
+			"%s build --build-arg GO_VERSION=%s --file Containerfile --tag ericornelissen/ades:%s .",
 			engine,
+			GO_VERSION,
 			tag,
 		)
 	)
@@ -261,8 +267,9 @@ func TaskDevImg(t *T) error {
 	var (
 		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
 		build  = fmt.Sprintf(
-			"%s build --file 'Containerfile.dev' --tag ades-dev-img .",
+			"%s build --build-arg GO_VERSION=%s --file Containerfile.dev --tag ades-dev-img .",
 			engine,
+			GO_VERSION,
 		)
 	)
 
@@ -444,28 +451,28 @@ func TaskReproducibleContainer(t *T) error {
 		engine    = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
 		tag1      = "docker.io/ericornelissen/ades:a"
 		tag2      = "docker.io/ericornelissen/ades:b"
-		buildCmd  = "%s build --no-cache --file Containerfile --tag %s ."
+		buildCmd  = "%s build --no-cache --build-arg GO_VERSION=%s --file Containerfile --tag %s ."
 		removeCmd = "%s rmi %s"
 	)
 
 	t.Log("Initial container build...")
-	cmd := fmt.Sprintf(buildCmd, engine, tag1)
-	if err := t.Exec(cmd); err != nil {
-		return err
-	}
-
-	t.Log("Reproducing container build...")
-	cmd = fmt.Sprintf(buildCmd, engine, tag2)
+	cmd := fmt.Sprintf(buildCmd, engine, GO_VERSION, tag1)
 	if err := t.Exec(cmd); err != nil {
 		return err
 	}
 
 	defer func() {
-		_ = t.ExecF(
-			io.Discard,
-			fmt.Sprintf(removeCmd, engine, tag1),
-			fmt.Sprintf(removeCmd, engine, tag2),
-		)
+		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, engine, tag1))
+	}()
+
+	t.Log("Reproducing container build...")
+	cmd = fmt.Sprintf(buildCmd, engine, GO_VERSION, tag2)
+	if err := t.Exec(cmd); err != nil {
+		return err
+	}
+
+	defer func() {
+		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, engine, tag2))
 	}()
 
 	t.Log("Check...")

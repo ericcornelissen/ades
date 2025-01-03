@@ -1,4 +1,4 @@
-# Copyright (C) 2023-2024  Eric Cornelissen
+# Copyright (C) 2023-2025  Eric Cornelissen
 #
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -13,7 +13,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-FROM docker.io/golang:1.23.0 AS build
+ARG GO_VERSION=invalid
+FROM docker.io/golang:${GO_VERSION} AS build
 
 WORKDIR /src
 
