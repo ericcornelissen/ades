@@ -25,7 +25,7 @@ require (
 	github.com/polyfloyd/go-errorlint v1.7.0
 	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e
 	github.com/reproducible-containers/diffoci v0.1.4
-	github.com/rhysd/actionlint v1.7.5
+	github.com/rhysd/actionlint v1.7.6
 	github.com/rogpeppe/go-internal v1.13.1
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	github.com/tetafro/godot v1.4.16
@@ -151,7 +151,7 @@ require (
 	golang.org/x/exp/typeparams v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/net v0.32.0 // indirect
 	golang.org/x/sync v0.10.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/sys v0.29.0 // indirect
 	golang.org/x/text v0.21.0 // indirect
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
