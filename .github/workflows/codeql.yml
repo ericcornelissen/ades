@@ -8,11 +8,17 @@ on:
 permissions: read-all
 
 jobs:
-  go:
-    name: Go
+  codeql:
+    name: ${{ matrix.what }}
     runs-on: ubuntu-24.04
     permissions:
       security-events: write # To upload CodeQL results
+    strategy:
+      fail-fast: false
+      matrix:
+        what:
+          - actions
+          - go
     steps:
     - name: Checkout repository
       uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
@@ -23,9 +29,9 @@ jobs:
       with:
         go-version-file: go.mod
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
+      uses: github/codeql-action/init@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
       with:
         config-file: ./.github/codeql.yml
-        languages: go
+        languages: ${{ matrix.what }}
     - name: Perform CodeQL analysis
-      uses: github/codeql-action/analyze@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3.28.0
+      uses: github/codeql-action/analyze@b6a472f63d85b9c78a3ac5e89422239fc15e9b3c # v3.28.1
