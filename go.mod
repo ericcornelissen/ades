@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.23.0
+go 1.23.5
 
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3
@@ -12,7 +12,7 @@ require (
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.6.0
 	github.com/go-critic/go-critic v0.11.4
-	github.com/google/capslock v0.2.5
+	github.com/google/capslock v0.2.7
 	github.com/google/go-licenses v1.6.0
 	github.com/gordonklaus/ineffassign v0.0.0-20230610083614-0e73809eb601
 	github.com/gtramontina/ooze v0.2.0
@@ -157,7 +157,7 @@ require (
 	google.golang.org/genproto v0.0.0-20231106174013-bbf56f31fb17 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231120223509-83a465c0220f // indirect
 	google.golang.org/grpc v1.59.0 // indirect
-	google.golang.org/protobuf v1.35.2 // indirect
+	google.golang.org/protobuf v1.36.3 // indirect
 	gopkg.in/ini.v1 v1.67.0 // indirect
 	gopkg.in/src-d/go-billy.v4 v4.3.2 // indirect
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect

@@ -18,7 +18,7 @@
 # SOFTWARE.
 
 ARG GO_VERSION=invalid
-FROM docker.io/golang:${GO_VERSION}-alpine3.19
+FROM docker.io/golang:${GO_VERSION}-alpine3.21
 
 RUN apk add --no-cache \
 	bash git perl-utils zip \
