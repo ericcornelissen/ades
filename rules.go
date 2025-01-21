@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -288,9 +288,9 @@ var actionRules = map[string][]actionRule{
 	},
 }
 
-var stepRuleRun = stepRule{
+var stepRuleRunBash = stepRule{
 	appliesTo: func(step *JobStep) bool {
-		return len(step.Run) > 0
+		return len(step.Run) > 0 && !isShellPowerShell(step.Shell)
 	},
 	rule: rule{
 		id:    "ADES100",
@@ -322,8 +322,45 @@ it can be made safer by converting it into:
 	},
 }
 
+var stepRuleRunPwsh = stepRule{
+	appliesTo: func(step *JobStep) bool {
+		return len(step.Run) > 0 && isShellPowerShell(step.Shell)
+	},
+	rule: rule{
+		id:    "ADES105",
+		title: "Expression in 'run:' directive with PowerShell",
+		description: `
+When an expression appears in a 'run:' directive you can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      shell: pwsh
+      run: |
+        echo 'Hello ${{ inputs.name }}'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      shell: pwsh
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      run: |
+        echo "Hello $Env:NAME"
+      #      ^      ^^^^^^^^^
+      #      |      | Replace the expression with the environment variable
+      #      |
+      #      | Note: the use of double quotes is required in this example (for interpolation)`,
+		extractFrom: func(step *JobStep) string {
+			return step.Run
+		},
+	},
+}
+
 var stepRules = []stepRule{
-	stepRuleRun,
+	stepRuleRunBash,
+	stepRuleRunPwsh,
 }
 
 func isBeforeVersion(uses *StepUses, version string) bool {
@@ -431,4 +468,8 @@ func getVariableNameForExpression(expression string) string {
 	name = strings.TrimRight(name, "}")
 	name = strings.TrimSpace(name)
 	return strings.ToUpper(name)
+}
+
+func isShellPowerShell(shell string) bool {
+	return shell == "pwsh" || shell == "powershell"
 }

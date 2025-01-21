@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -40,6 +40,7 @@ type JobStep struct {
 	Env         map[string]string `yaml:"env"`
 	Name        string            `yaml:"name"`
 	Run         string            `yaml:"run"`
+	Shell       string            `yaml:"shell"`
 	Uses        string            `yaml:"uses"`
 	UsesComment string            `yaml:"-"`
 }
@@ -61,6 +62,8 @@ func (step *JobStep) UnmarshalYAML(node *yaml.Node) error {
 			step.Name = value.Value
 		case "run":
 			step.Run = value.Value
+		case "shell":
+			step.Shell = value.Value
 		case "uses":
 			step.Uses = value.Value
 			step.UsesComment = strings.TrimLeft(value.LineComment, "# ")

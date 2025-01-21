@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -37,6 +37,9 @@ jobs:
         fetch-depth: 1
     - name: Echo value
       run: echo '${{ inputs.value }}'
+    - name: Echo value in PowerShell
+      shell: pwsh
+      run: echo 'PowerShell ${{ inputs.value }}'
 `,
 				want: Workflow{
 					Jobs: map[string]WorkflowJob{
@@ -50,6 +53,11 @@ jobs:
 								{
 									Name: "Echo value",
 									Run:  "echo '${{ inputs.value }}'",
+								},
+								{
+									Name:  "Echo value in PowerShell",
+									Run:   "echo 'PowerShell ${{ inputs.value }}'",
+									Shell: "pwsh",
 								},
 							},
 						},
@@ -176,6 +184,10 @@ jobs:
 							t.Errorf("Unexpected run for job %q step %d (got %q, want %q)", k, i, got, want)
 						}
 
+						if got, want := step.Shell, want.Shell; got != want {
+							t.Errorf("Unexpected shell for step %d (got %q, want %q)", i, got, want)
+						}
+
 						if got, want := step.Uses, want.Uses; got != want {
 							t.Errorf("Unexpected uses for job %q step %d (got %q, want %q)", k, i, got, want)
 						}
@@ -273,6 +285,9 @@ runs:
       fetch-depth: 1
   - name: Echo value
     run: echo '${{ inputs.value }}'
+  - name: Echo value in PowerShell
+    shell: pwsh
+    run: echo 'PowerShell ${{ inputs.value }}'
 `,
 				want: Manifest{
 					Runs: ManifestRuns{
@@ -285,6 +300,11 @@ runs:
 							{
 								Name: "Echo value",
 								Run:  "echo '${{ inputs.value }}'",
+							},
+							{
+								Name:  "Echo value in PowerShell",
+								Run:   "echo 'PowerShell ${{ inputs.value }}'",
+								Shell: "pwsh",
 							},
 						},
 					},
@@ -351,6 +371,10 @@ runs:
 
 					if got, want := step.Run, want.Run; got != want {
 						t.Errorf("Unexpected run for step %d (got %q, want %q)", i, got, want)
+					}
+
+					if got, want := step.Shell, want.Shell; got != want {
+						t.Errorf("Unexpected shell for step %d (got %q, want %q)", i, got, want)
 					}
 
 					if got, want := step.Uses, want.Uses; got != want {
