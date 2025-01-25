@@ -20,11 +20,12 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/ericcornelissen/go-gha-models"
 	"golang.org/x/mod/semver"
 )
 
 type rule struct {
-	extractFrom func(step *JobStep) string
+	extractFrom func(step *gha.Step) string
 	fix         func(violation *Violation) []fix
 	id          string
 	title       string
@@ -32,12 +33,12 @@ type rule struct {
 }
 
 type actionRule struct {
-	appliesTo func(uses *StepUses) bool
+	appliesTo func(uses *gha.Uses) bool
 	rule      rule
 }
 
 type stepRule struct {
-	appliesTo func(step *JobStep) bool
+	appliesTo func(step *gha.Step) bool
 	rule      rule
 }
 
@@ -50,7 +51,7 @@ type fix struct {
 }
 
 var actionRuleActionsGitHubScript = actionRule{
-	appliesTo: func(_ *StepUses) bool {
+	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
@@ -79,14 +80,14 @@ it can be made safer by converting it into:
       #                     |      | Replace the expression with the environment variable
       #                     |
       #                     | Note: the use of backticks is required in this example (for interpolation)`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["script"]
 		},
 	},
 }
 
 var actionRuleAtlassianGajiraCreate = actionRule{
-	appliesTo: func(uses *StepUses) bool {
+	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v2.0.1")
 	},
 	rule: rule{
@@ -96,14 +97,14 @@ var actionRuleAtlassianGajiraCreate = actionRule{
 When an expression is used in the summary input for 'atlassian/gajira-create' in v2.0.0 or earlier
 it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To mitigate this,
 upgrade the action to a non-vulnerable version.`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["summary"]
 		},
 	},
 }
 
 var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
-	appliesTo: func(uses *StepUses) bool {
+	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.0.1")
 	},
 	rule: rule{
@@ -113,14 +114,14 @@ var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 When an expression is used in the tag input for 'ericcornelissen/git-tag-annotation-action' in
 v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
 mitigate this, upgrade the action to a non-vulnerable version.`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["tag"]
 		},
 	},
 }
 
 var actionRuleKcebGitMessageAction = actionRule{
-	appliesTo: func(uses *StepUses) bool {
+	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.2.0")
 	},
 	rule: rule{
@@ -130,14 +131,14 @@ var actionRuleKcebGitMessageAction = actionRule{
 When an expression is used in the sha input for 'kceb/git-message-action' in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
 this, upgrade the action to a non-vulnerable version.`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["sha"]
 		},
 	},
 }
 
 var actionRuleRootsIssueCloserIssueCloseMessage = actionRule{
-	appliesTo: func(_ *StepUses) bool {
+	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
@@ -165,15 +166,15 @@ it can be made safer by converting it into:
         issue-close-message: Closing ${process.env.NAME}
       #                              ^^^^^^^^^^^^^^^^^^^
       #                              | Replace the expression with the environment variable`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["issue-close-message"]
 		},
 		fix: func(violation *Violation) []fix {
-			var step JobStep
+			var step gha.Step
 			switch source := (violation.source).(type) {
-			case *Manifest:
+			case *gha.Manifest:
 				step = source.Runs.Steps[violation.stepIndex]
-			case *Workflow:
+			case *gha.Workflow:
 				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
 			}
 
@@ -195,7 +196,7 @@ it can be made safer by converting it into:
 }
 
 var actionRuleRootsIssueCloserPrCloseMessage = actionRule{
-	appliesTo: func(_ *StepUses) bool {
+	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
@@ -223,14 +224,14 @@ it can be made safer by converting it into:
         pr-close-message: Closing ${process.env.NAME}
       #                           ^^^^^^^^^^^^^^^^^^^
       #                           | Replace the expression with the environment variable`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["pr-close-message"]
 		},
 	},
 }
 
 var actionRuleSergeysovaJqAction = actionRule{
-	appliesTo: func(_ *StepUses) bool {
+	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
@@ -260,7 +261,7 @@ it can be made safer by converting it into:
         cmd: jq .version "$FILE" -r
       #                   ^^^^^
       #                   | Replace the expression with the environment variable`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.With["cmd"]
 		},
 	},
@@ -289,7 +290,7 @@ var actionRules = map[string][]actionRule{
 }
 
 var stepRuleRun = stepRule{
-	appliesTo: func(step *JobStep) bool {
+	appliesTo: func(step *gha.Step) bool {
 		return len(step.Run) > 0
 	},
 	rule: rule{
@@ -319,7 +320,7 @@ it can be made safer by converting it into:
 
 Note that the changes depend on the runner and shell being used. For example, on Windows (or when
 using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.`,
-		extractFrom: func(step *JobStep) string {
+		extractFrom: func(step *gha.Step) string {
 			return step.Run
 		},
 	},
@@ -329,7 +330,7 @@ var stepRules = []stepRule{
 	stepRuleRun,
 }
 
-func isBeforeVersion(uses *StepUses, version string) bool {
+func isBeforeVersion(uses *gha.Uses, version string) bool {
 	ref := uses.Ref
 	if !semver.IsValid(ref) {
 		ref = uses.Annotation
@@ -393,15 +394,15 @@ func findRule(ruleId string) (rule, error) {
 	return rule{}, fmt.Errorf("unknown rule %q", ruleId)
 }
 
-func fixAddEnvVar(step JobStep, name, value string) []fix {
+func fixAddEnvVar(step gha.Step, name, value string) []fix {
 	if step.Env == nil {
 		return []fix{
 			{
-				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)uses:\s*%s.*?\n`, step.Uses)),
+				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)uses:\s*%s@%s.*?\n`, step.Uses.Name, step.Uses.Ref)),
 				New: fmt.Sprintf("${0}${1}env:\n${1}  %s: %s\n", name, value),
 			},
 			{
-				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)-(\s+)uses:\s*%s.*?\n`, step.Uses)),
+				Old: *regexp.MustCompile(fmt.Sprintf(`\n(\s+)-(\s+)uses:\s*%s@%s.*?\n`, step.Uses.Name, step.Uses.Ref)),
 				New: fmt.Sprintf("${0}${1} ${2}env:\n${1} ${2}  %s: %s\n", name, value),
 			},
 		}

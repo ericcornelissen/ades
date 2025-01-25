@@ -3,12 +3,12 @@ module github.com/ericcornelissen/ades
 go 1.24.0
 
 require (
+	github.com/ericcornelissen/go-gha-models v0.3.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/playwright-community/playwright-go v0.5001.0
 	github.com/rogpeppe/go-internal v1.13.2-0.20241226121412-a5dc8ff20d0a
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	golang.org/x/mod v0.23.0
-	gopkg.in/yaml.v3 v3.0.1
 )
 
 require (
@@ -159,7 +159,8 @@ require (
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
-	honnef.co/go/tools v0.6.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
+	honnef.co/go/tools v0.5.1 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 	mvdan.cc/unparam v0.0.0-20250211232406-0e51248738fc // indirect
 )

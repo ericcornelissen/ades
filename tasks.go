@@ -203,6 +203,7 @@ func TaskClean(t *T) error {
 func TaskCompliance(t *T) error {
 	var (
 		licenses = []string{
+			"BSD-2-Clause",
 			"BSD-3-Clause",
 			"GPL-3.0",
 			"MIT",
