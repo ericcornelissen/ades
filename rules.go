@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -288,9 +288,9 @@ var actionRules = map[string][]actionRule{
 	},
 }
 
-var stepRuleRun = stepRule{
+var stepRuleRunDefault = stepRule{
 	appliesTo: func(step *JobStep) bool {
-		return len(step.Run) > 0
+		return len(step.Run) != 0 && !isShellPython(step)
 	},
 	rule: rule{
 		id:    "ADES100",
@@ -322,8 +322,45 @@ it can be made safer by converting it into:
 	},
 }
 
+var stepRuleRunPython = stepRule{
+	appliesTo: func(step *JobStep) bool {
+		return len(step.Run) != 0 && isShellPython(step)
+	},
+	rule: rule{
+		id:    "ADES105",
+		title: "Expression in 'run:' directive with Python",
+		description: `
+When an expression appears in a 'run:' directive you can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      shell: python
+      run: |
+        print('Hello ${{ inputs.name }}')
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      shell: python
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      run: |
+        print(f'Hello {os.getenv("HOME")}')
+      #       ^        ^^^^^^^^^^^^^^^^^
+      #       |        | Replace the expression with the environment variable
+      #       |
+      #       | Note: the use of the literal prefix 'f' is required for interpolation`,
+		extractFrom: func(step *JobStep) string {
+			return step.Run
+		},
+	},
+}
+
 var stepRules = []stepRule{
-	stepRuleRun,
+	stepRuleRunDefault,
+	stepRuleRunPython,
 }
 
 func isBeforeVersion(uses *StepUses, version string) bool {
@@ -431,4 +468,8 @@ func getVariableNameForExpression(expression string) string {
 	name = strings.TrimRight(name, "}")
 	name = strings.TrimSpace(name)
 	return strings.ToUpper(name)
+}
+
+func isShellPython(step *JobStep) bool {
+	return step.Shell == "python"
 }

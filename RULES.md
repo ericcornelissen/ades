@@ -147,6 +147,35 @@ it can be made safer by converting it into:
   #                   | Replace the expression with the environment variable
 ```
 
+## <a id="ADES105"></a> ADES105 - Expression in `run:` directive with Python
+
+When an expression appears in a 'run:' directive you can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  shell: python
+  run: |
+    print('Hello ${{ inputs.name }}')
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  shell: python
+  env:
+    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+  run: |
+    print(f'Hello {os.getenv("HOME")}')
+  #       ^        ^^^^^^^^^^^^^^^^^
+  #       |        | Replace the expression with the environment variable
+  #       |
+  #       | Note: the use of the literal prefix 'f' is required for interpolation
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in

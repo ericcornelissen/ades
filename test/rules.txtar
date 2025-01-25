@@ -28,6 +28,12 @@ stdout 'ADES103'
 stdout 'ADES104'
 ! stderr .
 
+# ADES105
+! exec ades ades105.yml
+! stdout 'Ok'
+stdout 'ADES105'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -101,6 +107,17 @@ jobs:
     - uses: sergeysova/jq-action@v2
       with:
         cmd: jq .version ${{ github.event.inputs.file }} -r
+-- ades105.yml --
+name: Example workflow with a ADES105 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - shell: python
+      run: |
+        print('Hello ${{ inputs.name }}')
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]

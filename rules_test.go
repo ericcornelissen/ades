@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -344,15 +344,20 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	})
 }
 
-func TestStepRuleRun(t *testing.T) {
+func TestStepRuleRunDefault(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		runSteps := func(step JobStep, run string) bool {
+		runSteps := func(step JobStep, run, shell string) bool {
 			if len(run) == 0 {
 				return true
 			}
 
+			if shell == "python" {
+				return true
+			}
+
+			step.Shell = shell
 			step.Run = run
-			return stepRuleRun.appliesTo(&step)
+			return stepRuleRunDefault.appliesTo(&step)
 		}
 		if err := quick.Check(runSteps, nil); err != nil {
 			t.Error(err)
@@ -360,13 +365,58 @@ func TestStepRuleRun(t *testing.T) {
 
 		nonRunStep := func(step JobStep) bool {
 			step.Run = ""
-			return !stepRuleRun.appliesTo(&step)
+			return !stepRuleRunDefault.appliesTo(&step)
 		}
 		if err := quick.Check(nonRunStep, nil); err != nil {
 			t.Error(err)
 		}
 
-		if !stepRuleRun.appliesTo(&JobStep{Run: "a"}) {
+		if !stepRuleRunDefault.appliesTo(&JobStep{Run: "a"}) {
+			t.Error("Should apply to extremely short scripts, but didn't")
+		}
+
+		if stepRuleRunDefault.appliesTo(&JobStep{Run: "echo 'foobar'", Shell: "python"}) {
+			t.Error("Should not apply to a run step using Python")
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		f := func(step JobStep, run string) bool {
+			step.Run = run
+			return stepRuleRunDefault.rule.extractFrom(&step) == run
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestStepRuleRunPython(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		runSteps := func(step JobStep, run string) bool {
+			if len(run) == 0 {
+				return true
+			}
+
+			step.Shell = "python"
+			step.Run = run
+			return stepRuleRunPython.appliesTo(&step)
+		}
+		if err := quick.Check(runSteps, nil); err != nil {
+			t.Error(err)
+		}
+
+		nonRunStep := func(step JobStep) bool {
+			step.Shell = "python"
+			step.Run = ""
+			return !stepRuleRunPython.appliesTo(&step)
+		}
+		if err := quick.Check(nonRunStep, nil); err != nil {
+			t.Error(err)
+		}
+
+		if !stepRuleRunPython.appliesTo(&JobStep{Run: "a", Shell: "python"}) {
 			t.Error("Should apply to extremely short scripts, but didn't")
 		}
 	})
@@ -374,7 +424,7 @@ func TestStepRuleRun(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		f := func(step JobStep, run string) bool {
 			step.Run = run
-			return stepRuleRun.rule.extractFrom(&step) == run
+			return stepRuleRunPython.rule.extractFrom(&step) == run
 		}
 
 		if err := quick.Check(f, nil); err != nil {
