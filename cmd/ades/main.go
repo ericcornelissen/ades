@@ -30,6 +30,7 @@ import (
 	"strings"
 
 	"github.com/ericcornelissen/ades"
+	"github.com/ericcornelissen/go-gha-models"
 )
 
 const (
@@ -342,7 +343,7 @@ func runOnFile(target string) ([]ades.Violation, error) {
 }
 
 func tryManifest(data []byte) ([]ades.Violation, error) {
-	manifest, err := ades.ParseManifest(data)
+	manifest, err := gha.ParseManifest(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}
@@ -358,7 +359,7 @@ func tryManifest(data []byte) ([]ades.Violation, error) {
 }
 
 func tryWorkflow(data []byte) ([]ades.Violation, error) {
-	workflow, err := ades.ParseWorkflow(data)
+	workflow, err := gha.ParseWorkflow(data)
 	if err != nil {
 		return nil, errors.Join(errNotParsed, err)
 	}

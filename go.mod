@@ -11,6 +11,7 @@ require (
 	github.com/butuzov/ireturn v0.3.0
 	github.com/catenacyber/perfsprint v0.7.1
 	github.com/dkorunic/betteralign v0.6.0
+	github.com/ericcornelissen/go-gha-models v0.1.0
 	github.com/go-critic/go-critic v0.11.4
 	github.com/google/capslock v0.2.7
 	github.com/google/go-licenses v1.6.0
@@ -35,7 +36,6 @@ require (
 	golang.org/x/mod v0.22.0
 	golang.org/x/tools v0.29.0
 	golang.org/x/vuln v1.1.4
-	gopkg.in/yaml.v3 v3.0.1
 	honnef.co/go/tools v0.5.1
 	mvdan.cc/unparam v0.0.0-20230917202934-3ee2d22f45fb
 )
@@ -163,5 +163,6 @@ require (
 	gopkg.in/src-d/go-git.v4 v4.13.1 // indirect
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
+	gopkg.in/yaml.v3 v3.0.1 // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 )
