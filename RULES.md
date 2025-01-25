@@ -32,6 +32,9 @@ it can be made safer by converting it into:
 #        | Note: the use of double quotes is required in this example (for interpolation)
 ```
 
+Note that the changes depend on the runner and shell being used. For example, on Windows (or when
+using `shell: powershell`) the environment variable must be accessed as `$Env:NAME`.
+
 ## <a id="ADES101"></a> ADES101 - Expression in `actions/github-script` script
 
 When an expression appears in a `actions/github-script` script you can avoid potential attacks by
