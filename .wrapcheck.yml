@@ -1,4 +1,4 @@
-# Check out Wrapcheck at: https://github.com/tomarrell/wrapcheck
+# Configuration file for Wrapcheck (https://github.com/tomarrell/wrapcheck)
 
 ignorePackageGlobs:
 - gopkg.in/yaml.v3
