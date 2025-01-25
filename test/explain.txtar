@@ -32,3 +32,6 @@ it can be made safer by converting it into:
       #      |      | Replace the expression with the environment variable
       #      |
       #      | Note: the use of double quotes is required in this example (for interpolation)
+
+Note that the changes depend on the runner and shell being used. For example, on Windows (or when
+using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.

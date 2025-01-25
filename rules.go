@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -315,7 +315,10 @@ it can be made safer by converting it into:
       #      ^      ^^^^^
       #      |      | Replace the expression with the environment variable
       #      |
-      #      | Note: the use of double quotes is required in this example (for interpolation)`,
+      #      | Note: the use of double quotes is required in this example (for interpolation)
+
+Note that the changes depend on the runner and shell being used. For example, on Windows (or when
+using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.`,
 		extractFrom: func(step *JobStep) string {
 			return step.Run
 		},
