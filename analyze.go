@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,6 +17,8 @@ package ades
 
 import (
 	"fmt"
+
+	"github.com/ericcornelissen/go-gha-models"
 )
 
 // Violation contain information on problematic GitHub Actions Expressions found in a workflow or
@@ -52,7 +54,7 @@ type Violation struct {
 }
 
 // AnalyzeManifest analyzes a GitHub Actions manifest for problematic GitHub Actions Expressions.
-func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
+func AnalyzeManifest(manifest *gha.Manifest, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if manifest == nil {
 		return violations
@@ -71,7 +73,7 @@ func AnalyzeManifest(manifest *Manifest, matcher ExprMatcher) []Violation {
 }
 
 // AnalyzeWorkflow analyzes a GitHub Actions workflow for problematic GitHub Actions Expressions.
-func AnalyzeWorkflow(workflow *Workflow, matcher ExprMatcher) []Violation {
+func AnalyzeWorkflow(workflow *gha.Workflow, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	if workflow == nil {
 		return violations
@@ -87,7 +89,7 @@ func AnalyzeWorkflow(workflow *Workflow, matcher ExprMatcher) []Violation {
 	return violations
 }
 
-func analyzeJob(id string, job *WorkflowJob, matcher ExprMatcher) []Violation {
+func analyzeJob(id string, job *gha.Job, matcher ExprMatcher) []Violation {
 	name := job.Name
 	if name == "" {
 		name = id
@@ -103,7 +105,7 @@ func analyzeJob(id string, job *WorkflowJob, matcher ExprMatcher) []Violation {
 	return violations
 }
 
-func analyzeSteps(steps []JobStep, matcher ExprMatcher) []Violation {
+func analyzeSteps(steps []gha.Step, matcher ExprMatcher) []Violation {
 	violations := make([]Violation, 0)
 	for i, step := range steps {
 		violations = append(violations, analyzeStep(i, &step, matcher)...)
@@ -112,14 +114,14 @@ func analyzeSteps(steps []JobStep, matcher ExprMatcher) []Violation {
 	return violations
 }
 
-func analyzeStep(id int, step *JobStep, matcher ExprMatcher) []Violation {
+func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 	name := step.Name
 	if step.Name == "" {
 		name = fmt.Sprintf("#%d", id)
 	}
 
 	rules := make([]rule, 0)
-	if uses, err := ParseUses(step); err == nil {
+	if uses := step.Uses; uses.Name != "" {
 		if rs, ok := actionRules[uses.Name]; ok {
 			for _, r := range rs {
 				if r.appliesTo(&uses) {

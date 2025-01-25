@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,11 +21,13 @@ import (
 	"slices"
 	"testing"
 	"testing/quick"
+
+	"github.com/ericcornelissen/go-gha-models"
 )
 
 func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses StepUses, ref string) bool {
+		f := func(uses gha.Uses, ref string) bool {
 			uses.Name = "actions/github-script"
 			uses.Ref = ref
 			return actionRuleActionsGitHubScript.appliesTo(&uses)
@@ -37,7 +39,7 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withScript := func(step JobStep, script string) bool {
+		withScript := func(step gha.Step, script string) bool {
 			step.With["script"] = script
 			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == script
 		}
@@ -45,7 +47,7 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 			t.Error(err)
 		}
 
-		withoutScript := func(step JobStep) bool {
+		withoutScript := func(step gha.Step) bool {
 			delete(step.With, "script")
 			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == ""
 		}
@@ -58,31 +60,31 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses StepUses
+			uses gha.Uses
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v2.0.0",
 				},
 				want: true,
 			},
 			"Old version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.0.1",
 				},
 				want: true,
 			},
 			"First fixed version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v2.0.1",
 				},
 				want: false,
 			},
 			"New version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v3.0.0",
 				},
 				want: false,
@@ -101,7 +103,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withSummary := func(step JobStep, summary string) bool {
+		withSummary := func(step gha.Step, summary string) bool {
 			step.With["summary"] = summary
 			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == summary
 		}
@@ -109,7 +111,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 			t.Error(err)
 		}
 
-		withoutSummary := func(step JobStep) bool {
+		withoutSummary := func(step gha.Step) bool {
 			delete(step.With, "summary")
 			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == ""
 		}
@@ -122,31 +124,31 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses StepUses
+			uses gha.Uses
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.0.0",
 				},
 				want: true,
 			},
 			"Old version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v0.0.9",
 				},
 				want: true,
 			},
 			"First fixed version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.0.1",
 				},
 				want: false,
 			},
 			"New version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.1.0",
 				},
 				want: false,
@@ -165,7 +167,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withTag := func(step JobStep, tag string) bool {
+		withTag := func(step gha.Step, tag string) bool {
 			step.With["tag"] = tag
 			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == tag
 		}
@@ -173,7 +175,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 			t.Error(err)
 		}
 
-		withoutTag := func(step JobStep) bool {
+		withoutTag := func(step gha.Step) bool {
 			delete(step.With, "tag")
 			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == ""
 		}
@@ -186,31 +188,31 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses StepUses
+			uses gha.Uses
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.1.0",
 				},
 				want: true,
 			},
 			"Old version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.0.0",
 				},
 				want: true,
 			},
 			"First fixed version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.2.0",
 				},
 				want: false,
 			},
 			"New version": {
-				uses: StepUses{
+				uses: gha.Uses{
 					Ref: "v1.3.0",
 				},
 				want: false,
@@ -229,7 +231,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withSha := func(step JobStep, tag string) bool {
+		withSha := func(step gha.Step, tag string) bool {
 			step.With["sha"] = tag
 			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == tag
 		}
@@ -237,7 +239,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 			t.Error(err)
 		}
 
-		withoutSha := func(step JobStep) bool {
+		withoutSha := func(step gha.Step) bool {
 			delete(step.With, "sha")
 			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == ""
 		}
@@ -250,7 +252,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 func TestActionRulesRootsIssueCloser(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses StepUses, ref string) bool {
+			f := func(uses gha.Uses, ref string) bool {
 				uses.Name = "roots/issue-closer"
 				uses.Ref = ref
 				return actionRuleRootsIssueCloserIssueCloseMessage.appliesTo(&uses)
@@ -262,7 +264,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 		})
 
 		t.Run("Extract from", func(t *testing.T) {
-			withIssueCloseMessage := func(step JobStep, message string) bool {
+			withIssueCloseMessage := func(step gha.Step, message string) bool {
 				step.With["issue-close-message"] = message
 				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == message
 			}
@@ -270,7 +272,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 				t.Error(err)
 			}
 
-			withoutIssueCloseMessage := func(step JobStep) bool {
+			withoutIssueCloseMessage := func(step gha.Step) bool {
 				delete(step.With, "issue-close-message")
 				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == ""
 			}
@@ -282,7 +284,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 
 	t.Run("pr-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses StepUses, ref string) bool {
+			f := func(uses gha.Uses, ref string) bool {
 				uses.Name = "roots/issue-closer"
 				uses.Ref = ref
 				return actionRuleRootsIssueCloserPrCloseMessage.appliesTo(&uses)
@@ -294,7 +296,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 		})
 
 		t.Run("Extract from", func(t *testing.T) {
-			withIssueCloseMessage := func(step JobStep, message string) bool {
+			withIssueCloseMessage := func(step gha.Step, message string) bool {
 				step.With["pr-close-message"] = message
 				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == message
 			}
@@ -302,7 +304,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 				t.Error(err)
 			}
 
-			withoutIssueCloseMessage := func(step JobStep) bool {
+			withoutIssueCloseMessage := func(step gha.Step) bool {
 				delete(step.With, "pr-close-message")
 				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == ""
 			}
@@ -315,7 +317,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 
 func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses StepUses) bool {
+		f := func(uses gha.Uses) bool {
 			uses.Name = "sergeysova/jq-action"
 			return actionRuleSergeysovaJqAction.appliesTo(&uses)
 		}
@@ -326,7 +328,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withCmd := func(step JobStep, cmd string) bool {
+		withCmd := func(step gha.Step, cmd string) bool {
 			step.With["cmd"] = cmd
 			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == cmd
 		}
@@ -334,7 +336,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 			t.Error(err)
 		}
 
-		withoutCmd := func(step JobStep) bool {
+		withoutCmd := func(step gha.Step) bool {
 			delete(step.With, "cmd")
 			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == ""
 		}
@@ -346,7 +348,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 
 func TestStepRuleRun(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		runSteps := func(step JobStep, run string) bool {
+		runSteps := func(step gha.Step, run string) bool {
 			if len(run) == 0 {
 				return true
 			}
@@ -358,7 +360,7 @@ func TestStepRuleRun(t *testing.T) {
 			t.Error(err)
 		}
 
-		nonRunStep := func(step JobStep) bool {
+		nonRunStep := func(step gha.Step) bool {
 			step.Run = ""
 			return !stepRuleRun.appliesTo(&step)
 		}
@@ -366,13 +368,13 @@ func TestStepRuleRun(t *testing.T) {
 			t.Error(err)
 		}
 
-		if !stepRuleRun.appliesTo(&JobStep{Run: "a"}) {
+		if !stepRuleRun.appliesTo(&gha.Step{Run: "a"}) {
 			t.Error("Should apply to extremely short scripts, but didn't")
 		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		f := func(step JobStep, run string) bool {
+		f := func(step gha.Step, run string) bool {
 			step.Run = run
 			return stepRuleRun.rule.extractFrom(&step) == run
 		}
@@ -587,154 +589,154 @@ func TestFindRule(t *testing.T) {
 
 func TestIsBeforeVersion(t *testing.T) {
 	type TestCase struct {
-		uses    StepUses
+		uses    gha.Uses
 		version string
 		want    bool
 	}
 
 	testCases := map[string]TestCase{
 		"Full version, exact same version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.2.3",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
 		"Full version, earlier major version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v0.1.0",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
 		"Full version, earlier minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.1.0",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
 		"Full version, earlier patch version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.2.1",
 			},
 			version: "v1.2.3",
 			want:    true,
 		},
 		"Full version, later major version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v2.0.0",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
 		"Full version, later minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.3.0",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
 		"Full version, later patch version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.2.4",
 			},
 			version: "v1.2.3",
 			want:    false,
 		},
 		"Major version only, earlier major version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1",
 			},
 			version: "v2.1.0",
 			want:    true,
 		},
 		"Major version only, same major version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v2",
 			},
 			version: "v2.1.0",
 			want:    false,
 		},
 		"Major version only, later major version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v3",
 			},
 			version: "v2.1.0",
 			want:    false,
 		},
 		"Major+minor version, earlier major version and earlier minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.1",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
 		"Major+minor version, earlier major version and same minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.2",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
 		"Major+minor version, earlier major version and later minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v1.3",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
 		"Major+minor version, same major version and earlier minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v2.1",
 			},
 			version: "v2.2.1",
 			want:    true,
 		},
 		"Major+minor version, same major version and same minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v2.2",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
 		"Major+minor version, same major version and later minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v2.3",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
 		"Major+minor version, later major version and earlier minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v3.1",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
 		"Major+minor version, later major version and same minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v3.2",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
 		"Major+minor version, later major version and later minor version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "v3.3",
 			},
 			version: "v2.2.1",
 			want:    false,
 		},
 		"SHA without annotation": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 			},
 			version: "v1.0.0",
 			want:    false,
 		},
 		"SHA with annotation that is not a version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "I'm just a comment",
 			},
@@ -742,7 +744,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		"SHA with annotation, later version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v1.1.0",
 			},
@@ -750,7 +752,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		"SHA with annotation, same version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v1.0.0",
 			},
@@ -758,7 +760,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		"SHA with annotation, earlier version": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
 				Annotation: "v0.1.0",
 			},
@@ -766,7 +768,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    true,
 		},
 		"semver ref and annotation, ref later": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "v1.1.0",
 				Annotation: "v0.1.0",
 			},
@@ -774,7 +776,7 @@ func TestIsBeforeVersion(t *testing.T) {
 			want:    false,
 		},
 		"semver ref and annotation, ref earlier": {
-			uses: StepUses{
+			uses: gha.Uses{
 				Ref:        "v0.1.0",
 				Annotation: "v1.1.0",
 			},
@@ -806,7 +808,7 @@ func TestFixAddEnvVar(t *testing.T) {
 			new string
 		}
 		TestCase struct {
-			step  JobStep
+			step  gha.Step
 			name  string
 			value string
 			want  []TestWant
@@ -815,9 +817,12 @@ func TestFixAddEnvVar(t *testing.T) {
 
 	testCases := map[string]TestCase{
 		"no environment variables yet": {
-			step: JobStep{
-				Uses: "foo/bar@v1",
-				Env:  nil,
+			step: gha.Step{
+				Uses: gha.Uses{
+					Name: "foo/bar",
+					Ref:  "v1",
+				},
+				Env: nil,
 			},
 			name:  "no",
 			value: "env yet",
@@ -833,7 +838,7 @@ func TestFixAddEnvVar(t *testing.T) {
 			},
 		},
 		"one environment variable already": {
-			step: JobStep{
+			step: gha.Step{
 				Env: map[string]string{
 					"foo": "bar",
 				},
@@ -848,7 +853,7 @@ func TestFixAddEnvVar(t *testing.T) {
 			},
 		},
 		"two environment variables already": {
-			step: JobStep{
+			step: gha.Step{
 				Env: map[string]string{
 					"foo":   "bar",
 					"hello": "world!",

@@ -1,4 +1,4 @@
-// Copyright (C) 2024  Eric Cornelissen
+// Copyright (C) 2024-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -21,6 +21,7 @@ import (
 	"syscall/js"
 
 	"github.com/ericcornelissen/ades"
+	"github.com/ericcornelissen/go-gha-models"
 )
 
 var window = js.Global().Get("window")
@@ -53,7 +54,7 @@ func encodeErrorAsMap(violation *ades.Violation) map[string]any {
 }
 
 func lintWorkflow(source string, opts *options) ([]ades.Violation, error) {
-	workflow, err := ades.ParseWorkflow([]byte(source))
+	workflow, err := gha.ParseWorkflow([]byte(source))
 	if err != nil {
 		return nil, err
 	}
@@ -67,7 +68,7 @@ func lintWorkflow(source string, opts *options) ([]ades.Violation, error) {
 }
 
 func lintManifest(source string, opts *options) ([]ades.Violation, error) {
-	manifest, err := ades.ParseManifest([]byte(source))
+	manifest, err := gha.ParseManifest([]byte(source))
 	if err != nil {
 		return nil, err
 	}

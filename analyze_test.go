@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -17,21 +17,23 @@ package ades
 
 import (
 	"testing"
+
+	"github.com/ericcornelissen/go-gha-models"
 )
 
 func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
-		manifest Manifest
+		manifest gha.Manifest
 		matcher  ExprMatcher
 		want     int
 	}
 
 	testCases := map[string]TestCase{
 		"Non-composite manifest": {
-			manifest: Manifest{
-				Runs: ManifestRuns{
+			manifest: gha.Manifest{
+				Runs: gha.Runs{
 					Using: "node16",
-					Steps: []JobStep{
+					Steps: []gha.Step{
 						{
 							Name: "Example unsafe",
 							Run:  "echo ${{ inputs.value }}",
@@ -43,10 +45,10 @@ func TestAnalyzeManifest(t *testing.T) {
 			want:    0,
 		},
 		"Safe manifest": {
-			manifest: Manifest{
-				Runs: ManifestRuns{
+			manifest: gha.Manifest{
+				Runs: gha.Runs{
 					Using: "composite",
-					Steps: []JobStep{
+					Steps: []gha.Step{
 						{
 							Name: "Example",
 							Run:  "",
@@ -58,10 +60,10 @@ func TestAnalyzeManifest(t *testing.T) {
 			want:    0,
 		},
 		"Problem in first of two steps in manifest": {
-			manifest: Manifest{
-				Runs: ManifestRuns{
+			manifest: gha.Manifest{
+				Runs: gha.Runs{
 					Using: "composite",
-					Steps: []JobStep{
+					Steps: []gha.Step{
 						{
 							Name: "Example unsafe",
 							Run:  "echo ${{ inputs.value }}",
@@ -77,10 +79,10 @@ func TestAnalyzeManifest(t *testing.T) {
 			want:    1,
 		},
 		"Problem in second of two steps in manifest": {
-			manifest: Manifest{
-				Runs: ManifestRuns{
+			manifest: gha.Manifest{
+				Runs: gha.Runs{
 					Using: "composite",
-					Steps: []JobStep{
+					Steps: []gha.Step{
 						{
 							Name: "Example safe",
 							Run:  "echo 'Hello world!'",
@@ -96,10 +98,10 @@ func TestAnalyzeManifest(t *testing.T) {
 			want:    1,
 		},
 		"Problem in all steps in manifest": {
-			manifest: Manifest{
-				Runs: ManifestRuns{
+			manifest: gha.Manifest{
+				Runs: gha.Runs{
 					Using: "composite",
-					Steps: []JobStep{
+					Steps: []gha.Step{
 						{
 							Name: "Greeting",
 							Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -143,18 +145,18 @@ func TestAnalyzeManifest(t *testing.T) {
 
 func TestAnalyzeWorkflow(t *testing.T) {
 	type TestCase struct {
-		workflow Workflow
+		workflow gha.Workflow
 		matcher  ExprMatcher
 		want     int
 	}
 
 	testCases := map[string]TestCase{
 		"Safe workflow": {
-			workflow: Workflow{
-				Jobs: map[string]WorkflowJob{
+			workflow: gha.Workflow{
+				Jobs: map[string]gha.Job{
 					"safe": {
 						Name: "Safe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "",
@@ -167,11 +169,11 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			want:    0,
 		},
 		"Problem in first of two jobs in workflow": {
-			workflow: Workflow{
-				Jobs: map[string]WorkflowJob{
+			workflow: gha.Workflow{
+				Jobs: map[string]gha.Job{
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -180,7 +182,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 					"safe": {
 						Name: "Safe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "echo 'Hello world!'",
@@ -193,11 +195,11 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			want:    1,
 		},
 		"Problem in second of two jobs in workflow": {
-			workflow: Workflow{
-				Jobs: map[string]WorkflowJob{
+			workflow: gha.Workflow{
+				Jobs: map[string]gha.Job{
 					"safe": {
 						Name: "Safe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "echo 'Hello world!'",
@@ -206,7 +208,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -219,11 +221,11 @@ func TestAnalyzeWorkflow(t *testing.T) {
 			want:    1,
 		},
 		"Problem in all jobs in workflow": {
-			workflow: Workflow{
-				Jobs: map[string]WorkflowJob{
+			workflow: gha.Workflow{
+				Jobs: map[string]gha.Job{
 					"unsafe": {
 						Name: "Unsafe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Greeting",
 								Run:  "echo 'Hello ${{ inputs.name }}!'",
@@ -232,7 +234,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 					},
 					"more-unsafe": {
 						Name: "More Unsafe",
-						Steps: []JobStep{
+						Steps: []gha.Step{
 							{
 								Name: "Example",
 								Run:  "echo ${{ inputs.value }}",
@@ -278,7 +280,7 @@ func TestAnalyzeWorkflow(t *testing.T) {
 func TestAnalyzeJob(t *testing.T) {
 	type TestCase struct {
 		id        string
-		job       WorkflowJob
+		job       gha.Job
 		matcher   ExprMatcher
 		wantCount int
 		wantId    string
@@ -287,9 +289,9 @@ func TestAnalyzeJob(t *testing.T) {
 	testCases := map[string]TestCase{
 		"Safe unnamed job": {
 			id: "job-id",
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Unnamed Example",
 						Run:  "",
@@ -301,9 +303,9 @@ func TestAnalyzeJob(t *testing.T) {
 		},
 		"Safe named job": {
 			id: "job-id",
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "Safe",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Named example",
 						Run:  "",
@@ -315,9 +317,9 @@ func TestAnalyzeJob(t *testing.T) {
 		},
 		"Unnamed job with unsafe step": {
 			id: "job-id",
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Example",
 						Run:  "echo ${{ inputs.value }}",
@@ -330,9 +332,9 @@ func TestAnalyzeJob(t *testing.T) {
 		},
 		"Named job with unsafe step": {
 			id: "job-id",
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "Unsafe",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Example",
 						Run:  "echo ${{ inputs.value }}",
@@ -345,9 +347,9 @@ func TestAnalyzeJob(t *testing.T) {
 		},
 		"Unnamed job with unsafe and safe steps": {
 			id: "job-id",
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Checkout repository",
 						Run:  "",
@@ -367,9 +369,9 @@ func TestAnalyzeJob(t *testing.T) {
 			wantId:    "job-id",
 		},
 		"Named job with unsafe and safe steps": {
-			job: WorkflowJob{
+			job: gha.Job{
 				Name: "Unsafe",
-				Steps: []JobStep{
+				Steps: []gha.Step{
 					{
 						Name: "Checkout repository",
 						Run:  "",
@@ -415,7 +417,7 @@ func TestAnalyzeJob(t *testing.T) {
 func TestAnalyzeStep(t *testing.T) {
 	type TestCase struct {
 		id         int
-		step       JobStep
+		step       gha.Step
 		matcher    ExprMatcher
 		wantCount  int
 		wantStepId string
@@ -423,21 +425,21 @@ func TestAnalyzeStep(t *testing.T) {
 
 	testCases := map[string]TestCase{
 		"Unnamed step that does nothing": {
-			step: JobStep{
+			step: gha.Step{
 				Name: "",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		"Named step that does nothing": {
-			step: JobStep{
+			step: gha.Step{
 				Name: "Doesn't run",
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		"Unnamed step without violation": {
-			step: JobStep{
+			step: gha.Step{
 				Name: "",
 				Run:  "echo 'Hello world!'",
 			},
@@ -445,7 +447,7 @@ func TestAnalyzeStep(t *testing.T) {
 			wantCount: 0,
 		},
 		"Named step without violation": {
-			step: JobStep{
+			step: gha.Step{
 				Name: "Run something",
 				Run:  "echo 'Hello world!'",
 			},
@@ -454,7 +456,7 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 		"Unnamed step with one violation": {
 			id: 42,
-			step: JobStep{
+			step: gha.Step{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
@@ -463,7 +465,7 @@ func TestAnalyzeStep(t *testing.T) {
 			wantStepId: "#42",
 		},
 		"Named step with one violation": {
-			step: JobStep{
+			step: gha.Step{
 				Name: "Greet person",
 				Run:  "echo 'Hello ${{ inputs.name }}!'",
 			},
@@ -473,7 +475,7 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 		"Unnamed step with two violation": {
 			id: 3,
-			step: JobStep{
+			step: gha.Step{
 				Name: "",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
@@ -483,7 +485,7 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 		"Named step with two violation": {
 			id: 1,
-			step: JobStep{
+			step: gha.Step{
 				Name: "Greet person today",
 				Run:  "echo 'Hello ${{ inputs.name }}! How is your ${{ steps.id.outputs.day }}'",
 			},
@@ -493,24 +495,33 @@ func TestAnalyzeStep(t *testing.T) {
 		},
 		"Uses step with unknown action": {
 			id: 1,
-			step: JobStep{
-				Uses: "this/is-not@a-real-action",
+			step: gha.Step{
+				Uses: gha.Uses{
+					Name: "this/is-not",
+					Ref:  "a-real-action",
+				},
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		"Uses step with known action, no violations": {
 			id: 1,
-			step: JobStep{
-				Uses: "actions/github-script@v6",
+			step: gha.Step{
+				Uses: gha.Uses{
+					Name: "actions/github-script",
+					Ref:  "v6",
+				},
 			},
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
 		"Uses step with known action, one violation": {
 			id: 1,
-			step: JobStep{
-				Uses: "actions/github-script@v6",
+			step: gha.Step{
+				Uses: gha.Uses{
+					Name: "actions/github-script",
+					Ref:  "v6",
+				},
 				With: map[string]string{
 					"script": "console.log('Hello ${{ inputs.name }}')",
 				},
