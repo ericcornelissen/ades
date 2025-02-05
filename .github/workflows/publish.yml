@@ -21,7 +21,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Install cosign
-      uses: sigstore/cosign-installer@e1523de7571e31dbe865fd2e80c5c7c23ae71eb4 # v3.4.0
+      uses: sigstore/cosign-installer@c56c2d3e59e4281cc41dea2217323ba5694b171e # v3.8.0
       with:
         cosign-release: v2.2.3
     - name: Get release version
