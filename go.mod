@@ -9,7 +9,7 @@ require (
 	github.com/alexkohler/prealloc v1.0.0
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406
 	github.com/butuzov/ireturn v0.3.0
-	github.com/catenacyber/perfsprint v0.7.1
+	github.com/catenacyber/perfsprint v0.8.0
 	github.com/dkorunic/betteralign v0.6.0
 	github.com/go-critic/go-critic v0.11.4
 	github.com/google/capslock v0.2.7
