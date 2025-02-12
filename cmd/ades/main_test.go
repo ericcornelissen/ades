@@ -17,7 +17,6 @@ package main
 
 import (
 	"encoding/json"
-	"os"
 	"testing"
 	"testing/quick"
 
@@ -26,11 +25,11 @@ import (
 )
 
 func TestMain(m *testing.M) {
-	commands := map[string]func() int{
-		"ades": run,
+	commands := map[string]func(){
+		"ades": main,
 	}
 
-	os.Exit(testscript.RunMain(m, commands))
+	testscript.Main(m, commands)
 }
 
 func TestCli(t *testing.T) {
