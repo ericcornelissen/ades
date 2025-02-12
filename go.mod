@@ -36,7 +36,7 @@ require (
 	golang.org/x/tools v0.30.0
 	golang.org/x/vuln v1.1.4
 	gopkg.in/yaml.v3 v3.0.1
-	honnef.co/go/tools v0.5.1
+	honnef.co/go/tools v0.6.0
 	mvdan.cc/unparam v0.0.0-20230917202934-3ee2d22f45fb
 )
 
