@@ -582,7 +582,7 @@ func TaskWebBuild(t *T) error {
 	var (
 		buildWasm    = "env GOOS=js GOARCH=wasm go build -o ades.wasm"
 		copyLicense  = "cp ../COPYING.txt ./COPYING.txt"
-		copyWasmExec = fmt.Sprintf("cp %s/misc/wasm/wasm_exec.js ./wasm_exec.js", goroot)
+		copyWasmExec = fmt.Sprintf("cp %s/lib/wasm/wasm_exec.js ./wasm_exec.js", goroot)
 	)
 
 	t.Log("Building webapp...")
