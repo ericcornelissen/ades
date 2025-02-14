@@ -4,7 +4,7 @@ go 1.24.0
 
 require (
 	github.com/gtramontina/ooze v0.2.0
-	github.com/playwright-community/playwright-go v0.4902.0
+	github.com/playwright-community/playwright-go v0.5001.0
 	github.com/rogpeppe/go-internal v1.13.2-0.20241226121412-a5dc8ff20d0a
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	golang.org/x/mod v0.23.0
