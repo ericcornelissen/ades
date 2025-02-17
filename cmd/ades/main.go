@@ -415,7 +415,7 @@ func fix(report map[string]map[string][]ades.Violation) error {
 }
 
 func legal() {
-	fmt.Println(`ades  Copyright (C) 2024  Eric Cornelissen
+	fmt.Println(`ades  Copyright (C) 2025  Eric Cornelissen
 This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
 This is free software, and you are welcome to redistribute it under certain
 conditions; see the GPL v3.0 for details.`)
@@ -426,7 +426,7 @@ func usage() {
 
 Usage:
 
-  ades [path]...
+  ades [flag...] [path...]
 
 Flags:
 
