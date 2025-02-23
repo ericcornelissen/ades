@@ -37,6 +37,7 @@ const (
 	exitSuccess = iota
 	exitError
 	exitViolations
+	exitFatal
 )
 
 var (
@@ -78,7 +79,19 @@ var (
 )
 
 func main() {
-	os.Exit(run())
+	code := exitFatal
+	defer func() {
+		if err := recover(); err != nil {
+			fmt.Println(err)
+			fmt.Println()
+			fmt.Println("An unexpected error occurred. Please report the error and command to:")
+			fmt.Println("https://github.com/ericcornelissen/ades/issues/new/choose")
+		}
+
+		os.Exit(code)
+	}()
+
+	code = run()
 }
 
 func run() int {
