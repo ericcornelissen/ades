@@ -86,7 +86,7 @@ func TaskAuditVulnerabilities(t *T) error {
 // Build the ades binary for the current platform.
 func TaskBuild(t *T) error {
 	t.Log("Building...")
-	return t.Exec(`go build -trimpath ./cmd/ades`)
+	return t.Exec(`go build -buildvcs=false -trimpath ./cmd/ades`)
 }
 
 // Build the ades binary for all supported platforms.
@@ -151,7 +151,7 @@ func TaskBuildAll(t *T) error {
 
 		var (
 			compile = fmt.Sprintf(
-				"env GOOS=%s GOARCH=%s go build -o %s ./cmd/ades",
+				"env GOOS=%s GOARCH=%s go build -buildvcs=false -trimpath -o %s ./cmd/ades",
 				target.GOOS,
 				target.GOARCH,
 				executable,
