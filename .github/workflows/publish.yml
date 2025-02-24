@@ -24,6 +24,16 @@ jobs:
       uses: sigstore/cosign-installer@c56c2d3e59e4281cc41dea2217323ba5694b171e # v3.8.0
       with:
         cosign-release: v2.2.3
+    - name: Install Go
+      uses: actions/setup-go@f111f3307d8850f501ac008e886eec1fd1932a34 # v5.3.0
+      with:
+        go-version-file: go.mod
+    - name: Get Go version
+      id: go
+      shell: bash
+      run: |
+        version=$(go version | sed -E 's/.*go([0-9]+\.[0-9]+\.[0-9]+).*/\1/')
+        echo "version=${version}" >>"$GITHUB_OUTPUT"
     - name: Get release version
       id: version
       shell: bash
@@ -38,6 +48,7 @@ jobs:
       id: docker
       uses: docker/build-push-action@b32b51a8eda65d6793cd0494a773d4f6bcef32dc # v6.11.0
       with:
+        build-args: GO_VERSION=${{ steps.go.outputs.version }}
         context: .
         file: Containerfile
         push: true
