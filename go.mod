@@ -6,7 +6,7 @@ require (
 	github.com/ericcornelissen/go-gha-models v0.3.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/playwright-community/playwright-go v0.5001.0
-	github.com/rogpeppe/go-internal v1.14.0
+	github.com/rogpeppe/go-internal v1.14.1
 	github.com/santhosh-tekuri/jsonschema/v5 v5.3.1
 	golang.org/x/mod v0.23.0
 )
