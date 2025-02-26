@@ -1,0 +1,30 @@
+exec ades
+stdout 'Ok'
+! stderr .
+
+
+-- .github/workflows/uses-values.yml --
+name: Example workflow that lists possible 'uses:' values
+on: [push]
+
+# These examples are based on:
+# https://docs.github.com/en/actions/writing-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsuses
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    # Reference a specific commit
+    - uses: actions/checkout@8f4b7f84864484a7bf31766abe9204da3cbe65b3
+    # Reference the major version of a release
+    - uses: actions/checkout@v4
+    # Reference a specific version
+    - uses: actions/checkout@v4.2.0
+    # Reference a branch
+    - uses: actions/checkout@main
+    # Using a public action in a subdirectory
+    - uses: actions/aws/ec2@main
+    # This step checks out a copy of your repository.
+    - uses: actions/checkout@v4
+    # This step references the directory that contains the action.
+    - uses: ./.github/actions/hello-world-action
