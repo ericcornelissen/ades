@@ -21,12 +21,9 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
-	"slices"
-	"sort"
 	"strings"
 
 	"github.com/ericcornelissen/ades"
@@ -136,19 +133,14 @@ func run() int {
 	}
 
 	var (
-		err    error
-		report map[string]map[string][]ades.Violation
+		errs   map[string]error
+		report Report
 	)
 
 	if targets[0] == "-" {
-		report, err = runOnStdin()
+		report, errs = runOnStdin()
 	} else {
-		report, err = runOnTargets(targets)
-	}
-
-	if err != nil {
-		fmt.Fprintln(os.Stderr, err.Error())
-		return exitError
+		report, errs = runOnTargets(targets)
 	}
 
 	if *flagFix {
@@ -160,51 +152,75 @@ func run() int {
 
 	if *flagJson {
 		fmt.Println(printJson(report))
-	} else {
-		targets := slices.Collect(maps.Keys(report))
-		sort.Strings(targets)
+	}
 
-		separator := false
-		for _, target := range targets {
-			violations := report[target]
+	out := os.Stdout
+	if *flagJson {
+		out = os.Stderr
+	}
 
+	separator := false
+	anyViolations := false
+	for _, target := range targets {
+		var msg string
+		if targetReport, ok := report[target]; ok {
+			if !(*flagJson) {
+				msg = printProjectViolations(targetReport)
+			}
+
+			for _, violations := range targetReport {
+				if len(violations) > 0 {
+					anyViolations = true
+				}
+			}
+		} else if err, ok := errs[target]; ok {
+			msg = fmt.Sprintln(err)
+		}
+
+		if msg != "" {
 			if separator {
-				fmt.Println( /* empty line between targets */ )
+				_, _ = fmt.Fprintln(out /* empty line between targets */)
 			}
 			if len(targets) > 1 {
-				fmt.Printf("[%s]\n", target)
+				_, _ = fmt.Fprintf(out, "[%s]\n", target)
 			}
 
-			fmt.Print(printProjectViolations(violations))
+			_, _ = fmt.Fprint(out, msg)
 			separator = true
 		}
 	}
 
-	for _, targetViolations := range report {
-		for _, fileViolations := range targetViolations {
-			if len(fileViolations) > 0 {
-				if !(*flagJson) {
-					fmt.Println()
-					fmt.Println("Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')")
-				}
-
-				return exitViolations
-			}
-		}
+	if anyViolations && !(*flagJson) {
+		fmt.Println()
+		fmt.Println("Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')")
 	}
 
-	return exitSuccess
+	switch {
+	case len(errs) > 0:
+		return exitError
+	case anyViolations:
+		return exitViolations
+	default:
+		return exitSuccess
+	}
 }
 
-func runOnStdin() (map[string]map[string][]ades.Violation, error) {
+type TargetReport = map[string][]ades.Violation
+type Report = map[string]TargetReport
+
+func runOnStdin() (Report, map[string]error) {
 	data, err := io.ReadAll(os.Stdin)
 	if err != nil {
-		return nil, fmt.Errorf("could not read from stdin: %s", err)
+		errors := make(map[string]error)
+		errors["-"] = fmt.Errorf("could not read from stdin: %s", err)
+		return nil, errors
 	}
 
 	violations := make(map[string][]ades.Violation)
 	if workflowViolations, err := tryWorkflow(data); err != nil {
-		return nil, fmt.Errorf("could not parse input: %s", err)
+		errors := make(map[string]error)
+		errors["-"] = fmt.Errorf("could not parse input: %s", err)
+		return nil, errors
 	} else if len(workflowViolations) != 0 {
 		violations["stdin"] = workflowViolations
 	} else {
@@ -213,17 +229,19 @@ func runOnStdin() (map[string]map[string][]ades.Violation, error) {
 	}
 
 	report := make(map[string]map[string][]ades.Violation)
-	report["stdin"] = violations
+	report["-"] = violations
 
 	return report, nil
 }
 
-func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, error) {
+func runOnTargets(targets []string) (Report, map[string]error) {
 	report := make(map[string]map[string][]ades.Violation)
+	errors := make(map[string]error)
 	for _, target := range targets {
 		violations, err := runOnTarget(target)
 		if err != nil {
-			return nil, fmt.Errorf("an unexpected error occurred: %s", err)
+			errors[target] = fmt.Errorf("an unexpected error occurred: %s", err)
+			continue
 		}
 
 		targetViolations, ok := report[target]
@@ -237,10 +255,10 @@ func runOnTargets(targets []string) (map[string]map[string][]ades.Violation, err
 		}
 	}
 
-	return report, nil
+	return report, errors
 }
 
-func runOnTarget(target string) (map[string][]ades.Violation, error) {
+func runOnTarget(target string) (TargetReport, error) {
 	stat, err := os.Stat(target)
 	if err != nil {
 		return nil, fmt.Errorf("could not process %s: %v", target, err)
@@ -265,7 +283,7 @@ const (
 	workflowsDir = "workflows"
 )
 
-func runOnRepository(target string) (map[string][]ades.Violation, error) {
+func runOnRepository(target string) (TargetReport, error) {
 	violations := make(map[string][]ades.Violation)
 
 	fsys := os.DirFS(target)
