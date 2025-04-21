@@ -1,6 +1,11 @@
+# No violations
+exec ades 'project/.github/workflows/safe.yml'
+cmp stdout $WORK/snapshots/workflow-safe-stdout.txt
+! stderr .
+
 # Workflow target
-! exec ades 'project/.github/workflows/workflow.yml'
-cmp stdout $WORK/snapshots/workflow-stdout.txt
+! exec ades 'project/.github/workflows/unsafe.yml'
+cmp stdout $WORK/snapshots/workflow-unsafe-stdout.txt
 ! stderr .
 
 # Manifest target
@@ -9,12 +14,12 @@ cmp stdout $WORK/snapshots/manifest-stdout.txt
 ! stderr .
 
 # Multiple targets
-! exec ades 'project/action.yml' 'project/.github/workflows/workflow.yml'
+! exec ades 'project/action.yml' 'project/.github/workflows/unsafe.yml'
 cmp stdout $WORK/snapshots/multiple-stdout.txt
 ! stderr .
 
 # File target (JSON)
-! exec ades -json 'project/.github/workflows/workflow.yml'
+! exec ades -json 'project/.github/workflows/unsafe.yml'
 cmp stdout $WORK/snapshots/json-file-stdout.txt
 ! stderr .
 
@@ -24,24 +29,24 @@ cmp stdout $WORK/snapshots/json-repository-stdout.txt
 ! stderr .
 
 # Multiple targets (JSON)
-! exec ades -json 'project/action.yml' 'project/.github/workflows/workflow.yml'
+! exec ades -json 'project/action.yml' 'project/.github/workflows/unsafe.yml'
 cmp stdout $WORK/snapshots/json-multiple-stdout.txt
 ! stderr .
 
 # Stdin
-stdin project/.github/workflows/workflow.yml
+stdin project/.github/workflows/unsafe.yml
 ! exec ades -
 cmp stdout $WORK/snapshots/stdin-stdout.txt
 ! stderr .
 
 # Suggestions
-! exec ades -suggestions 'project/.github/workflows/workflow.yml'
+! exec ades -suggestions 'project/.github/workflows/unsafe.yml'
 cmp stderr $WORK/snapshots/suggestion-stderr.txt
 
 # Not found
-! exec ades 'does-not-exist'
-! stdout .
-stderr 'an unexpected error occurred: could not process does-not-exist:'
+! exec ades 'does-not-exist' 'project/action.yml'
+cmp stdout $WORK/snapshots/not-found.txt
+! stderr .
 
 
 -- project/action.yml --
@@ -63,7 +68,7 @@ runs:
     run: echo 'Hello world!'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
--- project/.github/workflows/workflow.yml --
+-- project/.github/workflows/unsafe.yml --
 name: Example unsafe workflow
 on: [push]
 
@@ -86,23 +91,45 @@ jobs:
       uses: actions/github-script@v6
       with:
         script: console.log("Hello ${{ inputs.name }}");
+-- project/.github/workflows/safe.yml --
+name: Example safe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Safe run
+      run: echo 'Hello world!'
 -- snapshots/json-file-stdout.txt --
-{"problems":[{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
+{"problems":[{"target":"project/.github/workflows/unsafe.yml","file":"project/.github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/unsafe.yml","file":"project/.github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"}]}
 -- snapshots/json-multiple-stdout.txt --
-{"problems":[{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/workflow.yml","file":"project/.github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/action.yml","file":"project/action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
+{"problems":[{"target":"project/.github/workflows/unsafe.yml","file":"project/.github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/.github/workflows/unsafe.yml","file":"project/.github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/action.yml","file":"project/action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
 -- snapshots/json-repository-stdout.txt --
-{"problems":[{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/workflow.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
+{"problems":[{"target":"project/","file":".github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe run","problem":"${{ inputs.name }}"},{"target":"project/","file":".github/workflows/unsafe.yml","job":"Example unsafe job","step":"Unsafe GitHub script","problem":"${{ inputs.name }}"},{"target":"project/","file":"action.yml","job":"","step":"Unsafe run","problem":"${{ inputs.name }}"}]}
 -- snapshots/manifest-stdout.txt --
 Detected 1 violation(s) in "project/action.yml":
     step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
 
 Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
 -- snapshots/multiple-stdout.txt --
-[project/.github/workflows/workflow.yml]
-Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
+[project/action.yml]
+Detected 1 violation(s) in "project/action.yml":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+[project/.github/workflows/unsafe.yml]
+Detected 2 violation(s) in "project/.github/workflows/unsafe.yml":
   2 in job "Example unsafe job":
     step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
     step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
+-- snapshots/not-found.txt --
+[does-not-exist]
+an unexpected error occurred: could not process does-not-exist: stat does-not-exist: no such file or directory
 
 [project/action.yml]
 Detected 1 violation(s) in "project/action.yml":
@@ -119,8 +146,10 @@ Use -explain for more details and fix suggestions (example: 'ades -explain ADES1
 -- snapshots/suggestion-stderr.txt --
 The -suggestions flag is deprecated and will be removed in the future
 
--- snapshots/workflow-stdout.txt --
-Detected 2 violation(s) in "project/.github/workflows/workflow.yml":
+-- snapshots/workflow-safe-stdout.txt --
+Ok
+-- snapshots/workflow-unsafe-stdout.txt --
+Detected 2 violation(s) in "project/.github/workflows/unsafe.yml":
   2 in job "Example unsafe job":
     step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
     step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
