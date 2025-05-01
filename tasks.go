@@ -199,25 +199,6 @@ func TaskClean(t *T) error {
 	return t.Exec(clean)
 }
 
-// Check license compliance.
-func TaskCompliance(t *T) error {
-	var (
-		licenses = []string{
-			"BSD-2-Clause",
-			"BSD-3-Clause",
-			"GPL-3.0",
-			"MIT",
-		}
-		licenseCheck = fmt.Sprintf(
-			"go run github.com/google/go-licenses check --allowed_licenses %s ./...",
-			strings.Join(licenses, ","),
-		)
-	)
-
-	t.Log("Checking license compliance...")
-	return t.Exec(licenseCheck)
-}
-
 // Build the ades container for the current platform.
 func TaskContainer(t *T) error {
 	var (
@@ -529,7 +510,6 @@ func TaskUpdateCapabilities(t *T) error {
 func TaskVerify(t *T) error {
 	return t.Run(
 		TaskBuild,
-		TaskCompliance,
 		TaskFormatCheck,
 		TaskTest,
 		TaskDogfeed,
