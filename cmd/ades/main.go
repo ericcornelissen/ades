@@ -479,6 +479,6 @@ Exit Codes:
 }
 
 func version() {
-	versionString := "v25.03"
+	versionString := "v25.05"
 	fmt.Println(versionString)
 }
