@@ -46,6 +46,12 @@ stdout 'Ok'
 ! exec ades -conservative 'GHSA-6q4m-7476-932w/'
 ! stdout 'Ok'
 
+# GHSA-2487-9f55-2vg9
+! exec ades 'GHSA-2487-9f55-2vg9/'
+! stdout 'Ok'
+! exec ades -conservative 'GHSA-2487-9f55-2vg9/'
+! stdout 'Ok'
+
 
 -- GHSA-7x29-qqmq-v6qc/action.yml --
 # Ultralytics YOLO 🚀, AGPL-3.0 License https://ultralytics.com/license
@@ -821,3 +827,44 @@ runs:
         short-on-error: true
         length: ${{ steps.prefligth.outputs.PREFLIGHT_SHORT_LENGTH }}
         prefix: ${{ inputs.prefix }}
+-- GHSA-2487-9f55-2vg9/action.yml --
+name: ozi-publish
+description: "OZI publish action."
+inputs:
+  github-token:
+    description: "GitHub workflow-generated token."
+    required: true
+  create-pull-request:
+    description: "Create a pull request on the default branch."
+    default: false
+  pull-request-body:
+    description: "Text to use for the pull request body."
+    default: "Created automatically. Manually close and reopen to enable checks."
+runs:
+  using: "composite"
+  steps:
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+
+    - name: Move artifact
+      run: cp -a artifact/. ./
+      shell: bash
+
+    - name: Publish package distributions to GitHub Releases
+      uses: python-semantic-release/publish-action@1aa9f41fac5d531e6764e1991b536783337f3a56
+      with:
+        github_token: ${{ inputs.github-token }}
+
+    - name: Get HEAD branch name
+      id: head
+      if: ${{ fromJSON(inputs.create-pull-request) == true }}
+      run: git remote show origin | grep 'HEAD branch' | cut -d ":" -f2 | sed 's/ /name=/' >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Create pull request
+      if: ${{ fromJSON(inputs.create-pull-request) == true }}
+      run: gh pr create -B ${{ steps.head.outputs.name }} -H ${{ github.head_ref || github.ref_name }} --title 'Merge ${{ github.head_ref || github.ref_name }} into ${{ steps.head.outputs.name }}' --body '${{ inputs.pull-request-body }}'
+      env:
+          GITHUB_TOKEN: ${{ inputs.github-token }}
+      shell: bash
