@@ -353,8 +353,18 @@ func TestConservativeMatcher(t *testing.T) {
 			},
 		},
 
-		"unsafe and unsafe in one expression": {},
-		"two, only one is dangerous":          {},
+		"(conservatively) safe followed by (conservatively) unsafe": {
+			value: `gh pr create -B ${{ steps.head.outputs.name }} -H ${{ github.head_ref || github.ref_name }}`,
+			want: []string{
+				"${{ github.head_ref || github.ref_name }}",
+			},
+		},
+		"(conservatively) unsafe followed by (conservatively) safe": {
+			value: `gh pr create -H ${{ github.head_ref || github.ref_name }} -B ${{ steps.head.outputs.name }}`,
+			want: []string{
+				"${{ github.head_ref || github.ref_name }}",
+			},
+		},
 	}
 
 	for name, tt := range testCases {

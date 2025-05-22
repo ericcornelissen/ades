@@ -53,11 +53,19 @@ var conservativeExprRegExp = regexp.MustCompile(`\${{.+?(github\.event\.issue\.t
 type conservativeExprMatcher struct{}
 
 func (m conservativeExprMatcher) FindAll(v []byte) [][]byte {
-	if conservativeExprRegExp.Find(stripSafe(v)) == nil {
+	if allExprRegExp.Find(stripSafe(v)) == nil {
 		return nil
 	}
 
-	return conservativeExprRegExp.FindAll(v, len(v))
+	all := allExprRegExp.FindAll(v, len(v))
+	conservative := make([][]byte, 0, len(all))
+	for _, candidate := range all {
+		if conservativeExprRegExp.Match(candidate) {
+			conservative = append(conservative, candidate)
+		}
+	}
+
+	return conservative
 }
 
 var (
