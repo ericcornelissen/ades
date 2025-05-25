@@ -1,0 +1,44 @@
+name: Bug Report
+description: File a bug report.
+labels:
+- bug
+body:
+- type: markdown
+  attributes:
+    value: |
+      Before you submit your report, make sure the bug has not already been reported. Also check for
+      closed bug reports, e.g. in case it has been fixed in a new version.
+- type: input
+  id: version
+  attributes:
+    label: Version
+    description: |
+      What version are you using? Check `ades -version`.
+    placeholder: ex. v25.04
+  validations:
+    required: true
+- type: textarea
+  id: summary
+  attributes:
+    label: Summary
+    description: |
+      Provide a short description of the bug. What goes wrong and when?
+  validations:
+    required: true
+- type: textarea
+  id: expected-behavior
+  attributes:
+    label: Expected behavior
+    description: |
+      Describe what you expected to happen.
+  validations:
+    required: false
+- type: textarea
+  id: reproducing-example
+  attributes:
+    label: Reproducing example
+    description: |
+      Provide a workflow file, manifest file, or repository that triggers the bug.
+    placeholder: ex. run `ades` on the repository <https://github.com/ericcornelissen/ades>
+  validations:
+    required: true
