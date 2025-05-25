@@ -1,0 +1,13 @@
+name: Website
+description: Report something about the website.
+labels:
+- website
+body:
+- type: textarea
+  id: report
+  attributes:
+    label: Report
+    description: |
+      Describe your experience with the web version of `ades`.
+  validations:
+    required: true

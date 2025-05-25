@@ -1,0 +1,27 @@
+name: Documentation
+description: Report something about the documentation.
+labels:
+- documentation
+body:
+- type: markdown
+  attributes:
+    value: |
+      Report mistakes or gaps in the documentation. This can be in the docs on GitHub, the CLI help,
+      or the website.
+- type: input
+  id: where
+  attributes:
+    label: Where
+    description: |
+      What piece of documentation are we talking about? Include the version of `ades` if relevant.
+    placeholder: ex. the CLI help message.
+  validations:
+    required: true
+- type: textarea
+  id: problem
+  attributes:
+    label: Problem
+    description: |
+      Describe the problem with this documentation.
+  validations:
+    required: true

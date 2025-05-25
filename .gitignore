@@ -5,6 +5,13 @@
 # GitHub
 !.github/
 .github/**
+!.github/ISSUE_TEMPLATE/
+.github/ISSUE_TEMPLATE/**
+!.github/ISSUE_TEMPLATE/bug-report.yml
+!.github/ISSUE_TEMPLATE/documentation.yml
+!.github/ISSUE_TEMPLATE/feature-request.yml
+!.github/ISSUE_TEMPLATE/question.yml
+!.github/ISSUE_TEMPLATE/website.yml
 !.github/workflows/
 .github/workflows/**
 !.github/workflows/audit.yml

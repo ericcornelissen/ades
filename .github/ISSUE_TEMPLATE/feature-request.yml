@@ -1,0 +1,36 @@
+name: Feature Request
+description: Request a new feature.
+labels:
+- enhancement
+body:
+- type: markdown
+  attributes:
+    value: |
+      Before you submit your request, check that it has not been requested before.
+
+      Note that the scope of this project is intentionally limited, support for other CI/CD smells
+      will not be added.
+- type: textarea
+  id: summary
+  attributes:
+    label: Summary
+    description: |
+      Provide a short description of the feature you want to see and why.
+  validations:
+    required: true
+- type: textarea
+  id: expected-behavior
+  attributes:
+    label: Expected behavior
+    description: |
+      Describe how you would use `ades` with this feature and how the feature should function.
+  validations:
+    required: false
+- type: textarea
+  id: usage-example
+  attributes:
+    label: Usage example
+    description: |
+      Provide an example use case where this feature would be useful.
+  validations:
+    required: false

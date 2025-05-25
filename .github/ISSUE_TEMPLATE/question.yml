@@ -1,0 +1,28 @@
+name: Question
+description: Ask a question.
+labels:
+- question
+body:
+- type: markdown
+  attributes:
+    value: |
+      Ask a question if you need help using `ades`.
+
+      You can also use this form if you're unsure if you found a bug or if a feature is missing.
+- type: input
+  id: version
+  attributes:
+    label: Version
+    description: |
+      What version are you using? Check `ades -version`.
+    placeholder: ex. v25.04
+  validations:
+    required: true
+- type: textarea
+  id: question
+  attributes:
+    label: Question
+    description: |
+      What is your question?
+  validations:
+    required: true

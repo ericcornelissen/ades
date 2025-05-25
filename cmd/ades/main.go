@@ -82,7 +82,7 @@ func main() {
 			fmt.Println(err)
 			fmt.Println()
 			fmt.Println("An unexpected error occurred. Please report the error and command to:")
-			fmt.Println("https://github.com/ericcornelissen/ades/issues/new/choose")
+			fmt.Println("https://github.com/ericcornelissen/ades/issues/new?template=bug-report.yml")
 		}
 
 		os.Exit(code)
