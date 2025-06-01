@@ -48,7 +48,34 @@ func (m allExprMatcher) FindAll(v []byte) [][]byte {
 	return allExprRegExp.FindAll(v, len(v))
 }
 
-var conservativeExprRegExp = regexp.MustCompile(`\${{.+?(github\.event\.issue\.title|github\.event\.issue\.body|github\.event\.discussion\.title|github\.event\.discussion\.body|github\.event\.comment\.body|github\.event\.review\.body|github\.event\.review_comment\.body|github\.event\.pages\[\d+\]\.page_name|github\.event\.commits\[\d+\]\.message|github\.event\.commits\[\d+\]\.author\.email|github\.event\.commits\[\d+\]\.author\.name|github\.event\.head_commit\.message|github\.event\.head_commit\.author\.email|github\.event\.head_commit\.author\.name|github\.event\.head_commit\.committer\.email|github\.event\.workflow_run\.head_branch|github\.event\.workflow_run\.head_commit\.message|github\.event\.workflow_run\.head_commit\.author\.email|github\.event\.workflow_run\.head_commit\.author\.name|github\.event\.pull_request\.title|github\.event\.pull_request\.body|github\.event\.pull_request\.head\.label|github\.event\.pull_request\.head\.repo\.default_branch|github\.head_ref|github\.event\.pull_request\.head\.ref|github\.event\.workflow_run\.pull_requests\[\d+\]\.head\.ref).+?}}`)
+var conservativeExps = []*regexp.Regexp{
+	regexp.MustCompile(`github\.event\.comment\.body`),
+	regexp.MustCompile(`github\.event\.commits\[\d+\]\.author\.email`),
+	regexp.MustCompile(`github\.event\.commits\[\d+\]\.author\.name`),
+	regexp.MustCompile(`github\.event\.commits\[\d+\]\.message`),
+	regexp.MustCompile(`github\.event\.discussion\.body`),
+	regexp.MustCompile(`github\.event\.discussion\.title`),
+	regexp.MustCompile(`github\.event\.head_commit\.author\.email`),
+	regexp.MustCompile(`github\.event\.head_commit\.author\.name`),
+	regexp.MustCompile(`github\.event\.head_commit\.committer\.email`),
+	regexp.MustCompile(`github\.event\.head_commit\.message`),
+	regexp.MustCompile(`github\.event\.issue\.body`),
+	regexp.MustCompile(`github\.event\.issue\.title`),
+	regexp.MustCompile(`github\.event\.pages\[\d+\]\.page_name`),
+	regexp.MustCompile(`github\.event\.pull_request\.body`),
+	regexp.MustCompile(`github\.event\.pull_request\.head\.label`),
+	regexp.MustCompile(`github\.event\.pull_request\.head\.ref`),
+	regexp.MustCompile(`github\.event\.pull_request\.head\.repo\.default_branch`),
+	regexp.MustCompile(`github\.event\.pull_request\.title`),
+	regexp.MustCompile(`github\.event\.review\.body`),
+	regexp.MustCompile(`github\.event\.review_comment\.body`),
+	regexp.MustCompile(`github\.event\.workflow_run\.head_branch`),
+	regexp.MustCompile(`github\.event\.workflow_run\.head_commit\.author\.email`),
+	regexp.MustCompile(`github\.event\.workflow_run\.head_commit\.author\.name`),
+	regexp.MustCompile(`github\.event\.workflow_run\.head_commit\.message`),
+	regexp.MustCompile(`github\.event\.workflow_run\.pull_requests\[\d+\]\.head\.ref`),
+	regexp.MustCompile(`github\.head_ref`),
+}
 
 type conservativeExprMatcher struct{}
 
@@ -60,8 +87,11 @@ func (m conservativeExprMatcher) FindAll(v []byte) [][]byte {
 	all := allExprRegExp.FindAll(v, len(v))
 	conservative := make([][]byte, 0, len(all))
 	for _, candidate := range all {
-		if conservativeExprRegExp.Match(candidate) {
-			conservative = append(conservative, candidate)
+		for _, exp := range conservativeExps {
+			if exp.Match(candidate) {
+				conservative = append(conservative, candidate)
+				break
+			}
 		}
 	}
 
