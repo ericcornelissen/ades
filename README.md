@@ -93,6 +93,12 @@ Then run it using:
 docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades -version
 ```
 
+You can set up an alias for convenience:
+
+```shell
+alias ades='docker run --rm --volume $PWD:/src docker.io/ericornelissen/ades'
+```
+
 > **NOTE:** To use [Podman] instead of [Docker] you can replace `docker` by `podman`.
 
 [cosign]: https://github.com/sigstore/cosign
