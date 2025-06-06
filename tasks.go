@@ -523,6 +523,7 @@ func TaskVet(t *T) error {
 	return t.Exec(
 		"go vet ./...",
 		"go run 4d63.com/gochecknoinits ./...",
+		"go run fillmore-labs.com/zerolint -level=full ./...",
 		"go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status ./...",
 		"go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 ./...",
 		"go run github.com/alexkohler/prealloc -set_exit_status ./...",
