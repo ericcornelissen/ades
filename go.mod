@@ -13,6 +13,7 @@ require (
 
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3 // indirect
+	fillmore-labs.com/zerolint v0.0.10 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20230811130428-ced1acdcaa24 // indirect
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20230306123547-8075edf89bb0 // indirect
 	github.com/BurntSushi/toml v1.4.1-0.20240526193622-a339e1f7089c // indirect
@@ -134,12 +135,12 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/nilaway v0.0.0-20241010202415-ba14292918d8 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240213143201-ec583247a57a // indirect
-	golang.org/x/net v0.38.0 // indirect
-	golang.org/x/sync v0.12.0 // indirect
-	golang.org/x/sys v0.31.0 // indirect
+	golang.org/x/net v0.40.0 // indirect
+	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/telemetry v0.0.0-20240522233618-39ace7a40ae7 // indirect
-	golang.org/x/text v0.23.0 // indirect
-	golang.org/x/tools v0.30.0 // indirect
+	golang.org/x/text v0.25.0 // indirect
+	golang.org/x/tools v0.33.0 // indirect
 	golang.org/x/vuln v1.1.4 // indirect
 	google.golang.org/genproto v0.0.0-20231211222908-989df2bf70f3 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
@@ -154,6 +155,7 @@ require (
 
 tool (
 	4d63.com/gochecknoinits
+	fillmore-labs.com/zerolint
 	github.com/alexkohler/dogsled/cmd/dogsled
 	github.com/alexkohler/nakedret/v2/cmd/nakedret
 	github.com/alexkohler/prealloc
