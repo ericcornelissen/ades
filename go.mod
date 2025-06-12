@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.24.0
+go 1.24.4
 
 require (
 	github.com/ericcornelissen/go-gha-models v0.4.3
