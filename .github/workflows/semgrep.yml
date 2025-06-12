@@ -19,7 +19,16 @@ jobs:
       with:
         persist-credentials: false
     - name: Get malicious code ruleset
-      run: git clone https://github.com/apiiro/malicious-code-ruleset.git ../malicious-code-ruleset
+      run: |
+        git clone https://github.com/apiiro/malicious-code-ruleset.git ../malicious-code-ruleset
+
+        mv ../malicious-code-ruleset/dynamic_execution/go ../dynamic_execution-go || true
+        rm -rf ../malicious-code-ruleset/dynamic_execution/*
+        mv ../dynamic_execution-go ../malicious-code-ruleset/dynamic_execution/go || true
+
+        mv ../malicious-code-ruleset/obfuscation/go ../obfuscation-go
+        rm -rf ../malicious-code-ruleset/obfuscation/*
+        mv ../obfuscation-go ../malicious-code-ruleset/obfuscation/go
     - name: Perform malicious code analysis
       run: semgrep --config ../malicious-code-ruleset
   semgrep:
