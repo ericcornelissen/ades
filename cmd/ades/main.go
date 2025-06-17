@@ -453,7 +453,7 @@ conditions; see the GPL v3.0 for details.`)
 }
 
 func usage() {
-	fmt.Println(`find dangerous uses of expressions in GitHub Action workflows and manifests
+	fmt.Println(`Find dangerous uses of expressions in GitHub Action workflows and manifests.
 
 Usage:
 
@@ -461,7 +461,7 @@ Usage:
 
 Flags:
 
-  -conservative       Only report expressions known to be controllable by attackers.
+  -conservative       Only report known attacker-controlled expressions.
   -explain ADESxxx    Explain the given violation.
   -fix-experimental   Automatically fix violations if possible.
   -help               Show this help message and exit.
@@ -475,7 +475,10 @@ Exit Codes:
 
   0   Success
   1   Unexpected error
-  2   Problems detected`)
+  2   Problems detected
+
+Need more help? Found a bug? Missing something? See:
+https://github.com/ericcornelissen/ades/issues/new/choose`)
 }
 
 func version() {
