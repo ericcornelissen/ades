@@ -1,6 +1,6 @@
 # Help
 exec ades -help
-stdout 'find dangerous uses of expressions in GitHub Action workflows and manifests\n'
+stdout 'Find dangerous uses of expressions in GitHub Action workflows and manifests.\n'
 ! stderr .
 
 # Legal
