@@ -194,6 +194,13 @@ report fewer expressions overall (fewer _false positives_), but it might also mi
 expressions in `run:` scripts and will completely miss others, for example expressions in
 `actions/github-script` scripts.
 
+### [Ghast]
+
+A tool to find misconfigurations in GitHub Actions Workflows (not Actions). Among other checks it
+looks for a couple known problematic uses of expressions involving the `github` context. It also
+steers users away from using inline scripts, recommending local Actions instead. As a result it will
+report fewer expressions overall (fewer _false positives_) but miss some (more _false negatives_).
+
 ### [`poutine`]
 
 A tool that aims to find misconfigurations in CI/CD pipeline configurations including GitHub Actions
@@ -219,6 +226,7 @@ severities.
 
 [argus: a framework for staged static taint analysis of github workflows and actions]: https://www.usenix.org/conference/usenixsecurity23/presentation/muralee
 [automatic security assessment of github actions workflows]: https://dl.acm.org/doi/abs/10.1145/3560835.3564554
+[ghast]: https://github.com/bin3xish477/ghast
 [`poutine`]: https://github.com/boostsecurityio/poutine
 [raven]: https://github.com/CycodeLabs/raven
 [`zizmor`]: https://github.com/woodruffw/zizmor
