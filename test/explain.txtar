@@ -3,6 +3,11 @@ exec ades -explain 'ADES100'
 cmp stdout $WORK/snapshots/ades100-stdout.txt
 ! stderr .
 
+# Lowercase rule ID
+exec ades -explain 'ades100'
+cmp stdout $WORK/snapshots/ades100-stdout.txt
+! stderr .
+
 # Non-existent rule
 ! exec ades -explain 'foobar'
 ! stdout .

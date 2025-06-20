@@ -377,6 +377,7 @@ func Fix(violation *Violation) ([]fix, error) {
 }
 
 func findRule(ruleId string) (rule, error) {
+	ruleId = strings.ToUpper(ruleId)
 	for _, rs := range actionRules {
 		for _, r := range rs {
 			if r.rule.id == ruleId {
