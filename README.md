@@ -244,20 +244,29 @@ Actions Expression but is still worth mentioning:
 
 #### Tooling
 
-- [`actionlint`]: General purpose linter for GitHub Actions users.
+- [`actionlint`]: General purpose linter for GitHub Actions.
 - [`aeisenberg/codeql-actions-queries`]: A CodeQl query pack for writing reusable GitHub Actions.
+- [BOLT]: Egress-filter and runtime security tool for GitHub Actions pipelines.
+- [Bullfrog]: Control the outbound network connections of GitHub Actions pipelines.
+- [Cimon]: Runtime security to stop software supply-chain attacks on GitHub Actions pipelines.
 - [CodeQL support for GitHub Actions]: CodeQL queries for GitHub Actions workflows.
-- [StepSecurity]: Runtime protection for GitHub Action users.
+- [OpenSSF Scorecard]: Assess repository configs, including GitHub Action workflows.
+- [StepSecurity]: Runtime protection for GitHub Actions pipelines.
 
 [`actionlint`]: https://github.com/rhysd/actionlint
 [`aeisenberg/codeql-actions-queries`]: https://github.com/aeisenberg/codeql-actions-queries
+[bolt]: https://github.com/koalalab-inc/bolt
+[bullfrog]: https://github.com/bullfrogsec/bullfrog
+[cimon]: https://github.com/CycodeLabs/cimon-action
 [codeql support for github actions]: https://docs.github.com/en/code-security/code-scanning/managing-your-code-scanning-configuration/actions-built-in-queries
+[openssf scorecard]: https://scorecard.dev/
 [stepsecurity]: https://www.stepsecurity.io/
 
 #### Research
 
 - [Ambush From All Sides: Understanding Security Threats in Open-Source Software CI/CD Pipelines]
 - [A Preliminary Study of GitHub Actions Dependencies]
+- [Cacheract: GitHub Actions Cache Native Malware]
 - [Catching Smells in the Act: A GitHub Actions Workflow Investigation]
 - [Characterizing the Security of Github CI Workflows]
 - [Continuous Intrusion: Characterizing the Security of Continuous Integration Services]
@@ -269,6 +278,7 @@ Actions Expression but is still worth mentioning:
 
 [ambush from all sides: understanding security threats in open-source software ci/cd pipelines]: https://ieeexplore.ieee.org/abstract/document/10061526
 [a preliminary study of github actions dependencies]: https://ceur-ws.org/Vol-3483/paper7.pdf
+[cacheract: github actions cache native malware]: https://github.com/AdnaneKhan/Cacheract
 [catching smells in the act: a github actions workflow investigation]: https://ieeexplore.ieee.org/abstract/document/10795325
 [characterizing the security of github ci workflows]: https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev
 [continuous intrusion: characterizing the security of continuous integration services]: https://ieeexplore.ieee.org/abstract/document/10179471
