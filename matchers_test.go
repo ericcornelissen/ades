@@ -32,14 +32,6 @@ func TestAllMatcher(t *testing.T) {
 			value: `'Hello world'`,
 			want:  nil,
 		},
-		"safe expression": {
-			value: `${{ true }}`,
-			want:  nil,
-		},
-		"safe use of an unsafe expression": {
-			value: `${{ contains(github.event.issue.title, 'foobar') }}`,
-			want:  nil,
-		},
 		"unsafe expression ": {
 			value: `${{ foo.bar }}`,
 			want: []string{
@@ -118,10 +110,6 @@ func TestAllMatcher(t *testing.T) {
 				`${{ false || foo.baz }}`,
 			},
 		},
-		"safe & safe in one expression": {
-			value: `echo ${{ false || true }}`,
-			want:  nil,
-		},
 		"unsafe & unsafe in one expression": {
 			value: `${{ foo.bar || foo.baz }}`,
 			want: []string{
@@ -167,10 +155,6 @@ func TestConservativeMatcher(t *testing.T) {
 		},
 		"conservatively safe expression": {
 			value: `${{ input.greeting }}`,
-			want:  nil,
-		},
-		"safe use of conservatively unsafe expression": {
-			value: `${{ contains(github.event.issue.title, 'foobar') }}`,
 			want:  nil,
 		},
 		"github.event.issue.title": {
