@@ -378,6 +378,114 @@ func TestDefinitelySafe(t *testing.T) {
 	}
 
 	testCases := map[string]TestCase{
+		"context, github, action_status": {
+			value: `echo ${{ github.action_status }}`,
+			want:  `echo `,
+		},
+		"context, github, event_name": {
+			value: `echo ${{ github.event_name }}`,
+			want:  `echo `,
+		},
+		"context, github, event.number": {
+			value: `echo ${{ github.event.number }}`,
+			want:  `echo `,
+		},
+		"context, github, event.workflow_run.id": {
+			value: `echo ${{ github.event.workflow_run.id }}`,
+			want:  `echo `,
+		},
+		"context, github, ref_protected": {
+			value: `echo ${{ github.ref_protected }}`,
+			want:  `echo `,
+		},
+		"context, github, ref_type": {
+			value: `echo ${{ github.ref_type }}`,
+			want:  `echo `,
+		},
+		"context, github, retention_days": {
+			value: `echo ${{ github.retention_days }}`,
+			want:  `echo `,
+		},
+		"context, github, run_attempt": {
+			value: `echo ${{ github.run_attempt }}`,
+			want:  `echo `,
+		},
+		"context, github, run_id": {
+			value: `echo ${{ github.run_id }}`,
+			want:  `echo `,
+		},
+		"context, github, run_number": {
+			value: `echo ${{ github.run_number }}`,
+			want:  `echo `,
+		},
+		"context, github, secret_source": {
+			value: `echo ${{ github.secret_source }}`,
+			want:  `echo `,
+		},
+		"context, github, sha": {
+			value: `echo ${{ github.sha }}`,
+			want:  `echo `,
+		},
+		"context, github, workflow_sha": {
+			value: `echo ${{ github.workflow_sha }}`,
+			want:  `echo `,
+		},
+		"context, github, workspace": {
+			value: `echo ${{ github.workspace }}`,
+			want:  `echo `,
+		},
+		"context, job, status": {
+			value: `echo ${{ job.status }}`,
+			want:  `echo `,
+		},
+		"context, jobs, <job_id>.result": {
+			value: `echo ${{ jobs.foobar.result }}`,
+			want:  `echo `,
+		},
+		"context, steps, <step_id>.conclusion": {
+			value: `echo ${{ steps.foobar.conclusion }}`,
+			want:  `echo `,
+		},
+		"context, steps, <step_id>.outcome": {
+			value: `echo ${{ steps.foobar.outcome }}`,
+			want:  `echo `,
+		},
+		"context, runner, arch": {
+			value: `echo ${{ runner.arch }}`,
+			want:  `echo `,
+		},
+		"context, runner, debug": {
+			value: `echo ${{ runner.debug }}`,
+			want:  `echo `,
+		},
+		"context, runner, environment": {
+			value: `echo ${{ runner.environment }}`,
+			want:  `echo `,
+		},
+		"context, runner, os": {
+			value: `echo ${{ runner.os }}`,
+			want:  `echo `,
+		},
+		"context, strategy, fail-fast": {
+			value: `echo ${{ strategy.fail-fast }}`,
+			want:  `echo `,
+		},
+		"context, strategy, job-index": {
+			value: `echo ${{ strategy.job-index }}`,
+			want:  `echo `,
+		},
+		"context, strategy, job-total": {
+			value: `echo ${{ strategy.job-total }}`,
+			want:  `echo `,
+		},
+		"context, strategy, max-parallel": {
+			value: `echo ${{ strategy.max-parallel }}`,
+			want:  `echo `,
+		},
+		"context, needs, <job_id>.result": {
+			value: `echo ${{ needs.foobar.result }}`,
+			want:  `echo `,
+		},
 		"literal, boolean, true": {
 			value: `echo ${{ true }}`,
 			want:  `echo `,
@@ -529,6 +637,10 @@ func TestDefinitelySafe(t *testing.T) {
 		"edge case, identifier like a function": {
 			value: `echo ${{ contained('foo', 'bar') }}`,
 			want:  `echo ${{ contained(, ) }}`,
+		},
+		"edge case, almost safe context, malicious id": {
+			value: `echo ${{ jobs.foo.bar.result }} ${{ steps.foo.bar.conclusion }} ${{ steps.foo.bar.outcome }} ${{ needs.foo.bar.result }}`,
+			want:  `echo ${{ jobs.foo.bar.result }} ${{ steps.foo.bar.conclusion }} ${{ steps.foo.bar.outcome }} ${{ needs.foo.bar.result }}`,
 		},
 	}
 

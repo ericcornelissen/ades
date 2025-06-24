@@ -96,6 +96,7 @@ var (
 	trailing = `(?P<trailing>(` + boundary + `.*?|)}})`
 
 	LiteralInExprRegExp      = regexp.MustCompile(leading + `(true|false|null|-?\d+(\.\d+)?|0x[0-9A-Fa-f]+|-?\d+\.\d+e-?\d+|'[^']+')` + trailing)
+	SafeContextInExprRegExp  = regexp.MustCompile(leading + `(github\.(action_status|event_name|event\.number|event\.workflow_run\.id|ref_protected|ref_type|retention_days|run_attempt|run_id|run_number|secret_source|sha|workflow_sha|workspace)|job\.status|jobs\.[a-z-_]+\.result|steps\.[a-z-_]+\.(conclusion|outcome)|runner\.(arch|debug|environment|os)|strategy\.(fail-fast|job-index|job-total|max-parallel)|needs\.[a-z-_]+\.result)` + trailing)
 	SafeFunctionInExprRegExp = regexp.MustCompile(leading + `((always|cancelled|contains|endsWith|failure|hashFiles|success|startsWith)\(([^,]*,)*[^,)]*\)|(format|fromJSON|join|toJSON)\([\s,]*\))` + trailing)
 
 	EmptyExprRegExp = regexp.MustCompile(`\${{` + boundary + `*}}`)
@@ -104,6 +105,7 @@ var (
 func stripSafe(v []byte) []byte {
 	exps := []regexp.Regexp{
 		*LiteralInExprRegExp,
+		*SafeContextInExprRegExp,
 		*SafeFunctionInExprRegExp,
 	}
 
