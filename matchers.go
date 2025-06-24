@@ -41,10 +41,6 @@ var allExprRegExp = regexp.MustCompile(`\${{.*?}}`)
 type allExprMatcher struct{}
 
 func (m allExprMatcher) FindAll(v []byte) [][]byte {
-	if allExprRegExp.Find(stripSafe(v)) == nil {
-		return nil
-	}
-
 	return allExprRegExp.FindAll(v, len(v))
 }
 
@@ -80,10 +76,6 @@ var conservativeExps = []*regexp.Regexp{
 type conservativeExprMatcher struct{}
 
 func (m conservativeExprMatcher) FindAll(v []byte) [][]byte {
-	if allExprRegExp.Find(stripSafe(v)) == nil {
-		return nil
-	}
-
 	all := allExprRegExp.FindAll(v, len(v))
 	conservative := make([][]byte, 0, len(all))
 	for _, candidate := range all {

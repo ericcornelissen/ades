@@ -587,6 +587,18 @@ func TestAnalyzeString(t *testing.T) {
 				{Problem: "${{ input.name }}"},
 			},
 		},
+		"Safe expressions": {
+			value:   "echo '${{ true }} or ${{ false }}!'",
+			matcher: AllMatcher,
+			want:    nil,
+		},
+		"Partially safe expressions": {
+			value:   "echo '${{ true || input.sha }}'",
+			matcher: AllMatcher,
+			want: []Violation{
+				{Problem: "${{ true || input.sha }}"},
+			},
+		},
 	}
 
 	for name, tt := range testCases {
