@@ -35,9 +35,14 @@ body {
   padding: 2rem 2rem 0 ;
   position: relative;
 }
-p {
-  margin: .25rem 0;
-  padding: 0;
+
+label,
+textarea {
+  margin: .5rem 0;
+}
+
+input[type="checkbox"] {
+  margin: 10px 4px 10px 0;
 }
 
 textarea.code {
