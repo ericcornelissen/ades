@@ -17,6 +17,8 @@ package ades
 
 import (
 	"fmt"
+	"regexp"
+	"strings"
 
 	"github.com/ericcornelissen/go-gha-models"
 )
@@ -97,12 +99,83 @@ func analyzeJob(id string, job *gha.Job, matcher ExprMatcher) []Violation {
 
 	violations := make([]Violation, 0)
 	for _, violation := range analyzeSteps(job.Steps, matcher) {
+		if matrixCheck(violation.Problem, matcher, job.Strategy.Matrix) {
+			continue
+		}
+
 		violation.jobKey = id
 		violation.JobId = name
 		violations = append(violations, violation)
 	}
 
 	return violations
+}
+
+func matrixCheck(expr string, matcher ExprMatcher, matrix map[string]any) bool {
+	re := regexp.MustCompile(`matrix\.[a-z._-]+`)
+	matches := re.FindAllString(expr, -1)
+
+	// check if there's a potential violation without the matrix values
+	tmp := expr
+	for _, match := range matches {
+		tmp = strings.ReplaceAll(tmp, match, "")
+	}
+	if got := analyzeString(tmp, matcher); len(got) != 0 {
+		return false
+	}
+
+	// check if the matrix values are trusted
+	for _, expr := range matches {
+		if matrixSafe(expr, matcher, matrix) == 1 {
+			return false
+		}
+
+		if include, ok := matrix["include"]; ok {
+			if include, ok := include.([]any); ok {
+				for _, entry := range include {
+					if entry, ok := entry.(map[string]any); ok {
+						if matrixSafe(expr, matcher, entry) == 1 {
+							return false
+						}
+					}
+				}
+			}
+		}
+	}
+
+	return true
+}
+
+func matrixSafe(s string, matcher ExprMatcher, matrix map[string]any) int {
+	var values []string
+	for _, part := range strings.Split(s, ".")[1:] {
+		tmp, ok := matrix[part]
+		if !ok {
+			 // TODO(not found)
+			return 2
+		}
+
+		switch tmp := tmp.(type) {
+		case map[string]any:
+			matrix = tmp
+		case []any:
+			values = make([]string, len(tmp))
+			for i, v := range tmp {
+				values[i] = v.(string)
+			}
+		case any:
+			value, _ := tmp.(string)
+			values = []string{value}
+		}
+	}
+
+	for _, value := range values {
+		if len(matcher.FindAll([]byte(value))) > 0 {
+			return 1
+		}
+	}
+
+	return 0
 }
 
 func analyzeSteps(steps []gha.Step, matcher ExprMatcher) []Violation {
