@@ -106,7 +106,6 @@ require (
 	github.com/quasilyte/gogrep v0.5.0 // indirect
 	github.com/quasilyte/regex/syntax v0.0.0-20210819130434-b3f0c404a727 // indirect
 	github.com/quasilyte/stdinfo v0.0.0-20220114132959-f7386bf02567 // indirect
-	github.com/remyoudompheng/go-misc v0.0.0-20190427085024-2d6ac652a50e // indirect
 	github.com/reproducible-containers/diffoci v0.1.5 // indirect
 	github.com/rhysd/actionlint v1.7.7 // indirect
 	github.com/rivo/uniseg v0.4.7 // indirect
@@ -135,12 +134,12 @@ require (
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/nilaway v0.0.0-20241010202415-ba14292918d8 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240213143201-ec583247a57a // indirect
-	golang.org/x/net v0.40.0 // indirect
-	golang.org/x/sync v0.14.0 // indirect
+	golang.org/x/net v0.41.0 // indirect
+	golang.org/x/sync v0.15.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/telemetry v0.0.0-20240522233618-39ace7a40ae7 // indirect
-	golang.org/x/text v0.25.0 // indirect
-	golang.org/x/tools v0.33.0 // indirect
+	golang.org/x/text v0.26.0 // indirect
+	golang.org/x/tools v0.34.0 // indirect
 	golang.org/x/vuln v1.1.4 // indirect
 	google.golang.org/genproto v0.0.0-20231211222908-989df2bf70f3 // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20240401170217-c3f982113cda // indirect
@@ -172,13 +171,13 @@ tool (
 	github.com/mdempsky/unconvert
 	github.com/nishanths/exhaustive/cmd/exhaustive
 	github.com/polyfloyd/go-errorlint
-	github.com/remyoudompheng/go-misc/deadcode
 	github.com/reproducible-containers/diffoci/cmd/diffoci
 	github.com/rhysd/actionlint/cmd/actionlint
 	github.com/tetafro/godot/cmd/godot
 	github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck
 	github.com/ultraware/whitespace/cmd/whitespace
 	go.uber.org/nilaway/cmd/nilaway
+	golang.org/x/tools/cmd/deadcode
 	golang.org/x/tools/cmd/goimports
 	golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
 	golang.org/x/vuln/cmd/govulncheck
