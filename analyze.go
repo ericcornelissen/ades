@@ -97,6 +97,10 @@ func analyzeJob(id string, job *gha.Job, matcher ExprMatcher) []Violation {
 
 	violations := make([]Violation, 0)
 	for _, violation := range analyzeSteps(job.Steps, matcher) {
+		if matrixSafe(violation.Problem, job.Strategy.Matrix, matcher) {
+			continue
+		}
+
 		violation.jobKey = id
 		violation.JobId = name
 		violations = append(violations, violation)

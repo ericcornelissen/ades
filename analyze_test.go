@@ -390,6 +390,304 @@ func TestAnalyzeJob(t *testing.T) {
 			wantCount: 1,
 			wantId:    "Unsafe",
 		},
+		"matrix safe": {
+			job: gha.Job{
+				Name: "Safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"field": []any{
+								"safe",
+								"also safe",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix unsafe": {
+			job: gha.Job{
+				Name: "Unsafe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"field": []any{
+								"${{ input.unsafe }}",
+								"${{ input.also-unsafe }}",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe matrix",
+		},
+		"matrix include safe": {
+			job: gha.Job{
+				Name: "Safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Include: []map[string]any{
+							{
+								"field": "safe",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix include unsafe": {
+			job: gha.Job{
+				Name: "Unsafe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Include: []map[string]any{
+							{
+								"field": "${{ input.unsafe }}",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe matrix",
+		},
+		"matrix nested safe": {
+			job: gha.Job{
+				Name: "Safe nested matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": map[string]any{
+								"bar": "safe",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix nested unsafe": {
+			job: gha.Job{
+				Name: "Unsafe nested matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": map[string]any{
+								"bar": "${{ input.unsafe }}",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe nested matrix",
+		},
+		"matrix safe combined with something unsafe": {
+			job: gha.Job{
+				Name: "Safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"field": "safe",
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field || input.unsafe }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Safe matrix",
+		},
+		"matrix missing": {
+			job: gha.Job{
+				Name: "Incomplete matrix",
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Incomplete matrix",
+		},
+		"matrix incomplete access": {
+			job: gha.Job{
+				Name: "Incomplete access",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": map[string]any{
+								"bar": "${{ input.unsafe }}",
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Incomplete access",
+		},
+		"matrix multiple in one expression": {
+			job: gha.Job{
+				Name: "Partially unsafe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": "safe",
+							"bar": "${{ input.unsafe }}",
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo || matrix.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Partially unsafe matrix",
+		},
+		"matrix value safe expression": {
+			job: gha.Job{
+				Name: "Safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"field": "${{ 3.14 }}",
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix nested objects safe": {
+			job: gha.Job{
+				Name: "Nested unsafe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": []any{
+								map[string]any{
+									"baz": "safe",
+								},
+								map[string]any{
+									"baz": "also safe",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.baz }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix nested objects unsafe": {
+			job: gha.Job{
+				Name: "Nested unsafe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"foo": []any{
+								map[string]any{
+									"bar": "safe",
+								},
+								map[string]any{
+									"bar": "${{ input.unsafe }}",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Nested unsafe matrix",
+		},
+		"matrix conservatively safe": {
+			job: gha.Job{
+				Name: "Conservatively safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: gha.Matrix{
+						Matrix: map[string]any{
+							"field": []any{"${{ foo.bar }}"},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }}",
+					},
+				},
+			},
+			matcher:   ConservativeMatcher,
+			wantCount: 0,
+		},
 	}
 
 	for name, tt := range testCases {
