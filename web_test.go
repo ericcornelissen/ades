@@ -1,4 +1,4 @@
-// Copyright (C) 2024  Eric Cornelissen
+// Copyright (C) 2024-2025  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -231,7 +231,7 @@ func setup(t *testing.T, scripts []playwright.Script) (*http.Server, playwright.
 
 	port, err := getAvailablePort()
 	if err != nil {
-		t.Fatalf("could not create a new page: %v", err)
+		t.Fatalf("no port available: %v", err)
 	}
 
 	server := http.Server{

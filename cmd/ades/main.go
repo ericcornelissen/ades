@@ -21,6 +21,7 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
+	"maps"
 	"os"
 	"path/filepath"
 	"regexp"
@@ -250,9 +251,7 @@ func runOnTargets(targets []string) (Report, map[string]error) {
 			report[target] = targetViolations
 		}
 
-		for file, fileViolations := range violations {
-			targetViolations[file] = fileViolations
-		}
+		maps.Copy(targetViolations, violations)
 	}
 
 	return report, errors
