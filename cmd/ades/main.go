@@ -283,12 +283,23 @@ const (
 )
 
 func runOnRepository(target string) (TargetReport, error) {
-	violations := make(map[string][]ades.Violation)
+	report := make(map[string][]ades.Violation)
+	if err := runOnRepositoryManifests(target, report); err != nil {
+		return nil, err
+	}
 
+	if err := runOnRepositoryWorkflows(target, report); err != nil {
+		return nil, err
+	}
+
+	return report, nil
+}
+
+func runOnRepositoryManifests(target string, report TargetReport) error {
 	fsys := os.DirFS(target)
-	_ = fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
+	return fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
-			return nil
+			return err
 		}
 
 		if entry.IsDir() {
@@ -305,18 +316,25 @@ func runOnRepository(target string) (TargetReport, error) {
 
 		fullPath := filepath.Join(target, path)
 		if fileViolations, err := runOnFile(fullPath); err == nil {
-			violations[path] = fileViolations
+			report[path] = fileViolations
 		} else {
-			fmt.Fprintf(os.Stderr, "Could not process manifest %q: %v\n", path, err)
+			return fmt.Errorf("could not process manifest %q: %v", entry.Name(), err)
 		}
 
 		return nil
 	})
+}
 
+func runOnRepositoryWorkflows(target string, report TargetReport) error {
+	fsys := os.DirFS(target)
 	workflowsPath := filepath.Join(githubDir, workflowsDir)
-	_ = fs.WalkDir(fsys, workflowsPath, func(path string, entry fs.DirEntry, err error) error {
+	if _, err := fsys.Open(workflowsPath); errors.Is(err, fs.ErrNotExist) {
+		return nil
+	}
+
+	return fs.WalkDir(fsys, workflowsPath, func(path string, entry fs.DirEntry, err error) error {
 		if err != nil {
-			return nil
+			return err
 		}
 
 		if entry.IsDir() {
@@ -333,15 +351,13 @@ func runOnRepository(target string) (TargetReport, error) {
 
 		fullPath := filepath.Join(target, path)
 		if workflowViolations, err := runOnFile(fullPath); err == nil {
-			violations[path] = workflowViolations
+			report[path] = workflowViolations
 		} else {
-			fmt.Fprintf(os.Stderr, "Could not process workflow %s: %v\n", entry.Name(), err)
+			return fmt.Errorf("could not process workflow %q: %v", entry.Name(), err)
 		}
 
 		return nil
 	})
-
-	return violations, nil
 }
 
 var (

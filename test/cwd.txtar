@@ -37,15 +37,14 @@ stdout '.github/workflows/unsafe.yaml'
 # Invalid manifest
 cd ../invalid-manifest
 
-exec ades
-stderr 'Could not process manifest "action.yml"'
-stderr 'Could not process manifest "action.yaml"'
+! exec ades
+stdout 'could not process manifest "action.yml"'
 
 # Invalid workflow
 cd ../invalid-workflow
 
-exec ades
-stderr 'Could not process workflow syntax-error.yml'
+! exec ades
+stdout 'could not process workflow "syntax-error.yml"'
 
 
 -- manifests/action.yml --
@@ -133,15 +132,6 @@ runs:
   steps:
   - run: echo 'Hello ${{ inputs.name }}'
 -- invalid-manifest/action.yml --
-name: Example action manifest with a syntax error
-description: Sample action for testing _ades_
-
-runs:
-  using: composite
-  steps:
-  - name: Unsafe run
-   run: echo 'Hello ${{ inputs.name }}'
--- invalid-manifest/action.yaml --
 name: Example action manifest with a syntax error
 description: Sample action for testing _ades_
 
