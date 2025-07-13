@@ -1,0 +1,4 @@
+# Configuration file for Wrapcheck (https://github.com/tomarrell/wrapcheck)
+
+extraIgnoreSigs:
+- fs.WalkDir(
