@@ -132,7 +132,6 @@ require (
 	go.opentelemetry.io/otel/metric v1.21.0 // indirect
 	go.opentelemetry.io/otel/trace v1.21.0 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
-	go.uber.org/nilaway v0.0.0-20241010202415-ba14292918d8 // indirect
 	golang.org/x/exp/typeparams v0.0.0-20240213143201-ec583247a57a // indirect
 	golang.org/x/net v0.41.0 // indirect
 	golang.org/x/sync v0.15.0 // indirect
@@ -176,7 +175,6 @@ tool (
 	github.com/tetafro/godot/cmd/godot
 	github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck
 	github.com/ultraware/whitespace/cmd/whitespace
-	go.uber.org/nilaway/cmd/nilaway
 	golang.org/x/tools/cmd/deadcode
 	golang.org/x/tools/cmd/goimports
 	golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow
