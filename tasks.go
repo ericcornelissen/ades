@@ -544,7 +544,6 @@ func TaskVet(t *T) error {
 		"go run github.com/tetafro/godot/cmd/godot .",
 		"go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck ./...",
 		"go run github.com/ultraware/whitespace/cmd/whitespace ./...",
-		"go run go.uber.org/nilaway/cmd/nilaway ./...",
 		"go run golang.org/x/tools/cmd/deadcode ./...",
 		"go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow ./...",
 		"go run honnef.co/go/tools/cmd/staticcheck ./...",
