@@ -7,13 +7,16 @@ A simple tool to find dangerous uses of [GitHub Actions Expression]s.
 Expressions in GitHub Actions, e.g. `${{ <expression> }}`, may appear in a GitHub Actions workflow
 or manifest and are filled in at runtime. If the value is controlled by an attacker it could be used
 to hijack the continuous integration pipeline of a repository. A more detailed description of the
-problem is given by GitHub in "[Understanding the risk of script injections]".
+problem is given by GitHub in "[Understanding the risk of script injections]". GitHub also covered
+this problem on their blog in [2023][blog-2023] and [2025][blog-2025].
 
 `ades` helps you **find** and **resolve** dangerous uses of GitHub Actions Expressions in workflows
 and manifests.
 
 [github actions expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
 [understanding the risk of script injections]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections
+[blog-2023]: https://github.blog/security/supply-chain-security/four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
+[blog-2025]: https://github.blog/security/vulnerability-research/how-to-catch-github-actions-workflow-injections-before-attackers-do#h-explaining-actions-workflow-injections
 
 ## Overview
 
