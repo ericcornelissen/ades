@@ -57,6 +57,7 @@ cmd/ades/**
 !*.go
 
 # Test
+!axe.min.js
 !gremlins.min.js
 !test/
 test/**

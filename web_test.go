@@ -129,6 +129,34 @@ jobs:
 	}
 }
 
+func TestWebAccessibility(t *testing.T) {
+	scripts := []playwright.Script{
+		{Path: playwright.String("./axe.min.js")},
+	}
+
+	s, p := setup(t, scripts)
+	defer s.Close()
+
+	res, err := p.Evaluate(`
+		async () => {
+			const { violations } = await axe.run();
+			if (violations.length > 0) {
+				const details = violations
+					.map(violation => violation.help + " (" + violation.helpUrl + ")")
+					.join("\n");
+				return "Accessibility issues found:\n" + details;
+			}
+		}
+	`)
+	if err != nil {
+		t.Fatalf("could not evaluate accessibility: %v", err)
+	}
+
+	if res, ok := res.(string); ok {
+		t.Error(res)
+	}
+}
+
 func TestWebChaos(t *testing.T) {
 	scripts := []playwright.Script{
 		{Path: playwright.String("./gremlins.min.js")},
