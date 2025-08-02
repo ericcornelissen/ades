@@ -52,6 +52,9 @@ jobs:
         context: .
         file: Containerfile
         push: true
+        platforms: >-
+          linux/amd64,
+          linux/arm64
         tags: >-
           ericornelissen/ades:latest,
           ericornelissen/ades:${{ steps.version.outputs.version }}
