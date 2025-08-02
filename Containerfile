@@ -27,6 +27,12 @@ RUN go run tasks.go build
 
 FROM scratch AS main
 
+LABEL org.opencontainers.image.title="ades" \
+	org.opencontainers.image.description="Find dangerous uses of GitHub Actions Workflow expressions." \
+	org.opencontainers.image.version="v25.07" \
+	org.opencontainers.image.licenses="GPL-3.0-or-later" \
+	org.opencontainers.image.source="https://github.com/ericcornelissen/ades"
+
 COPY --from=build /src/ades /bin/ades
 COPY COPYING.txt SECURITY.md /
 

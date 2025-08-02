@@ -39,11 +39,18 @@ as an example):
 
    Single-digit months should be prefixed with a `0` (for example for January `24.01`).
 
+1. Update the version number accordingly in the `Containerfile`:
+
+   ```diff
+   - org.opencontainers.image.version="v23.11"
+   + org.opencontainers.image.version="v23.12"
+   ```
+
 1. Commit the changes to a new branch and push using:
 
    ```shell
    git checkout -b version-bump
-   git add 'main.go' 'test/flags-info.txtar'
+   git add 'cmd/ades/main.go' 'test/flags-info.txtar' 'Containerfile'
    git commit --signoff --message 'version bump'
    git push origin version-bump
    ```
