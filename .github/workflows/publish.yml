@@ -28,6 +28,8 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Install Docker Buildx
+      uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
     - name: Get Go version
       id: go
       shell: bash
@@ -52,6 +54,9 @@ jobs:
         context: .
         file: Containerfile
         push: true
+        platforms: >-
+          linux/amd64,
+          linux/arm64
         tags: >-
           ericornelissen/ades:latest,
           ericornelissen/ades:${{ steps.version.outputs.version }}
