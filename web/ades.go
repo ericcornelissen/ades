@@ -98,7 +98,6 @@ func analyze(source string, opts *options) {
 	}
 
 	succeed(result)
-	return
 }
 
 func runAdes(_this js.Value, args []js.Value) any {
