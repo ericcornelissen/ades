@@ -1,0 +1,14 @@
+version 1
+
+JamesIves/github-pages-deploy-action@v4.6.0 toj4e4MC92RwV/GgRxZJus1K82eOraaiT9PtYks+Vtk=
+actions/attest-build-provenance@1176ef556905f349f669722abf30bce1a6e16e01 ccAb5thd4J1sxFT5QEgKnC04KRkp1R1zO1Q8eSFkcHo=
+actions/attest-build-provenance@v2.4.0 tr3SCeKvJr8jCELaGHgO5ynOBk5VbRLW6D1BiwsEK9w=
+actions/attest@ce27ba3b4a9a139d9a20a4a07d69fabb52f1e5bc cz9gcE3dfmBwFH8u4keODp4ZtK45yVawz6ykFT0+Npw=
+actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 aYx2ZNrV/U9daVa5XJLnuR3depD7lQqzkyRhH4E9bOU=
+actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 vSiNC7HetrtPF3QhZDzPHWyJ1e8pFltzruLjcw65Sok=
+docker/build-push-action@v6.17.0 JSBiASwiRckIi1Wp4xJz7zlr/fU3g9lZK9k212ed574=
+docker/login-action@v3.5.0 RxoJ1o2Xuu23E92jBIienfwaHki0MzXuVVE4QOm1mJ4=
+github/codeql-action@ce28f5bb42b7a9f2c824e633a3f6ee835bab6858 EHmrWPs3TigbNzGrCQBGGHmtmbW5+gPaF8Qj+Zs/aPc=
+github/codeql-action@v3.29.0 EHmrWPs3TigbNzGrCQBGGHmtmbW5+gPaF8Qj+Zs/aPc=
+ncipollo/release-action@v1.18.0 xoLZgWU2qmceVE1cIutBUMKLHHiWc105Qar4yO9x+kY=
+sigstore/cosign-installer@v3.8.0 opkO3mG7r6Lz7AsxV18ddtZUJX+MRaIO3+YmoqrUq2s=

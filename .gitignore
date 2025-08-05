@@ -12,11 +12,17 @@
 !.github/ISSUE_TEMPLATE/feature-request.yml
 !.github/ISSUE_TEMPLATE/question.yml
 !.github/ISSUE_TEMPLATE/website.yml
+!.github/actions/
+.github/actions/**
+!.github/actions/ghasum/
+.github/actions/ghasum/**
+!.github/actions/ghasum/action.yml
 !.github/workflows/
 .github/workflows/**
 !.github/workflows/audit.yml
 !.github/workflows/check.yml
 !.github/workflows/codeql.yml
+!.github/workflows/gha.sum
 !.github/workflows/publish.yml
 !.github/workflows/semgrep.yml
 !.github/workflows/website.yml

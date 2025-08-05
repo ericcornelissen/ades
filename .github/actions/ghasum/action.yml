@@ -1,0 +1,47 @@
+name: ghasum
+description: Verify checksums of actions
+
+runs:
+  using: composite
+  steps:
+  # macOS
+  - name: Verify the action checksums
+    if: runner.os == 'macOS'
+    shell: bash
+    env:
+      JOB: ${{ github.job }}
+      WORKFLOW: ${{ github.workflow_ref }}
+    run: |
+      set -euo pipefail
+      WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+      go run github.com/chains-project/ghasum/cmd/ghasum verify \
+        -cache /Users/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
+
+  # Linux
+  - name: Verify the action checksums
+    if: runner.os == 'Linux'
+    shell: bash
+    env:
+      JOB: ${{ github.job }}
+      WORKFLOW: ${{ github.workflow_ref }}
+    run: |
+      set -euo pipefail
+      WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+      go run github.com/chains-project/ghasum/cmd/ghasum verify \
+        -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
+
+  # Windows
+  - name: Verify the action checksums
+    if: runner.os == 'Windows'
+    shell: pwsh
+    env:
+      JOB: ${{ github.job }}
+      WORKFLOW: ${{ github.workflow_ref }}
+    run: |
+      $WorkflowParts = $env:WORKFLOW -split '@'
+      $WorkflowPath = ($WorkflowParts[0] -split '/')[2..4] -join '/'
+      if (Test-Path -Path 'C:\a\_actions') {
+        go run github.com/chains-project/ghasum/cmd/ghasum verify -cache C:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+      } else {
+        go run github.com/chains-project/ghasum/cmd/ghasum verify -cache D:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
+      }

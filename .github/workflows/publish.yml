@@ -20,16 +20,16 @@ jobs:
       uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         persist-credentials: false
-    - name: Install cosign
-      uses: sigstore/cosign-installer@c56c2d3e59e4281cc41dea2217323ba5694b171e # v3.8.0
-      with:
-        cosign-release: v2.2.3
     - name: Install Go
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
-    - name: Install Docker Buildx
-      uses: docker/setup-buildx-action@e468171a9de216ec08956ac3ada2f0791b6bd435 # v3.11.1
+    - name: Verify action checksums
+      uses: ./.github/actions/ghasum
+    - name: Install cosign
+      uses: sigstore/cosign-installer@v3.8.0
+      with:
+        cosign-release: v2.2.3
     - name: Get Go version
       id: go
       shell: bash
@@ -42,13 +42,13 @@ jobs:
       run: |
         echo "version=${GITHUB_REF#refs/tags/}" >>"$GITHUB_OUTPUT"
     - name: Log in to Docker Hub
-      uses: docker/login-action@184bdaa0721073962dff0199f1fb9940f07167d1 # v3.5.0
+      uses: docker/login-action@v3.5.0
       with:
         username: ${{ vars.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build and push to Docker Hub
       id: docker
-      uses: docker/build-push-action@1dc73863535b631f98b2378be8619f83b136f4a0 # v6.17.0
+      uses: docker/build-push-action@v6.17.0
       with:
         build-args: GO_VERSION=${{ steps.go.outputs.version }}
         context: .
@@ -88,6 +88,8 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      uses: ./.github/actions/ghasum
     - name: Get release version
       id: version
       shell: bash
@@ -96,13 +98,13 @@ jobs:
     - name: Compile
       run: go run tasks.go build-all
     - name: Create GitHub release
-      uses: ncipollo/release-action@bcfe5470707e8832e12347755757cec0eb3c22af # v1.18.0
+      uses: ncipollo/release-action@v1.18.0
       with:
         tag: ${{ steps.version.outputs.version }}
         name: Release ${{ steps.version.outputs.version }}
         body: ${{ steps.version.outputs.version }}
         artifacts: ./_compiled/*
     - name: Attest build provenance
-      uses: actions/attest-build-provenance@e8998f949152b193b063cb0ec769d69d929409be # v2.4.0
+      uses: actions/attest-build-provenance@v2.4.0
       with:
         subject-path: ./_compiled/*
