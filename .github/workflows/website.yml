@@ -21,10 +21,12 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      uses: ./.github/actions/ghasum
     - name: Build
       run: go run tasks.go web-build
     - name: Deploy
-      uses: JamesIves/github-pages-deploy-action@ec9c88baef04b842ca6f0a132fd61c762aa6c1b0 # v4.6.0
+      uses: JamesIves/github-pages-deploy-action@v4.6.0
       with:
         branch: gh-pages
         folder: web
