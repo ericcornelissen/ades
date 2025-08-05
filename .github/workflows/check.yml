@@ -20,6 +20,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Build binary
       run: go run tasks.go build
     - name: Build all release binaries
@@ -44,6 +52,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Build container with ${{ matrix.engine }}
       run: go run tasks.go container
       env:
@@ -64,6 +80,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Build
       run: go run tasks.go dev-img
   format:
@@ -80,6 +104,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Check source code formatting
       run: go run tasks.go format-check
   reproducible:
@@ -96,6 +128,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Check reproducibility
       run: go run tasks.go reproducible
   reproducible-container:
@@ -113,6 +153,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Check reproducibility
       run: go run tasks.go reproducible-container
   reproducible-web:
@@ -129,6 +177,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Check reproducibility
       run: go run tasks.go web-reproducible
   test-unit:
@@ -145,6 +201,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Run tests
       run: go run tasks.go test-randomized
   test-dogfeed:
@@ -161,6 +225,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Run on this repository
       run: go run tasks.go dogfeed
   test-mutation:
@@ -177,6 +249,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Run mutation tests
       run: go run tasks.go test-mutation
   test-web:
@@ -194,6 +274,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Run web tests
       run: go run tasks.go web-test
   vet:
@@ -210,6 +298,14 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Vet source code
       run: go run tasks.go vet
   web:
@@ -226,5 +322,13 @@ jobs:
       uses: actions/setup-go@d35c59abb061a4a6fb18e82ac0862c26744d6ab5 # v5.5.0
       with:
         go-version-file: go.mod
+    - name: Verify action checksums
+      env:
+        JOB: ${{ github.job }}
+        WORKFLOW: ${{ github.workflow_ref }}
+      run: |
+        WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
+        go run github.com/chains-project/ghasum/cmd/ghasum verify \
+          -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
     - name: Build web app
       run: go run tasks.go web-build
