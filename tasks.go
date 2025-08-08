@@ -337,6 +337,7 @@ func TaskRelease(t *T) error {
 	err = t.Exec(
 		`sed -i cmd/ades/main.go -e 's/versionString := "v[0-9][0-9][.][0-9][0-9]"/versionString := "v`+date+`"/'`,
 		`sed -i test/flags-info.txtar -e "s/stdout 'v[0-9][0-9][.][0-9][0-9]'/stdout 'v`+date+`'/"`,
+		`sed -i Containerfile -e "s/version=\"v[0-9][0-9][.][0-9][0-9]\"/version=\"v`+date+`\"/"`,
 	)
 	if err != nil {
 		return err
@@ -345,7 +346,7 @@ func TaskRelease(t *T) error {
 	t.Log("Committing and pushing version bump...")
 	err = t.Exec(
 		`git checkout -b `+bumpBranch,
-		`git add 'cmd/ades/main.go' 'test/flags-info.txtar'`,
+		`git add 'cmd/ades/main.go' 'test/flags-info.txtar' 'Containerfile'`,
 		`git commit --signoff --message 'version bump'`,
 		`git push origin `+bumpBranch,
 	)
