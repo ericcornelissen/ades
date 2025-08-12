@@ -17,7 +17,7 @@ jobs:
       url: https://hub.docker.com/r/ericornelissen/ades
     steps:
     - name: Checkout repository
-      uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         persist-credentials: false
     - name: Install cosign
@@ -81,7 +81,7 @@ jobs:
       id-token: write # To perform keyless signing with cosign for attestations
     steps:
     - name: Checkout repository
-      uses: actions/checkout@d632683dd7b4114ad314bca15554477dd762a938 # v4.2.0
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
       with:
         persist-credentials: false
     - name: Install Go
