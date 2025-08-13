@@ -86,6 +86,27 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleAddnabDockerRunAction = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES105",
+		title: "Expression in 'addnab/docker-run-action' run input",
+		description: `
+When an expression appears in the run input of 'addnab/docker-run-action' you can avoid any
+potential attack by removing the expression. There is no safe way to use untrusted inputs here
+without risking injection.
+
+Do NOT pass environment variables into the container through the action's options input. This opens
+up alternative attack vectors because the options are not validated.
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["run"]
+		},
+	},
+}
+
 var actionRuleAtlassianGajiraCreate = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v2.0.1")
@@ -270,6 +291,9 @@ it can be made safer by converting it into:
 var actionRules = map[string][]actionRule{
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
+	},
+	"addnab/docker-run-action": {
+		actionRuleAddnabDockerRunAction,
 	},
 	"atlassian/gajira-create": {
 		actionRuleAtlassianGajiraCreate,

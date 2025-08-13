@@ -96,7 +96,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t", tt.uses.Ref, want)
+					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
 				}
 			})
 		}
@@ -116,6 +116,40 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == ""
 		}
 		if err := quick.Check(withoutSummary, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestActionRuleAddnabDockerRunAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		t.Run("Applies to", func(t *testing.T) {
+			f := func(uses gha.Uses, ref string) bool {
+				uses.Name = "addnab/docker-run-action"
+				uses.Ref = ref
+				return actionRuleAddnabDockerRunAction.appliesTo(&uses)
+			}
+
+			if err := quick.Check(f, nil); err != nil {
+				t.Error(err)
+			}
+		})
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		withRun := func(step gha.Step, run string) bool {
+			step.With["run"] = run
+			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == run
+		}
+		if err := quick.Check(withRun, nil); err != nil {
+			t.Error(err)
+		}
+
+		withoutRun := func(step gha.Step) bool {
+			delete(step.With, "run")
+			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(withoutRun, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -160,7 +194,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t", tt.uses.Ref, want)
+					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
 				}
 			})
 		}
@@ -224,7 +258,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleKcebGitMessageAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t", tt.uses.Ref, want)
+					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
 				}
 			})
 		}
