@@ -150,6 +150,15 @@ it can be made safer by converting it into:
   #                   | Replace the expression with the environment variable
 ```
 
+## <a id="ADES105"></a> ADES105 - Expression in `addnab/docker-run-action` run input
+
+When an expression appears in the run input of `addnab/docker-run-action` you can avoid any
+potential attack by removing the expression. There is no safe way to use untrusted inputs here
+without risking injection.
+
+Do NOT pass environment variables into the container through the action's options input. This opens
+up alternative attack vectors because the options are not validated.
+
 ## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in
