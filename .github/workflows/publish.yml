@@ -105,6 +105,6 @@ jobs:
         body: ${{ steps.version.outputs.version }}
         artifacts: ./_compiled/*
     - name: Attest build provenance
-      uses: actions/attest-build-provenance@v2.4.0
+      uses: actions/attest-build-provenance@v3.0.0
       with:
         subject-path: ./_compiled/*
