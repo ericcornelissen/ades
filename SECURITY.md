@@ -30,6 +30,16 @@ the issue privately.
 [new github advisory]: https://github.com/ericcornelissen/ades/security/advisories/new
 [security@ericcornelissen.dev]: mailto:security@ericcornelissen.dev?subject=SECURITY%20%28ades%29
 
+### Threat Model
+
+The standalone program considers the Go runtime and command line arguments as trusted. The
+containerized program additionally considers the container runtime used as trusted. The website
+considers the browser used as trusted. All other inputs, most notably files and text to analyze, are
+considered untrusted. Any violation of confidentiality or integrity is considered a security issue.
+
+The project considers the GitHub infrastructure and all project maintainers to be trusted. Any
+action performed by any other GitHub user against the repository is considered untrusted.
+
 ### What to Include in a Report
 
 Try to include as many of the following items as possible in a security report:
