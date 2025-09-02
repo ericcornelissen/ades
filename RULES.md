@@ -64,17 +64,17 @@ it can be made safer by converting it into:
 #                       | Note: the use of backticks is required in this example (for interpolation)
 ```
 
-## <a id="ADES102"></a> ADES102 - Expression in `roots/issue-closer` issue close message
+## <a id="ADES102"></a> ADES102 - Expression in `roots/issue-closer-action` issue close message
 
-When an expression appears in the issue close message of `roots/issue-closer` it is interpreted as
-an ES6-style template literal. You can avoid potential attacks by extracting the expression into an
-environment variable and using the environment variable instead.
+When an expression appears in the issue close message of `roots/issue-closer-action` it is
+interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
 ```yaml
 - name: Example step
-  uses: roots/issue-closer@v1
+  uses: roots/issue-closer-action@v1
   with:
     issue-close-message: Closing ${{ github.event.issue.title }}
 ```
@@ -83,7 +83,7 @@ it can be made safer by converting it into:
 
 ```yaml
 - name: Example step
-  uses: roots/issue-closer@v1
+  uses: roots/issue-closer-action@v1
   env:
     NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
   with:
@@ -92,9 +92,9 @@ it can be made safer by converting it into:
   #                              | Replace the expression with the environment variable
 ```
 
-## <a id="ADES103"></a> ADES103 - Expression in `roots/issue-closer` pull request close message
+## <a id="ADES103"></a> ADES103 - Expression in `roots/issue-closer-action` pull request close message
 
-When an expression appears in the pull request close message of `roots/issue-closer` it is
+When an expression appears in the pull request close message of `roots/issue-closer-action` it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -102,7 +102,7 @@ For example, given the workflow snippet:
 
 ```yaml
 - name: Example step
-  uses: roots/issue-closer@v1
+  uses: roots/issue-closer-action@v1
   with:
     pr-close-message: Closing ${{ github.event.issue.title }}
 ```
@@ -111,7 +111,7 @@ it can be made safer by converting it into:
 
 ```yaml
 - name: Example step
-  uses: roots/issue-closer@v1
+  uses: roots/issue-closer-action@v1
   env:
     NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
   with:

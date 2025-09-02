@@ -11,13 +11,23 @@ stdout 'ADES101'
 ! stderr .
 
 # ADES102
-! exec ades ades102.yml
+! exec ades ades102-1.yml
+! stdout 'Ok'
+stdout 'ADES102'
+! stderr .
+
+! exec ades ades102-2.yml
 ! stdout 'Ok'
 stdout 'ADES102'
 ! stderr .
 
 # ADES103
-! exec ades ades103.yml
+! exec ades ades103-1.yml
+! stdout 'Ok'
+stdout 'ADES103'
+! stderr .
+
+! exec ades ades103-2.yml
 ! stdout 'Ok'
 stdout 'ADES103'
 ! stderr .
@@ -74,7 +84,18 @@ jobs:
     - uses: actions/github-script@v6
       with:
         script: console.log('Hello ${{ inputs.name }}')
--- ades102.yml --
+-- ades102-1.yml --
+name: Example workflow with a ADES102 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer-action@v1
+      with:
+        issue-close-message: Closing ${{ github.event.issue.title }}
+-- ades102-2.yml --
 name: Example workflow with a ADES102 violation
 on: [push]
 
@@ -85,7 +106,18 @@ jobs:
     - uses: roots/issue-closer@v1
       with:
         issue-close-message: Closing ${{ github.event.issue.title }}
--- ades103.yml --
+-- ades103-1.yml --
+name: Example workflow with a ADES103 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: roots/issue-closer-action@v1
+      with:
+        pr-close-message: Closing ${{ github.event.issue.title }}
+-- ades103-2.yml --
 name: Example workflow with a ADES103 violation
 on: [push]
 
