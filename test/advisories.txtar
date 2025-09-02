@@ -58,6 +58,12 @@ stdout 'Ok'
 ! exec ades -conservative 'GHSA-phf6-hm3h-x8qp/'
 ! stdout 'Ok'
 
+# GHSA-65rg-554r-9j5x
+! exec ades 'GHSA-65rg-554r-9j5x/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-65rg-554r-9j5x/'
+stdout 'Ok'
+
 
 -- GHSA-7x29-qqmq-v6qc/action.yml --
 # Ultralytics YOLO 🚀, AGPL-3.0 License https://ultralytics.com/license
@@ -939,3 +945,138 @@ jobs:
           git commit -m "ScalaFmt fixup via Broad Bot"
           git push origin ${{ steps.determine-branch.outputs.target_branch }}
         working-directory: ${{ github.workspace }}
+-- GHSA-65rg-554r-9j5x/action.yml --
+name: "Lychee Broken Link Checker"
+description: "Quickly check links in Markdown, HTML, and text files"
+
+inputs:
+  args:
+    description: "Lychee arguments (https://github.com/lycheeverse/lychee#commandline-parameters)"
+    default: "--verbose --no-progress './**/*.md' './**/*.html' './**/*.rst'"
+    required: false
+  debug:
+    description: "Enable debug output in action (set -x). Helpful for troubleshooting."
+    default: false
+    required: false
+  fail:
+    description: "Fail entire pipeline on error (i.e. when lychee exit code is not 0)"
+    default: true
+    required: false
+  failIfEmpty:
+    description: "Fail entire pipeline if no links were found"
+    default: true
+    required: false
+  format:
+    description: "Summary output format (e.g. json)"
+    default: "markdown"
+    required: false
+  jobSummary:
+    description: "Write GitHub job summary at the end of the job (written on Markdown output only)"
+    default: true
+    required: false
+  lycheeVersion:
+    description: "Use custom version of lychee link checker"
+    default: v0.16.1
+    required: false
+  output:
+    description: "Summary output file path"
+    default: "lychee/out.md"
+    required: false
+  token:
+    description: "Your GitHub Access Token, defaults to: {{ github.token }}"
+    default: ${{ github.token }}
+    required: false
+
+outputs:
+  exit_code:
+    description: "The exit code returned from Lychee"
+    value: ${{ steps.run-lychee.outputs.exit_code }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Set up environment
+      run: |
+        echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+        mkdir -p "$HOME/.local/bin"
+      shell: bash
+
+    - name: Clean up existing lychee files
+      run: |
+        # Remove any existing lychee binaries or archives to prevent conflicts
+        rm -f "$HOME/.local/bin/lychee"
+        rm -rf lychee
+        rm -f "${{ steps.lychee-filename.outputs.filename }}"
+      shell: bash
+
+    - name: Download and extract lychee
+      id: lychee-setup
+      run: |
+        # Determine filename and download URL based on version
+        if [[ '${{ inputs.lycheeVersion }}' =~ ^v0\.0|^v0\.1[0-5]\. ]]; then
+          FILENAME="lychee-${{ inputs.lycheeVersion }}-x86_64-unknown-linux-gnu.tar.gz"
+          DOWNLOAD_URL="https://github.com/lycheeverse/lychee/releases/download/${{ inputs.lycheeVersion }}/${FILENAME}"
+        else
+          FILENAME="lychee-x86_64-unknown-linux-gnu.tar.gz"
+          if [[ '${{ inputs.lycheeVersion }}' == 'nightly' ]]; then
+            DOWNLOAD_URL="https://github.com/lycheeverse/lychee/releases/download/nightly/${FILENAME}"
+          elif [[ '${{ inputs.lycheeVersion }}' == 'latest' ]]; then
+            DOWNLOAD_URL="https://github.com/lycheeverse/lychee/releases/latest/download/${FILENAME}"
+          else
+            DOWNLOAD_URL="https://github.com/lycheeverse/lychee/releases/download/lychee-${{ inputs.lycheeVersion }}/${FILENAME}"
+          fi
+        fi
+
+        echo "Downloading from: ${DOWNLOAD_URL}"
+        curl -sfLO "${DOWNLOAD_URL}"
+
+        echo "Extracting ${FILENAME}"
+        tar -xvzf "${FILENAME}"
+
+        # Output filename for use in later steps
+        echo "filename=${FILENAME}" >> $GITHUB_OUTPUT
+      shell: bash
+
+    - name: Install lychee
+      run: |
+        install -t "$HOME/.local/bin" -D lychee
+      shell: bash
+
+    - name: Clean up installation files
+      run: |
+        # Remove the downloaded archive and any unnecessary files after installation
+        rm -f "${{ steps.lychee-setup.outputs.filename }}"
+        shopt -s extglob
+        rm -f lychee!(*-bin|*-lib|*.toml)
+      shell: bash
+
+    - name: Run Lychee
+      id: run-lychee
+      run: |
+        # This step runs lychee and captures its exit code.
+        # We use 'set +e' to prevent the script from exiting immediately if lychee fails.
+        # This allows us to capture the exit code and pass it both to GitHub Actions (via GITHUB_OUTPUT)
+        # and to the shell (via the final 'exit $EXIT_CODE').
+        # This ensures that:
+        # 1. The step fails if lychee fails
+        # 2. The exit code is available as an output for subsequent steps
+        # 3. The exit code is properly propagated to the workflow
+        set +e
+        ${{ github.action_path }}/entrypoint.sh
+        EXIT_CODE=$?
+        echo "exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
+        exit $EXIT_CODE
+      env:
+        # https://github.com/actions/runner/issues/665
+        INPUT_TOKEN: ${{ inputs.TOKEN }}
+        INPUT_ARGS: ${{ inputs.ARGS }}
+        INPUT_DEBUG: ${{ inputs.DEBUG }}
+        INPUT_FAIL: ${{ inputs.FAIL }}
+        INPUT_FAILIFEMPTY: ${{ inputs.FAILIFEMPTY }}
+        INPUT_FORMAT: ${{ inputs.FORMAT }}
+        INPUT_JOBSUMMARY: ${{ inputs.JOBSUMMARY }}
+        INPUT_OUTPUT: ${{ inputs.OUTPUT }}
+      shell: bash
+branding:
+  icon: "external-link"
+  color: "purple"
