@@ -158,29 +158,29 @@ this, upgrade the action to a non-vulnerable version.`,
 	},
 }
 
-var actionRuleRootsIssueCloserIssueCloseMessage = actionRule{
+var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
 		id:    "ADES102",
-		title: "Expression in 'roots/issue-closer' issue close message",
+		title: "Expression in 'roots/issue-closer-action' issue close message",
 		description: `
-When an expression appears in the issue close message of 'roots/issue-closer' it is interpreted as
-an ES6-style template literal. You can avoid potential attacks by extracting the expression into an
-environment variable and using the environment variable instead.
+When an expression appears in the issue close message of 'roots/issue-closer-action' it is
+interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
+expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
     - name: Example step
-      uses: roots/issue-closer@v1
+      uses: roots/issue-closer-action@v1
       with:
         issue-close-message: Closing ${{ github.event.issue.title }}
 
 it can be made safer by converting it into:
 
     - name: Example step
-      uses: roots/issue-closer@v1
+      uses: roots/issue-closer-action@v1
       env:
         NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
       with:
@@ -216,29 +216,29 @@ it can be made safer by converting it into:
 	},
 }
 
-var actionRuleRootsIssueCloserPrCloseMessage = actionRule{
+var actionRuleRootsIssueCloserActionPrCloseMessage = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
 	},
 	rule: rule{
 		id:    "ADES103",
-		title: "Expression in 'roots/issue-closer' pull request close message",
+		title: "Expression in 'roots/issue-closer-action' pull request close message",
 		description: `
-When an expression appears in the pull request close message of 'roots/issue-closer' it is
+When an expression appears in the pull request close message of 'roots/issue-closer-action' it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
 For example, given the workflow snippet:
 
     - name: Example step
-      uses: roots/issue-closer@v1
+      uses: roots/issue-closer-action@v1
       with:
         pr-close-message: Closing ${{ github.event.issue.title }}
 
 it can be made safer by converting it into:
 
     - name: Example step
-      uses: roots/issue-closer@v1
+      uses: roots/issue-closer-action@v1
       env:
         NAME: ${{ github.event.issue.title }} # <- Assign the expression to an environment variable
       with:
@@ -304,9 +304,13 @@ var actionRules = map[string][]actionRule{
 	"kceb/git-message-action": {
 		actionRuleKcebGitMessageAction,
 	},
+	"roots/issue-closer-action": {
+		actionRuleRootsIssueCloserActionIssueCloseMessage,
+		actionRuleRootsIssueCloserActionPrCloseMessage,
+	},
 	"roots/issue-closer": {
-		actionRuleRootsIssueCloserIssueCloseMessage,
-		actionRuleRootsIssueCloserPrCloseMessage,
+		actionRuleRootsIssueCloserActionIssueCloseMessage,
+		actionRuleRootsIssueCloserActionPrCloseMessage,
 	},
 	"sergeysova/jq-action": {
 		actionRuleSergeysovaJqAction,

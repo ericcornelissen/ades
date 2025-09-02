@@ -283,13 +283,13 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	})
 }
 
-func TestActionRulesRootsIssueCloser(t *testing.T) {
+func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
 			f := func(uses gha.Uses, ref string) bool {
 				uses.Name = "roots/issue-closer"
 				uses.Ref = ref
-				return actionRuleRootsIssueCloserIssueCloseMessage.appliesTo(&uses)
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&uses)
 			}
 
 			if err := quick.Check(f, nil); err != nil {
@@ -300,7 +300,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 		t.Run("Extract from", func(t *testing.T) {
 			withIssueCloseMessage := func(step gha.Step, message string) bool {
 				step.With["issue-close-message"] = message
-				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == message
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == message
 			}
 			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
 				t.Error(err)
@@ -308,7 +308,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 
 			withoutIssueCloseMessage := func(step gha.Step) bool {
 				delete(step.With, "issue-close-message")
-				return actionRuleRootsIssueCloserIssueCloseMessage.rule.extractFrom(&step) == ""
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == ""
 			}
 			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
 				t.Error(err)
@@ -321,7 +321,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 			f := func(uses gha.Uses, ref string) bool {
 				uses.Name = "roots/issue-closer"
 				uses.Ref = ref
-				return actionRuleRootsIssueCloserPrCloseMessage.appliesTo(&uses)
+				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&uses)
 			}
 
 			if err := quick.Check(f, nil); err != nil {
@@ -332,7 +332,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 		t.Run("Extract from", func(t *testing.T) {
 			withIssueCloseMessage := func(step gha.Step, message string) bool {
 				step.With["pr-close-message"] = message
-				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == message
+				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == message
 			}
 			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
 				t.Error(err)
@@ -340,7 +340,7 @@ func TestActionRulesRootsIssueCloser(t *testing.T) {
 
 			withoutIssueCloseMessage := func(step gha.Step) bool {
 				delete(step.With, "pr-close-message")
-				return actionRuleRootsIssueCloserPrCloseMessage.rule.extractFrom(&step) == ""
+				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == ""
 			}
 			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
 				t.Error(err)
@@ -425,10 +425,7 @@ func TestAllRules(t *testing.T) {
 	t.Run("id", func(t *testing.T) {
 		idExpr := regexp.MustCompile(`ADES\d{3}`)
 
-		ids := make([]string, 0)
 		for _, tt := range testCases {
-			ids = append(ids, tt.id)
-
 			t.Run(tt.title, func(t *testing.T) {
 				t.Parallel()
 
@@ -439,13 +436,13 @@ func TestAllRules(t *testing.T) {
 		}
 
 		t.Run("unique", func(t *testing.T) {
-			uniqueIds := make(map[string]any, len(ids))
-			for _, id := range ids {
-				if _, ok := uniqueIds[id]; ok {
-					t.Errorf("Found repeated ID %q", id)
+			ids := make(map[string]rule, len(testCases))
+			for _, tt := range testCases {
+				if got, ok := ids[tt.id]; ok && tt.title != got.title {
+					t.Errorf("Found repeated ID %q", tt.id)
 				}
 
-				uniqueIds[id] = true
+				ids[tt.id] = tt
 			}
 		})
 	})
