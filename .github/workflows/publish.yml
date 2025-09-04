@@ -100,12 +100,13 @@ jobs:
     - name: Compile
       run: go run tasks.go build-all
     - name: Create GitHub release
-      uses: ncipollo/release-action@v1.18.0
+      uses: ncipollo/release-action@v1.20.0
       with:
         tag: ${{ steps.version.outputs.version }}
         name: Release ${{ steps.version.outputs.version }}
         body: ${{ steps.version.outputs.version }}
         artifacts: ./_compiled/*
+        immutableCreate: true
     - name: Attest build provenance
       uses: actions/attest-build-provenance@v3.0.0
       with:
