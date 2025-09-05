@@ -39,9 +39,9 @@ func TestAllMatcher(t *testing.T) {
 			},
 		},
 		"input expression": {
-			value: `${{ input.greeting }}`,
+			value: `${{ inputs.greeting }}`,
 			want: []string{
-				`${{ input.greeting }}`,
+				`${{ inputs.greeting }}`,
 			},
 		},
 		"matrix expression": {
@@ -154,7 +154,7 @@ func TestConservativeMatcher(t *testing.T) {
 			want:  nil,
 		},
 		"conservatively safe expression": {
-			value: `${{ input.greeting }}`,
+			value: `${{ inputs.greeting }}`,
 			want:  nil,
 		},
 		"github.event.issue.title": {
@@ -595,7 +595,7 @@ func TestDefinitelySafe(t *testing.T) {
 			want:  `echo 'hash: '`,
 		},
 		"function, hashFiles, with variables": {
-			value: `echo 'hash: ${{ hashFiles(input.files) }}'`,
+			value: `echo 'hash: ${{ hashFiles(inputs.files) }}'`,
 			want:  `echo 'hash: '`,
 		},
 		"function, join, no variables": {

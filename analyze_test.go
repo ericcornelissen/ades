@@ -419,8 +419,8 @@ func TestAnalyzeJob(t *testing.T) {
 					Matrix: gha.Matrix{
 						Matrix: map[string]any{
 							"field": []any{
-								"${{ input.unsafe }}",
-								"${{ input.also-unsafe }}",
+								"${{ inputs.unsafe }}",
+								"${{ inputs.also-unsafe }}",
 							},
 						},
 					},
@@ -463,7 +463,7 @@ func TestAnalyzeJob(t *testing.T) {
 					Matrix: gha.Matrix{
 						Include: []map[string]any{
 							{
-								"field": "${{ input.unsafe }}",
+								"field": "${{ inputs.unsafe }}",
 							},
 						},
 					},
@@ -506,7 +506,7 @@ func TestAnalyzeJob(t *testing.T) {
 					Matrix: gha.Matrix{
 						Matrix: map[string]any{
 							"foo": map[string]any{
-								"bar": "${{ input.unsafe }}",
+								"bar": "${{ inputs.unsafe }}",
 							},
 						},
 					},
@@ -533,7 +533,7 @@ func TestAnalyzeJob(t *testing.T) {
 				},
 				Steps: []gha.Step{
 					{
-						Run: "echo ${{ matrix.field || input.unsafe }}",
+						Run: "echo ${{ matrix.field || inputs.unsafe }}",
 					},
 				},
 			},
@@ -561,7 +561,7 @@ func TestAnalyzeJob(t *testing.T) {
 					Matrix: gha.Matrix{
 						Matrix: map[string]any{
 							"foo": map[string]any{
-								"bar": "${{ input.unsafe }}",
+								"bar": "${{ inputs.unsafe }}",
 							},
 						},
 					},
@@ -583,7 +583,7 @@ func TestAnalyzeJob(t *testing.T) {
 					Matrix: gha.Matrix{
 						Matrix: map[string]any{
 							"foo": "safe",
-							"bar": "${{ input.unsafe }}",
+							"bar": "${{ inputs.unsafe }}",
 						},
 					},
 				},
@@ -653,7 +653,7 @@ func TestAnalyzeJob(t *testing.T) {
 									"bar": "safe",
 								},
 								map[string]any{
-									"bar": "${{ input.unsafe }}",
+									"bar": "${{ inputs.unsafe }}",
 								},
 							},
 						},
@@ -871,18 +871,18 @@ func TestAnalyzeString(t *testing.T) {
 			want:    []Violation{},
 		},
 		"One violations": {
-			value:   "echo 'Hello ${{ input.name }}!'",
+			value:   "echo 'Hello ${{ inputs.name }}!'",
 			matcher: AllMatcher,
 			want: []Violation{
-				{Problem: "${{ input.name }}"},
+				{Problem: "${{ inputs.name }}"},
 			},
 		},
 		"Two violations": {
-			value:   "echo '${{ input.greeting }} ${{ input.name }}!'",
+			value:   "echo '${{ inputs.greeting }} ${{ inputs.name }}!'",
 			matcher: AllMatcher,
 			want: []Violation{
-				{Problem: "${{ input.greeting }}"},
-				{Problem: "${{ input.name }}"},
+				{Problem: "${{ inputs.greeting }}"},
+				{Problem: "${{ inputs.name }}"},
 			},
 		},
 		"Safe expressions": {
@@ -891,10 +891,10 @@ func TestAnalyzeString(t *testing.T) {
 			want:    nil,
 		},
 		"Partially safe expressions": {
-			value:   "echo '${{ true || input.sha }}'",
+			value:   "echo '${{ true || inputs.sha }}'",
 			matcher: AllMatcher,
 			want: []Violation{
-				{Problem: "${{ true || input.sha }}"},
+				{Problem: "${{ true || inputs.sha }}"},
 			},
 		},
 	}

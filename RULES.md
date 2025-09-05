@@ -159,6 +159,34 @@ without risking injection.
 Do NOT pass environment variables into the container through the action's options input. This opens
 up alternative attack vectors because the options are not validated.
 
+## <a id="ADES106"></a> ADES106 - Expression in `cardinalby/js-eval-action` expression input
+
+When an expression appears in the expression input of `cardinalby/js-eval-action` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: cardinalby/js-eval-action@v1
+  with:
+    expression: 1 + parseInt(${{ inputs.value }})
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: cardinalby/js-eval-action@v1
+  env:
+    VALUE: ${{ inputs.value }} # <- Assign the expression to an environment variable
+  with:
+    expression: 1 + parseInt(env.VALUE)
+  #                          ^^^^^^^^^
+  #                          | Replace the expression with the environment variable
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in
