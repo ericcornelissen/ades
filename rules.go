@@ -126,6 +126,42 @@ upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleCardinalbyJsEvalAction = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES106",
+		title: "Expression in 'cardinalby/js-eval-action' expression input",
+		description: `
+When an expression appears in the expression input of 'cardinalby/js-eval-action' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: cardinalby/js-eval-action@v1
+      with:
+        expression: 1 + parseInt(${{ inputs.value }})
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: cardinalby/js-eval-action@v1
+      env:
+        VALUE: ${{ inputs.value }} # <- Assign the expression to an environment variable
+      with:
+        expression: 1 + parseInt(env.VALUE)
+      #                          ^^^^^^^^^
+      #                          | Replace the expression with the environment variable
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["expression"]
+		},
+	},
+}
+
 var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.0.1")
@@ -304,6 +340,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"atlassian/gajira-create": {
 		actionRuleAtlassianGajiraCreate,
+	},
+	"cardinalby/js-eval-action": {
+		actionRuleCardinalbyJsEvalAction,
 	},
 	"ericcornelissen/git-tag-annotation-action": {
 		actionRuleEriccornelissenGitTagAnnotationAction,

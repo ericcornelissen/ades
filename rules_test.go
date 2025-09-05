@@ -58,6 +58,38 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	})
 }
 
+func TestActionRuleAddnabDockerRunAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses, ref string) bool {
+			uses.Name = "addnab/docker-run-action"
+			uses.Ref = ref
+			return actionRuleAddnabDockerRunAction.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		withRun := func(step gha.Step, run string) bool {
+			step.With["run"] = run
+			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == run
+		}
+		if err := quick.Check(withRun, nil); err != nil {
+			t.Error(err)
+		}
+
+		withoutRun := func(step gha.Step) bool {
+			delete(step.With, "run")
+			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(withoutRun, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
@@ -122,35 +154,33 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	})
 }
 
-func TestActionRuleAddnabDockerRunAction(t *testing.T) {
+func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses, ref string) bool {
-				uses.Name = "addnab/docker-run-action"
-				uses.Ref = ref
-				return actionRuleAddnabDockerRunAction.appliesTo(&uses)
-			}
+		f := func(uses gha.Uses, ref string) bool {
+			uses.Name = "cardinalby/js-eval-action"
+			uses.Ref = ref
+			return actionRuleCardinalbyJsEvalAction.appliesTo(&uses)
+		}
 
-			if err := quick.Check(f, nil); err != nil {
-				t.Error(err)
-			}
-		})
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withRun := func(step gha.Step, run string) bool {
-			step.With["run"] = run
-			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == run
+		with := func(step gha.Step, expression string) bool {
+			step.With["expression"] = expression
+			return actionRuleCardinalbyJsEvalAction.rule.extractFrom(&step) == expression
 		}
-		if err := quick.Check(withRun, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutRun := func(step gha.Step) bool {
-			delete(step.With, "run")
-			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == ""
+		without := func(step gha.Step) bool {
+			delete(step.With, "expression")
+			return actionRuleCardinalbyJsEvalAction.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutRun, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})

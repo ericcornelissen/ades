@@ -44,6 +44,12 @@ stdout 'ADES104'
 stdout 'ADES105'
 ! stderr .
 
+# ADES106
+! exec ades ades106.yml
+! stdout 'Ok'
+stdout 'ADES106'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -152,6 +158,17 @@ jobs:
         image: ubuntu:latest
         run: |
           echo 'Hello ${{ env.name }}'
+-- ades106.yml --
+name: Example workflow with a ADES106 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: cardinalby/js-eval-action@v1
+      with:
+        expression: 'Hello ${{ env.name }}'
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]
@@ -162,7 +179,7 @@ jobs:
     steps:
     - uses: ericcornelissen/git-tag-annotation-action@v1.0.0
       with:
-        tag: ${{ input.tag }}
+        tag: ${{ inputs.tag }}
 -- ades201.yml --
 name: Example workflow with a ADES201 violation
 on: [push]
@@ -173,7 +190,7 @@ jobs:
     steps:
     - uses: kceb/git-message-action@v1.1.0
       with:
-        sha: ${{ input.sha }}
+        sha: ${{ inputs.sha }}
 -- ades202.yml --
 name: Example workflow with a ADES202 violation
 on: [push]
