@@ -36,6 +36,9 @@
 !.wrapcheck.yml
 
 # Docs
+!docs/
+docs/**
+!docs/EVALUATION.md
 !CONTRIBUTING.md
 !README.md
 !RELEASE.md
