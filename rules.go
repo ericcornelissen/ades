@@ -159,6 +159,29 @@ it can be made safer by converting it into:
 		extractFrom: func(step *gha.Step) string {
 			return step.With["expression"]
 		},
+		fix: func(violation *Violation) []fix {
+			var step gha.Step
+			switch source := (violation.source).(type) {
+			case *gha.Manifest:
+				step = source.Runs.Steps[violation.stepIndex]
+			case *gha.Workflow:
+				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+			}
+
+			name := getVariableNameForExpression(violation.Problem)
+			if _, ok := step.Env[name]; ok {
+				return nil
+			}
+
+			fixes := fixAddEnvVar(step, name, violation.Problem)
+			fixes = append(fixes, fixReplaceIn(
+				step.With["expression"],
+				violation.Problem,
+				"env."+name,
+			))
+
+			return fixes
+		},
 	},
 }
 
