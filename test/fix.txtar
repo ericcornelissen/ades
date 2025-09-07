@@ -88,6 +88,18 @@ cmp ADES102/workflow/unnamed/workflow.yml .want/ADES102/workflow/unnamed/workflo
 ! stderr .
 cmp ADES102/workflow/fix-and-unfixed/workflow.yml .want/ADES102/workflow/fix-and-unfixed/workflow.yml
 
+# ADES106 - Workflow
+exec ades -fix-experimental ADES106/workflow.yml
+stdout 'Ok'
+! stderr .
+cmp ADES106/workflow.yml ADES106/.want/workflow.yml
+
+# ADES106 - Manifest
+exec ades -fix-experimental ADES106/action.yml
+stdout 'Ok'
+! stderr .
+cmp ADES106/action.yml ADES106/.want/action.yml
+
 
 -- ADES100/action.yml --
 name: Example unsafe action
@@ -279,6 +291,64 @@ jobs:
       uses: roots/issue-closer@v1
       with:
         issue-close-message: Closing ${{ github.event.issue.title }}
+-- ADES106/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: cardinalby/js-eval-action@v1
+    env:
+      FOO: BAR
+    with:
+      expression: 1 + parseInt(${{ inputs.value }})
+-- ADES106/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: cardinalby/js-eval-action@v1
+      env:
+        FOO: BAR
+      with:
+        expression: 1 + parseInt(${{ inputs.value }})
+-- ADES106/.want/action.yml --
+name: Example unsafe action
+description: Sample action for testing _ades_
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe uses
+    uses: cardinalby/js-eval-action@v1
+    env:
+      FOO: BAR
+      VALUE: ${{ inputs.value }}
+    with:
+      expression: 1 + parseInt(env.VALUE)
+-- ADES106/.want/workflow.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Unsafe uses
+      uses: cardinalby/js-eval-action@v1
+      env:
+        FOO: BAR
+        VALUE: ${{ inputs.value }}
+      with:
+        expression: 1 + parseInt(env.VALUE)
 -- .want/ADES100/action.yml --
 name: Example unsafe action
 description: Sample action for testing _ades_
