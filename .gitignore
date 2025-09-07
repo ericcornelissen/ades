@@ -39,10 +39,10 @@
 !docs/
 docs/**
 !docs/EVALUATION.md
+!docs/RULES.md
 !CONTRIBUTING.md
 !README.md
 !RELEASE.md
-!RULES.md
 !SECURITY.md
 
 # Legal

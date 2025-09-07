@@ -130,5 +130,5 @@ Conservative,ADES101,      1
 Advisories,Out of scope,   23
 ```
 
-[ADES100]: ../RULES.md#ADES100
-[ADES101]: ../RULES.md#ADES101
+[ADES100]: ../docs/RULES.md#ADES100
+[ADES101]: ../docs/RULES.md#ADES101
