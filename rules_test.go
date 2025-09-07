@@ -19,6 +19,7 @@ import (
 	"fmt"
 	"regexp"
 	"slices"
+	"strings"
 	"testing"
 	"testing/quick"
 
@@ -454,6 +455,14 @@ func TestAllRules(t *testing.T) {
 
 				if len(tt.description) == 0 {
 					t.Error("The description must not be empty")
+				}
+
+				if !strings.HasPrefix(tt.description, "\n") {
+					t.Error("The description must start with a newline")
+				}
+
+				if !strings.HasSuffix(tt.description, "\n") {
+					t.Error("The description must end with a newline")
 				}
 			})
 		}
