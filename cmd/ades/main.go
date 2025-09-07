@@ -117,7 +117,7 @@ func run() int {
 			fmt.Fprintf(os.Stderr, "Unknown rule %q\n", *flagExplain)
 			return exitError
 		} else {
-			fmt.Println(explanation)
+			fmt.Print(explanation)
 			return exitSuccess
 		}
 	}

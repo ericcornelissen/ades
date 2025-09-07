@@ -79,7 +79,8 @@ it can be made safer by converting it into:
       #                     ^      ^^^^^^^^^^^^^^^^^^^
       #                     |      | Replace the expression with the environment variable
       #                     |
-      #                     | Note: the use of backticks is required in this example (for interpolation)`,
+      #                     | Note: the use of backticks is required in this example (for interpolation)
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["script"]
 		},
@@ -117,7 +118,8 @@ var actionRuleAtlassianGajiraCreate = actionRule{
 		description: `
 When an expression is used in the summary input for 'atlassian/gajira-create' in v2.0.0 or earlier
 it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To mitigate this,
-upgrade the action to a non-vulnerable version.`,
+upgrade the action to a non-vulnerable version.
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["summary"]
 		},
@@ -134,7 +136,8 @@ var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 		description: `
 When an expression is used in the tag input for 'ericcornelissen/git-tag-annotation-action' in
 v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
-mitigate this, upgrade the action to a non-vulnerable version.`,
+mitigate this, upgrade the action to a non-vulnerable version.
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["tag"]
 		},
@@ -151,7 +154,8 @@ var actionRuleKcebGitMessageAction = actionRule{
 		description: `
 When an expression is used in the sha input for 'kceb/git-message-action' in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
-this, upgrade the action to a non-vulnerable version.`,
+this, upgrade the action to a non-vulnerable version.
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["sha"]
 		},
@@ -186,7 +190,8 @@ it can be made safer by converting it into:
       with:
         issue-close-message: Closing ${process.env.NAME}
       #                              ^^^^^^^^^^^^^^^^^^^
-      #                              | Replace the expression with the environment variable`,
+      #                              | Replace the expression with the environment variable
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["issue-close-message"]
 		},
@@ -244,7 +249,8 @@ it can be made safer by converting it into:
       with:
         pr-close-message: Closing ${process.env.NAME}
       #                           ^^^^^^^^^^^^^^^^^^^
-      #                           | Replace the expression with the environment variable`,
+      #                           | Replace the expression with the environment variable
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["pr-close-message"]
 		},
@@ -281,7 +287,8 @@ it can be made safer by converting it into:
       #                  v
         cmd: jq .version "$FILE" -r
       #                   ^^^^^
-      #                   | Replace the expression with the environment variable`,
+      #                   | Replace the expression with the environment variable
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["cmd"]
 		},
@@ -347,7 +354,8 @@ it can be made safer by converting it into:
       #      | Note: the use of double quotes is required in this example (for interpolation)
 
 Note that the changes depend on the runner and shell being used. For example, on Windows (or when
-using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.`,
+using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.
+`,
 		extractFrom: func(step *gha.Step) string {
 			return step.Run
 		},
