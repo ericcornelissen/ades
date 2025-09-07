@@ -36,7 +36,7 @@ async function loadWasm() {
 
 const htmlEncode = {
   ruleId: (ruleId) => {
-    const link = `https://github.com/ericcornelissen/ades/blob/main/RULES.md#${ruleId}`;
+    const link = `https://github.com/ericcornelissen/ades/blob/main/docs/RULES.md#${ruleId}`;
 
     const a = document.createElement("a");
     a.setAttribute("href", link);

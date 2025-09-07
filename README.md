@@ -162,7 +162,7 @@ ades -help
 
 See [RULES.md].
 
-[rules.md]: ./RULES.md
+[rules.md]: ./docs/RULES.md
 
 ### JSON output
 
