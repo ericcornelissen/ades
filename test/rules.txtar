@@ -74,6 +74,12 @@ stdout 'ADES202'
 stdout 'ADES203'
 ! stderr .
 
+# ADES204
+! exec ades ades204.yml
+! stdout 'Ok'
+stdout 'ADES204'
+! stderr .
+
 
 -- ades100.yml --
 name: Example workflow with a ADES100 violation
@@ -222,3 +228,14 @@ jobs:
     - uses: SonarSource/sonarqube-scan-action@v5.0.0
       with:
         args: ${{ inputs.args }}
+-- ades204.yml --
+name: Example workflow with a ADES204 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: lycheeverse/lychee@v2.0.1
+      with:
+        lycheeVersion: ${{ inputs.lycheeVersion }}

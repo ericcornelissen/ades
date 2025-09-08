@@ -221,6 +221,24 @@ this, upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleLycheeverseLycheeAction = actionRule{
+	appliesTo: func(uses *gha.Uses) bool {
+		return isBeforeVersion(uses, "v2.0.2")
+	},
+	rule: rule{
+		id:    "ADES204",
+		title: "Expression in 'lycheeverse/lychee' lycheeVersion input",
+		description: `
+When an expression is used in the args input for 'lycheeverse/lychee' in v2.0.1 or earlier it may be
+used to execute arbitrary Bash code, see GHSA-65rg-554r-9j5x. To mitigate this, upgrade the action
+to a non-vulnerable version.
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["lycheeVersion"]
+		},
+	},
+}
+
 var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
@@ -390,6 +408,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"kceb/git-message-action": {
 		actionRuleKcebGitMessageAction,
+	},
+	"lycheeverse/lychee": {
+		actionRuleLycheeverseLycheeAction,
 	},
 	"roots/issue-closer-action": {
 		actionRuleRootsIssueCloserActionIssueCloseMessage,
