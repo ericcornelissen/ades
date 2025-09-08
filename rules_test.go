@@ -40,19 +40,19 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withScript := func(step gha.Step, script string) bool {
+		with := func(step gha.Step, script string) bool {
 			step.With["script"] = script
 			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == script
 		}
-		if err := quick.Check(withScript, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutScript := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "script")
 			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutScript, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -72,19 +72,19 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withRun := func(step gha.Step, run string) bool {
+		with := func(step gha.Step, run string) bool {
 			step.With["run"] = run
 			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == run
 		}
-		if err := quick.Check(withRun, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutRun := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "run")
 			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutRun, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -136,19 +136,19 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withSummary := func(step gha.Step, summary string) bool {
+		with := func(step gha.Step, summary string) bool {
 			step.With["summary"] = summary
 			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == summary
 		}
-		if err := quick.Check(withSummary, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutSummary := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "summary")
 			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutSummary, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -232,19 +232,19 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withTag := func(step gha.Step, tag string) bool {
+		with := func(step gha.Step, tag string) bool {
 			step.With["tag"] = tag
 			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == tag
 		}
-		if err := quick.Check(withTag, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutTag := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "tag")
 			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutTag, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -296,19 +296,83 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withSha := func(step gha.Step, tag string) bool {
+		with := func(step gha.Step, tag string) bool {
 			step.With["sha"] = tag
 			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == tag
 		}
-		if err := quick.Check(withSha, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutSha := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "sha")
 			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutSha, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			uses gha.Uses
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
+				uses: gha.Uses{
+					Ref: "v2.0.1",
+				},
+				want: true,
+			},
+			"Old version": {
+				uses: gha.Uses{
+					Ref: "v1.6.1",
+				},
+				want: true,
+			},
+			"First fixed version": {
+				uses: gha.Uses{
+					Ref: "v2.0.2",
+				},
+				want: false,
+			},
+			"New version": {
+				uses: gha.Uses{
+					Ref: "v3.0.0",
+				},
+				want: false,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				if got, want := actionRuleLycheeverseLycheeAction.appliesTo(&tt.uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, lycheeVersion string) bool {
+			step.With["lycheeVersion"] = lycheeVersion
+			return actionRuleLycheeverseLycheeAction.rule.extractFrom(&step) == lycheeVersion
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "lycheeVersion")
+			return actionRuleLycheeverseLycheeAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -329,19 +393,19 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 		})
 
 		t.Run("Extract from", func(t *testing.T) {
-			withIssueCloseMessage := func(step gha.Step, message string) bool {
+			with := func(step gha.Step, message string) bool {
 				step.With["issue-close-message"] = message
 				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == message
 			}
-			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
+			if err := quick.Check(with, nil); err != nil {
 				t.Error(err)
 			}
 
-			withoutIssueCloseMessage := func(step gha.Step) bool {
+			without := func(step gha.Step) bool {
 				delete(step.With, "issue-close-message")
 				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == ""
 			}
-			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
+			if err := quick.Check(without, nil); err != nil {
 				t.Error(err)
 			}
 		})
@@ -361,19 +425,19 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 		})
 
 		t.Run("Extract from", func(t *testing.T) {
-			withIssueCloseMessage := func(step gha.Step, message string) bool {
+			with := func(step gha.Step, message string) bool {
 				step.With["pr-close-message"] = message
 				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == message
 			}
-			if err := quick.Check(withIssueCloseMessage, nil); err != nil {
+			if err := quick.Check(with, nil); err != nil {
 				t.Error(err)
 			}
 
-			withoutIssueCloseMessage := func(step gha.Step) bool {
+			without := func(step gha.Step) bool {
 				delete(step.With, "pr-close-message")
 				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == ""
 			}
-			if err := quick.Check(withoutIssueCloseMessage, nil); err != nil {
+			if err := quick.Check(without, nil); err != nil {
 				t.Error(err)
 			}
 		})
@@ -393,19 +457,19 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
-		withCmd := func(step gha.Step, cmd string) bool {
+		with := func(step gha.Step, cmd string) bool {
 			step.With["cmd"] = cmd
 			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == cmd
 		}
-		if err := quick.Check(withCmd, nil); err != nil {
+		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
 		}
 
-		withoutCmd := func(step gha.Step) bool {
+		without := func(step gha.Step) bool {
 			delete(step.With, "cmd")
 			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == ""
 		}
-		if err := quick.Check(withoutCmd, nil); err != nil {
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})

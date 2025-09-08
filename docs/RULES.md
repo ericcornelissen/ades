@@ -216,3 +216,11 @@ and v5.3.0 it may be used to execute arbitrary Bash code, see [GHSA-f79p-9c5r-xg
 this, upgrade the action to a non-vulnerable version.
 
 [GHSA-f79p-9c5r-xg88]: https://github.com/advisories/GHSA-f79p-9c5r-xg88
+
+## <a id="ADES204"></a> ADES204 - Expression in `lycheeverse/lychee` lycheeVersion input
+
+When an expression is used in the args input for `lycheeverse/lychee` in v2.0.1 or earlier it may be
+used to execute arbitrary Bash code, see [GHSA-65rg-554r-9j5x]. To mitigate this, upgrade the action
+to a non-vulnerable version.
+
+[GHSA-65rg-554r-9j5x]: https://github.com/advisories/GHSA-65rg-554r-9j5x
