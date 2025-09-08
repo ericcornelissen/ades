@@ -1,0 +1,17 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "matchManagers": ["github-actions"],
+      "addLabels": ["ci"],
+      "schedule": "* 0-4 * * *",
+      "prConcurrentLimit": 1
+    },
+    {
+      "matchManagers": ["gomod"],
+      "schedule": "* 0-4 * * *",
+      "prConcurrentLimit": 1
+    }
+  ]
+}
