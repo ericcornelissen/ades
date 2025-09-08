@@ -27,7 +27,7 @@
 !.github/workflows/semgrep.yml
 !.github/workflows/website.yml
 !.github/codeql.yml
-!.github/dependabot.yml
+!.github/renovate.json
 
 # Config
 !.editorconfig
