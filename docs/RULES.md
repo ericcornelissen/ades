@@ -208,3 +208,11 @@ it may be used to execute arbitrary JavaScript code, see [GHSA-4xqx-pqpj-9fqw]. 
 upgrade the action to a non-vulnerable version.
 
 [GHSA-4xqx-pqpj-9fqw]: https://github.com/advisories/GHSA-4xqx-pqpj-9fqw
+
+## <a id="ADES203"></a> ADES203 - Expression in `SonarSource/sonarqube-scan-action` args input
+
+When an expression is used in the args input for `SonarSource/sonarqube-scan-action` between v4.0.0
+and v5.3.0 it may be used to execute arbitrary Bash code, see [GHSA-f79p-9c5r-xg88]. To mitigate
+this, upgrade the action to a non-vulnerable version.
+
+[GHSA-f79p-9c5r-xg88]: https://github.com/advisories/GHSA-f79p-9c5r-xg88

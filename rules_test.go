@@ -129,7 +129,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
 				}
 			})
 		}
@@ -225,7 +225,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
 				}
 			})
 		}
@@ -289,7 +289,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 				t.Parallel()
 
 				if got, want := actionRuleKcebGitMessageAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s, got %t, want %t", tt.uses.Ref, got, want)
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
 				}
 			})
 		}
@@ -406,6 +406,82 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == ""
 		}
 		if err := quick.Check(withoutCmd, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			uses gha.Uses
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"Old unaffected version": {
+				uses: gha.Uses{
+					Ref: "v3.1.0",
+				},
+				want: false,
+			},
+			"First vulnerable version": {
+				uses: gha.Uses{
+					Ref: "v4.0.0",
+				},
+				want: true,
+			},
+			"Middle vulnerable version": {
+				uses: gha.Uses{
+					Ref: "v4.2.0",
+				},
+				want: true,
+			},
+			"Last vulnerable version": {
+				uses: gha.Uses{
+					Ref: "v5.3.0",
+				},
+				want: true,
+			},
+			"First fixed version": {
+				uses: gha.Uses{
+					Ref: "v5.3.1",
+				},
+				want: false,
+			},
+			"New version": {
+				uses: gha.Uses{
+					Ref: "v6.0.0",
+				},
+				want: false,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				if got, want := actionRuleSonarSourceSonarqubeScanAction.appliesTo(&tt.uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, args string) bool {
+			step.With["args"] = args
+			return actionRuleSonarSourceSonarqubeScanAction.rule.extractFrom(&step) == args
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "args")
+			return actionRuleSonarSourceSonarqubeScanAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -655,6 +731,220 @@ func TestFindRule(t *testing.T) {
 			})
 		}
 	})
+}
+
+func TestIsAtOrAfterVersion(t *testing.T) {
+	type TestCase struct {
+		uses    gha.Uses
+		version string
+		want    bool
+	}
+
+	testCases := map[string]TestCase{
+		"Full version, exact same version": {
+			uses: gha.Uses{
+				Ref: "v1.2.3",
+			},
+			version: "v1.2.3",
+			want:    true,
+		},
+		"Full version, earlier major version": {
+			uses: gha.Uses{
+				Ref: "v0.1.0",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		"Full version, earlier minor version": {
+			uses: gha.Uses{
+				Ref: "v1.1.0",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		"Full version, earlier patch version": {
+			uses: gha.Uses{
+				Ref: "v1.2.1",
+			},
+			version: "v1.2.3",
+			want:    false,
+		},
+		"Full version, later major version": {
+			uses: gha.Uses{
+				Ref: "v2.0.0",
+			},
+			version: "v1.2.3",
+			want:    true,
+		},
+		"Full version, later minor version": {
+			uses: gha.Uses{
+				Ref: "v1.3.0",
+			},
+			version: "v1.2.3",
+			want:    true,
+		},
+		"Full version, later patch version": {
+			uses: gha.Uses{
+				Ref: "v1.2.4",
+			},
+			version: "v1.2.3",
+			want:    true,
+		},
+		"Major version only, earlier major version": {
+			uses: gha.Uses{
+				Ref: "v1",
+			},
+			version: "v2.1.0",
+			want:    false,
+		},
+		"Major version only, same major version": {
+			uses: gha.Uses{
+				Ref: "v2",
+			},
+			version: "v2.1.0",
+			want:    true,
+		},
+		"Major version only, later major version": {
+			uses: gha.Uses{
+				Ref: "v3",
+			},
+			version: "v2.1.0",
+			want:    true,
+		},
+		"Major+minor version, earlier major version and earlier minor version": {
+			uses: gha.Uses{
+				Ref: "v1.1",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		"Major+minor version, earlier major version and same minor version": {
+			uses: gha.Uses{
+				Ref: "v1.2",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		"Major+minor version, earlier major version and later minor version": {
+			uses: gha.Uses{
+				Ref: "v1.3",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		"Major+minor version, same major version and earlier minor version": {
+			uses: gha.Uses{
+				Ref: "v2.1",
+			},
+			version: "v2.2.1",
+			want:    false,
+		},
+		"Major+minor version, same major version and same minor version": {
+			uses: gha.Uses{
+				Ref: "v2.2",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		"Major+minor version, same major version and later minor version": {
+			uses: gha.Uses{
+				Ref: "v2.3",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		"Major+minor version, later major version and earlier minor version": {
+			uses: gha.Uses{
+				Ref: "v3.1",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		"Major+minor version, later major version and same minor version": {
+			uses: gha.Uses{
+				Ref: "v3.2",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		"Major+minor version, later major version and later minor version": {
+			uses: gha.Uses{
+				Ref: "v3.3",
+			},
+			version: "v2.2.1",
+			want:    true,
+		},
+		"SHA without annotation": {
+			uses: gha.Uses{
+				Ref: "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		"SHA with annotation that is not a version": {
+			uses: gha.Uses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "I'm just a comment",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		"SHA with annotation, later version": {
+			uses: gha.Uses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v1.1.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		"SHA with annotation, same version": {
+			uses: gha.Uses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v1.0.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		"SHA with annotation, earlier version": {
+			uses: gha.Uses{
+				Ref:        "21fa0360d55070a1d6b999d027db44cc21a7b48d",
+				Annotation: "v0.1.0",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+		"semver ref and annotation, ref later": {
+			uses: gha.Uses{
+				Ref:        "v1.1.0",
+				Annotation: "v0.1.0",
+			},
+			version: "v1.0.0",
+			want:    true,
+		},
+		"semver ref and annotation, ref earlier": {
+			uses: gha.Uses{
+				Ref:        "v0.1.0",
+				Annotation: "v1.1.0",
+			},
+			version: "v1.0.0",
+			want:    false,
+		},
+	}
+
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			if got, want := isAtOrAfterVersion(&tt.uses, tt.version), tt.want; got != want {
+				ref := tt.uses.Ref
+				if tt.uses.Annotation != "" {
+					ref = fmt.Sprintf("%s (%s)", tt.uses.Ref, tt.uses.Annotation)
+				}
+
+				t.Errorf("Wrong answer for given %s compared to %s (got %t, want %t)", ref, tt.version, got, want)
+			}
+		})
+	}
 }
 
 func TestIsBeforeVersion(t *testing.T) {

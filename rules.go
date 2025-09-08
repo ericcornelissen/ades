@@ -354,6 +354,24 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleSonarSourceSonarqubeScanAction = actionRule{
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAtOrAfterVersion(uses, "v4.0.0") && isBeforeVersion(uses, "v5.3.1")
+	},
+	rule: rule{
+		id:    "ADES203",
+		title: "Expression in 'SonarSource/sonarqube-scan-action' args input",
+		description: `
+When an expression is used in the args input for 'SonarSource/sonarqube-scan-action' between v4.0.0
+and v5.3.0 it may be used to execute arbitrary Bash code, see GHSA-f79p-9c5r-xg88. To mitigate
+this, upgrade the action to a non-vulnerable version.
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["args"]
+		},
+	},
+}
+
 var actionRules = map[string][]actionRule{
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
@@ -383,6 +401,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"sergeysova/jq-action": {
 		actionRuleSergeysovaJqAction,
+	},
+	"SonarSource/sonarqube-scan-action": {
+		actionRuleSonarSourceSonarqubeScanAction,
 	},
 }
 
@@ -428,13 +449,38 @@ var stepRules = []stepRule{
 	stepRuleRun,
 }
 
-func isBeforeVersion(uses *gha.Uses, version string) bool {
+func getRef(uses *gha.Uses) (string, bool) {
 	ref := uses.Ref
 	if !semver.IsValid(ref) {
 		ref = uses.Annotation
 		if !semver.IsValid(ref) {
-			return false
+			return "", false
 		}
+	}
+
+	return ref, true
+}
+
+func isAtOrAfterVersion(uses *gha.Uses, version string) bool {
+	ref, ok := getRef(uses)
+	if !ok {
+		return false
+	}
+
+	switch {
+	case semver.Canonical(ref) == ref:
+		return semver.Compare(ref, version) >= 0
+	case semver.MajorMinor(ref) == ref:
+		return semver.Compare(ref, semver.MajorMinor(version)) >= 0
+	default:
+		return semver.Compare(ref, semver.Major(version)) >= 0
+	}
+}
+
+func isBeforeVersion(uses *gha.Uses, version string) bool {
+	ref, ok := getRef(uses)
+	if !ok {
+		return false
 	}
 
 	switch {
