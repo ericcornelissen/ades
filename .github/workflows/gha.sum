@@ -12,4 +12,4 @@ docker/setup-buildx-action@v3.11.1 ZSQQmzmjsPIJZdqrOUcuNs24j01PJ/r4ff0LDxkvXMk=
 github/codeql-action@2d92b76c45b91eb80fc44c74ce3fce0ee94e8f9d k7FtwExLneGuWxCRuUpXy9qUHFdB7P9THUcVZiFjnkw=
 github/codeql-action@v3.30.0 k7FtwExLneGuWxCRuUpXy9qUHFdB7P9THUcVZiFjnkw=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
-sigstore/cosign-installer@v3.8.0 opkO3mG7r6Lz7AsxV18ddtZUJX+MRaIO3+YmoqrUq2s=
+sigstore/cosign-installer@v3.9.2 HtMoG+EMCPvEgzNQVxeDSt6ImxiD0alCjNO7cfb0/3c=
