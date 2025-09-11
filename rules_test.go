@@ -26,6 +26,37 @@ import (
 	"github.com/ericcornelissen/go-gha-models"
 )
 
+func TestActionRule8398a7ActionSlack(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "8398a7/action-slack"
+			return actionRule8398a7ActionSlack.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["custom_payload"] = value
+			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "custom_payload")
+			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		f := func(uses gha.Uses, ref string) bool {
