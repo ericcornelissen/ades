@@ -50,6 +50,12 @@ stdout 'ADES105'
 stdout 'ADES106'
 ! stderr .
 
+# ADES107
+! exec ades ades107.yml
+! stdout 'Ok'
+stdout 'ADES107'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -181,6 +187,18 @@ jobs:
     - uses: cardinalby/js-eval-action@v1
       with:
         expression: 'Hello ${{ env.name }}'
+-- ades107.yml --
+name: Example workflow with a ADES107 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: 8398a7/action-slack@v3.18.0
+      with:
+        custom_payload: |
+          { attachments: [{ color: '${{ inputs.color }}' }] }
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]
