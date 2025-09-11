@@ -50,6 +50,44 @@ type fix struct {
 	Old regexp.Regexp
 }
 
+var actionRule8398a7ActionSlack = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES107",
+		title: "Expression in '8398a7/action-slack' custom_payload input",
+		description: `
+When an expression appears in the custom_payload input of '8398a7/action-slack' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: 8398a7/action-slack@v3
+      with:
+        custom_payload: |
+          { attachments: [{ color: '${{ inputs.color }}' }] }
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: 8398a7/action-slack@v3
+      env:
+        COLOR: ${{ inputs.color }} # <- Assign the expression to an environment variable
+      with:
+        custom_payload: |
+          { attachments: [{ color: process.env.COLOR }] }
+      #                            ^^^^^^^^^^^^^^^^^
+      #                            | Replace the expression with the environment variable
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["custom_payload"]
+		},
+	},
+}
+
 var actionRuleActionsGitHubScript = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
@@ -391,6 +429,9 @@ this, upgrade the action to a non-vulnerable version.
 }
 
 var actionRules = map[string][]actionRule{
+	"8398a7/action-slack": {
+		actionRule8398a7ActionSlack,
+	},
 	"actions/github-script": {
 		actionRuleActionsGitHubScript,
 	},

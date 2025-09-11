@@ -26,11 +26,41 @@ import (
 	"github.com/ericcornelissen/go-gha-models"
 )
 
+func TestActionRule8398a7ActionSlack(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "8398a7/action-slack"
+			return actionRule8398a7ActionSlack.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["custom_payload"] = value
+			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "custom_payload")
+			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses, ref string) bool {
+		f := func(uses gha.Uses) bool {
 			uses.Name = "actions/github-script"
-			uses.Ref = ref
 			return actionRuleActionsGitHubScript.appliesTo(&uses)
 		}
 
@@ -60,9 +90,8 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 
 func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses, ref string) bool {
+		f := func(uses gha.Uses) bool {
 			uses.Name = "addnab/docker-run-action"
-			uses.Ref = ref
 			return actionRuleAddnabDockerRunAction.appliesTo(&uses)
 		}
 
@@ -156,9 +185,8 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 
 func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses, ref string) bool {
+		f := func(uses gha.Uses) bool {
 			uses.Name = "cardinalby/js-eval-action"
-			uses.Ref = ref
 			return actionRuleCardinalbyJsEvalAction.appliesTo(&uses)
 		}
 
@@ -381,9 +409,8 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses, ref string) bool {
+			f := func(uses gha.Uses) bool {
 				uses.Name = "roots/issue-closer"
-				uses.Ref = ref
 				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&uses)
 			}
 
@@ -413,9 +440,8 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 	t.Run("pr-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses, ref string) bool {
+			f := func(uses gha.Uses) bool {
 				uses.Name = "roots/issue-closer"
-				uses.Ref = ref
 				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&uses)
 			}
 
