@@ -4,12 +4,13 @@
   "packageRules": [
     {
       "matchManagers": ["github-actions"],
-      "addLabels": ["ci"],
+      "addLabels": ["ci/cd"],
       "schedule": "* 0-4 * * *",
       "prConcurrentLimit": 1
     },
     {
       "matchManagers": ["gomod"],
+      "postUpdateOptions": ["gomodTidy"],
       "schedule": "* 0-4 * * *",
       "prConcurrentLimit": 1
     }
