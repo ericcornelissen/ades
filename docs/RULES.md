@@ -187,6 +187,36 @@ it can be made safer by converting it into:
   #                          | Replace the expression with the environment variable
 ```
 
+## <a id="ADES107"></a> ADES107 - Expression in `8398a7/action-slack` custom_payload input
+
+When an expression appears in the custom_payload input of `8398a7/action-slack` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: 8398a7/action-slack@v3
+  with:
+    custom_payload: |
+      { attachments: [{ color: '${{ inputs.color }}' }] }
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: 8398a7/action-slack@v3
+  env:
+    COLOR: ${{ inputs.color }} # <- Assign the expression to an environment variable
+  with:
+    custom_payload: |
+      { attachments: [{ color: process.env.COLOR }] }
+  #                            ^^^^^^^^^^^^^^^^^
+  #                            | Replace the expression with the environment variable
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
 
 When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in
