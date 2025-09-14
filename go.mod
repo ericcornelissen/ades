@@ -136,7 +136,7 @@ require (
 	github.com/spf13/pflag v1.0.7 // indirect
 	github.com/spf13/viper v1.18.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
-	github.com/tetafro/godot v1.5.1 // indirect
+	github.com/tetafro/godot v1.5.2 // indirect
 	github.com/tomarrell/wrapcheck/v2 v2.11.0 // indirect
 	github.com/ultraware/whitespace v0.2.0 // indirect
 	github.com/urfave/cli v1.22.17 // indirect
