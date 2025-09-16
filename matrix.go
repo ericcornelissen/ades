@@ -28,9 +28,9 @@ var matrixExprRegExp = regexp.MustCompile(`matrix\.[a-z._-]+`)
 func matrixSafe(expr string, matrix gha.Matrix, matcher ExprMatcher) bool {
 	matrixExprs := matrixExprRegExp.FindAllString(expr, len(expr))
 	for _, expr := range matrixExprs {
-		values := getMatrixValues(expr, matrix.Matrix)
-		for _, include := range matrix.Include {
-			values = append(values, getMatrixValues(expr, include)...)
+		var values []string
+		for _, matrix := range matrix {
+			values = getMatrixValues(expr, matrix)
 		}
 
 		if len(values) == 0 {
