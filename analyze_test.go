@@ -394,8 +394,8 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Safe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
+					Matrix: []map[string]any{
+						{
 							"field": []any{
 								"safe",
 								"also safe",
@@ -416,54 +416,11 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Unsafe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
+					Matrix: []map[string]any{
+						{
 							"field": []any{
 								"${{ inputs.unsafe }}",
 								"${{ inputs.also-unsafe }}",
-							},
-						},
-					},
-				},
-				Steps: []gha.Step{
-					{
-						Run: "echo ${{ matrix.field }}",
-					},
-				},
-			},
-			matcher:   AllMatcher,
-			wantCount: 1,
-			wantId:    "Unsafe matrix",
-		},
-		"matrix include safe": {
-			job: gha.Job{
-				Name: "Safe matrix",
-				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Include: []map[string]any{
-							{
-								"field": "safe",
-							},
-						},
-					},
-				},
-				Steps: []gha.Step{
-					{
-						Run: "echo ${{ matrix.field }}",
-					},
-				},
-			},
-			matcher:   AllMatcher,
-			wantCount: 0,
-		},
-		"matrix include unsafe": {
-			job: gha.Job{
-				Name: "Unsafe matrix",
-				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Include: []map[string]any{
-							{
-								"field": "${{ inputs.unsafe }}",
 							},
 						},
 					},
@@ -482,8 +439,8 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Safe nested matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
+					Matrix: []map[string]any{
+						{
 							"foo": map[string]any{
 								"bar": "safe",
 							},
@@ -503,8 +460,8 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Unsafe nested matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
+					Matrix: []map[string]any{
+						{
 							"foo": map[string]any{
 								"bar": "${{ inputs.unsafe }}",
 							},
@@ -525,9 +482,9 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Safe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"field": "safe",
+					Matrix: []map[string]any{
+						{
+							"foo": "safe",
 						},
 					},
 				},
@@ -558,8 +515,8 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Incomplete access",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
+					Matrix: []map[string]any{
+						{
 							"foo": map[string]any{
 								"bar": "${{ inputs.unsafe }}",
 							},
@@ -580,10 +537,12 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Partially unsafe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"foo": "safe",
-							"bar": "${{ inputs.unsafe }}",
+					Matrix: []map[string]any{
+						{
+							"foo": map[string]any{
+								"foo": "safe",
+								"bar": "${{ inputs.unsafe }}",
+							},
 						},
 					},
 				},
@@ -601,9 +560,12 @@ func TestAnalyzeJob(t *testing.T) {
 			job: gha.Job{
 				Name: "Safe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"field": "${{ 3.14 }}",
+					Matrix: []map[string]any{
+						{
+							"field": []any{
+								"safe",
+								"${{ 3.14 }}",
+							},
 						},
 					},
 				},
@@ -616,66 +578,15 @@ func TestAnalyzeJob(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 0,
 		},
-		"matrix nested objects safe": {
-			job: gha.Job{
-				Name: "Nested unsafe matrix",
-				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"foo": []any{
-								map[string]any{
-									"baz": "safe",
-								},
-								map[string]any{
-									"baz": "also safe",
-								},
-							},
-						},
-					},
-				},
-				Steps: []gha.Step{
-					{
-						Run: "echo ${{ matrix.foo.baz }}",
-					},
-				},
-			},
-			matcher:   AllMatcher,
-			wantCount: 0,
-		},
-		"matrix nested objects unsafe": {
-			job: gha.Job{
-				Name: "Nested unsafe matrix",
-				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"foo": []any{
-								map[string]any{
-									"bar": "safe",
-								},
-								map[string]any{
-									"bar": "${{ inputs.unsafe }}",
-								},
-							},
-						},
-					},
-				},
-				Steps: []gha.Step{
-					{
-						Run: "echo ${{ matrix.foo.bar }}",
-					},
-				},
-			},
-			matcher:   AllMatcher,
-			wantCount: 1,
-			wantId:    "Nested unsafe matrix",
-		},
 		"matrix conservatively safe": {
 			job: gha.Job{
 				Name: "Conservatively safe matrix",
 				Strategy: gha.Strategy{
-					Matrix: gha.Matrix{
-						Matrix: map[string]any{
-							"field": []any{"${{ foo.bar }}"},
+					Matrix: []map[string]any{
+						{
+							"field": []any{
+								"${{ foo.bar }}",
+							},
 						},
 					},
 				},
@@ -696,7 +607,7 @@ func TestAnalyzeJob(t *testing.T) {
 
 			violations := analyzeJob(tt.id, &tt.job, tt.matcher)
 			if got, want := len(violations), tt.wantCount; got != want {
-				t.Fatalf("Unexpected number of violations (got %d, want %d)", got, want)
+				t.Fatalf("Unexpected number of violations (got %d, want %d) %v", got, want, violations)
 			}
 
 			for i, violation := range violations {
