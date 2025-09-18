@@ -21,7 +21,7 @@ import (
 	"testing/quick"
 
 	"github.com/rogpeppe/go-internal/testscript"
-	"github.com/santhosh-tekuri/jsonschema/v5"
+	"github.com/santhosh-tekuri/jsonschema/v6"
 )
 
 func TestMain(m *testing.M) {
@@ -39,7 +39,8 @@ func TestCli(t *testing.T) {
 }
 
 func TestJsonSchema(t *testing.T) {
-	schema, err := jsonschema.Compile("../../schema.json")
+	c := jsonschema.NewCompiler()
+	schema, err := c.Compile("../../schema.json")
 	if err != nil {
 		t.Fatalf("schema.json is not a valid JSON Schema: %v", err)
 	}
