@@ -249,8 +249,16 @@ this, upgrade the action to a non-vulnerable version.
 
 ## <a id="ADES204"></a> ADES204 - Expression in `lycheeverse/lychee` lycheeVersion input
 
-When an expression is used in the args input for `lycheeverse/lychee` in v2.0.1 or earlier it may be
-used to execute arbitrary Bash code, see [GHSA-65rg-554r-9j5x]. To mitigate this, upgrade the action
-to a non-vulnerable version.
+When an expression is used in the lycheeVersion input for `lycheeverse/lychee` in v2.0.1 or earlier
+it may be used to execute arbitrary Bash code, see [GHSA-65rg-554r-9j5x]. To mitigate this, upgrade
+the action to a non-vulnerable version.
 
 [GHSA-65rg-554r-9j5x]: https://github.com/advisories/GHSA-65rg-554r-9j5x
+
+## <a id="ADES205"></a> ADES205 - Expression in `OZI-Project/ozi-publish` pull-request-body input
+
+When an expression is used in the pull-request-body input for `OZI-Project/ozi-publish` between
+v1.13.2 and v1.13.5 it may be used to execute arbitrary Bash code, see [GHSA-2487-9f55-2vg9]. To
+mitigate this, upgrade the action to a non-vulnerable version.
+
+[GHSA-2487-9f55-2vg9]: https://github.com/advisories/GHSA-2487-9f55-2vg9
