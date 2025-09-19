@@ -86,6 +86,12 @@ stdout 'ADES203'
 stdout 'ADES204'
 ! stderr .
 
+# ADES205
+! exec ades ades205.yml
+! stdout 'Ok'
+stdout 'ADES205'
+! stderr .
+
 
 -- ades100.yml --
 name: Example workflow with a ADES100 violation
@@ -257,3 +263,14 @@ jobs:
     - uses: lycheeverse/lychee@v2.0.1
       with:
         lycheeVersion: ${{ inputs.lycheeVersion }}
+-- ades205.yml --
+name: Example workflow with a ADES205 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: OZI-Project/publish@v1.13.5
+      with:
+        pull-request-body: ${{ inputs.pullRequestBody }}
