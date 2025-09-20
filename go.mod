@@ -3,7 +3,7 @@ module github.com/ericcornelissen/ades
 go 1.25.0
 
 require (
-	github.com/ericcornelissen/go-gha-models v0.7.0
+	github.com/ericcornelissen/go-gha-models v0.8.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/playwright-community/playwright-go v0.5200.0
 	github.com/rogpeppe/go-internal v1.14.1
@@ -150,6 +150,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.37.0 // indirect
 	go.uber.org/automaxprocs v1.6.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
+	go.yaml.in/yaml/v3 v3.0.4 // indirect
 	golang.org/x/crypto v0.42.0 // indirect
 	golang.org/x/exp v0.0.0-20241108190413-2d47ceb2692f // indirect
 	golang.org/x/exp/typeparams v0.0.0-20250813145105-42675adae3e6 // indirect
