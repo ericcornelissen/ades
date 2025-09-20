@@ -92,6 +92,12 @@ stdout 'ADES204'
 stdout 'ADES205'
 ! stderr .
 
+# ADES206
+! exec ades ades206.yml
+! stdout 'Ok'
+stdout 'ADES206'
+! stderr .
+
 
 -- ades100.yml --
 name: Example workflow with a ADES100 violation
@@ -274,3 +280,14 @@ jobs:
     - uses: OZI-Project/publish@v1.13.5
       with:
         pull-request-body: ${{ inputs.pullRequestBody }}
+-- ades206.yml --
+name: Example workflow with a ADES206 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: fish-shop/syntax-check@v1.6.10
+      with:
+        pattern: ${{ inputs.pattern }}

@@ -241,6 +241,24 @@ mitigate this, upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleFishShopSyntaxCheck = actionRule{
+	appliesTo: func(uses *gha.Uses) bool {
+		return isBeforeVersion(uses, "v1.6.12")
+	},
+	rule: rule{
+		id:    "ADES206",
+		title: "Expression in 'fish-shop/syntax-check' pattern input",
+		description: `
+When an expression is used in the pattern input for 'fish-shop/syntax-check' in v1.6.11 or earlier
+it may be used to execute arbitrary shell commands, see GHSA-xj87-mqvh-88w2. To mitigate this,
+upgrade the action to a non-vulnerable version.
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["pattern"]
+		},
+	},
+}
+
 var actionRuleKcebGitMessageAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.2.0")
@@ -268,8 +286,8 @@ var actionRuleLycheeverseLycheeAction = actionRule{
 		title: "Expression in 'lycheeverse/lychee' lycheeVersion input",
 		description: `
 When an expression is used in the lycheeVersion input for 'lycheeverse/lychee' in v2.0.1 or earlier
-it may be used to execute arbitrary Bash code, see GHSA-65rg-554r-9j5x. To mitigate this, upgrade
-the action to a non-vulnerable version.
+it may be used to execute arbitrary shell commands, see GHSA-65rg-554r-9j5x. To mitigate this,
+upgrade the action to a non-vulnerable version.
 `,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["lycheeVersion"]
@@ -285,9 +303,9 @@ var actionRuleOziProjectPublish = actionRule{
 		id:    "ADES205",
 		title: "Expression in 'OZI-Project/publish' pull-request-body input",
 		description: `
-When an expression is used in the pull-request-body input for 'OZI-Project/ozi-publish' between
-v1.13.2 and v1.13.5 it may be used to execute arbitrary Bash code, see GHSA-2487-9f55-2vg9. To
-mitigate this, upgrade the action to a non-vulnerable version.
+When an expression is used in the pull-request-body input for 'OZI-Project/publish' between v1.13.2
+and v1.13.5 it may be used to execute arbitrary shell commands, see GHSA-2487-9f55-2vg9. To mitigate
+this, upgrade the action to a non-vulnerable version.
 `,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["pull-request-body"]
@@ -437,7 +455,7 @@ var actionRuleSonarSourceSonarqubeScanAction = actionRule{
 		title: "Expression in 'SonarSource/sonarqube-scan-action' args input",
 		description: `
 When an expression is used in the args input for 'SonarSource/sonarqube-scan-action' between v4.0.0
-and v5.3.0 it may be used to execute arbitrary Bash code, see GHSA-f79p-9c5r-xg88. To mitigate
+and v5.3.0 it may be used to execute arbitrary shell commands, see GHSA-f79p-9c5r-xg88. To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
 		extractFrom: func(step *gha.Step) string {
@@ -464,6 +482,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"ericcornelissen/git-tag-annotation-action": {
 		actionRuleEriccornelissenGitTagAnnotationAction,
+	},
+	"fish-shop/syntax-check": {
+		actionRuleFishShopSyntaxCheck,
 	},
 	"kceb/git-message-action": {
 		actionRuleKcebGitMessageAction,

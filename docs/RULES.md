@@ -242,23 +242,31 @@ upgrade the action to a non-vulnerable version.
 ## <a id="ADES203"></a> ADES203 - Expression in `SonarSource/sonarqube-scan-action` args input
 
 When an expression is used in the args input for `SonarSource/sonarqube-scan-action` between v4.0.0
-and v5.3.0 it may be used to execute arbitrary Bash code, see [GHSA-f79p-9c5r-xg88]. To mitigate
-this, upgrade the action to a non-vulnerable version.
+and v5.3.0 it may be used to execute arbitrary shell commands, see [GHSA-f79p-9c5r-xg88]. To
+mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-f79p-9c5r-xg88]: https://github.com/advisories/GHSA-f79p-9c5r-xg88
 
 ## <a id="ADES204"></a> ADES204 - Expression in `lycheeverse/lychee` lycheeVersion input
 
 When an expression is used in the lycheeVersion input for `lycheeverse/lychee` in v2.0.1 or earlier
-it may be used to execute arbitrary Bash code, see [GHSA-65rg-554r-9j5x]. To mitigate this, upgrade
-the action to a non-vulnerable version.
+it may be used to execute arbitrary shell commands, see [GHSA-65rg-554r-9j5x]. To mitigate this,
+upgrade the action to a non-vulnerable version.
 
 [GHSA-65rg-554r-9j5x]: https://github.com/advisories/GHSA-65rg-554r-9j5x
 
-## <a id="ADES205"></a> ADES205 - Expression in `OZI-Project/ozi-publish` pull-request-body input
+## <a id="ADES205"></a> ADES205 - Expression in `OZI-Project/publish` pull-request-body input
 
-When an expression is used in the pull-request-body input for `OZI-Project/ozi-publish` between
-v1.13.2 and v1.13.5 it may be used to execute arbitrary Bash code, see [GHSA-2487-9f55-2vg9]. To
+When an expression is used in the pull-request-body input for `OZI-Project/publish` between v1.13.2
+and v1.13.5 it may be used to execute arbitrary shell commands, see [GHSA-2487-9f55-2vg9]. To
 mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-2487-9f55-2vg9]: https://github.com/advisories/GHSA-2487-9f55-2vg9
+
+## <a id="ADES206"></a> ADES206 - Expression in `fish-shop/syntax-check` pattern input
+
+When an expression is used in the pattern input for `fish-shop/syntax-check` in v1.6.11 or earlier
+it may be used to execute arbitrary shell commands, see [GHSA-xj87-mqvh-88w2]. To mitigate this,
+upgrade the action to a non-vulnerable version.
+
+[GHSA-xj87-mqvh-88w2]: https://github.com/advisories/GHSA-xj87-mqvh-88w2
