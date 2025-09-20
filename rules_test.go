@@ -278,6 +278,70 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			uses gha.Uses
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
+				uses: gha.Uses{
+					Ref: "v1.6.11",
+				},
+				want: true,
+			},
+			"First fixed version": {
+				uses: gha.Uses{
+					Ref: "v1.6.12",
+				},
+				want: false,
+			},
+			"New version": {
+				uses: gha.Uses{
+					Ref: "v2.0.0",
+				},
+				want: false,
+			},
+			"Old version": {
+				uses: gha.Uses{
+					Ref: "v1.0.0",
+				},
+				want: true,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				if got, want := actionRuleFishShopSyntaxCheck.appliesTo(&tt.uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["pattern"] = value
+			return actionRuleFishShopSyntaxCheck.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "pattern")
+			return actionRuleFishShopSyntaxCheck.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
