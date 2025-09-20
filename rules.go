@@ -56,9 +56,9 @@ var actionRule8398a7ActionSlack = actionRule{
 	},
 	rule: rule{
 		id:    "ADES107",
-		title: "Expression in '8398a7/action-slack' custom_payload input",
+		title: "Expression in 'custom_payload' input of '8398a7/action-slack'",
 		description: `
-When an expression appears in the custom_payload input of '8398a7/action-slack' you can avoid any
+When an expression appears in the 'custom_payload' input of '8398a7/action-slack' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
 
@@ -131,9 +131,9 @@ var actionRuleAddnabDockerRunAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES105",
-		title: "Expression in 'addnab/docker-run-action' run input",
+		title: "Expression in 'run' input of 'addnab/docker-run-action'",
 		description: `
-When an expression appears in the run input of 'addnab/docker-run-action' you can avoid any
+When an expression appears in the 'run' input of 'addnab/docker-run-action' you can avoid any
 potential attack by removing the expression. There is no safe way to use untrusted inputs here
 without risking injection.
 
@@ -152,9 +152,9 @@ var actionRuleAtlassianGajiraCreate = actionRule{
 	},
 	rule: rule{
 		id:    "ADES202",
-		title: "Expression in 'atlassian/gajira-create' summary input",
+		title: "Expression in 'summary' input of 'atlassian/gajira-create'",
 		description: `
-When an expression is used in the summary input for 'atlassian/gajira-create' in v2.0.0 or earlier
+When an expression is used in the 'summary' input of 'atlassian/gajira-create' in v2.0.0 or earlier
 it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
@@ -170,11 +170,11 @@ var actionRuleCardinalbyJsEvalAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES106",
-		title: "Expression in 'cardinalby/js-eval-action' expression input",
+		title: "Expression in 'expression' input of 'cardinalby/js-eval-action'",
 		description: `
-When an expression appears in the expression input of 'cardinalby/js-eval-action' you can avoid any
-potential attack by extracting the expression into an environment variable and using the environment
-variable instead.
+When an expression appears in the 'expression' input of 'cardinalby/js-eval-action' you can avoid
+any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -229,9 +229,9 @@ var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES200",
-		title: "Expression in 'ericcornelissen/git-tag-annotation-action' tag input",
+		title: "Expression in 'tag' input of 'ericcornelissen/git-tag-annotation-action'",
 		description: `
-When an expression is used in the tag input for 'ericcornelissen/git-tag-annotation-action' in
+When an expression is used in the 'tag' input of 'ericcornelissen/git-tag-annotation-action' in
 v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
 mitigate this, upgrade the action to a non-vulnerable version.
 `,
@@ -247,9 +247,9 @@ var actionRuleFishShopSyntaxCheck = actionRule{
 	},
 	rule: rule{
 		id:    "ADES206",
-		title: "Expression in 'fish-shop/syntax-check' pattern input",
+		title: "Expression in 'pattern' input of 'fish-shop/syntax-check'",
 		description: `
-When an expression is used in the pattern input for 'fish-shop/syntax-check' in v1.6.11 or earlier
+When an expression is used in the 'pattern' input of 'fish-shop/syntax-check' in v1.6.11 or earlier
 it may be used to execute arbitrary shell commands, see GHSA-xj87-mqvh-88w2. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
@@ -265,9 +265,9 @@ var actionRuleKcebGitMessageAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES201",
-		title: "Expression in 'kceb/git-message-action' sha input",
+		title: "Expression in 'sha' input of 'kceb/git-message-action'",
 		description: `
-When an expression is used in the sha input for 'kceb/git-message-action' in v1.1.0 or earlier it
+When an expression is used in the 'sha' input of 'kceb/git-message-action' in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
@@ -283,9 +283,9 @@ var actionRuleLycheeverseLycheeAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES204",
-		title: "Expression in 'lycheeverse/lychee' lycheeVersion input",
+		title: "Expression in 'lycheeVersion' input of 'lycheeverse/lychee'",
 		description: `
-When an expression is used in the lycheeVersion input for 'lycheeverse/lychee' in v2.0.1 or earlier
+When an expression is used in the 'lycheeVersion' input of 'lycheeverse/lychee' in v2.0.1 or earlier
 it may be used to execute arbitrary shell commands, see GHSA-65rg-554r-9j5x. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
@@ -301,9 +301,9 @@ var actionRuleOziProjectPublish = actionRule{
 	},
 	rule: rule{
 		id:    "ADES205",
-		title: "Expression in 'OZI-Project/publish' pull-request-body input",
+		title: "Expression in 'pull-request-body' input of 'OZI-Project/publish'",
 		description: `
-When an expression is used in the pull-request-body input for 'OZI-Project/publish' between v1.13.2
+When an expression is used in the 'pull-request-body' input of 'OZI-Project/publish' between v1.13.2
 and v1.13.5 it may be used to execute arbitrary shell commands, see GHSA-2487-9f55-2vg9. To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
@@ -319,9 +319,9 @@ var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
 	},
 	rule: rule{
 		id:    "ADES102",
-		title: "Expression in 'roots/issue-closer-action' issue close message",
+		title: "Expression in 'issue-close-message' input of 'roots/issue-closer-action'",
 		description: `
-When an expression appears in the issue close message of 'roots/issue-closer-action' it is
+When an expression appears in the 'issue-close-message' input of 'roots/issue-closer-action' it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -378,9 +378,9 @@ var actionRuleRootsIssueCloserActionPrCloseMessage = actionRule{
 	},
 	rule: rule{
 		id:    "ADES103",
-		title: "Expression in 'roots/issue-closer-action' pull request close message",
+		title: "Expression in 'pr-close-message' input of 'roots/issue-closer-action'",
 		description: `
-When an expression appears in the pull request close message of 'roots/issue-closer-action' it is
+When an expression appears in the 'pr-close-message' input of 'roots/issue-closer-action' it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -414,11 +414,11 @@ var actionRuleSergeysovaJqAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES104",
-		title: "Expression in 'sergeysova/jq-action' command",
+		title: "Expression in 'cmd' input of 'sergeysova/jq-action'",
 		description: `
-When an expression appears in the command input of 'sergeysova/jq-action' you can avoid any
-potential attack by extracting the expression into an environment variable and using the environment
-variable instead.
+When an expression appears in the 'cmd' input of 'sergeysova/jq-action' you can avoid any potential
+attack by extracting the expression into an environment variable and using the environment variable
+instead.
 
 For example, given the workflow snippet:
 
@@ -452,9 +452,9 @@ var actionRuleSonarSourceSonarqubeScanAction = actionRule{
 	},
 	rule: rule{
 		id:    "ADES203",
-		title: "Expression in 'SonarSource/sonarqube-scan-action' args input",
+		title: "Expression in 'args' input of 'SonarSource/sonarqube-scan-action'",
 		description: `
-When an expression is used in the args input for 'SonarSource/sonarqube-scan-action' between v4.0.0
+When an expression is used in the 'args' input of 'SonarSource/sonarqube-scan-action' between v4.0.0
 and v5.3.0 it may be used to execute arbitrary shell commands, see GHSA-f79p-9c5r-xg88. To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,

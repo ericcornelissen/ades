@@ -64,9 +64,9 @@ it can be made safer by converting it into:
 #                       | Note: the use of backticks is required in this example (for interpolation)
 ```
 
-## <a id="ADES102"></a> ADES102 - Expression in `roots/issue-closer-action` issue close message
+## <a id="ADES102"></a> ADES102 - Expression in `issue-close-message` input of `roots/issue-closer-action`
 
-When an expression appears in the issue close message of `roots/issue-closer-action` it is
+When an expression appears in the `issue-close-message` input of `roots/issue-closer-action` it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -92,9 +92,9 @@ it can be made safer by converting it into:
   #                              | Replace the expression with the environment variable
 ```
 
-## <a id="ADES103"></a> ADES103 - Expression in `roots/issue-closer-action` pull request close message
+## <a id="ADES103"></a> ADES103 - Expression in `pr-close-message` input of `roots/issue-closer-action`
 
-When an expression appears in the pull request close message of `roots/issue-closer-action` it is
+When an expression appears in the `pr-close-message` input of `roots/issue-closer-action` it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -120,11 +120,11 @@ it can be made safer by converting it into:
   #                           | Replace the expression with the environment variable
 ```
 
-## <a id="ADES104"></a> ADES104 - Expression in `sergeysova/jq-action` command
+## <a id="ADES104"></a> ADES104 - Expression in `cmd` input of `sergeysova/jq-action`
 
-When an expression appears in the command input of `sergeysova/jq-action` you can avoid any
-potential attack by extracting the expression into an environment variable and using the environment
-variable instead.
+When an expression appears in the `cmd` input of `sergeysova/jq-action` you can avoid any potential
+attack by extracting the expression into an environment variable and using the environment variable
+instead.
 
 For example, given the workflow snippet:
 
@@ -150,20 +150,20 @@ it can be made safer by converting it into:
   #                   | Replace the expression with the environment variable
 ```
 
-## <a id="ADES105"></a> ADES105 - Expression in `addnab/docker-run-action` run input
+## <a id="ADES105"></a> ADES105 - Expression in `run` input of `addnab/docker-run-action`
 
-When an expression appears in the run input of `addnab/docker-run-action` you can avoid any
+When an expression appears in the `run` input of `addnab/docker-run-action` you can avoid any
 potential attack by removing the expression. There is no safe way to use untrusted inputs here
 without risking injection.
 
 Do NOT pass environment variables into the container through the action's options input. This opens
 up alternative attack vectors because the options are not validated.
 
-## <a id="ADES106"></a> ADES106 - Expression in `cardinalby/js-eval-action` expression input
+## <a id="ADES106"></a> ADES106 - Expression in `expression` input of `cardinalby/js-eval-action`
 
-When an expression appears in the expression input of `cardinalby/js-eval-action` you can avoid any
-potential attack by extracting the expression into an environment variable and using the environment
-variable instead.
+When an expression appears in the `expression` input of `cardinalby/js-eval-action` you can avoid
+any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
 
 For example, given the workflow snippet:
 
@@ -187,9 +187,9 @@ it can be made safer by converting it into:
   #                          | Replace the expression with the environment variable
 ```
 
-## <a id="ADES107"></a> ADES107 - Expression in `8398a7/action-slack` custom_payload input
+## <a id="ADES107"></a> ADES107 - Expression in `custom_payload` input of `8398a7/action-slack`
 
-When an expression appears in the custom_payload input of `8398a7/action-slack` you can avoid any
+When an expression appears in the `custom_payload` input of `8398a7/action-slack` you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
 
@@ -217,55 +217,55 @@ it can be made safer by converting it into:
   #                            | Replace the expression with the environment variable
 ```
 
-## <a id="ADES200"></a> ADES200 - Expression in `ericcornelissen/git-tag-annotation-action` tag input
+## <a id="ADES200"></a> ADES200 - Expression in `tag` input of `ericcornelissen/git-tag-annotation-action`
 
-When an expression is used in the tag input for `ericcornelissen/git-tag-annotation-action` in
+When an expression is used in the `tag` input of `ericcornelissen/git-tag-annotation-action` in
 v1.0.0 or earlier it may be used to execute arbitrary shell commands, see [GHSA-hgx2-4pp9-357g]. To
 mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-hgx2-4pp9-357g]: https://github.com/ericcornelissen/git-tag-annotation-action/security/advisories/GHSA-hgx2-4pp9-357g
 
-## <a id="ADES201"></a> ADES201 - Expression in `kceb/git-message-action` sha input
+## <a id="ADES201"></a> ADES201 - Expression in `sha` input of `kceb/git-message-action`
 
-When an expression is used in the sha input for `kceb/git-message-action` in v1.1.0 or earlier it
+When an expression is used in the `sha` input of `kceb/git-message-action` in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
 this, upgrade the action to a non-vulnerable version.
 
-## <a id="ADES202"></a> ADES202 - Expression in `atlassian/gajira-create` summary input
+## <a id="ADES202"></a> ADES202 - Expression in `summary` input of `atlassian/gajira-create`
 
-When an expression is used in the summary input for `atlassian/gajira-create` in v2.0.0 or earlier
+When an expression is used in the `summary` input of `atlassian/gajira-create` in v2.0.0 or earlier
 it may be used to execute arbitrary JavaScript code, see [GHSA-4xqx-pqpj-9fqw]. To mitigate this,
 upgrade the action to a non-vulnerable version.
 
 [GHSA-4xqx-pqpj-9fqw]: https://github.com/advisories/GHSA-4xqx-pqpj-9fqw
 
-## <a id="ADES203"></a> ADES203 - Expression in `SonarSource/sonarqube-scan-action` args input
+## <a id="ADES203"></a> ADES203 - Expression in `args` input of `SonarSource/sonarqube-scan-action`
 
-When an expression is used in the args input for `SonarSource/sonarqube-scan-action` between v4.0.0
+When an expression is used in the `args` input of `SonarSource/sonarqube-scan-action` between v4.0.0
 and v5.3.0 it may be used to execute arbitrary shell commands, see [GHSA-f79p-9c5r-xg88]. To
 mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-f79p-9c5r-xg88]: https://github.com/advisories/GHSA-f79p-9c5r-xg88
 
-## <a id="ADES204"></a> ADES204 - Expression in `lycheeverse/lychee` lycheeVersion input
+## <a id="ADES204"></a> ADES204 - Expression in `lycheeVersion` input of `lycheeverse/lychee`
 
-When an expression is used in the lycheeVersion input for `lycheeverse/lychee` in v2.0.1 or earlier
+When an expression is used in the `lycheeVersion` input of `lycheeverse/lychee` in v2.0.1 or earlier
 it may be used to execute arbitrary shell commands, see [GHSA-65rg-554r-9j5x]. To mitigate this,
 upgrade the action to a non-vulnerable version.
 
 [GHSA-65rg-554r-9j5x]: https://github.com/advisories/GHSA-65rg-554r-9j5x
 
-## <a id="ADES205"></a> ADES205 - Expression in `OZI-Project/publish` pull-request-body input
+## <a id="ADES205"></a> ADES205 - Expression in `pull-request-body` input of `OZI-Project/publish`
 
-When an expression is used in the pull-request-body input for `OZI-Project/publish` between v1.13.2
+When an expression is used in the `pull-request-body` input of `OZI-Project/publish` between v1.13.2
 and v1.13.5 it may be used to execute arbitrary shell commands, see [GHSA-2487-9f55-2vg9]. To
 mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-2487-9f55-2vg9]: https://github.com/advisories/GHSA-2487-9f55-2vg9
 
-## <a id="ADES206"></a> ADES206 - Expression in `fish-shop/syntax-check` pattern input
+## <a id="ADES206"></a> ADES206 - Expression in `pattern` input of `fish-shop/syntax-check`
 
-When an expression is used in the pattern input for `fish-shop/syntax-check` in v1.6.11 or earlier
+When an expression is used in the `pattern` input of `fish-shop/syntax-check` in v1.6.11 or earlier
 it may be used to execute arbitrary shell commands, see [GHSA-xj87-mqvh-88w2]. To mitigate this,
 upgrade the action to a non-vulnerable version.
 
