@@ -146,6 +146,45 @@ up alternative attack vectors because the options are not validated.
 	},
 }
 
+var actionRuleAppleboySshAction = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES108",
+		title: "Expression in 'script' input of 'appleboy/ssh-action'",
+		description: `
+When an expression appears in the 'script' input of 'appleboy/ssh-action' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: appleboy/ssh-action@v1
+      with:
+        script: echo 'Hello ${{ inputs.name }}'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: appleboy/ssh-action@v1
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      with:
+        envs: NAME # <- Pass the environment variable through SSH
+        script: echo "Hello $NAME"
+      #              ^      ^^^^^
+      #              |      | Replace the expression with the environment variable
+      #              |
+      #              | Note: the use of double quotes is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["script"]
+		},
+	},
+}
+
 var actionRuleAtlassianGajiraCreate = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v2.0.1")
@@ -473,6 +512,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"addnab/docker-run-action": {
 		actionRuleAddnabDockerRunAction,
+	},
+	"appleboy/ssh-action": {
+		actionRuleAppleboySshAction,
 	},
 	"atlassian/gajira-create": {
 		actionRuleAtlassianGajiraCreate,

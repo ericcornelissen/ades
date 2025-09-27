@@ -56,6 +56,12 @@ stdout 'ADES106'
 stdout 'ADES107'
 ! stderr .
 
+# ADES108
+! exec ades ades108.yml
+! stdout 'Ok'
+stdout 'ADES108'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -211,6 +217,17 @@ jobs:
       with:
         custom_payload: |
           { attachments: [{ color: '${{ inputs.color }}' }] }
+-- ades108.yml --
+name: Example workflow with a ADES108 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: appleboy/ssh-action@v1
+      with:
+        script: echo 'Hello ${{ env.name }}'
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]
