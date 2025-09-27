@@ -217,6 +217,37 @@ it can be made safer by converting it into:
   #                            | Replace the expression with the environment variable
 ```
 
+## <a id="ADES108"></a> ADES108 - Expression in `script` input of `appleboy/ssh-action`
+
+When an expression appears in the `script` input of `appleboy/ssh-action` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: appleboy/ssh-action@v1
+  with:
+    script: echo 'Hello ${{ inputs.name }}'
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: appleboy/ssh-action@v1
+  env:
+    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+  with:
+    envs: NAME # <- Pass the environment variable through SSH
+    script: echo "Hello $NAME"
+  #              ^      ^^^^^
+  #              |      | Replace the expression with the environment variable
+  #              |
+  #              | Note: the use of double quotes is required in this example (for interpolation)
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `tag` input of `ericcornelissen/git-tag-annotation-action`
 
 When an expression is used in the `tag` input of `ericcornelissen/git-tag-annotation-action` in
