@@ -76,6 +76,12 @@ stdout 'Ok'
 exec ades -conservative 'GHSA-vxmw-7h4f-hqxh/'
 stdout 'Ok'
 
+# GHSA-pwf7-47c3-mfhx
+! exec ades 'GHSA-pwf7-47c3-mfhx/'
+! stdout 'Ok'
+exec ades -conservative 'GHSA-pwf7-47c3-mfhx/'
+stdout 'Ok'
+
 # Grafana Labs 2025-04-27
 ! exec ades 'grafana-labs-2025-04-27/'
 ! stdout 'Ok'
@@ -1341,6 +1347,68 @@ runs:
       verbose: ${{ inputs.verbose }}
       print-hash: ${{ inputs.print-hash || inputs.print_hash }}
       attestations: ${{ inputs.attestations }}
+-- GHSA-pwf7-47c3-mfhx/action.yml --
+name: prek-action
+description: Run pre-commit hooks using prek
+inputs:
+  extra-args:
+    description: Options to pass to `prek run`
+    required: false
+    default: '--all-files'
+  extra_args:
+    description: Options to pass to `prek run` (deprecated, use extra-args)
+    required: false
+  install-only:
+    description: Only install prek, do not run it
+    required: false
+    default: 'false'
+  prek-version:
+    description: Version of prek to install (e.g., '0.2.1', 'latest')
+    required: false
+    default: 'latest'
+  working-directory:
+    description: The working directory to run prek in
+    required: false
+    default: '.'
+runs:
+  using: composite
+  steps:
+  - name: Resolve download URL
+    id: resolve
+    run: |
+      if [ "${{ inputs.prek-version }}" = "latest" ]; then
+        echo "version=latest" >> $GITHUB_OUTPUT
+        echo "base_url=https://github.com/j178/prek/releases/latest/download/" >> $GITHUB_OUTPUT
+      else
+        VERSION="${{ inputs.prek-version }}"
+        VERSION="${VERSION#v}"
+        VERSION="v$VERSION"
+        echo "version=$VERSION" >> $GITHUB_OUTPUT
+        echo "base_url=https://github.com/j178/prek/releases/download/$VERSION/" >> $GITHUB_OUTPUT
+      fi
+    shell: bash
+  - name: Install prek
+    run: "curl --proto '=https' --tlsv1.2 -LsSf ${{ steps.resolve.outputs.base_url }}prek-installer.sh | sh"
+    shell: bash
+    if: runner.os != 'Windows'
+  - name: Install prek (Windows)
+    run: 'powershell -ExecutionPolicy Bypass -c "irm ${{ steps.resolve.outputs.base_url }}prek-installer.ps1 | iex"'
+    shell: powershell
+    if: runner.os == 'Windows'
+  - uses: actions/cache@0400d5f644dc74513175e3cd8d07132dd4860809 # v4.2.4
+    with:
+      path: |
+        ~/.cache/prek
+        ~\AppData\Local\prek
+      key: prek-v1|${{ runner.os }}|${{ runner.arch }}|${{ hashFiles(format('{0}/**/.pre-commit-config.yaml', inputs.working-directory)) }}
+    if: inputs.install-only == 'false'
+  - run: prek run --show-diff-on-failure --color=always ${{ inputs.extra_args || inputs.extra-args }}
+    shell: bash
+    working-directory: ${{ inputs.working-directory }}
+    if: inputs.install-only == 'false'
+branding:
+  icon: 'git-commit'
+  color: 'orange'
 -- grafana-labs-2025-04-27/.github/workflows/pr-patch-check-event.yml --
 # Owned by grafana-delivery-squad
 # Intended to be dropped into the base repo Ex: grafana/grafana
