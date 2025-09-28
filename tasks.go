@@ -532,6 +532,7 @@ func TaskVet(t *T) error {
 		"go run github.com/catenacyber/perfsprint ./...",
 		"go run github.com/dkorunic/betteralign/cmd/betteralign ./...",
 		"go run github.com/go-critic/go-critic/cmd/gocritic check ./...",
+		"go run github.com/goodwithtech/dockle/cmd/dockle ericornelissen/ades",
 		"go run github.com/gordonklaus/ineffassign ./...",
 		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status -ignore 'web' ./...",
 		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status ./web/...",
