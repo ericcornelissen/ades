@@ -22,6 +22,8 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 |   # | Advisory              | Relevant | Detected | Conservative | Rule      |
 | --: | :-------------------- | :------- | :------- | :----------- | :-------- |
+|  38 | [GHSA-pwf7-47c3-mfhx] | Yes      | Yes      | No           | [ADES100] |
+|  37 | [GHSA-5xq9-5g24-4g6f] | No       |          |              |           |
 |  36 | [GHSA-vxmw-7h4f-hqxh] | Yes      | Yes      | No           | [ADES100] |
 |  35 | [GHSA-f79p-9c5r-xg88] | Yes      | Yes      | No           | [ADES100] |
 |  34 | [GHSA-65rg-554r-9j5x] | Yes      | Yes      | No           | [ADES100] |
@@ -61,6 +63,8 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 [GitHub Actions Advisories]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Aactions
 
+[GHSA-pwf7-47c3-mfhx]: https://github.com/advisories/GHSA-pwf7-47c3-mfhx
+[GHSA-5xq9-5g24-4g6f]: https://github.com/advisories/GHSA-5xq9-5g24-4g6f
 [GHSA-vxmw-7h4f-hqxh]: https://github.com/advisories/GHSA-vxmw-7h4f-hqxh
 [GHSA-f79p-9c5r-xg88]: https://github.com/advisories/GHSA-f79p-9c5r-xg88
 [GHSA-65rg-554r-9j5x]: https://github.com/advisories/GHSA-65rg-554r-9j5x
@@ -118,16 +122,19 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 ```mermaid
 sankey-beta
 
-Advisories,Relevant,       14
+Advisories,Considered,     38
+Incidents,Considered,      1
 
-Relevant,Non-conservative, 7
-Non-conservative,ADES100,  7
+Considered,Relevant,       15
+
+Relevant,Non-conservative, 8
+Non-conservative,ADES100,  8
 
 Relevant,Conservative,     7
 Conservative,ADES100,      6
 Conservative,ADES101,      1
 
-Advisories,Out of scope,   23
+Considered,Out of scope,   24
 ```
 
 [ADES100]: ../docs/RULES.md#ADES100
