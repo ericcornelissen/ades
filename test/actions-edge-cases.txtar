@@ -1,0 +1,121 @@
+# Manifest Confusion
+cd manifest-confusion
+
+! exec ades
+cmp stdout $WORK/snapshots/manifest-confusion.stdout
+! stderr .
+
+cd ..
+
+# Manifest Workflow
+cd manifest-workflow/yml
+
+! exec ades
+cmp stdout $WORK/snapshots/manifest-workflow-yml.stdout
+! stderr .
+
+! exec ades '.github/workflows/action.yml'
+cmp stdout $WORK/snapshots/manifest-workflow-yml.stdout
+! stderr .
+
+cd ../yaml
+
+! exec ades
+cmp stdout $WORK/snapshots/manifest-workflow-yaml.stdout
+! stderr .
+
+! exec ades '.github/workflows/action.yaml'
+cmp stdout $WORK/snapshots/manifest-workflow-yaml.stdout
+! stderr .
+
+cd ../..
+
+# Case Insensitive Action Names
+cd case-insensitive
+
+! exec ades
+stdout 'ADES101'
+
+cd ..
+
+
+-- case-insensitive/.github/workflows/example.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Example step
+      uses: ACTIONS/GitHub-Script@v6
+      with:
+        script: console.log('Hello ${{ inputs.name }}')
+-- manifest-confusion/Dockerfile --
+FROM docker.io/alpine:3.21.3
+
+ENTRYPOINT ["echo", "Hallo, Dockerfile!"]
+-- manifest-confusion/action.yaml --
+name: .yaml manifest
+description: The second manifest in this project.
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe in .yaml
+    run: echo 'Hello, ${{ inputs.name }}!'
+-- manifest-confusion/action.yml --
+name: .yml manifest
+description: The third manifest in this project.
+
+runs:
+  using: composite
+  steps:
+  - name: Unsafe in .yml
+    run: echo 'Hej, ${{ inputs.name }}!'
+-- manifest-workflow/yml/.github/workflows/action.yml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- manifest-workflow/yaml/.github/workflows/action.yaml --
+name: Example unsafe workflow
+on: [push]
+
+jobs:
+  example:
+    name: Example unsafe job
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+-- snapshots/manifest-confusion.stdout --
+Detected 1 violation(s) in "action.yaml":
+    step "Unsafe in .yaml" contains "${{ inputs.name }}" (ADES100)
+Detected 1 violation(s) in "action.yml":
+    step "Unsafe in .yml" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
+-- snapshots/manifest-workflow-yml.stdout --
+Detected 1 violation(s) in ".github/workflows/action.yml":
+  1 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
+-- snapshots/manifest-workflow-yaml.stdout --
+Detected 1 violation(s) in ".github/workflows/action.yaml":
+  1 in job "Example unsafe job":
+    step "Unsafe run" contains "${{ inputs.name }}" (ADES100)
+
+Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')

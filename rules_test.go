@@ -781,6 +781,20 @@ func TestStepRuleRun(t *testing.T) {
 	})
 }
 
+func TestActionRules(t *testing.T) {
+	t.Run("key", func(t *testing.T) {
+		for tt := range actionRules {
+			t.Run(tt, func(t *testing.T) {
+				t.Parallel()
+
+				if got, want := tt, strings.ToLower(tt); got != want {
+					t.Errorf("action name is not lowercase (got %q)", got)
+				}
+			})
+		}
+	})
+}
+
 func TestAllRules(t *testing.T) {
 	testCases := allRules()
 
