@@ -534,7 +534,7 @@ var actionRules = map[string][]actionRule{
 	"lycheeverse/lychee": {
 		actionRuleLycheeverseLycheeAction,
 	},
-	"OZI-Project/publish": {
+	"ozi-project/publish": {
 		actionRuleOziProjectPublish,
 	},
 	"roots/issue-closer-action": {
@@ -548,7 +548,7 @@ var actionRules = map[string][]actionRule{
 	"sergeysova/jq-action": {
 		actionRuleSergeysovaJqAction,
 	},
-	"SonarSource/sonarqube-scan-action": {
+	"sonarsource/sonarqube-scan-action": {
 		actionRuleSonarSourceSonarqubeScanAction,
 	},
 }

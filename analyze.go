@@ -17,6 +17,7 @@ package ades
 
 import (
 	"fmt"
+	"strings"
 
 	"github.com/ericcornelissen/go-gha-models"
 )
@@ -126,7 +127,8 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 
 	rules := make([]rule, 0)
 	if uses := step.Uses; uses.Name != "" {
-		if rs, ok := actionRules[uses.Name]; ok {
+		actionName := strings.ToLower(uses.Name)
+		if rs, ok := actionRules[actionName]; ok {
 			for _, r := range rs {
 				if r.appliesTo(&uses) {
 					rules = append(rules, r.rule)
