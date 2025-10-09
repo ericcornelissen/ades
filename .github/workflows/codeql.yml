@@ -31,9 +31,9 @@ jobs:
     - name: Verify action checksums
       uses: ./.github/actions/ghasum
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3.30.4
+      uses: github/codeql-action/init@v3.30.7
       with:
         config-file: ./.github/codeql.yml
         languages: ${{ matrix.what }}
     - name: Perform CodeQL analysis
-      uses: github/codeql-action/analyze@v3.30.4
+      uses: github/codeql-action/analyze@v3.30.7
