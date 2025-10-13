@@ -37,8 +37,8 @@ github.com/bmatcuk/doublestar/v4 v4.9.1 h1:X8jg9rRZmJd4yRy7ZeNDRnM+T3ZfHv15JiBJ/
 github.com/bmatcuk/doublestar/v4 v4.9.1/go.mod h1:xBQ8jztBU6kakFMg+8WGxn0c6z1fTSPVIjEY1Wr7jzc=
 github.com/butuzov/ireturn v0.4.0 h1:+s76bF/PfeKEdbG8b54aCocxXmi0wvYdOVsWxVO7n8E=
 github.com/butuzov/ireturn v0.4.0/go.mod h1:ghI0FrCmap8pDWZwfPisFD1vEc56VKH4NpQUxDHta70=
-github.com/catenacyber/perfsprint v0.9.1 h1:5LlTp4RwTooQjJCvGEFV6XksZvWE7wCOUvjD2z0vls0=
-github.com/catenacyber/perfsprint v0.9.1/go.mod h1:q//VWC2fWbcdSLEY1R3l8n0zQCDPdE4IjZwyY1HMunM=
+github.com/catenacyber/perfsprint v0.10.0 h1:AZj1mYyxbxLRqmnYOeguZXEQwWOgQGm2wzLI5d7Hl/0=
+github.com/catenacyber/perfsprint v0.10.0/go.mod h1:DJTGsi/Zufpuus6XPGJyKOTMELe347o6akPvWG9Zcsc=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
 github.com/chains-project/ghasum v0.6.1 h1:Hgasm5UoZlgG0/jjGWxISj61WbQ1VdtIVGOFwnoW+ws=
 github.com/chains-project/ghasum v0.6.1/go.mod h1:3tOrLvzVobSlAujIBZ2qUynCQFmc8d7f1w39Txff+rw=
