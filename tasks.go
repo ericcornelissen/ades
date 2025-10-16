@@ -536,7 +536,7 @@ func TaskVet(t *T) error {
 		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status -ignore 'web' ./...",
 		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status ./web/...",
 		"go run github.com/kisielk/errcheck ./...",
-		"go run github.com/kunwardeep/paralleltest -i -ignoreloopVar ./...",
+		"go run github.com/kunwardeep/paralleltest -i -ignoreloopVar -checkcleanup ./...",
 		"go run github.com/mdempsky/unconvert ./...",
 		"go run github.com/nishanths/exhaustive/cmd/exhaustive ./...",
 		"go run github.com/polyfloyd/go-errorlint ./...",
