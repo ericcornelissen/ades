@@ -1,0 +1,47 @@
+name: Modernize
+on:
+  schedule:
+  - cron: "0 0 1 * *"
+  workflow_dispatch: ~
+
+permissions: read-all
+
+jobs:
+  modernize:
+    name: Modernize
+    runs-on: ubuntu-24.04
+    permissions:
+      contents: write # To push a commit
+      pull-requests: write # To open a Pull Request
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
+      with:
+        persist-credentials: false
+    - name: Install Go
+      uses: actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 # v6.0.0
+      with:
+        go-version-file: go.mod
+    - name: Verify action checksums
+      uses: ./.github/actions/ghasum
+    - name: Create automation token
+      uses: actions/create-github-app-token@v2.1.4
+      id: automation-token
+      with:
+        app-id: ${{ secrets.AUTOMATION_APP_ID }}
+        private-key: ${{ secrets.AUTOMATION_APP_PRIVATE_KEY }}
+    - name: Modernize
+      run: |
+        go run golang.org/x/tools/gopls/internal/analysis/modernize/cmd/modernize@latest \
+          -fix -test \
+          ./...
+    - name: Create Pull Request
+      uses: peter-evans/create-pull-request@v7.0.8
+      with:
+        token: ${{ steps.automation-token.outputs.token }}
+        title: Modernize codebase
+        body: |
+          _This Pull Request was created automatically_
+        branch: modernize
+        labels: refactor
+        commit-message: Modernize codebase
