@@ -298,6 +298,44 @@ upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleJannekemRunPythonScriptAction = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES109",
+		title: "Expression in 'script' input of 'jannekem/run-python-script-action'",
+		description: `
+When an expression appears in the 'script' input of 'jannekem/run-python-script-action' you can
+avoid any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: jannekem/run-python-script-action@v1
+      with:
+        script: print("Hello ${{ inputs.name }}")
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: jannekem/run-python-script-action@v1
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      with:
+        script: print(f"Hello {os.getenv('NAME')}")
+      #               ^       ^^^^^^^^^^^^^^^^^^^
+      #               |       | Replace the expression with the environment variable
+      #               |
+      #               | Note: the use of string interpolation is required in this example
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["script"]
+		},
+	},
+}
+
 var actionRuleKcebGitMessageAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.2.0")
@@ -527,6 +565,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"fish-shop/syntax-check": {
 		actionRuleFishShopSyntaxCheck,
+	},
+	"jannekem/run-python-script-action": {
+		actionRuleJannekemRunPythonScriptAction,
 	},
 	"kceb/git-message-action": {
 		actionRuleKcebGitMessageAction,
