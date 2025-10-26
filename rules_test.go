@@ -373,6 +373,37 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 	})
 }
 
+func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "jannekem/run-python-script-action"
+			return actionRuleJannekemRunPythonScriptAction.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["script"] = value
+			return actionRuleJannekemRunPythonScriptAction.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "script")
+			return actionRuleJannekemRunPythonScriptAction.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
