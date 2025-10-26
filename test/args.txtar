@@ -48,6 +48,11 @@ stdout '[workflows]'
 stdout '[manifest/action.yml]'
 ! stderr .
 
+# Not a YAML file
+exec ades not_yaml.txt
+stdout 'Skipped'
+! stderr .
+
 # Conservative
 exec ades -conservative 'manifests/action.yml' 'workflows/.github/workflows/unsafe.yml'
 stdout 'Ok'
@@ -92,6 +97,8 @@ runs:
     run: echo 'Hello .yml'
   - name: Unsafe run
     run: echo 'Hello ${{ inputs.name }}'
+-- not_yaml.txt --
+Hello world!
 -- safe/.github/workflows/safe.yml --
 name: Example safe workflow
 on: [push]

@@ -175,7 +175,12 @@ func run() int {
 				}
 			}
 		} else if err, ok := errs[target]; ok {
-			msg = fmt.Sprintln(err)
+			if errors.Is(err, errNotYaml) {
+				msg = "Skipped\n"
+				delete(errs, target)
+			} else {
+				msg = fmt.Sprintf("an unexpected error occurred: %s\n", err)
+			}
 		}
 
 		if msg != "" {
@@ -241,7 +246,7 @@ func runOnTargets(targets []string) (Report, map[string]error) {
 	for _, target := range targets {
 		violations, err := runOnTarget(target)
 		if err != nil {
-			errors[target] = fmt.Errorf("an unexpected error occurred: %s", err)
+			errors[target] = err
 			continue
 		}
 
@@ -345,14 +350,10 @@ func runOnRepositoryWorkflows(target string, report TargetReport) error {
 			return fs.SkipDir
 		}
 
-		if ext := filepath.Ext(entry.Name()); ext != ".yml" && ext != ".yaml" {
-			return nil
-		}
-
 		fullPath := filepath.Join(target, path)
 		if workflowViolations, err := runOnFile(fullPath); err == nil {
 			report[path] = workflowViolations
-		} else {
+		} else if !errors.Is(err, errNotYaml) {
 			return fmt.Errorf("could not process workflow %q: %v", entry.Name(), err)
 		}
 
@@ -363,11 +364,16 @@ func runOnRepositoryWorkflows(target string, report TargetReport) error {
 var (
 	errNotFound  = errors.New("not found")
 	errNotParsed = errors.New("not parsed")
+	errNotYaml   = errors.New("not yaml")
 
 	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
 )
 
 func runOnFile(target string) ([]ades.Violation, error) {
+	if ext := filepath.Ext(target); ext != ".yml" && ext != ".yaml" {
+		return nil, errNotYaml
+	}
+
 	absolutePath, err := filepath.Abs(target)
 	if err != nil {
 		return nil, errors.Join(errNotFound, err)
