@@ -146,6 +146,46 @@ up alternative attack vectors because the options are not validated.
 	},
 }
 
+var actionRuleAmadevusPwshScript = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES110",
+		title: "Expression in 'script' input of 'Amadevus/pwsh-script'",
+		description: `
+When an expression appears in the 'script' input of 'Amadevus/pwsh-script' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: Amadevus/pwsh-script@v2
+      with:
+        script: |
+          Write-Output 'Hello ${{ inputs.name }}'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: Amadevus/pwsh-script@v2
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      with:
+        script: |
+          Write-Output "Hello $env:NAME"
+      #                ^      ^^^^^^^^^
+      #                |      | Replace the expression with the environment variable
+      #                |
+      #                | Note: the use of double quotes is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["script"]
+		},
+	},
+}
+
 var actionRuleAppleboySshAction = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
@@ -553,6 +593,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"appleboy/ssh-action": {
 		actionRuleAppleboySshAction,
+	},
+	"amadevus/pwsh-script": {
+		actionRuleAmadevusPwshScript,
 	},
 	"atlassian/gajira-create": {
 		actionRuleAtlassianGajiraCreate,

@@ -119,6 +119,37 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleAmadevusPwshScript(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "Amadevus/pwsh-script"
+			return actionRuleAmadevusPwshScript.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["script"] = value
+			return actionRuleAmadevusPwshScript.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "script")
+			return actionRuleAmadevusPwshScript.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleAppleboySshAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		f := func(uses gha.Uses) bool {

@@ -278,6 +278,38 @@ it can be made safer by converting it into:
   #               | Note: the use of string interpolation is required in this example
 ```
 
+## <a id="ADES110"></a> ADES110 - Expression in `script` input of `Amadevus/pwsh-script`
+
+When an expression appears in the `script` input of `Amadevus/pwsh-script` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: Amadevus/pwsh-script@v2
+  with:
+    script: |
+      Write-Output 'Hello ${{ inputs.name }}'
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: Amadevus/pwsh-script@v2
+  env:
+    NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+  with:
+    script: |
+      Write-Output "Hello $env:NAME"
+  #                ^      ^^^^^^^^^
+  #                |      | Replace the expression with the environment variable
+  #                |
+  #                | Note: the use of double quotes is required in this example (for interpolation)
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `tag` input of `ericcornelissen/git-tag-annotation-action`
 
 When an expression is used in the `tag` input of `ericcornelissen/git-tag-annotation-action` in
