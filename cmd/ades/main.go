@@ -503,6 +503,6 @@ https://github.com/ericcornelissen/ades/issues/new/choose`)
 }
 
 func version() {
-	versionString := "v25.10"
+	versionString := "v25.11"
 	fmt.Println(versionString)
 }
