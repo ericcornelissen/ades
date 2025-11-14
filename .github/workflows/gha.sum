@@ -9,7 +9,7 @@ actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 0qLZUqMcil7hZ8idJYYxI/
 docker/build-push-action@v6.17.0 JSBiASwiRckIi1Wp4xJz7zlr/fU3g9lZK9k212ed574=
 docker/login-action@v3.6.0 4RAwqK9AsSvSEtV9RMGVQo+3jz9tsgNg9UyqMVfA/vE=
 docker/setup-buildx-action@v3.11.1 ZSQQmzmjsPIJZdqrOUcuNs24j01PJ/r4ff0LDxkvXMk=
-github/codeql-action@4e94bd11f71e507f7f87df81788dff88d1dacbfb 0kPivh6lMtOcCoSnlU9zjrGksJBXXQRZhbr9G+jZKww=
-github/codeql-action@v4.31.0 0kPivh6lMtOcCoSnlU9zjrGksJBXXQRZhbr9G+jZKww=
+github/codeql-action@014f16e7ab1402f30e7c3329d33797e7948572db AkcwaqXMJavDA5dvKtWFbxjfDYRXBA2VJAMt2rUbP0E=
+github/codeql-action@v4.31.3 AkcwaqXMJavDA5dvKtWFbxjfDYRXBA2VJAMt2rUbP0E=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
 sigstore/cosign-installer@v4.0.0 9G7ZrM2Fr/B0uwOObCSa6gMY4kv7spg439EVhNZZjds=
