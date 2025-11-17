@@ -20,7 +20,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/fs"
 	"maps"
 	"os"
 	"path/filepath"
@@ -269,7 +268,21 @@ func runOnTarget(target string) (TargetReport, error) {
 	}
 
 	if stat.IsDir() {
-		return runOnRepository(target)
+		fsys := os.DirFS(target)
+
+		var matcher ades.ExprMatcher
+		if *flagConservative {
+			matcher = ades.ConservativeMatcher
+		} else {
+			matcher = ades.AllMatcher
+		}
+
+		report, err := ades.AnalyzeRepo(fsys, matcher)
+		if err != nil {
+			return nil, fmt.Errorf("repository analysis failed: %v", err)
+		}
+
+		return report, nil
 	} else {
 		fileViolations, err := runOnFile(target)
 		if err != nil {
@@ -287,90 +300,17 @@ const (
 	workflowsDir = "workflows"
 )
 
-func runOnRepository(target string) (TargetReport, error) {
-	report := make(map[string][]ades.Violation)
-	if err := runOnRepositoryManifests(target, report); err != nil {
-		return nil, err
-	}
-
-	if err := runOnRepositoryWorkflows(target, report); err != nil {
-		return nil, err
-	}
-
-	return report, nil
-}
-
-func runOnRepositoryManifests(target string, report TargetReport) error {
-	fsys := os.DirFS(target)
-	return fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if entry.IsDir() {
-			if path == ".git" {
-				return fs.SkipDir
-			}
-
-			return nil
-		}
-
-		if name := filepath.Base(path); !ghaManifestFileRegExp.MatchString(name) {
-			return nil
-		}
-
-		fullPath := filepath.Join(target, path)
-		if fileViolations, err := runOnFile(fullPath); err == nil {
-			report[path] = fileViolations
-		} else {
-			return fmt.Errorf("could not process manifest %q: %v", entry.Name(), err)
-		}
-
-		return nil
-	})
-}
-
-func runOnRepositoryWorkflows(target string, report TargetReport) error {
-	fsys := os.DirFS(target)
-	workflowsPath := filepath.Join(githubDir, workflowsDir)
-	if _, err := fsys.Open(workflowsPath); errors.Is(err, fs.ErrNotExist) {
-		return nil
-	}
-
-	return fs.WalkDir(fsys, workflowsPath, func(path string, entry fs.DirEntry, err error) error {
-		if err != nil {
-			return err
-		}
-
-		if entry.IsDir() {
-			if path == workflowsPath {
-				return nil
-			}
-
-			return fs.SkipDir
-		}
-
-		fullPath := filepath.Join(target, path)
-		if workflowViolations, err := runOnFile(fullPath); err == nil {
-			report[path] = workflowViolations
-		} else if !errors.Is(err, errNotYaml) {
-			return fmt.Errorf("could not process workflow %q: %v", entry.Name(), err)
-		}
-
-		return nil
-	})
-}
-
 var (
 	errNotFound  = errors.New("not found")
 	errNotParsed = errors.New("not parsed")
 	errNotYaml   = errors.New("not yaml")
 
 	ghaManifestFileRegExp = regexp.MustCompile("action.ya?ml")
+	yamlFileRegExp        = regexp.MustCompile("ya?ml$")
 )
 
 func runOnFile(target string) ([]ades.Violation, error) {
-	if ext := filepath.Ext(target); ext != ".yml" && ext != ".yaml" {
+	if !yamlFileRegExp.MatchString(target) {
 		return nil, errNotYaml
 	}
 
