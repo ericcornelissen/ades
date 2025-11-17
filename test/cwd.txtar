@@ -44,7 +44,7 @@ stdout 'could not process manifest "action.yml"'
 cd ../invalid-workflow
 
 ! exec ades
-stdout 'could not process workflow "syntax-error.yml"'
+stdout 'could not process workflow ".github/workflows/syntax-error.yml"'
 
 
 -- manifests/action.yml --

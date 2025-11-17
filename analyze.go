@@ -17,6 +17,9 @@ package ades
 
 import (
 	"fmt"
+	"io"
+	"io/fs"
+	"path/filepath"
 	"strings"
 
 	"github.com/ericcornelissen/go-gha-models"
@@ -52,6 +55,67 @@ type Violation struct {
 	// StepIndex is the index of the step in which the violation occurs. Different from StepId in
 	// that it always uniquely identifies the step.
 	stepIndex int
+}
+
+// AnalyzeRepo analyzes a GitHub repository for problematic GitHub Actions Expressions in manifests
+// and workflows.
+func AnalyzeRepo(fsys fs.FS, matcher ExprMatcher) (map[string][]Violation, error) {
+	report := make(map[string][]Violation)
+	return report, fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
+		if err != nil {
+			return err
+		}
+
+		if entry.IsDir() {
+			if path == ".git" {
+				return fs.SkipDir
+			}
+
+			return nil
+		}
+
+		var (
+			dir  = filepath.Dir(path)
+			base = filepath.Base(path)
+			ext  = filepath.Ext(path)
+
+			isManifest = base == "action.yml" || base == "action.yaml"
+			isWorkflow = dir == ".github/workflows" && (ext == ".yml" || ext == ".yaml")
+		)
+
+		if !isManifest && !isWorkflow {
+			return nil
+		}
+
+		file, err := fsys.Open(path)
+		if err != nil {
+			return fmt.Errorf("could not open %q: %v", path, err)
+		}
+		defer func() { _ = file.Close() }()
+
+		content, err := io.ReadAll(file)
+		if err != nil {
+			return fmt.Errorf("could not read %q: %v", path, err)
+		}
+
+		if isWorkflow {
+			workflow, err := gha.ParseWorkflow(content)
+			if err != nil {
+				return fmt.Errorf("could not process workflow %q: %v", path, err)
+			}
+
+			report[path] = AnalyzeWorkflow(&workflow, matcher)
+		} else {
+			manifest, err := gha.ParseManifest(content)
+			if err != nil {
+				return fmt.Errorf("could not process manifest %q: %v", path, err)
+			}
+
+			report[path] = AnalyzeManifest(&manifest, matcher)
+		}
+
+		return nil
+	})
 }
 
 // AnalyzeManifest analyzes a GitHub Actions manifest for problematic GitHub Actions Expressions.
