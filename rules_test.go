@@ -563,6 +563,37 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleMikefarahYq(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "mikefarah/yq"
+			return actionRuleMikefarahYq.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["cmd"] = value
+			return actionRuleMikefarahYq.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "cmd")
+			return actionRuleMikefarahYq.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleOziProjectPublish(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {

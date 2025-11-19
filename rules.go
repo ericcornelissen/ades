@@ -412,6 +412,44 @@ upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleMikefarahYq = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES111",
+		title: "Expression in 'cmd' input of 'mikefarah/yq'",
+		description: `
+When an expression appears in the 'cmd' input of 'mikefarah/yq' you can avoid any potential attack
+by extracting the expression into an environment variable and using the environment variable
+instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: mikefarah/yq@master
+      with:
+        cmd: yq '${{ inputs.query }}' 'config.yml'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: mikefarah/yq@master
+      env:
+        QUERY: ${{ inputs.query }} # <- Assign the expression to an environment variable
+      with:
+        cmd: yq "$QUERY" 'config.yml'
+      #        / ^^^^^^
+      #        | | Replace the expression with the environment variable
+      #        |
+      #        | Note: the use of double quotes is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["cmd"]
+		},
+	},
+}
+
 var actionRuleOziProjectPublish = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isAtOrAfterVersion(uses, "v1.13.2") && isBeforeVersion(uses, "v1.13.6")
@@ -617,6 +655,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"lycheeverse/lychee": {
 		actionRuleLycheeverseLycheeAction,
+	},
+	"mikefarah/yq": {
+		actionRuleMikefarahYq,
 	},
 	"ozi-project/publish": {
 		actionRuleOziProjectPublish,
