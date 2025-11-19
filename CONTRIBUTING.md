@@ -15,6 +15,10 @@ If you decide to make a contribution, please read the [DCO] and use the followin
 - Commit, with [signoff], to the new branch and push the commit(s).
 - Open a Pull Request against `main`.
 
+In case you run into any issues while working on the project, e.g. the tests are not working as you
+expect, checkout the `main` and run `go run tasks.go clean verify`. If this does not _just work_
+please open an issue with the full output log.
+
 [dco]: ./DCO.txt
 [signoff]: https://git-scm.com/docs/git-commit#Documentation/git-commit.txt---signoff
 
