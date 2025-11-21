@@ -16,10 +16,235 @@
 package ades
 
 import (
+	"io"
+	"io/fs"
 	"testing"
+	"testing/fstest"
 
 	"github.com/ericcornelissen/go-gha-models"
 )
+
+func TestAnalyzeRepo(t *testing.T) {
+	type TestCase struct {
+		fsys    fs.FS
+		matcher ExprMatcher
+		want    int
+	}
+
+	testCases := map[string]TestCase{
+		"Repository with one workflow": {
+			fsys: fstest.MapFS{
+				".github/workflows/example.yml": &fstest.MapFile{
+					Data: []byte(`name: Example workflow with a ADES100 violation
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo 'Hello ${{ inputs.name }}'
+`),
+				},
+			},
+			matcher: AllMatcher,
+			want:    1,
+		},
+		"Repository with two workflows": {
+			fsys: fstest.MapFS{
+				".github/workflows/ades100.yml": &fstest.MapFile{
+					Data: []byte(`name: Example workflow with a ADES100 violation
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo 'Hello ${{ inputs.name }}'
+`),
+				},
+				".github/workflows/ades101.yml": &fstest.MapFile{
+					Data: []byte(`name: Example workflow with a ADES101 violation
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/github-script@v6
+      with:
+        script: console.log('Hello ${{ inputs.name }}')
+`),
+				},
+			},
+			matcher: AllMatcher,
+			want:    2,
+		},
+		"Repository with manifest in root": {
+			fsys: fstest.MapFS{
+				"action.yml": &fstest.MapFile{
+					Data: []byte(`name: Example action
+description: An example action.
+
+runs:
+  using: composite
+  steps:
+  - run: echo 'Hello, ${{ inputs.name }}!'
+`),
+				},
+			},
+			matcher: AllMatcher,
+			want:    1,
+		},
+		"Repository with manifest in directory": {
+			fsys: fstest.MapFS{
+				"example/action.yml": &fstest.MapFile{
+					Data: []byte(`name: Example action
+description: An example action.
+
+runs:
+  using: composite
+  steps:
+  - run: echo 'Hello, ${{ inputs.name }}!'
+`),
+				},
+			},
+			matcher: AllMatcher,
+			want:    1,
+		},
+		"Skip .git directory": {
+			fsys: fstest.MapFS{
+				".git/action.yml": &fstest.MapFile{
+					Data: []byte(`name: Example action
+description: An example action.
+
+runs:
+  using: composite
+  steps:
+  - run: echo 'Hello, ${{ inputs.name }}!'
+`),
+				},
+			},
+			matcher: AllMatcher,
+			want:    0,
+		},
+		"Skip irrelevant file that cannot be opened": {
+			fsys: FailOpenFS{
+				FS: fstest.MapFS{
+					".github/workflows/example.yml": &fstest.MapFile{
+						Data: []byte(`name: Purely illustrative`),
+					},
+					"wham.mp3": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					"wham.mp3": fs.ErrNotExist,
+				},
+			},
+			matcher: AllMatcher,
+			want:    0,
+		},
+	}
+
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			report, err := AnalyzeRepo(tt.fsys, AllMatcher)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+
+			count := 0
+			for _, v := range report {
+				count += len(v)
+			}
+
+			if got, want := count, tt.want; got != want {
+				t.Fatalf("unexpected report size (got %d, want %d; %v)", got, want, report)
+			}
+		})
+	}
+
+	errCases := map[string]TestCase{
+		"Cannot open dir": {
+			fsys: FailOpenFS{
+				FS: fstest.MapFS{
+					".github/": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					".github": fs.ErrPermission,
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Cannot open workflow": {
+			fsys: FailOpenFS{
+				FS: fstest.MapFS{
+					".github/workflows/example.yml": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					".github/workflows/example.yml": fs.ErrNotExist,
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Cannot open manifest": {
+			fsys: FailOpenFS{
+				FS: fstest.MapFS{
+					"action.yml": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					"action.yml": fs.ErrNotExist,
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Cannot read workflow": {
+			fsys: FailReadFS{
+				FS: fstest.MapFS{
+					".github/workflows/example.yml": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					".github/workflows/example.yml": io.ErrNoProgress,
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Cannot read manifest": {
+			fsys: FailReadFS{
+				FS: fstest.MapFS{
+					"action.yml": &fstest.MapFile{},
+				},
+				Fail: map[string]error{
+					"action.yml": io.ErrNoProgress,
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Corrupt workflow": {
+			fsys: fstest.MapFS{
+				".github/workflows/example.yml": &fstest.MapFile{
+					Data: []byte(`* this is not YAML`),
+				},
+			},
+			matcher: AllMatcher,
+		},
+		"Corrupt manifest": {
+			fsys: fstest.MapFS{
+				"action.yml": &fstest.MapFile{
+					Data: []byte(`* this is not YAML`),
+				},
+			},
+			matcher: AllMatcher,
+		},
+	}
+
+	for name, tt := range errCases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			if _, err := AnalyzeRepo(tt.fsys, AllMatcher); err == nil {
+				t.Fatal("Unexpected success")
+			}
+		})
+	}
+}
 
 func TestAnalyzeManifest(t *testing.T) {
 	type TestCase struct {
@@ -826,4 +1051,44 @@ func TestAnalyzeString(t *testing.T) {
 			}
 		})
 	}
+}
+
+type FailOpenFS struct {
+	fs.FS
+	Fail map[string]error
+}
+
+func (f FailOpenFS) Open(name string) (fs.File, error) {
+	if err, ok := f.Fail[name]; ok {
+		return nil, err
+	}
+
+	return f.FS.Open(name)
+}
+
+type FailReadFS struct {
+	fs.FS
+	Fail map[string]error
+}
+
+func (f FailReadFS) Open(name string) (fs.File, error) {
+	file, err := f.FS.Open(name)
+	if err != nil {
+		return nil, err
+	}
+
+	if err, ok := f.Fail[name]; ok {
+		return FailReadFile{file, err}, nil
+	}
+
+	return file, nil
+}
+
+type FailReadFile struct {
+	fs.File
+	err error
+}
+
+func (f FailReadFile) Read(p []byte) (int, error) {
+	return 0, f.err
 }
