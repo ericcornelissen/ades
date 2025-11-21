@@ -14,7 +14,7 @@ require (
 require (
 	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3 // indirect
 	dario.cat/mergo v1.0.2 // indirect
-	fillmore-labs.com/zerolint v0.0.13 // indirect
+	fillmore-labs.com/zerolint v0.0.14 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 // indirect
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20250520111509-a70c2aa677fa // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
