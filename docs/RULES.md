@@ -340,6 +340,36 @@ it can be made safer by converting it into:
   #        | Note: the use of double quotes is required in this example (for interpolation)
 ```
 
+## <a id="ADES112"></a> ADES112 - Expression in `cmd` input of `devorbitus/yq-action-output`
+
+When an expression appears in the `cmd` input of `devorbitus/yq-action-output` you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: devorbitus/yq-action-output@v1.1
+  with:
+    cmd: yq eval '${{ inputs.query }}' 'config.yml'
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: devorbitus/yq-action-output@v1.1
+  env:
+    QUERY: ${{ inputs.query }} # <- Assign the expression to an environment variable
+  with:
+    cmd: yq eval "$QUERY" 'config.yml'
+  #             / ^^^^^^
+  #             | | Replace the expression with the environment variable
+  #             |
+  #             | Note: the use of double quotes is required in this example (for interpolation)
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `tag` input of `ericcornelissen/git-tag-annotation-action`
 
 When an expression is used in the `tag` input of `ericcornelissen/git-tag-annotation-action` in
