@@ -80,6 +80,12 @@ stdout 'ADES110'
 stdout 'ADES111'
 ! stderr .
 
+# ADES112
+! exec ades ades112.yml
+! stdout 'Ok'
+stdout 'ADES112'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -283,6 +289,18 @@ jobs:
       uses: mikefarah/yq@master
       with:
         cmd: yq -i '${{ inputs.query }}' 'config.yml'
+-- ades112.yml --
+name: Example workflow with a ADES112 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Example step
+      uses: devorbitus/yq-action-output@v1.1
+      with:
+        cmd: yq eval '${{ inputs.query }}' 'config.yml'
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]

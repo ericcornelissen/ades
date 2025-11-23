@@ -302,6 +302,44 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleDevorbitusYqActionOutput = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES112",
+		title: "Expression in 'cmd' input of 'devorbitus/yq-action-output'",
+		description: `
+When an expression appears in the 'cmd' input of 'devorbitus/yq-action-output' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: devorbitus/yq-action-output@v1.1
+      with:
+        cmd: yq eval '${{ inputs.query }}' 'config.yml'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: devorbitus/yq-action-output@v1.1
+      env:
+        QUERY: ${{ inputs.query }} # <- Assign the expression to an environment variable
+      with:
+        cmd: yq eval "$QUERY" 'config.yml'
+      #             / ^^^^^^
+      #             | | Replace the expression with the environment variable
+      #             |
+      #             | Note: the use of double quotes is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["cmd"]
+		},
+	},
+}
+
 var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
 		return isBeforeVersion(uses, "v1.0.1")
@@ -640,6 +678,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"cardinalby/js-eval-action": {
 		actionRuleCardinalbyJsEvalAction,
+	},
+	"devorbitus/yq-action-output": {
+		actionRuleDevorbitusYqActionOutput,
 	},
 	"ericcornelissen/git-tag-annotation-action": {
 		actionRuleEriccornelissenGitTagAnnotationAction,
