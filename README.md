@@ -14,7 +14,7 @@ this problem on their blog in [2023][blog-2023] and [2025][blog-2025].
 and manifests.
 
 [github actions expression]: https://docs.github.com/en/actions/learn-github-actions/expressions
-[understanding the risk of script injections]: https://docs.github.com/en/actions/security-for-github-actions/security-guides/security-hardening-for-github-actions#understanding-the-risk-of-script-injections
+[understanding the risk of script injections]: https://docs.github.com/en/actions/concepts/security/script-injections#understanding-the-risk-of-script-injections
 [blog-2023]: https://github.blog/security/supply-chain-security/four-tips-to-keep-your-github-actions-workflows-secure/#1-dont-use-syntax-in-the-run-section-to-avoid-unexpected-substitution-behavior
 [blog-2025]: https://github.blog/security/vulnerability-research/how-to-catch-github-actions-workflow-injections-before-attackers-do#h-explaining-actions-workflow-injections
 
