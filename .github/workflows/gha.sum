@@ -5,7 +5,7 @@ actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538 XNMz7LH
 actions/attest-build-provenance@v3.0.0 OVQyvZqzPBwqFMxYdJt2p/XpuM5BcwN/QDeTgYVd0Hc=
 actions/attest@daf44fb950173508f38bd2406030372c1d1162b1 AlPt1CKAf/W8V8QEUcfVJopo9v7wGzR2WN0NRaf6HRk=
 actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 aYx2ZNrV/U9daVa5XJLnuR3depD7lQqzkyRhH4E9bOU=
-actions/setup-go@44694675825211faa026b3c33043df3e48a5fa00 0qLZUqMcil7hZ8idJYYxI/LgdETqnWR0T02izCncHy4=
+actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c 5G//j2nmf3RF0j3fNbUeHncIdEiv4XIMc0RbD9aceOM=
 docker/build-push-action@v6.17.0 JSBiASwiRckIi1Wp4xJz7zlr/fU3g9lZK9k212ed574=
 docker/login-action@v3.6.0 4RAwqK9AsSvSEtV9RMGVQo+3jz9tsgNg9UyqMVfA/vE=
 docker/setup-buildx-action@v3.11.1 ZSQQmzmjsPIJZdqrOUcuNs24j01PJ/r4ff0LDxkvXMk=
