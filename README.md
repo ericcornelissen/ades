@@ -116,10 +116,18 @@ Fetch and run `ades` from source using the [Go] CLI:
 go run github.com/ericcornelissen/ades/cmd/ades@latest -version
 ```
 
-Or integrate it into a Go project as a tool (after which it can be run without `@latest`):
+Or fetch and install `ades` from source using the [Go] CLI, after which it can be run directly:
+
+```shell
+go install github.com/ericcornelissen/ades/cmd/ades@latest
+ades -version
+```
+
+Or integrate `ades` into a Go project as a tool, after which it can be run without `@latest`:
 
 ```shell
 go get -tool github.com/ericcornelissen/ades
+go run github.com/ericcornelissen/ades/cmd/ades -version
 ```
 
 [go]: https://go.dev/
