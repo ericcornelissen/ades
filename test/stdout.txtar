@@ -39,10 +39,6 @@ stdin project/.github/workflows/unsafe.yml
 cmp stdout $WORK/snapshots/stdin-stdout.txt
 ! stderr .
 
-# Suggestions
-! exec ades -suggestions 'project/.github/workflows/unsafe.yml'
-cmp stderr $WORK/snapshots/suggestion-stderr.txt
-
 # Not found
 ! exec ades 'does-not-exist' 'project/action.yml'
 cmp stdout $WORK/snapshots/not-found.txt
@@ -143,9 +139,6 @@ Detected 2 violation(s) in "stdin":
     step "Unsafe GitHub script" contains "${{ inputs.name }}" (ADES101)
 
 Use -explain for more details and fix suggestions (example: 'ades -explain ADES100')
--- snapshots/suggestion-stderr.txt --
-The -suggestions flag is deprecated and will be removed in the future
-
 -- snapshots/workflow-safe-stdout.txt --
 Ok
 -- snapshots/workflow-unsafe-stdout.txt --
