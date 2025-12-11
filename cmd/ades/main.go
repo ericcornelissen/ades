@@ -63,11 +63,6 @@ var (
 		false,
 		"Show legal information and exit",
 	)
-	flagSuggestions = flag.Bool(
-		"suggestions",
-		false,
-		"No effect (deprecated)",
-	)
 	flagVersion = flag.Bool(
 		"version",
 		false,
@@ -103,11 +98,6 @@ func run() int {
 	if *flagVersion {
 		version()
 		return exitSuccess
-	}
-
-	if *flagSuggestions {
-		fmt.Fprintln(os.Stderr, "The -suggestions flag is deprecated and will be removed in the future")
-		fmt.Fprintln(os.Stderr, "")
 	}
 
 	if *flagExplain != "" {
@@ -428,7 +418,6 @@ Flags:
   -help               Show this help message and exit.
   -json               Output results in JSON format.
   -legal              Show legal information and exit.
-  -suggestions        No effect (deprecated).
   -version            Show the program version and exit.
   -                   Read workflow or manifest from stdin.
 
