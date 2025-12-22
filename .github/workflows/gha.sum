@@ -2,13 +2,13 @@ version 1
 
 JamesIves/github-pages-deploy-action@v4.7.3 nB3e5w7A6Zu3I5aucvek89SUJ52ZEFl5VQZzbfnsqwQ=
 actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538 XNMz7LHJ9IN3MIa8gRo+72lU5I7gjRYQ8yR0N/cAWwo=
-actions/attest-build-provenance@v3.0.0 OVQyvZqzPBwqFMxYdJt2p/XpuM5BcwN/QDeTgYVd0Hc=
-actions/attest@daf44fb950173508f38bd2406030372c1d1162b1 AlPt1CKAf/W8V8QEUcfVJopo9v7wGzR2WN0NRaf6HRk=
+actions/attest-build-provenance@v3.1.0 uON4rVJph2AcYoGrs1RbNOcrSdtiq2nB8VG8wKWl3lI=
+actions/attest@7667f588f2f73a90cea6c7ac70e78266c4f76616 OtwL+vGbfGDzG2lvDb0xVx5KhJJ9/1eEkPicbJjuPHs=
 actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
 actions/setup-go@4dc6199c7b1a012772edbd06daecab0f50c9053c 5G//j2nmf3RF0j3fNbUeHncIdEiv4XIMc0RbD9aceOM=
 docker/build-push-action@v6.17.0 JSBiASwiRckIi1Wp4xJz7zlr/fU3g9lZK9k212ed574=
 docker/login-action@v3.6.0 4RAwqK9AsSvSEtV9RMGVQo+3jz9tsgNg9UyqMVfA/vE=
-docker/setup-buildx-action@v3.11.1 ZSQQmzmjsPIJZdqrOUcuNs24j01PJ/r4ff0LDxkvXMk=
+docker/setup-buildx-action@v3.12.0 Pc060N0ajyrI7UfGFDE06XCpFmAVqyxc4kit1ubO8Fg=
 github/codeql-action@cf1bb45a277cb3c205638b2cd5c984db1c46a412 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
 github/codeql-action@v4.31.7 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
