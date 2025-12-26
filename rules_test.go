@@ -245,6 +245,37 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	})
 }
 
+func TestActionRuleAzurePowershell(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "azure/powershell"
+			return actionRuleAzurePowershell.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["inlineScript"] = value
+			return actionRuleAzurePowershell.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "inlineScript")
+			return actionRuleAzurePowershell.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		f := func(uses gha.Uses) bool {
