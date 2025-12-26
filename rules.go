@@ -243,6 +243,48 @@ upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleAzurePowershell = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES113",
+		title: "Expression in 'inlineScript' input of 'azure/powershell'",
+		description: `
+When an expression appears in the 'inlineScript' input of 'azure/powershell' you can avoid any
+potential attack by extracting the expression into an environment variable and using the environment
+variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: azure/powershell@v2.0.0
+      with:
+        azPSVersion: latest
+        inlineScript: |
+          Write-Output 'Hello ${{ inputs.name }}'
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: azure/powershell@v2.0.0
+      env:
+        NAME: ${{ inputs.name }} # <- Assign the expression to an environment variable
+      with:
+        azPSVersion: latest
+        inlineScript: |
+          Write-Output "Hello $env:NAME"
+      #                ^      ^^^^^^^^^
+      #                |      | Replace the expression with the environment variable
+      #                |
+      #                | Note: the use of double quotes is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["inlineScript"]
+		},
+	},
+}
+
 var actionRuleCardinalbyJsEvalAction = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
@@ -675,6 +717,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"atlassian/gajira-create": {
 		actionRuleAtlassianGajiraCreate,
+	},
+	"azure/powershell": {
+		actionRuleAzurePowershell,
 	},
 	"cardinalby/js-eval-action": {
 		actionRuleCardinalbyJsEvalAction,
