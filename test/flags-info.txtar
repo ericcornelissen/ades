@@ -10,12 +10,12 @@ cmp stdout $WORK/snapshots/legal-stdout.txt
 
 # Version
 exec ades -version
-stdout 'v25.11'
+stdout 'v26.01.0'
 ! stderr .
 
 
 -- snapshots/legal-stdout.txt --
-ades  Copyright (C) 2025  Eric Cornelissen
+ades  Copyright (C) 2026  Eric Cornelissen
 This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
 This is free software, and you are welcome to redistribute it under certain
 conditions; see the GPL v3.0 for details.

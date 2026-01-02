@@ -1,6 +1,6 @@
 // MIT No Attribution
 //
-// Copyright (c) 2024-2025 Eric Cornelissen
+// Copyright (c) 2024-2026 Eric Cornelissen
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -334,9 +334,17 @@ func TaskRelease(t *T) error {
 		return err
 	}
 
+	var version string
+	for patch := 0; ; patch++ {
+		version = fmt.Sprintf(`v%s.%d`, date, patch)
+		if _, err := t.ExecS(`git rev-parse --quiet --verify refs/tags/` + version); err != nil {
+			break
+		}
+	}
+
 	err = t.Exec(
-		`sed -i cmd/ades/main.go -e 's/versionString := "v[0-9][0-9][.][0-9][0-9]"/versionString := "v`+date+`"/'`,
-		`sed -i test/flags-info.txtar -e "s/stdout 'v[0-9][0-9][.][0-9][0-9]'/stdout 'v`+date+`'/"`,
+		`sed -i cmd/ades/main.go -e 's/versionString := "v[0-9][0-9][.][0-9][0-9][.][0-9]*"/versionString := "`+version+`"/'`,
+		`sed -i test/flags-info.txtar -e "s/stdout 'v[0-9][0-9][.][0-9][0-9][.][0-9]*'/stdout '`+version+`'/"`,
 	)
 	if err != nil {
 		return err
@@ -359,8 +367,8 @@ func TaskRelease(t *T) error {
 	fmt.Println()
 	fmt.Println("    git checkout " + baseBranch)
 	fmt.Println("    git pull origin " + baseBranch)
-	fmt.Println("    git tag v" + date)
-	fmt.Println("    git push origin v" + date)
+	fmt.Println("    git tag " + version)
+	fmt.Println("    git push origin " + version)
 	fmt.Println()
 	fmt.Println("After that a release should be created automatically. If not, follow the release")
 	fmt.Println("guidelines in RELEASE.md.")
