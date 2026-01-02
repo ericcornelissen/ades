@@ -404,6 +404,40 @@ it can be made safer by converting it into:
   #                | Note: the use of double quotes is required in this example (for interpolation)
 ```
 
+## <a id="ADES114"></a> ADES114 - Expression in `item_exec` input of `gautamkrishnar/blog-post-workflow`
+
+When an expression appears in the `item_exec` input of `gautamkrishnar/blog-post-workflow` you can
+avoid any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: gautamkrishnar/blog-post-workflow@1.9.4
+  with:
+    item_exec: |
+      post.includes('${{ inputs.substr }}')
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: gautamkrishnar/blog-post-workflow@1.9.4
+  env:
+    SUBSTR: ${{ inputs.substr }} # <- Assign the expression to an environment variable
+  with:
+    item_exec: |
+      post.includes(`${process.env.SUBSTR}`)
+  #                / ^ ^^^^^^^^^^^^^^^^^^
+  #                | | | Replace the expression with the environment variable
+  #                | |
+  #                | | Note: the use of ${...} is required in this example (for interpolating)
+  #                |
+  #                | Note: the use of backticks is required in this example (for interpolation)
+```
+
 ## <a id="ADES200"></a> ADES200 - Expression in `tag` input of `ericcornelissen/git-tag-annotation-action`
 
 When an expression is used in the `tag` input of `ericcornelissen/git-tag-annotation-action` in
