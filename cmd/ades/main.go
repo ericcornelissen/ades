@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -397,7 +397,7 @@ func fix(report map[string]map[string][]ades.Violation) error {
 }
 
 func legal() {
-	fmt.Println(`ades  Copyright (C) 2025  Eric Cornelissen
+	fmt.Println(`ades  Copyright (C) 2026  Eric Cornelissen
 This program comes with ABSOLUTELY NO WARRANTY; see the GPL v3.0 for details.
 This is free software, and you are welcome to redistribute it under certain
 conditions; see the GPL v3.0 for details.`)
@@ -432,6 +432,6 @@ https://github.com/ericcornelissen/ades/issues/new/choose`)
 }
 
 func version() {
-	versionString := "v25.11"
+	versionString := "v26.01.0"
 	fmt.Println(versionString)
 }
