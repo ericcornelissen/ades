@@ -92,6 +92,12 @@ stdout 'ADES112'
 stdout 'ADES113'
 ! stderr .
 
+# ADES114
+! exec ades ades114.yml
+! stdout 'Ok'
+stdout 'ADES114'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -321,6 +327,19 @@ jobs:
         azPSVersion: latest
         inlineScript: |
           Write-Output 'Hello ${{ inputs.name }}'
+-- ades114.yml --
+name: Example workflow with a ADES114 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Example step
+      uses: gautamkrishnar/blog-post-workflow@1.9.4
+      with:
+        item_exec: |
+          post.includes('${{ inputs.substr }}')
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]

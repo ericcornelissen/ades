@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -459,6 +459,37 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 		without := func(step gha.Step) bool {
 			delete(step.With, "pattern")
 			return actionRuleFishShopSyntaxCheck.rule.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
+func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		f := func(uses gha.Uses) bool {
+			uses.Name = "gautamkrishnar/blog-post-workflow"
+			return actionRuleGautamkrishnarBlogPostWorkflow.appliesTo(&uses)
+		}
+
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["item_exec"] = value
+			return actionRuleGautamkrishnarBlogPostWorkflow.rule.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "item_exec")
+			return actionRuleGautamkrishnarBlogPostWorkflow.rule.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)

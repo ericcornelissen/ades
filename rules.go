@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -418,6 +418,48 @@ upgrade the action to a non-vulnerable version.
 	},
 }
 
+var actionRuleGautamkrishnarBlogPostWorkflow = actionRule{
+	appliesTo: func(_ *gha.Uses) bool {
+		return true
+	},
+	rule: rule{
+		id:    "ADES114",
+		title: "Expression in 'item_exec' input of 'gautamkrishnar/blog-post-workflow'",
+		description: `
+When an expression appears in the 'item_exec' input of 'gautamkrishnar/blog-post-workflow' you can
+avoid any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: gautamkrishnar/blog-post-workflow@1.9.4
+      with:
+        item_exec: |
+          post.includes('${{ inputs.substr }}')
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: gautamkrishnar/blog-post-workflow@1.9.4
+      env:
+        SUBSTR: ${{ inputs.substr }} # <- Assign the expression to an environment variable
+      with:
+        item_exec: |
+          post.includes(` + "`" + `${process.env.SUBSTR}` + "`" + `)
+      #                / ^ ^^^^^^^^^^^^^^^^^^
+      #                | | | Replace the expression with the environment variable
+      #                | |
+      #                | | Note: the use of ${...} is required in this example (for interpolating)
+      #                |
+      #                | Note: the use of backticks is required in this example (for interpolation)
+`,
+		extractFrom: func(step *gha.Step) string {
+			return step.With["item_exec"]
+		},
+	},
+}
+
 var actionRuleJannekemRunPythonScriptAction = actionRule{
 	appliesTo: func(_ *gha.Uses) bool {
 		return true
@@ -732,6 +774,9 @@ var actionRules = map[string][]actionRule{
 	},
 	"fish-shop/syntax-check": {
 		actionRuleFishShopSyntaxCheck,
+	},
+	"gautamkrishnar/blog-post-workflow": {
+		actionRuleGautamkrishnarBlogPostWorkflow,
 	},
 	"jannekem/run-python-script-action": {
 		actionRuleJannekemRunPythonScriptAction,
