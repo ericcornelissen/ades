@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -160,27 +160,28 @@ func analyzeJob(id string, job *gha.Job, matcher ExprMatcher) []Violation {
 		name = id
 	}
 
-	violations := make([]Violation, 0)
-	for _, violation := range analyzeSteps(job.Steps, matcher) {
+	violations := analyzeSteps(job.Steps, matcher)
+	out := make([]Violation, 0, len(violations))
+	for _, violation := range violations {
 		if matrixSafe(violation.Problem, job.Strategy.Matrix, matcher) {
 			continue
 		}
 
 		violation.jobKey = id
 		violation.JobId = name
-		violations = append(violations, violation)
+		out = append(out, violation)
 	}
 
-	return violations
+	return out
 }
 
 func analyzeSteps(steps []gha.Step, matcher ExprMatcher) []Violation {
-	violations := make([]Violation, 0)
+	violations := make([][]Violation, len(steps))
 	for i, step := range steps {
-		violations = append(violations, analyzeStep(i, &step, matcher)...)
+		violations[i] = analyzeStep(i, &step, matcher)
 	}
 
-	return violations
+	return flatten(violations)
 }
 
 func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
@@ -207,17 +208,19 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 		}
 	}
 
-	violations := make([]Violation, 0)
-	for _, rule := range rules {
-		for _, violation := range analyzeString(rule.extractFrom(step), matcher) {
-			violation.RuleId = rule.id
-			violation.StepId = name
-			violation.stepIndex = id
-			violations = append(violations, violation)
+	violations := make([][]Violation, len(rules))
+	for i, rule := range rules {
+		vs := analyzeString(rule.extractFrom(step), matcher)
+		for i := range vs {
+			vs[i].RuleId = rule.id
+			vs[i].StepId = name
+			vs[i].stepIndex = id
 		}
+
+		violations[i] = vs
 	}
 
-	return violations
+	return flatten(violations)
 }
 
 func analyzeString(s string, matcher ExprMatcher) []Violation {
@@ -236,4 +239,23 @@ func analyzeString(s string, matcher ExprMatcher) []Violation {
 	}
 
 	return violations
+}
+
+func flatten[T any](s [][]T) []T {
+	size := 0
+	for _, s := range s {
+		size += len(s)
+	}
+
+	offset := 0
+	out := make([]T, size)
+	for _, s := range s {
+		for i, e := range s {
+			out[offset+i] = e
+		}
+
+		offset += len(s)
+	}
+
+	return out
 }
