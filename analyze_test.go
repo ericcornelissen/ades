@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2025  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -1047,6 +1047,64 @@ func TestAnalyzeString(t *testing.T) {
 			for i, violation := range violations {
 				if got, want := violation, tt.want[i]; got != want {
 					t.Errorf("Unexpected #%d violation (got '%v', want '%v')", i, got, want)
+				}
+			}
+		})
+	}
+}
+
+func TestFlatten(t *testing.T) {
+	type TestCase struct {
+		inp  [][]uint
+		want []uint
+	}
+
+	testCases := map[string]TestCase{
+		"basic example": {
+			inp: [][]uint{
+				{1, 3},
+				{2, 4},
+			},
+			want: []uint{1, 3, 2, 4},
+		},
+		"different length slices": {
+			inp: [][]uint{
+				{1, 2, 3},
+				{4},
+				{5, 6},
+			},
+			want: []uint{1, 2, 3, 4, 5, 6},
+		},
+		"with nil slice": {
+			inp: [][]uint{
+				{1, 3},
+				nil,
+				{2, 4},
+			},
+			want: []uint{1, 3, 2, 4},
+		},
+		"empty input": {
+			inp:  nil,
+			want: nil,
+		},
+	}
+
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+
+			got, want := flatten(tt.inp), tt.want
+			if got, want := len(got), len(want); got != want {
+				t.Fatalf("Unexpected output length (got %d, want %d)", got, want)
+			}
+
+			if got, want := cap(got), cap(want); got != want {
+				t.Errorf("Unexpected output capacity (got %d, want %d)", got, want)
+			}
+
+			for i, got := range got {
+				if want := want[i]; got != want {
+					t.Errorf("Unexpected %dth value (got %d, want %d)", i, got, want)
 				}
 			}
 		})

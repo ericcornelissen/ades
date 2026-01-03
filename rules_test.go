@@ -1769,14 +1769,25 @@ func TestFixReplaceIn(t *testing.T) {
 }
 
 func allRules() []rule {
-	rules := make([]rule, 0)
-
-	for _, rs := range actionRules {
-		for _, r := range rs {
-			rules = append(rules, r.rule)
+	tmp := make([][]rule, 0, len(actionRules))
+	for _, ars := range actionRules {
+		rs := make([]rule, len(ars))
+		for i, r := range ars {
+			rs[i] = r.rule
 		}
+
+		tmp = append(tmp, rs)
 	}
 
+	total := 0
+	for _, rs := range tmp {
+		total += len(rs)
+	}
+
+	rules := make([]rule, 0, total+len(stepRules))
+	for _, rs := range tmp {
+		rules = append(rules, rs...)
+	}
 	for _, r := range stepRules {
 		rules = append(rules, r.rule)
 	}
