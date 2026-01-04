@@ -60,7 +60,7 @@ jobs:
     - run: echo 'Hello ${{ inputs.name }}'
 `),
 				},
-				".github/workflows/ades101.yml": &fstest.MapFile{
+				".github/workflows/ades101.yaml": &fstest.MapFile{
 					Data: []byte(`name: Example workflow with a ADES101 violation
 on: [push]
 jobs:

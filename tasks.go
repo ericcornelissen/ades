@@ -489,7 +489,13 @@ func TaskTest(t *T) error {
 // Run mutation tests.
 func TaskTestMutation(t *T) error {
 	t.Log("Mutation testing...")
-	return t.Exec(`go test -tags=mutation`)
+	return t.Exec(`
+		go run github.com/go-gremlins/gremlins/cmd/gremlins unleash
+			--threshold-mcover 99
+			--output-statuses "ltr"
+			--exclude-files "tasks.go"
+			--exclude-files "^web"
+	`)
 }
 
 // Run tests in a random order.
