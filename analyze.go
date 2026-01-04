@@ -20,6 +20,7 @@ import (
 	"io"
 	"io/fs"
 	"path/filepath"
+	"slices"
 	"strings"
 
 	"github.com/ericcornelissen/go-gha-models"
@@ -181,7 +182,7 @@ func analyzeSteps(steps []gha.Step, matcher ExprMatcher) []Violation {
 		violations[i] = analyzeStep(i, &step, matcher)
 	}
 
-	return flatten(violations)
+	return slices.Concat(violations...)
 }
 
 func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
@@ -220,7 +221,7 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 		violations[i] = vs
 	}
 
-	return flatten(violations)
+	return slices.Concat(violations...)
 }
 
 func analyzeString(s string, matcher ExprMatcher) []Violation {
@@ -239,23 +240,4 @@ func analyzeString(s string, matcher ExprMatcher) []Violation {
 	}
 
 	return violations
-}
-
-func flatten[T any](s [][]T) []T {
-	size := 0
-	for _, s := range s {
-		size += len(s)
-	}
-
-	offset := 0
-	out := make([]T, size)
-	for _, s := range s {
-		for i, e := range s {
-			out[offset+i] = e
-		}
-
-		offset += len(s)
-	}
-
-	return out
 }
