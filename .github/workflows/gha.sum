@@ -1,5 +1,6 @@
 version 1
 
+JamesIves/github-pages-deploy-action@v4.7.3 nB3e5w7A6Zu3I5aucvek89SUJ52ZEFl5VQZzbfnsqwQ=
 actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538 XNMz7LHJ9IN3MIa8gRo+72lU5I7gjRYQ8yR0N/cAWwo=
 actions/attest-build-provenance@v3.1.0 uON4rVJph2AcYoGrs1RbNOcrSdtiq2nB8VG8wKWl3lI=
 actions/attest@7667f588f2f73a90cea6c7ac70e78266c4f76616 OtwL+vGbfGDzG2lvDb0xVx5KhJJ9/1eEkPicbJjuPHs=
@@ -10,6 +11,5 @@ docker/login-action@v3.6.0 4RAwqK9AsSvSEtV9RMGVQo+3jz9tsgNg9UyqMVfA/vE=
 docker/setup-buildx-action@v3.12.0 Pc060N0ajyrI7UfGFDE06XCpFmAVqyxc4kit1ubO8Fg=
 github/codeql-action@cf1bb45a277cb3c205638b2cd5c984db1c46a412 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
 github/codeql-action@v4.31.7 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
-jamesives/github-pages-deploy-action@v4.7.3 nB3e5w7A6Zu3I5aucvek89SUJ52ZEFl5VQZzbfnsqwQ=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
 sigstore/cosign-installer@v4.0.0 9G7ZrM2Fr/B0uwOObCSa6gMY4kv7spg439EVhNZZjds=
