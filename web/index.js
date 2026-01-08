@@ -1,5 +1,5 @@
 /**
- * Copyright (C) 2024  Eric Cornelissen
+ * Copyright (C) 2024-2026  Eric Cornelissen
  *
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -36,7 +36,7 @@ async function loadWasm() {
 
 const htmlEncode = {
   ruleId: (ruleId) => {
-    const link = `https://github.com/ericcornelissen/ades/blob/main/docs/RULES.md#${ruleId}`;
+    const link = `https://github.com/ericcornelissen/ades/blob/main/docs/RULES.md#user-content-${ruleId}`;
 
     const a = document.createElement("a");
     a.setAttribute("href", link);
