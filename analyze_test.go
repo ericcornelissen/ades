@@ -836,7 +836,7 @@ func TestAnalyzeJob(t *testing.T) {
 			}
 
 			for i, violation := range violations {
-				if got, want := violation.jobKey, tt.id; got != want {
+				if got, want := violation.JobKey, tt.id; got != want {
 					t.Errorf("Unexpected job key for violation %d (got %q, want %q)", i, got, want)
 				}
 
@@ -976,7 +976,7 @@ func TestAnalyzeStep(t *testing.T) {
 			}
 
 			for i, violation := range violations {
-				if got, want := violation.stepIndex, tt.id; got != want {
+				if got, want := violation.StepIndex, tt.id; got != want {
 					t.Errorf("Unexpected step index for violation #%d (got %q, want %q)", i, got, want)
 				}
 

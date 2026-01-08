@@ -326,8 +326,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleCardinalbyJsEvalAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return uses.Name == "cardinalby/js-eval-action"
 	},
 	rule: rule{
 		id:    "ADES106",
@@ -362,9 +362,9 @@ it can be made safer by converting it into:
 			var step gha.Step
 			switch source := (violation.source).(type) {
 			case *gha.Manifest:
-				step = source.Runs.Steps[violation.stepIndex]
+				step = source.Runs.Steps[violation.StepIndex]
 			case *gha.Workflow:
-				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+				step = source.Jobs[violation.JobKey].Steps[violation.StepIndex]
 			}
 
 			name := getVariableNameForExpression(violation.Problem)
@@ -501,8 +501,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleJannekemRunPythonScriptAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAction(uses, "TODO")
 	},
 	rule: rule{
 		id:    "ADES109",
@@ -540,7 +540,8 @@ it can be made safer by converting it into:
 
 var actionRuleKcebGitMessageAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
-		return isBeforeVersion(uses, "v1.2.0")
+		return isAction(uses, "kceb/git-message-action") &&
+			isBeforeVersion(uses, "v1.2.0")
 	},
 	rule: rule{
 		id:    "ADES201",
@@ -558,7 +559,8 @@ this, upgrade the action to a non-vulnerable version.
 
 var actionRuleLycheeverseLycheeAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
-		return isBeforeVersion(uses, "v2.0.2")
+		return isAction(uses, "lycheeverse/lychee") &&
+			isBeforeVersion(uses, "v2.0.2")
 	},
 	rule: rule{
 		id:    "ADES204",
@@ -575,8 +577,8 @@ upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleMikefarahYq = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAction(uses, "mikefarah/yq")
 	},
 	rule: rule{
 		id:    "ADES111",
@@ -614,7 +616,9 @@ it can be made safer by converting it into:
 
 var actionRuleOziProjectPublish = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
-		return isAtOrAfterVersion(uses, "v1.13.2") && isBeforeVersion(uses, "v1.13.6")
+		return isAction(uses, "ozi-project/publish") &&
+			isAtOrAfterVersion(uses, "v1.13.2") &&
+			isBeforeVersion(uses, "v1.13.6")
 	},
 	rule: rule{
 		id:    "ADES205",
@@ -631,8 +635,8 @@ this, upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAction(uses, "roots/issue-closer-action")
 	},
 	rule: rule{
 		id:    "ADES102",
@@ -667,9 +671,9 @@ it can be made safer by converting it into:
 			var step gha.Step
 			switch source := (violation.source).(type) {
 			case *gha.Manifest:
-				step = source.Runs.Steps[violation.stepIndex]
+				step = source.Runs.Steps[violation.StepIndex]
 			case *gha.Workflow:
-				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+				step = source.Jobs[violation.JobKey].Steps[violation.StepIndex]
 			}
 
 			name := getVariableNameForExpression(violation.Problem)
@@ -690,8 +694,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleRootsIssueCloserActionPrCloseMessage = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAction(uses, "roots/issue-closer-action")
 	},
 	rule: rule{
 		id:    "ADES103",
@@ -726,8 +730,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleSergeysovaJqAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return isAction(uses, "sergeysova/jq-action")
 	},
 	rule: rule{
 		id:    "ADES104",
@@ -765,7 +769,9 @@ it can be made safer by converting it into:
 
 var actionRuleSonarSourceSonarqubeScanAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
-		return isAtOrAfterVersion(uses, "v4.0.0") && isBeforeVersion(uses, "v5.3.1")
+		return isAction(uses, "sonarsource/sonarqube-scan-action") &&
+			isAtOrAfterVersion(uses, "v4.0.0") &&
+			isBeforeVersion(uses, "v5.3.1")
 	},
 	rule: rule{
 		id:    "ADES203",
@@ -852,6 +858,31 @@ var actionRules = map[string][]actionRule{
 	},
 }
 
+var actionRules2 = []actionRule{
+	actionRule8398a7ActionSlack,
+	actionRuleActionsGitHubScript,
+	actionRuleAddnabDockerRunAction,
+	actionRuleAppleboySshAction,
+	actionRuleAmadevusPwshScript,
+	actionRuleAtlassianGajiraCreate,
+	actionRuleAzurePowershell,
+	actionRuleCardinalbyJsEvalAction,
+	actionRuleDevorbitusYqActionOutput,
+	actionRuleEriccornelissenGitTagAnnotationAction,
+	actionRuleFishShopSyntaxCheck,
+	actionRuleJannekemRunPythonScriptAction,
+	actionRuleKcebGitMessageAction,
+	actionRuleLycheeverseLycheeAction,
+	actionRuleMikefarahYq,
+	actionRuleOziProjectPublish,
+	actionRuleRootsIssueCloserActionIssueCloseMessage,
+	actionRuleRootsIssueCloserActionPrCloseMessage,
+	actionRuleRootsIssueCloserActionIssueCloseMessage,
+	actionRuleRootsIssueCloserActionPrCloseMessage,
+	actionRuleSergeysovaJqAction,
+	actionRuleSonarSourceSonarqubeScanAction,
+}
+
 var stepRuleRun = stepRule{
 	appliesTo: func(step *gha.Step) bool {
 		return len(step.Run) > 0
@@ -904,6 +935,10 @@ func getRef(uses *gha.Uses) (string, bool) {
 	}
 
 	return ref, true
+}
+
+func isAction(uses *gha.Uses, name string) bool {
+	return strings.ToLower(uses.Name) == name
 }
 
 func isAtOrAfterVersion(uses *gha.Uses, version string) bool {

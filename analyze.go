@@ -44,6 +44,9 @@ type Violation struct {
 	// Problem is the problematic GitHub Actions Expression as observed in the workflow or manifest.
 	Problem string
 
+	// The full original string containing the problem.
+	Full string
+
 	// RuleId is the identifier of the ades rule that produced the violation.
 	RuleId string
 
@@ -51,11 +54,11 @@ type Violation struct {
 	// always uniquely identifies the job.
 	//
 	// This will be the zero value if the violation is for a GitHub Actions manifest.
-	jobKey string
+	JobKey string
 
 	// StepIndex is the index of the step in which the violation occurs. Different from StepId in
 	// that it always uniquely identifies the step.
-	stepIndex int
+	StepIndex int
 }
 
 // AnalyzeRepo analyzes a GitHub repository for problematic GitHub Actions Expressions in manifests
@@ -168,7 +171,7 @@ func analyzeJob(id string, job *gha.Job, matcher ExprMatcher) []Violation {
 			continue
 		}
 
-		violation.jobKey = id
+		violation.JobKey = id
 		violation.JobId = name
 		out = append(out, violation)
 	}
@@ -215,7 +218,7 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 		for i := range vs {
 			vs[i].RuleId = rule.id
 			vs[i].StepId = name
-			vs[i].stepIndex = id
+			vs[i].StepIndex = id
 		}
 
 		violations[i] = vs
@@ -235,6 +238,7 @@ func analyzeString(s string, matcher ExprMatcher) []Violation {
 		for _, problem := range matches {
 			violations = append(violations, Violation{
 				Problem: string(problem),
+				Full:    s,
 			})
 		}
 	}

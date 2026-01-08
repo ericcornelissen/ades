@@ -1,4 +1,4 @@
-// Copyright (C) 2024  Eric Cornelissen
+// Copyright (C) 2024-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -31,11 +31,15 @@ type jsonOutput struct {
 }
 
 type jsonViolation struct {
-	Target  string `json:"target"`
-	File    string `json:"file"`
-	Job     string `json:"job"`
-	Step    string `json:"step"`
-	Problem string `json:"problem"`
+	Target    string `json:"target"`
+	File      string `json:"file"`
+	Job       string `json:"job"`
+	JobKey    string `json:"job_key"`
+	Step      string `json:"step"`
+	StepIndex int    `json:"step_index"`
+	Problem   string `json:"problem"`
+	Full      string `json:"full"`
+	Id        string `json:"id"`
 }
 
 func printJson(rawViolations map[string]map[string][]ades.Violation) string {
@@ -44,11 +48,15 @@ func printJson(rawViolations map[string]map[string][]ades.Violation) string {
 		for file, fileViolations := range targetViolations {
 			for _, fileViolation := range fileViolations {
 				violations = append(violations, jsonViolation{
-					Target:  target,
-					File:    file,
-					Job:     fileViolation.JobId,
-					Step:    fileViolation.StepId,
-					Problem: fileViolation.Problem,
+					Target:    target,
+					File:      file,
+					Job:       fileViolation.JobId,
+					JobKey:    fileViolation.JobKey,
+					Step:      fileViolation.StepId,
+					StepIndex: fileViolation.StepIndex,
+					Problem:   fileViolation.Problem,
+					Full:      fileViolation.Full,
+					Id:        fileViolation.RuleId,
 				})
 			}
 		}
