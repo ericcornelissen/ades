@@ -40,8 +40,8 @@ github.com/butuzov/ireturn v0.4.0/go.mod h1:ghI0FrCmap8pDWZwfPisFD1vEc56VKH4NpQU
 github.com/catenacyber/perfsprint v0.10.1 h1:u7Riei30bk46XsG8nknMhKLXG9BcXz3+3tl/WpKm0PQ=
 github.com/catenacyber/perfsprint v0.10.1/go.mod h1:DJTGsi/Zufpuus6XPGJyKOTMELe347o6akPvWG9Zcsc=
 github.com/census-instrumentation/opencensus-proto v0.2.1/go.mod h1:f6KPmirojxKA12rnyqOA5BBL4O983OfeGPqjHWSTneU=
-github.com/chains-project/ghasum v0.6.2 h1:nDIA3lXrKQqhQ4CZyZ3NGsAZq7PwcWcumUQ8TjYbSSc=
-github.com/chains-project/ghasum v0.6.2/go.mod h1:Nn1wHAz0lJ5+DckTsTKnTMbcFs3GoQs4OeH6tNIrxaU=
+github.com/chains-project/ghasum v0.6.3 h1:goLJ1mah4d4gL7SXenfSvwHlHr/h6xnvdSLBwWe2uek=
+github.com/chains-project/ghasum v0.6.3/go.mod h1:Nn1wHAz0lJ5+DckTsTKnTMbcFs3GoQs4OeH6tNIrxaU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudflare/circl v1.6.1 h1:zqIqSPIndyBh1bjLVVDHMPpVKqp8Su/V+6MeDzzQBQ0=
 github.com/cloudflare/circl v1.6.1/go.mod h1:uddAzsPgqdMAYatqJ0lsjX1oECcQLIlRpzZh3pJrofs=
