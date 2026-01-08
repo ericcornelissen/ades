@@ -98,6 +98,12 @@ stdout 'ADES113'
 stdout 'ADES114'
 ! stderr .
 
+# ADES115
+! exec ades ades115.yml
+! stdout 'Ok'
+stdout 'ADES115'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -340,6 +346,19 @@ jobs:
       with:
         item_exec: |
           post.includes('${{ inputs.substr }}')
+-- ades115.yml --
+name: Example workflow with a ADES115 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Example step
+      uses: azure/cli@v2.2.0
+      with:
+        inlineScript: |
+          az vm create --name '${{ inputs.name }}'
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]
