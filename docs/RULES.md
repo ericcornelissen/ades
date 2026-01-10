@@ -143,11 +143,11 @@ it can be made safer by converting it into:
   env:
     FILE: ${{ github.event.inputs.file }} # <- Assign the expression to an environment variable
   with:
-  #                  | Note: use double quotes to avoid argument splitting
-  #                  v
     cmd: jq .version "$FILE" -r
-  #                   ^^^^^
-  #                   | Replace the expression with the environment variable
+  #                 / ^^^^^
+  #                 | | Replace the expression with the environment variable
+  #                 |
+  #                 | Note: use double quotes to avoid argument splitting
 ```
 
 ## <a id="ADES105"></a> ADES105 - Expression in `run` input of `addnab/docker-run-action`
