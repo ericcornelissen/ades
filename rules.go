@@ -751,11 +751,11 @@ it can be made safer by converting it into:
       env:
         FILE: ${{ github.event.inputs.file }} # <- Assign the expression to an environment variable
       with:
-      #                  | Note: use double quotes to avoid argument splitting
-      #                  v
         cmd: jq .version "$FILE" -r
-      #                   ^^^^^
-      #                   | Replace the expression with the environment variable
+      #                 / ^^^^^
+      #                 | | Replace the expression with the environment variable
+      #                 |
+      #                 | Note: use double quotes to avoid argument splitting
 `,
 		extractFrom: func(step *gha.Step) string {
 			return step.With["cmd"]
