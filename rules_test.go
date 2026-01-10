@@ -184,33 +184,25 @@ func TestActionRuleAppleboySshAction(t *testing.T) {
 func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v2.0.0",
-				},
+				ref:  "v2.0.0",
 				want: true,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v1.0.1",
-				},
+				ref:  "v1.0.1",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v2.0.1",
-				},
+				ref:  "v2.0.1",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v3.0.0",
-				},
+				ref:  "v3.0.0",
 				want: false,
 			},
 		}
@@ -219,8 +211,13 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "atlassian/gajira-create",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -372,33 +369,25 @@ func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
 func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v1.0.0",
-				},
+				ref:  "v1.0.0",
 				want: true,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v0.0.9",
-				},
+				ref:  "v0.0.9",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v1.0.1",
-				},
+				ref:  "v1.0.1",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v1.1.0",
-				},
+				ref:  "v1.1.0",
 				want: false,
 			},
 		}
@@ -407,8 +396,13 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "ericcornelissen/git-tag-annotation-action",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -436,33 +430,25 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v1.6.11",
-				},
+				ref:  "v1.6.11",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v1.6.12",
-				},
+				ref:  "v1.6.12",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v2.0.0",
-				},
+				ref:  "v2.0.0",
 				want: false,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v1.0.0",
-				},
+				ref:  "v1.0.0",
 				want: true,
 			},
 		}
@@ -471,8 +457,13 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleFishShopSyntaxCheck.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "fish-shop/syntax-check",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleFishShopSyntaxCheck.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -562,33 +553,25 @@ func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
 func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v1.1.0",
-				},
+				ref:  "v1.1.0",
 				want: true,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v1.0.0",
-				},
+				ref:  "v1.0.0",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v1.2.0",
-				},
+				ref:  "v1.2.0",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v1.3.0",
-				},
+				ref:  "v1.3.0",
 				want: false,
 			},
 		}
@@ -597,8 +580,13 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleKcebGitMessageAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "kceb/git-message-action",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleKcebGitMessageAction.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -626,33 +614,25 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v2.0.1",
-				},
+				ref:  "v2.0.1",
 				want: true,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v1.6.1",
-				},
+				ref:  "v1.6.1",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v2.0.2",
-				},
+				ref:  "v2.0.2",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v3.0.0",
-				},
+				ref:  "v3.0.0",
 				want: false,
 			},
 		}
@@ -661,8 +641,13 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleLycheeverseLycheeAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "lycheeverse/lychee",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleLycheeverseLycheeAction.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -721,39 +706,29 @@ func TestActionRuleMikefarahYq(t *testing.T) {
 func TestActionRuleOziProjectPublish(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v1.13.5",
-				},
+				ref:  "v1.13.5",
 				want: true,
 			},
 			"Earliest vulnerable version version": {
-				uses: gha.Uses{
-					Ref: "v1.13.2",
-				},
+				ref:  "v1.13.2",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v1.13.6",
-				},
+				ref:  "v1.13.6",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v2.0.0",
-				},
+				ref:  "v2.0.0",
 				want: false,
 			},
 			"Old version": {
-				uses: gha.Uses{
-					Ref: "v1.0.0",
-				},
+				ref:  "v1.0.0",
 				want: false,
 			},
 		}
@@ -762,8 +737,13 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleOziProjectPublish.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "OZI-Project/publish",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleOziProjectPublish.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -791,8 +771,13 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses) bool {
-				uses.Name = "roots/issue-closer"
+			f := func(uses gha.Uses, i uint) bool {
+				if i%2 == 0 {
+					uses.Name = "roots/issue-closer-action"
+				} else {
+					uses.Name = "roots/issue-closer"
+				}
+
 				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&uses)
 			}
 
@@ -822,8 +807,13 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 	t.Run("pr-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses) bool {
-				uses.Name = "roots/issue-closer"
+			f := func(uses gha.Uses, i uint) bool {
+				if i%2 == 0 {
+					uses.Name = "roots/issue-closer-action"
+				} else {
+					uses.Name = "roots/issue-closer"
+				}
+
 				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&uses)
 			}
 
@@ -886,45 +876,33 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
-			uses gha.Uses
+			ref  string
 			want bool
 		}
 
 		testCases := map[string]TestCase{
 			"Old unaffected version": {
-				uses: gha.Uses{
-					Ref: "v3.1.0",
-				},
+				ref:  "v3.1.0",
 				want: false,
 			},
 			"First vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v4.0.0",
-				},
+				ref:  "v4.0.0",
 				want: true,
 			},
 			"Middle vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v4.2.0",
-				},
+				ref:  "v4.2.0",
 				want: true,
 			},
 			"Last vulnerable version": {
-				uses: gha.Uses{
-					Ref: "v5.3.0",
-				},
+				ref:  "v5.3.0",
 				want: true,
 			},
 			"First fixed version": {
-				uses: gha.Uses{
-					Ref: "v5.3.1",
-				},
+				ref:  "v5.3.1",
 				want: false,
 			},
 			"New version": {
-				uses: gha.Uses{
-					Ref: "v6.0.0",
-				},
+				ref:  "v6.0.0",
 				want: false,
 			},
 		}
@@ -933,8 +911,13 @@ func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				if got, want := actionRuleSonarSourceSonarqubeScanAction.appliesTo(&tt.uses), tt.want; got != want {
-					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.uses.Ref, got, want)
+				uses := gha.Uses{
+					Name: "SonarSource/sonarqube-scan-action",
+					Ref:  tt.ref,
+				}
+
+				if got, want := actionRuleSonarSourceSonarqubeScanAction.appliesTo(&uses), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
 		}
@@ -994,20 +977,6 @@ func TestStepRuleRun(t *testing.T) {
 
 		if err := quick.Check(f, nil); err != nil {
 			t.Error(err)
-		}
-	})
-}
-
-func TestActionRules(t *testing.T) {
-	t.Run("key", func(t *testing.T) {
-		for tt := range actionRules {
-			t.Run(tt, func(t *testing.T) {
-				t.Parallel()
-
-				if got, want := tt, strings.ToLower(tt); got != want {
-					t.Errorf("action name is not lowercase (got %q)", got)
-				}
-			})
 		}
 	})
 }
@@ -1161,21 +1130,19 @@ func TestFix(t *testing.T) {
 
 func TestFindRule(t *testing.T) {
 	t.Run("Action rules", func(t *testing.T) {
-		for _, testCases := range actionRules {
-			for _, tt := range testCases {
-				t.Run(tt.rule.id, func(t *testing.T) {
-					t.Parallel()
+		for _, tt := range actionRules {
+			t.Run(tt.rule.id, func(t *testing.T) {
+				t.Parallel()
 
-					r, err := findRule(tt.rule.id)
-					if err != nil {
-						t.Fatalf("Couldn't find rule %q", tt.rule.id)
-					}
+				r, err := findRule(tt.rule.id)
+				if err != nil {
+					t.Fatalf("Couldn't find rule %q", tt.rule.id)
+				}
 
-					if r.id != tt.rule.id {
-						t.Errorf("Unexpected rule found: %#v", r)
-					}
-				})
-			}
+				if r.id != tt.rule.id {
+					t.Errorf("Unexpected rule found: %#v", r)
+				}
+			})
 		}
 	})
 
@@ -1800,12 +1767,9 @@ func TestFixReplaceIn(t *testing.T) {
 }
 
 func allRules() []rule {
-	rules := make([]rule, 0)
-
-	for _, rs := range actionRules {
-		for _, r := range rs {
-			rules = append(rules, r.rule)
-		}
+	rules := make([]rule, 0, len(actionRules)+len(stepRules))
+	for _, r := range actionRules {
+		rules = append(rules, r.rule)
 	}
 
 	for _, r := range stepRules {

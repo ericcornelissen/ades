@@ -51,8 +51,8 @@ type fix struct {
 }
 
 var actionRule8398a7ActionSlack = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "8398a7/action-slack")
 	},
 	rule: rule{
 		id:    "ADES107",
@@ -89,8 +89,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleActionsGitHubScript = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "actions/github-script")
 	},
 	rule: rule{
 		id:    "ADES101",
@@ -126,8 +126,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleAddnabDockerRunAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "addnab/docker-run-action")
 	},
 	rule: rule{
 		id:    "ADES105",
@@ -147,8 +147,8 @@ up alternative attack vectors because the options are not validated.
 }
 
 var actionRuleAmadevusPwshScript = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "Amadevus/pwsh-script")
 	},
 	rule: rule{
 		id:    "ADES110",
@@ -187,8 +187,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleAppleboySshAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "appleboy/ssh-action")
 	},
 	rule: rule{
 		id:    "ADES108",
@@ -227,6 +227,10 @@ it can be made safer by converting it into:
 
 var actionRuleAtlassianGajiraCreate = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "atlassian/gajira-create") {
+			return false
+		}
+
 		return isBeforeVersion(uses, "v2.0.1")
 	},
 	rule: rule{
@@ -244,8 +248,8 @@ upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleAzureCli = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "azure/cli")
 	},
 	rule: rule{
 		id:    "ADES115",
@@ -284,8 +288,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleAzurePowershell = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "azure/powershell")
 	},
 	rule: rule{
 		id:    "ADES113",
@@ -326,8 +330,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleCardinalbyJsEvalAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "cardinalby/js-eval-action")
 	},
 	rule: rule{
 		id:    "ADES106",
@@ -385,8 +389,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleDevorbitusYqActionOutput = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "devorbitus/yq-action-output")
 	},
 	rule: rule{
 		id:    "ADES112",
@@ -424,7 +428,12 @@ it can be made safer by converting it into:
 
 var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "ericcornelissen/git-tag-annotation-action") {
+			return false
+		}
+
 		return isBeforeVersion(uses, "v1.0.1")
+
 	},
 	rule: rule{
 		id:    "ADES200",
@@ -442,6 +451,10 @@ mitigate this, upgrade the action to a non-vulnerable version.
 
 var actionRuleFishShopSyntaxCheck = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "fish-shop/syntax-check") {
+			return false
+		}
+
 		return isBeforeVersion(uses, "v1.6.12")
 	},
 	rule: rule{
@@ -459,8 +472,8 @@ upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleGautamkrishnarBlogPostWorkflow = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "gautamkrishnar/blog-post-workflow")
 	},
 	rule: rule{
 		id:    "ADES114",
@@ -501,8 +514,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleJannekemRunPythonScriptAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "jannekem/run-python-script-action")
 	},
 	rule: rule{
 		id:    "ADES109",
@@ -540,6 +553,10 @@ it can be made safer by converting it into:
 
 var actionRuleKcebGitMessageAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "kceb/git-message-action") {
+			return false
+		}
+
 		return isBeforeVersion(uses, "v1.2.0")
 	},
 	rule: rule{
@@ -558,6 +575,10 @@ this, upgrade the action to a non-vulnerable version.
 
 var actionRuleLycheeverseLycheeAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "lycheeverse/lychee") {
+			return false
+		}
+
 		return isBeforeVersion(uses, "v2.0.2")
 	},
 	rule: rule{
@@ -575,8 +596,8 @@ upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleMikefarahYq = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "mikefarah/yq")
 	},
 	rule: rule{
 		id:    "ADES111",
@@ -614,6 +635,10 @@ it can be made safer by converting it into:
 
 var actionRuleOziProjectPublish = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "OZI-Project/publish") {
+			return false
+		}
+
 		return isAtOrAfterVersion(uses, "v1.13.2") && isBeforeVersion(uses, "v1.13.6")
 	},
 	rule: rule{
@@ -631,8 +656,8 @@ this, upgrade the action to a non-vulnerable version.
 }
 
 var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "roots/issue-closer") || hasName(uses, "roots/issue-closer-action")
 	},
 	rule: rule{
 		id:    "ADES102",
@@ -690,8 +715,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleRootsIssueCloserActionPrCloseMessage = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(uses)
 	},
 	rule: rule{
 		id:    "ADES103",
@@ -726,8 +751,8 @@ it can be made safer by converting it into:
 }
 
 var actionRuleSergeysovaJqAction = actionRule{
-	appliesTo: func(_ *gha.Uses) bool {
-		return true
+	appliesTo: func(uses *gha.Uses) bool {
+		return hasName(uses, "sergeysova/jq-action")
 	},
 	rule: rule{
 		id:    "ADES104",
@@ -765,6 +790,10 @@ it can be made safer by converting it into:
 
 var actionRuleSonarSourceSonarqubeScanAction = actionRule{
 	appliesTo: func(uses *gha.Uses) bool {
+		if !hasName(uses, "SonarSource/sonarqube-scan-action") {
+			return false
+		}
+
 		return isAtOrAfterVersion(uses, "v4.0.0") && isBeforeVersion(uses, "v5.3.1")
 	},
 	rule: rule{
@@ -781,75 +810,29 @@ this, upgrade the action to a non-vulnerable version.
 	},
 }
 
-var actionRules = map[string][]actionRule{
-	"8398a7/action-slack": {
-		actionRule8398a7ActionSlack,
-	},
-	"actions/github-script": {
-		actionRuleActionsGitHubScript,
-	},
-	"addnab/docker-run-action": {
-		actionRuleAddnabDockerRunAction,
-	},
-	"appleboy/ssh-action": {
-		actionRuleAppleboySshAction,
-	},
-	"amadevus/pwsh-script": {
-		actionRuleAmadevusPwshScript,
-	},
-	"atlassian/gajira-create": {
-		actionRuleAtlassianGajiraCreate,
-	},
-	"azure/cli": {
-		actionRuleAzureCli,
-	},
-	"azure/powershell": {
-		actionRuleAzurePowershell,
-	},
-	"cardinalby/js-eval-action": {
-		actionRuleCardinalbyJsEvalAction,
-	},
-	"devorbitus/yq-action-output": {
-		actionRuleDevorbitusYqActionOutput,
-	},
-	"ericcornelissen/git-tag-annotation-action": {
-		actionRuleEriccornelissenGitTagAnnotationAction,
-	},
-	"fish-shop/syntax-check": {
-		actionRuleFishShopSyntaxCheck,
-	},
-	"gautamkrishnar/blog-post-workflow": {
-		actionRuleGautamkrishnarBlogPostWorkflow,
-	},
-	"jannekem/run-python-script-action": {
-		actionRuleJannekemRunPythonScriptAction,
-	},
-	"kceb/git-message-action": {
-		actionRuleKcebGitMessageAction,
-	},
-	"lycheeverse/lychee": {
-		actionRuleLycheeverseLycheeAction,
-	},
-	"mikefarah/yq": {
-		actionRuleMikefarahYq,
-	},
-	"ozi-project/publish": {
-		actionRuleOziProjectPublish,
-	},
-	"roots/issue-closer-action": {
-		actionRuleRootsIssueCloserActionIssueCloseMessage,
-		actionRuleRootsIssueCloserActionPrCloseMessage,
-	},
-	"roots/issue-closer": {
-		actionRuleRootsIssueCloserActionIssueCloseMessage,
-		actionRuleRootsIssueCloserActionPrCloseMessage,
-	},
-	"sergeysova/jq-action": {
-		actionRuleSergeysovaJqAction,
-	},
-	"sonarsource/sonarqube-scan-action": {
-		actionRuleSonarSourceSonarqubeScanAction,
-	},
+var actionRules = []actionRule{
+	actionRule8398a7ActionSlack,
+	actionRuleActionsGitHubScript,
+	actionRuleAddnabDockerRunAction,
+	actionRuleAppleboySshAction,
+	actionRuleAmadevusPwshScript,
+	actionRuleAtlassianGajiraCreate,
+	actionRuleAzureCli,
+	actionRuleAzurePowershell,
+	actionRuleCardinalbyJsEvalAction,
+	actionRuleDevorbitusYqActionOutput,
+	actionRuleEriccornelissenGitTagAnnotationAction,
+	actionRuleFishShopSyntaxCheck,
+	actionRuleGautamkrishnarBlogPostWorkflow,
+	actionRuleJannekemRunPythonScriptAction,
+	actionRuleKcebGitMessageAction,
+	actionRuleLycheeverseLycheeAction,
+	actionRuleMikefarahYq,
+	actionRuleOziProjectPublish,
+	actionRuleRootsIssueCloserActionIssueCloseMessage,
+	actionRuleRootsIssueCloserActionPrCloseMessage,
+	actionRuleSergeysovaJqAction,
+	actionRuleSonarSourceSonarqubeScanAction,
 }
 
 var stepRuleRun = stepRule{
@@ -904,6 +887,10 @@ func getRef(uses *gha.Uses) (string, bool) {
 	}
 
 	return ref, true
+}
+
+func hasName(uses *gha.Uses, name string) bool {
+	return strings.EqualFold(uses.Name, name)
 }
 
 func isAtOrAfterVersion(uses *gha.Uses, version string) bool {
@@ -967,11 +954,9 @@ func Fix(violation *Violation) ([]fix, error) {
 
 func findRule(ruleId string) (rule, error) {
 	ruleId = strings.ToUpper(ruleId)
-	for _, rs := range actionRules {
-		for _, r := range rs {
-			if r.rule.id == ruleId {
-				return r.rule, nil
-			}
+	for _, r := range actionRules {
+		if r.rule.id == ruleId {
+			return r.rule, nil
 		}
 	}
 
