@@ -39,12 +39,6 @@ import (
 )
 
 const (
-	DEFAULT_CONTAINER_ENGINE = "docker"
-	ENV_CONTAINER_ENGINE     = "CONTAINER_ENGINE"
-	ENV_CONTAINER_TAG        = "CONTAINER_TAG"
-)
-
-const (
 	buildAllDir = "_compiled"
 	webDir      = "web"
 )
@@ -56,6 +50,13 @@ const (
 
 var (
 	GO_VERSION = runtime.Version()[2:]
+	OCI        = func() string {
+		if v, ok := os.LookupEnv("CONTAINER_ENGINE"); ok {
+			return v
+		}
+
+		return "docker"
+	}()
 )
 
 // Audit the codebase.
@@ -192,21 +193,23 @@ func TaskClean(t *T) error {
 			"cover.html",
 			"cover.out",
 		}
-		clean = "git clean -fx " + strings.Join(items, " ")
 	)
 
 	t.Log("Cleaning...")
-	return t.Exec(clean)
+	if err := t.ExecF(io.Discard, OCI+" inspect ades-dev-env"); err == nil {
+		_ = t.Exec(OCI + " rm ades-dev-env")
+	}
+
+	return t.Exec("git clean -fx " + strings.Join(items, " "))
 }
 
 // Build the ades container for the current platform.
 func TaskContainer(t *T) error {
 	var (
-		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
-		tag    = t.Env(ENV_CONTAINER_TAG, "latest")
-		build  = fmt.Sprintf(
+		tag   = t.Env("CONTAINER_TAG", "latest")
+		build = fmt.Sprintf(
 			"%s build --build-arg GO_VERSION=%s --file Containerfile --tag ericornelissen/ades:%s .",
-			engine,
+			OCI,
 			GO_VERSION,
 			tag,
 		)
@@ -226,36 +229,27 @@ func TaskCoverage(t *T) error {
 
 // Run an ephemeral development environment container.
 func TaskDevEnv(t *T) error {
-	wd, _ := os.Getwd()
+	if err := t.ExecF(io.Discard, OCI+" inspect ades-dev-env"); err == nil {
+		return t.Exec(
+			OCI+" start ades-dev-env",
+			OCI+" attach ades-dev-env",
+		)
+	}
 
 	if err := TaskDevImg(t); err != nil {
 		return err
 	}
 
-	var (
-		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
-		build  = fmt.Sprintf(
-			"%s run -it --rm -p 8080:8080 --workdir '/ades' --mount 'type=bind,source=%s,target=/ades' --name ades-dev-env ades-dev-img",
-			engine,
-			wd,
-		)
+	return t.Exec(
+		OCI + " run -it -p 8080:8080 --workdir '/ades' --mount 'type=bind,source=.,target=/ades' --name ades-dev-env ades-dev-img",
 	)
-
-	return t.Exec(build)
 }
 
 // Build a development environment container image.
 func TaskDevImg(t *T) error {
-	var (
-		engine = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
-		build  = fmt.Sprintf(
-			"%s build --build-arg GO_VERSION=%s --file Containerfile.dev --tag ades-dev-img .",
-			engine,
-			GO_VERSION,
-		)
+	return t.Exec(
+		fmt.Sprintf("%s build --build-arg GO_VERSION=%s --file Containerfile.dev --tag ades-dev-img .", OCI, GO_VERSION),
 	)
-
-	return t.Exec(build)
 }
 
 // Run the project on itself.
@@ -312,7 +306,7 @@ func TaskRelease(t *T) error {
 		return errors.New("workspace is dirty")
 	}
 
-	if _, err := t.ExecS(`git fetch`); err != nil {
+	if err := t.ExecF(io.Discard, `git fetch`); err != nil {
 		return err
 	}
 
@@ -337,7 +331,7 @@ func TaskRelease(t *T) error {
 	var version string
 	for patch := 0; ; patch++ {
 		version = fmt.Sprintf(`v%s.%d`, date, patch)
-		if _, err := t.ExecS(`git rev-parse --quiet --verify refs/tags/` + version); err != nil {
+		if err := t.ExecF(io.Discard, `git rev-parse --quiet --verify refs/tags/`+version); err != nil {
 			break
 		}
 	}
@@ -438,7 +432,6 @@ func TaskReproducible(t *T) error {
 // Check if the container is reproducible.
 func TaskReproducibleContainer(t *T) error {
 	var (
-		engine    = t.Env(ENV_CONTAINER_ENGINE, DEFAULT_CONTAINER_ENGINE)
 		tag1      = "docker.io/ericornelissen/ades:a"
 		tag2      = "docker.io/ericornelissen/ades:b"
 		buildCmd  = "%s build --no-cache --build-arg GO_VERSION=%s --file Containerfile --tag %s ."
@@ -446,31 +439,31 @@ func TaskReproducibleContainer(t *T) error {
 	)
 
 	t.Log("Initial container build...")
-	cmd := fmt.Sprintf(buildCmd, engine, GO_VERSION, tag1)
+	cmd := fmt.Sprintf(buildCmd, OCI, GO_VERSION, tag1)
 	if err := t.Exec(cmd); err != nil {
 		return err
 	}
 
 	defer func() {
-		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, engine, tag1))
+		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, OCI, tag1))
 	}()
 
 	t.Log("Reproducing container build...")
-	cmd = fmt.Sprintf(buildCmd, engine, GO_VERSION, tag2)
+	cmd = fmt.Sprintf(buildCmd, OCI, GO_VERSION, tag2)
 	if err := t.Exec(cmd); err != nil {
 		return err
 	}
 
 	defer func() {
-		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, engine, tag2))
+		_ = t.ExecF(io.Discard, fmt.Sprintf(removeCmd, OCI, tag2))
 	}()
 
 	t.Log("Check...")
 	cmd = fmt.Sprintf(
 		"go run github.com/reproducible-containers/diffoci/cmd/diffoci diff --semantic %s://%s %s://%s",
-		engine,
+		OCI,
 		tag1,
-		engine,
+		OCI,
 		tag2,
 	)
 	if err := t.Exec(cmd); err != nil {
