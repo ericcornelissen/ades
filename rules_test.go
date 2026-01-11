@@ -28,9 +28,9 @@ import (
 
 func TestActionRule8398a7ActionSlack(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "8398a7/action-slack"
-			return actionRule8398a7ActionSlack.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "8398a7/action-slack"
+			return actionRule8398a7ActionSlack.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -41,7 +41,7 @@ func TestActionRule8398a7ActionSlack(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["custom_payload"] = value
-			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == value
+			return actionRule8398a7ActionSlack.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -49,7 +49,7 @@ func TestActionRule8398a7ActionSlack(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "custom_payload")
-			return actionRule8398a7ActionSlack.rule.extractFrom(&step) == ""
+			return actionRule8398a7ActionSlack.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -59,9 +59,9 @@ func TestActionRule8398a7ActionSlack(t *testing.T) {
 
 func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "actions/github-script"
-			return actionRuleActionsGitHubScript.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "actions/github-script"
+			return actionRuleActionsGitHubScript.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -72,7 +72,7 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["script"] = value
-			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == value
+			return actionRuleActionsGitHubScript.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -80,7 +80,7 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "script")
-			return actionRuleActionsGitHubScript.rule.extractFrom(&step) == ""
+			return actionRuleActionsGitHubScript.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -90,9 +90,9 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 
 func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "addnab/docker-run-action"
-			return actionRuleAddnabDockerRunAction.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "addnab/docker-run-action"
+			return actionRuleAddnabDockerRunAction.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -103,7 +103,7 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["run"] = value
-			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == value
+			return actionRuleAddnabDockerRunAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -111,7 +111,7 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "run")
-			return actionRuleAddnabDockerRunAction.rule.extractFrom(&step) == ""
+			return actionRuleAddnabDockerRunAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -121,9 +121,9 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 
 func TestActionRuleAmadevusPwshScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "Amadevus/pwsh-script"
-			return actionRuleAmadevusPwshScript.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "Amadevus/pwsh-script"
+			return actionRuleAmadevusPwshScript.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -134,7 +134,7 @@ func TestActionRuleAmadevusPwshScript(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["script"] = value
-			return actionRuleAmadevusPwshScript.rule.extractFrom(&step) == value
+			return actionRuleAmadevusPwshScript.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -142,7 +142,7 @@ func TestActionRuleAmadevusPwshScript(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "script")
-			return actionRuleAmadevusPwshScript.rule.extractFrom(&step) == ""
+			return actionRuleAmadevusPwshScript.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -152,9 +152,9 @@ func TestActionRuleAmadevusPwshScript(t *testing.T) {
 
 func TestActionRuleAppleboySshAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "appleboy/ssh-action"
-			return actionRuleAppleboySshAction.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "appleboy/ssh-action"
+			return actionRuleAppleboySshAction.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -165,7 +165,7 @@ func TestActionRuleAppleboySshAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["script"] = value
-			return actionRuleAppleboySshAction.rule.extractFrom(&step) == value
+			return actionRuleAppleboySshAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -173,7 +173,7 @@ func TestActionRuleAppleboySshAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "script")
-			return actionRuleAppleboySshAction.rule.extractFrom(&step) == ""
+			return actionRuleAppleboySshAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -211,12 +211,14 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "atlassian/gajira-create",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "atlassian/gajira-create",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleAtlassianGajiraCreate.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -226,7 +228,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["summary"] = value
-			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == value
+			return actionRuleAtlassianGajiraCreate.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -234,7 +236,7 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "summary")
-			return actionRuleAtlassianGajiraCreate.rule.extractFrom(&step) == ""
+			return actionRuleAtlassianGajiraCreate.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -244,9 +246,9 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 
 func TestActionRuleAzureCli(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "azure/cli"
-			return actionRuleAzureCli.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "azure/cli"
+			return actionRuleAzureCli.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -257,7 +259,7 @@ func TestActionRuleAzureCli(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["inlineScript"] = value
-			return actionRuleAzureCli.rule.extractFrom(&step) == value
+			return actionRuleAzureCli.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -265,7 +267,7 @@ func TestActionRuleAzureCli(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "inlineScript")
-			return actionRuleAzureCli.rule.extractFrom(&step) == ""
+			return actionRuleAzureCli.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -275,9 +277,9 @@ func TestActionRuleAzureCli(t *testing.T) {
 
 func TestActionRuleAzurePowershell(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "azure/powershell"
-			return actionRuleAzurePowershell.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "azure/powershell"
+			return actionRuleAzurePowershell.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -288,7 +290,7 @@ func TestActionRuleAzurePowershell(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["inlineScript"] = value
-			return actionRuleAzurePowershell.rule.extractFrom(&step) == value
+			return actionRuleAzurePowershell.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -296,7 +298,7 @@ func TestActionRuleAzurePowershell(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "inlineScript")
-			return actionRuleAzurePowershell.rule.extractFrom(&step) == ""
+			return actionRuleAzurePowershell.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -306,9 +308,9 @@ func TestActionRuleAzurePowershell(t *testing.T) {
 
 func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "cardinalby/js-eval-action"
-			return actionRuleCardinalbyJsEvalAction.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "cardinalby/js-eval-action"
+			return actionRuleCardinalbyJsEvalAction.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -319,7 +321,7 @@ func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["expression"] = value
-			return actionRuleCardinalbyJsEvalAction.rule.extractFrom(&step) == value
+			return actionRuleCardinalbyJsEvalAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -327,7 +329,7 @@ func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "expression")
-			return actionRuleCardinalbyJsEvalAction.rule.extractFrom(&step) == ""
+			return actionRuleCardinalbyJsEvalAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -337,9 +339,9 @@ func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 
 func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "devorbitus/yq-action-output"
-			return actionRuleDevorbitusYqActionOutput.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "devorbitus/yq-action-output"
+			return actionRuleDevorbitusYqActionOutput.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -350,7 +352,7 @@ func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["cmd"] = value
-			return actionRuleDevorbitusYqActionOutput.rule.extractFrom(&step) == value
+			return actionRuleDevorbitusYqActionOutput.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -358,7 +360,7 @@ func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "cmd")
-			return actionRuleDevorbitusYqActionOutput.rule.extractFrom(&step) == ""
+			return actionRuleDevorbitusYqActionOutput.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -396,12 +398,14 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "ericcornelissen/git-tag-annotation-action",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "ericcornelissen/git-tag-annotation-action",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -411,7 +415,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["tag"] = value
-			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == value
+			return actionRuleEriccornelissenGitTagAnnotationAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -419,7 +423,7 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "tag")
-			return actionRuleEriccornelissenGitTagAnnotationAction.rule.extractFrom(&step) == ""
+			return actionRuleEriccornelissenGitTagAnnotationAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -457,12 +461,14 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "fish-shop/syntax-check",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "fish-shop/syntax-check",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleFishShopSyntaxCheck.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleFishShopSyntaxCheck.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -472,7 +478,7 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["pattern"] = value
-			return actionRuleFishShopSyntaxCheck.rule.extractFrom(&step) == value
+			return actionRuleFishShopSyntaxCheck.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -480,7 +486,7 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "pattern")
-			return actionRuleFishShopSyntaxCheck.rule.extractFrom(&step) == ""
+			return actionRuleFishShopSyntaxCheck.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -490,9 +496,9 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 
 func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "gautamkrishnar/blog-post-workflow"
-			return actionRuleGautamkrishnarBlogPostWorkflow.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "gautamkrishnar/blog-post-workflow"
+			return actionRuleGautamkrishnarBlogPostWorkflow.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -503,7 +509,7 @@ func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["item_exec"] = value
-			return actionRuleGautamkrishnarBlogPostWorkflow.rule.extractFrom(&step) == value
+			return actionRuleGautamkrishnarBlogPostWorkflow.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -511,7 +517,7 @@ func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "item_exec")
-			return actionRuleGautamkrishnarBlogPostWorkflow.rule.extractFrom(&step) == ""
+			return actionRuleGautamkrishnarBlogPostWorkflow.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -521,9 +527,9 @@ func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 
 func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "jannekem/run-python-script-action"
-			return actionRuleJannekemRunPythonScriptAction.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "jannekem/run-python-script-action"
+			return actionRuleJannekemRunPythonScriptAction.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -534,7 +540,7 @@ func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["script"] = value
-			return actionRuleJannekemRunPythonScriptAction.rule.extractFrom(&step) == value
+			return actionRuleJannekemRunPythonScriptAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -542,7 +548,7 @@ func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "script")
-			return actionRuleJannekemRunPythonScriptAction.rule.extractFrom(&step) == ""
+			return actionRuleJannekemRunPythonScriptAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -580,12 +586,14 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "kceb/git-message-action",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "kceb/git-message-action",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleKcebGitMessageAction.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleKcebGitMessageAction.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -595,7 +603,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["sha"] = value
-			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == value
+			return actionRuleKcebGitMessageAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -603,7 +611,7 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "sha")
-			return actionRuleKcebGitMessageAction.rule.extractFrom(&step) == ""
+			return actionRuleKcebGitMessageAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -641,12 +649,14 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "lycheeverse/lychee",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "lycheeverse/lychee",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleLycheeverseLycheeAction.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleLycheeverseLycheeAction.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -656,7 +666,7 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["lycheeVersion"] = value
-			return actionRuleLycheeverseLycheeAction.rule.extractFrom(&step) == value
+			return actionRuleLycheeverseLycheeAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -664,7 +674,7 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "lycheeVersion")
-			return actionRuleLycheeverseLycheeAction.rule.extractFrom(&step) == ""
+			return actionRuleLycheeverseLycheeAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -674,9 +684,9 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 
 func TestActionRuleMikefarahYq(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "mikefarah/yq"
-			return actionRuleMikefarahYq.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "mikefarah/yq"
+			return actionRuleMikefarahYq.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -687,7 +697,7 @@ func TestActionRuleMikefarahYq(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["cmd"] = value
-			return actionRuleMikefarahYq.rule.extractFrom(&step) == value
+			return actionRuleMikefarahYq.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -695,7 +705,7 @@ func TestActionRuleMikefarahYq(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "cmd")
-			return actionRuleMikefarahYq.rule.extractFrom(&step) == ""
+			return actionRuleMikefarahYq.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -737,12 +747,14 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "OZI-Project/publish",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "OZI-Project/publish",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleOziProjectPublish.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleOziProjectPublish.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -752,7 +764,7 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["pull-request-body"] = value
-			return actionRuleOziProjectPublish.rule.extractFrom(&step) == value
+			return actionRuleOziProjectPublish.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -760,7 +772,7 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "pull-request-body")
-			return actionRuleOziProjectPublish.rule.extractFrom(&step) == ""
+			return actionRuleOziProjectPublish.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -771,14 +783,14 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses, i uint) bool {
+			f := func(step gha.Step, i uint) bool {
 				if i%2 == 0 {
-					uses.Name = "roots/issue-closer-action"
+					step.Uses.Name = "roots/issue-closer-action"
 				} else {
-					uses.Name = "roots/issue-closer"
+					step.Uses.Name = "roots/issue-closer"
 				}
 
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&uses)
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
 			}
 
 			if err := quick.Check(f, nil); err != nil {
@@ -789,7 +801,7 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 		t.Run("Extract from", func(t *testing.T) {
 			with := func(step gha.Step, value string) bool {
 				step.With["issue-close-message"] = value
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == value
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == value
 			}
 			if err := quick.Check(with, nil); err != nil {
 				t.Error(err)
@@ -797,7 +809,7 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 			without := func(step gha.Step) bool {
 				delete(step.With, "issue-close-message")
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.rule.extractFrom(&step) == ""
+				return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == ""
 			}
 			if err := quick.Check(without, nil); err != nil {
 				t.Error(err)
@@ -807,14 +819,14 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 	t.Run("pr-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(uses gha.Uses, i uint) bool {
+			f := func(step gha.Step, i uint) bool {
 				if i%2 == 0 {
-					uses.Name = "roots/issue-closer-action"
+					step.Uses.Name = "roots/issue-closer-action"
 				} else {
-					uses.Name = "roots/issue-closer"
+					step.Uses.Name = "roots/issue-closer"
 				}
 
-				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&uses)
+				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
 			}
 
 			if err := quick.Check(f, nil); err != nil {
@@ -825,7 +837,7 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 		t.Run("Extract from", func(t *testing.T) {
 			with := func(step gha.Step, value string) bool {
 				step.With["pr-close-message"] = value
-				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == value
+				return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == value
 			}
 			if err := quick.Check(with, nil); err != nil {
 				t.Error(err)
@@ -833,7 +845,7 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 			without := func(step gha.Step) bool {
 				delete(step.With, "pr-close-message")
-				return actionRuleRootsIssueCloserActionPrCloseMessage.rule.extractFrom(&step) == ""
+				return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == ""
 			}
 			if err := quick.Check(without, nil); err != nil {
 				t.Error(err)
@@ -844,9 +856,9 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(uses gha.Uses) bool {
-			uses.Name = "sergeysova/jq-action"
-			return actionRuleSergeysovaJqAction.appliesTo(&uses)
+		f := func(step gha.Step) bool {
+			step.Uses.Name = "sergeysova/jq-action"
+			return actionRuleSergeysovaJqAction.appliesTo(&step)
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -857,7 +869,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["cmd"] = value
-			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == value
+			return actionRuleSergeysovaJqAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -865,7 +877,7 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "cmd")
-			return actionRuleSergeysovaJqAction.rule.extractFrom(&step) == ""
+			return actionRuleSergeysovaJqAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -911,12 +923,14 @@ func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 			t.Run(name, func(t *testing.T) {
 				t.Parallel()
 
-				uses := gha.Uses{
-					Name: "SonarSource/sonarqube-scan-action",
-					Ref:  tt.ref,
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "SonarSource/sonarqube-scan-action",
+						Ref:  tt.ref,
+					},
 				}
 
-				if got, want := actionRuleSonarSourceSonarqubeScanAction.appliesTo(&uses), tt.want; got != want {
+				if got, want := actionRuleSonarSourceSonarqubeScanAction.appliesTo(&step), tt.want; got != want {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
@@ -926,7 +940,7 @@ func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		with := func(step gha.Step, value string) bool {
 			step.With["args"] = value
-			return actionRuleSonarSourceSonarqubeScanAction.rule.extractFrom(&step) == value
+			return actionRuleSonarSourceSonarqubeScanAction.extractFrom(&step) == value
 		}
 		if err := quick.Check(with, nil); err != nil {
 			t.Error(err)
@@ -934,7 +948,7 @@ func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 
 		without := func(step gha.Step) bool {
 			delete(step.With, "args")
-			return actionRuleSonarSourceSonarqubeScanAction.rule.extractFrom(&step) == ""
+			return actionRuleSonarSourceSonarqubeScanAction.extractFrom(&step) == ""
 		}
 		if err := quick.Check(without, nil); err != nil {
 			t.Error(err)
@@ -972,7 +986,7 @@ func TestStepRuleRun(t *testing.T) {
 	t.Run("Extract from", func(t *testing.T) {
 		f := func(step gha.Step, run string) bool {
 			step.Run = run
-			return stepRuleRun.rule.extractFrom(&step) == run
+			return stepRuleRun.extractFrom(&step) == run
 		}
 
 		if err := quick.Check(f, nil); err != nil {
@@ -982,12 +996,10 @@ func TestStepRuleRun(t *testing.T) {
 }
 
 func TestAllRules(t *testing.T) {
-	testCases := allRules()
-
 	t.Run("id", func(t *testing.T) {
 		idExpr := regexp.MustCompile(`ADES\d{3}`)
 
-		for _, tt := range testCases {
+		for _, tt := range rules {
 			t.Run(tt.title, func(t *testing.T) {
 				t.Parallel()
 
@@ -998,8 +1010,8 @@ func TestAllRules(t *testing.T) {
 		}
 
 		t.Run("unique", func(t *testing.T) {
-			ids := make(map[string]rule, len(testCases))
-			for _, tt := range testCases {
+			ids := make(map[string]rule, len(rules))
+			for _, tt := range rules {
 				if got, ok := ids[tt.id]; ok && tt.title != got.title {
 					t.Errorf("Found repeated ID %q", tt.id)
 				}
@@ -1010,7 +1022,7 @@ func TestAllRules(t *testing.T) {
 	})
 
 	t.Run("description", func(t *testing.T) {
-		for _, tt := range testCases {
+		for _, tt := range rules {
 			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
@@ -1030,7 +1042,7 @@ func TestAllRules(t *testing.T) {
 	})
 
 	t.Run("title", func(t *testing.T) {
-		for _, tt := range testCases {
+		for _, tt := range rules {
 			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
@@ -1044,9 +1056,7 @@ func TestAllRules(t *testing.T) {
 
 func TestExplain(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		testCases := allRules()
-
-		for _, tt := range testCases {
+		for _, tt := range rules {
 			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
@@ -1085,9 +1095,7 @@ func TestExplain(t *testing.T) {
 
 func TestFix(t *testing.T) {
 	t.Run("Existing rules", func(t *testing.T) {
-		testCases := allRules()
-
-		for _, tt := range testCases {
+		for _, tt := range rules {
 			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
@@ -1129,36 +1137,17 @@ func TestFix(t *testing.T) {
 }
 
 func TestFindRule(t *testing.T) {
-	t.Run("Action rules", func(t *testing.T) {
-		for _, tt := range actionRules {
-			t.Run(tt.rule.id, func(t *testing.T) {
+	t.Run("Existing rules", func(t *testing.T) {
+		for _, tt := range rules {
+			t.Run(tt.id, func(t *testing.T) {
 				t.Parallel()
 
-				r, err := findRule(tt.rule.id)
+				r, err := findRule(tt.id)
 				if err != nil {
-					t.Fatalf("Couldn't find rule %q", tt.rule.id)
+					t.Fatalf("Couldn't find rule %q", tt.id)
 				}
 
-				if r.id != tt.rule.id {
-					t.Errorf("Unexpected rule found: %#v", r)
-				}
-			})
-		}
-	})
-
-	t.Run("Step rules", func(t *testing.T) {
-		testCases := stepRules
-
-		for _, tt := range testCases {
-			t.Run(tt.rule.id, func(t *testing.T) {
-				t.Parallel()
-
-				r, err := findRule(tt.rule.id)
-				if err != nil {
-					t.Fatalf("Couldn't find rule %q", tt.rule.id)
-				}
-
-				if r.id != tt.rule.id {
+				if r.id != tt.id {
 					t.Errorf("Unexpected rule found: %#v", r)
 				}
 			})
@@ -1388,7 +1377,8 @@ func TestIsAtOrAfterVersion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := isAtOrAfterVersion(&tt.uses, tt.version), tt.want; got != want {
+			step := gha.Step{Uses: tt.uses}
+			if got, want := isAtOrAfterVersion(&step, tt.version), tt.want; got != want {
 				ref := tt.uses.Ref
 				if tt.uses.Annotation != "" {
 					ref = fmt.Sprintf("%s (%s)", tt.uses.Ref, tt.uses.Annotation)
@@ -1602,7 +1592,8 @@ func TestIsBeforeVersion(t *testing.T) {
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if got, want := isBeforeVersion(&tt.uses, tt.version), tt.want; got != want {
+			step := gha.Step{Uses: tt.uses}
+			if got, want := isBeforeVersion(&step, tt.version), tt.want; got != want {
 				ref := tt.uses.Ref
 				if tt.uses.Annotation != "" {
 					ref = fmt.Sprintf("%s (%s)", tt.uses.Ref, tt.uses.Annotation)
@@ -1764,17 +1755,4 @@ func TestFixReplaceIn(t *testing.T) {
 			}
 		})
 	}
-}
-
-func allRules() []rule {
-	rules := make([]rule, 0, len(actionRules)+len(stepRules))
-	for _, r := range actionRules {
-		rules = append(rules, r.rule)
-	}
-
-	for _, r := range stepRules {
-		rules = append(rules, r.rule)
-	}
-
-	return rules
 }
