@@ -190,23 +190,15 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 		name = fmt.Sprintf("#%d", id)
 	}
 
-	rules := make([]rule, 0)
-	if uses := step.Uses; uses.Name != "" {
-		for _, r := range actionRules {
-			if r.appliesTo(&uses) {
-				rules = append(rules, r.rule)
-			}
-		}
-	} else {
-		for _, r := range stepRules {
-			if r.appliesTo(step) {
-				rules = append(rules, r.rule)
-			}
+	applicable := make([]rule, 0)
+	for _, r := range rules {
+		if r.appliesTo(step) {
+			applicable = append(applicable, r)
 		}
 	}
 
-	violations := make([][]Violation, len(rules))
-	for i, rule := range rules {
+	violations := make([][]Violation, len(applicable))
+	for i, rule := range applicable {
 		vs := analyzeString(rule.extractFrom(step), matcher)
 		for i := range vs {
 			vs[i].RuleId = rule.id

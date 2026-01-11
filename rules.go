@@ -25,21 +25,12 @@ import (
 )
 
 type rule struct {
+	appliesTo   func(step *gha.Step) bool
 	extractFrom func(step *gha.Step) string
 	fix         func(violation *Violation) []fix
 	id          string
 	title       string
 	description string
-}
-
-type actionRule struct {
-	appliesTo func(uses *gha.Uses) bool
-	rule      rule
-}
-
-type stepRule struct {
-	appliesTo func(step *gha.Step) bool
-	rule      rule
 }
 
 type fix struct {
@@ -50,14 +41,13 @@ type fix struct {
 	Old regexp.Regexp
 }
 
-var actionRule8398a7ActionSlack = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "8398a7/action-slack")
+var actionRule8398a7ActionSlack = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "8398a7/action-slack")
 	},
-	rule: rule{
-		id:    "ADES107",
-		title: "Expression in 'custom_payload' input of '8398a7/action-slack'",
-		description: `
+	id:    "ADES107",
+	title: "Expression in 'custom_payload' input of '8398a7/action-slack'",
+	description: `
 When an expression appears in the 'custom_payload' input of '8398a7/action-slack' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
@@ -82,20 +72,19 @@ it can be made safer by converting it into:
       #                            ^^^^^^^^^^^^^^^^^
       #                            | Replace the expression with the environment variable
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["custom_payload"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["custom_payload"]
+
 	},
 }
 
-var actionRuleActionsGitHubScript = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "actions/github-script")
+var actionRuleActionsGitHubScript = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "actions/github-script")
 	},
-	rule: rule{
-		id:    "ADES101",
-		title: "Expression in 'actions/github-script' script",
-		description: `
+	id:    "ADES101",
+	title: "Expression in 'actions/github-script' script",
+	description: `
 When an expression appears in a 'actions/github-script' script you can avoid potential attacks by
 extracting the expression into an environment variable and using the environment variable instead.
 
@@ -119,20 +108,19 @@ it can be made safer by converting it into:
       #                     |
       #                     | Note: the use of backticks is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["script"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["script"]
+
 	},
 }
 
-var actionRuleAddnabDockerRunAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "addnab/docker-run-action")
+var actionRuleAddnabDockerRunAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "addnab/docker-run-action")
 	},
-	rule: rule{
-		id:    "ADES105",
-		title: "Expression in 'run' input of 'addnab/docker-run-action'",
-		description: `
+	id:    "ADES105",
+	title: "Expression in 'run' input of 'addnab/docker-run-action'",
+	description: `
 When an expression appears in the 'run' input of 'addnab/docker-run-action' you can avoid any
 potential attack by removing the expression. There is no safe way to use untrusted inputs here
 without risking injection.
@@ -140,20 +128,19 @@ without risking injection.
 Do NOT pass environment variables into the container through the action's options input. This opens
 up alternative attack vectors because the options are not validated.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["run"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["run"]
+
 	},
 }
 
-var actionRuleAmadevusPwshScript = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "Amadevus/pwsh-script")
+var actionRuleAmadevusPwshScript = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "Amadevus/pwsh-script")
 	},
-	rule: rule{
-		id:    "ADES110",
-		title: "Expression in 'script' input of 'Amadevus/pwsh-script'",
-		description: `
+	id:    "ADES110",
+	title: "Expression in 'script' input of 'Amadevus/pwsh-script'",
+	description: `
 When an expression appears in the 'script' input of 'Amadevus/pwsh-script' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
@@ -180,20 +167,19 @@ it can be made safer by converting it into:
       #                |
       #                | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["script"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["script"]
+
 	},
 }
 
-var actionRuleAppleboySshAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "appleboy/ssh-action")
+var actionRuleAppleboySshAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "appleboy/ssh-action")
 	},
-	rule: rule{
-		id:    "ADES108",
-		title: "Expression in 'script' input of 'appleboy/ssh-action'",
-		description: `
+	id:    "ADES108",
+	title: "Expression in 'script' input of 'appleboy/ssh-action'",
+	description: `
 When an expression appears in the 'script' input of 'appleboy/ssh-action' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
@@ -219,42 +205,40 @@ it can be made safer by converting it into:
       #              |
       #              | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["script"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["script"]
+
 	},
 }
 
-var actionRuleAtlassianGajiraCreate = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "atlassian/gajira-create") {
+var actionRuleAtlassianGajiraCreate = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "atlassian/gajira-create") {
 			return false
 		}
 
-		return isBeforeVersion(uses, "v2.0.1")
+		return isBeforeVersion(step, "v2.0.1")
 	},
-	rule: rule{
-		id:    "ADES202",
-		title: "Expression in 'summary' input of 'atlassian/gajira-create'",
-		description: `
+	id:    "ADES202",
+	title: "Expression in 'summary' input of 'atlassian/gajira-create'",
+	description: `
 When an expression is used in the 'summary' input of 'atlassian/gajira-create' in v2.0.0 or earlier
 it may be used to execute arbitrary JavaScript code, see GHSA-4xqx-pqpj-9fqw. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["summary"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["summary"]
+
 	},
 }
 
-var actionRuleAzureCli = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "azure/cli")
+var actionRuleAzureCli = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "azure/cli")
 	},
-	rule: rule{
-		id:    "ADES115",
-		title: "Expression in 'inlineScript' input of 'azure/cli'",
-		description: `
+	id:    "ADES115",
+	title: "Expression in 'inlineScript' input of 'azure/cli'",
+	description: `
 When an expression appears in the 'inlineScript' input of 'azure/cli' you can avoid any potential
 attack by extracting the expression into an environment variable and using the environment variable
 instead.
@@ -281,20 +265,19 @@ it can be made safer by converting it into:
       #                      |
       #                      | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["inlineScript"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["inlineScript"]
+
 	},
 }
 
-var actionRuleAzurePowershell = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "azure/powershell")
+var actionRuleAzurePowershell = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "azure/powershell")
 	},
-	rule: rule{
-		id:    "ADES113",
-		title: "Expression in 'inlineScript' input of 'azure/powershell'",
-		description: `
+	id:    "ADES113",
+	title: "Expression in 'inlineScript' input of 'azure/powershell'",
+	description: `
 When an expression appears in the 'inlineScript' input of 'azure/powershell' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
@@ -323,20 +306,19 @@ it can be made safer by converting it into:
       #                |
       #                | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["inlineScript"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["inlineScript"]
+
 	},
 }
 
-var actionRuleCardinalbyJsEvalAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "cardinalby/js-eval-action")
+var actionRuleCardinalbyJsEvalAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "cardinalby/js-eval-action")
 	},
-	rule: rule{
-		id:    "ADES106",
-		title: "Expression in 'expression' input of 'cardinalby/js-eval-action'",
-		description: `
+	id:    "ADES106",
+	title: "Expression in 'expression' input of 'cardinalby/js-eval-action'",
+	description: `
 When an expression appears in the 'expression' input of 'cardinalby/js-eval-action' you can avoid
 any potential attack by extracting the expression into an environment variable and using the
 environment variable instead.
@@ -359,43 +341,41 @@ it can be made safer by converting it into:
       #                          ^^^^^^^^^
       #                          | Replace the expression with the environment variable
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["expression"]
-		},
-		fix: func(violation *Violation) []fix {
-			var step gha.Step
-			switch source := (violation.source).(type) {
-			case *gha.Manifest:
-				step = source.Runs.Steps[violation.stepIndex]
-			case *gha.Workflow:
-				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
-			}
+	extractFrom: func(step *gha.Step) string {
+		return step.With["expression"]
+	},
+	fix: func(violation *Violation) []fix {
+		var step gha.Step
+		switch source := (violation.source).(type) {
+		case *gha.Manifest:
+			step = source.Runs.Steps[violation.stepIndex]
+		case *gha.Workflow:
+			step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+		}
 
-			name := getVariableNameForExpression(violation.Problem)
-			if _, ok := step.Env[name]; ok {
-				return nil
-			}
+		name := getVariableNameForExpression(violation.Problem)
+		if _, ok := step.Env[name]; ok {
+			return nil
+		}
 
-			fixes := fixAddEnvVar(step, name, violation.Problem)
-			fixes = append(fixes, fixReplaceIn(
-				step.With["expression"],
-				violation.Problem,
-				"env."+name,
-			))
+		fixes := fixAddEnvVar(step, name, violation.Problem)
+		fixes = append(fixes, fixReplaceIn(
+			step.With["expression"],
+			violation.Problem,
+			"env."+name,
+		))
 
-			return fixes
-		},
+		return fixes
 	},
 }
 
-var actionRuleDevorbitusYqActionOutput = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "devorbitus/yq-action-output")
+var actionRuleDevorbitusYqActionOutput = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "devorbitus/yq-action-output")
 	},
-	rule: rule{
-		id:    "ADES112",
-		title: "Expression in 'cmd' input of 'devorbitus/yq-action-output'",
-		description: `
+	id:    "ADES112",
+	title: "Expression in 'cmd' input of 'devorbitus/yq-action-output'",
+	description: `
 When an expression appears in the 'cmd' input of 'devorbitus/yq-action-output' you can avoid any
 potential attack by extracting the expression into an environment variable and using the environment
 variable instead.
@@ -420,65 +400,62 @@ it can be made safer by converting it into:
       #             |
       #             | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["cmd"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["cmd"]
+
 	},
 }
 
-var actionRuleEriccornelissenGitTagAnnotationAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "ericcornelissen/git-tag-annotation-action") {
+var actionRuleEriccornelissenGitTagAnnotationAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "ericcornelissen/git-tag-annotation-action") {
 			return false
 		}
 
-		return isBeforeVersion(uses, "v1.0.1")
+		return isBeforeVersion(step, "v1.0.1")
 
 	},
-	rule: rule{
-		id:    "ADES200",
-		title: "Expression in 'tag' input of 'ericcornelissen/git-tag-annotation-action'",
-		description: `
+	id:    "ADES200",
+	title: "Expression in 'tag' input of 'ericcornelissen/git-tag-annotation-action'",
+	description: `
 When an expression is used in the 'tag' input of 'ericcornelissen/git-tag-annotation-action' in
 v1.0.0 or earlier it may be used to execute arbitrary shell commands, see GHSA-hgx2-4pp9-357g. To
 mitigate this, upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["tag"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["tag"]
+
 	},
 }
 
-var actionRuleFishShopSyntaxCheck = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "fish-shop/syntax-check") {
+var actionRuleFishShopSyntaxCheck = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "fish-shop/syntax-check") {
 			return false
 		}
 
-		return isBeforeVersion(uses, "v1.6.12")
+		return isBeforeVersion(step, "v1.6.12")
 	},
-	rule: rule{
-		id:    "ADES206",
-		title: "Expression in 'pattern' input of 'fish-shop/syntax-check'",
-		description: `
+	id:    "ADES206",
+	title: "Expression in 'pattern' input of 'fish-shop/syntax-check'",
+	description: `
 When an expression is used in the 'pattern' input of 'fish-shop/syntax-check' in v1.6.11 or earlier
 it may be used to execute arbitrary shell commands, see GHSA-xj87-mqvh-88w2. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["pattern"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["pattern"]
+
 	},
 }
 
-var actionRuleGautamkrishnarBlogPostWorkflow = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "gautamkrishnar/blog-post-workflow")
+var actionRuleGautamkrishnarBlogPostWorkflow = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "gautamkrishnar/blog-post-workflow")
 	},
-	rule: rule{
-		id:    "ADES114",
-		title: "Expression in 'item_exec' input of 'gautamkrishnar/blog-post-workflow'",
-		description: `
+	id:    "ADES114",
+	title: "Expression in 'item_exec' input of 'gautamkrishnar/blog-post-workflow'",
+	description: `
 When an expression appears in the 'item_exec' input of 'gautamkrishnar/blog-post-workflow' you can
 avoid any potential attack by extracting the expression into an environment variable and using the
 environment variable instead.
@@ -507,20 +484,19 @@ it can be made safer by converting it into:
       #                |
       #                | Note: the use of backticks is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["item_exec"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["item_exec"]
+
 	},
 }
 
-var actionRuleJannekemRunPythonScriptAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "jannekem/run-python-script-action")
+var actionRuleJannekemRunPythonScriptAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "jannekem/run-python-script-action")
 	},
-	rule: rule{
-		id:    "ADES109",
-		title: "Expression in 'script' input of 'jannekem/run-python-script-action'",
-		description: `
+	id:    "ADES109",
+	title: "Expression in 'script' input of 'jannekem/run-python-script-action'",
+	description: `
 When an expression appears in the 'script' input of 'jannekem/run-python-script-action' you can
 avoid any potential attack by extracting the expression into an environment variable and using the
 environment variable instead.
@@ -545,64 +521,61 @@ it can be made safer by converting it into:
       #               |
       #               | Note: the use of string interpolation is required in this example
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["script"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["script"]
+
 	},
 }
 
-var actionRuleKcebGitMessageAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "kceb/git-message-action") {
+var actionRuleKcebGitMessageAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "kceb/git-message-action") {
 			return false
 		}
 
-		return isBeforeVersion(uses, "v1.2.0")
+		return isBeforeVersion(step, "v1.2.0")
 	},
-	rule: rule{
-		id:    "ADES201",
-		title: "Expression in 'sha' input of 'kceb/git-message-action'",
-		description: `
+	id:    "ADES201",
+	title: "Expression in 'sha' input of 'kceb/git-message-action'",
+	description: `
 When an expression is used in the 'sha' input of 'kceb/git-message-action' in v1.1.0 or earlier it
 may be used to execute arbitrary shell commands (no vulnerability identifier available). To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["sha"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["sha"]
+
 	},
 }
 
-var actionRuleLycheeverseLycheeAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "lycheeverse/lychee") {
+var actionRuleLycheeverseLycheeAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "lycheeverse/lychee") {
 			return false
 		}
 
-		return isBeforeVersion(uses, "v2.0.2")
+		return isBeforeVersion(step, "v2.0.2")
 	},
-	rule: rule{
-		id:    "ADES204",
-		title: "Expression in 'lycheeVersion' input of 'lycheeverse/lychee'",
-		description: `
+	id:    "ADES204",
+	title: "Expression in 'lycheeVersion' input of 'lycheeverse/lychee'",
+	description: `
 When an expression is used in the 'lycheeVersion' input of 'lycheeverse/lychee' in v2.0.1 or earlier
 it may be used to execute arbitrary shell commands, see GHSA-65rg-554r-9j5x. To mitigate this,
 upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["lycheeVersion"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["lycheeVersion"]
+
 	},
 }
 
-var actionRuleMikefarahYq = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "mikefarah/yq")
+var actionRuleMikefarahYq = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "mikefarah/yq")
 	},
-	rule: rule{
-		id:    "ADES111",
-		title: "Expression in 'cmd' input of 'mikefarah/yq'",
-		description: `
+	id:    "ADES111",
+	title: "Expression in 'cmd' input of 'mikefarah/yq'",
+	description: `
 When an expression appears in the 'cmd' input of 'mikefarah/yq' you can avoid any potential attack
 by extracting the expression into an environment variable and using the environment variable
 instead.
@@ -627,42 +600,40 @@ it can be made safer by converting it into:
       #        |
       #        | Note: the use of double quotes is required in this example (for interpolation)
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["cmd"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["cmd"]
+
 	},
 }
 
-var actionRuleOziProjectPublish = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "OZI-Project/publish") {
+var actionRuleOziProjectPublish = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "OZI-Project/publish") {
 			return false
 		}
 
-		return isAtOrAfterVersion(uses, "v1.13.2") && isBeforeVersion(uses, "v1.13.6")
+		return isAtOrAfterVersion(step, "v1.13.2") && isBeforeVersion(step, "v1.13.6")
 	},
-	rule: rule{
-		id:    "ADES205",
-		title: "Expression in 'pull-request-body' input of 'OZI-Project/publish'",
-		description: `
+	id:    "ADES205",
+	title: "Expression in 'pull-request-body' input of 'OZI-Project/publish'",
+	description: `
 When an expression is used in the 'pull-request-body' input of 'OZI-Project/publish' between v1.13.2
 and v1.13.5 it may be used to execute arbitrary shell commands, see GHSA-2487-9f55-2vg9. To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["pull-request-body"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["pull-request-body"]
+
 	},
 }
 
-var actionRuleRootsIssueCloserActionIssueCloseMessage = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "roots/issue-closer") || hasName(uses, "roots/issue-closer-action")
+var actionRuleRootsIssueCloserActionIssueCloseMessage = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "roots/issue-closer") || hasName(step, "roots/issue-closer-action")
 	},
-	rule: rule{
-		id:    "ADES102",
-		title: "Expression in 'issue-close-message' input of 'roots/issue-closer-action'",
-		description: `
+	id:    "ADES102",
+	title: "Expression in 'issue-close-message' input of 'roots/issue-closer-action'",
+	description: `
 When an expression appears in the 'issue-close-message' input of 'roots/issue-closer-action' it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
@@ -685,43 +656,41 @@ it can be made safer by converting it into:
       #                              ^^^^^^^^^^^^^^^^^^^
       #                              | Replace the expression with the environment variable
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["issue-close-message"]
-		},
-		fix: func(violation *Violation) []fix {
-			var step gha.Step
-			switch source := (violation.source).(type) {
-			case *gha.Manifest:
-				step = source.Runs.Steps[violation.stepIndex]
-			case *gha.Workflow:
-				step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
-			}
+	extractFrom: func(step *gha.Step) string {
+		return step.With["issue-close-message"]
+	},
+	fix: func(violation *Violation) []fix {
+		var step gha.Step
+		switch source := (violation.source).(type) {
+		case *gha.Manifest:
+			step = source.Runs.Steps[violation.stepIndex]
+		case *gha.Workflow:
+			step = source.Jobs[violation.jobKey].Steps[violation.stepIndex]
+		}
 
-			name := getVariableNameForExpression(violation.Problem)
-			if _, ok := step.Env[name]; ok {
-				return nil
-			}
+		name := getVariableNameForExpression(violation.Problem)
+		if _, ok := step.Env[name]; ok {
+			return nil
+		}
 
-			fixes := fixAddEnvVar(step, name, violation.Problem)
-			fixes = append(fixes, fixReplaceIn(
-				step.With["issue-close-message"],
-				violation.Problem,
-				fmt.Sprintf("${process.env.%s}", name),
-			))
+		fixes := fixAddEnvVar(step, name, violation.Problem)
+		fixes = append(fixes, fixReplaceIn(
+			step.With["issue-close-message"],
+			violation.Problem,
+			fmt.Sprintf("${process.env.%s}", name),
+		))
 
-			return fixes
-		},
+		return fixes
 	},
 }
 
-var actionRuleRootsIssueCloserActionPrCloseMessage = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(uses)
+var actionRuleRootsIssueCloserActionPrCloseMessage = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(step)
 	},
-	rule: rule{
-		id:    "ADES103",
-		title: "Expression in 'pr-close-message' input of 'roots/issue-closer-action'",
-		description: `
+	id:    "ADES103",
+	title: "Expression in 'pr-close-message' input of 'roots/issue-closer-action'",
+	description: `
 When an expression appears in the 'pr-close-message' input of 'roots/issue-closer-action' it is
 interpreted as an ES6-style template literal. You can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
@@ -744,20 +713,19 @@ it can be made safer by converting it into:
       #                           ^^^^^^^^^^^^^^^^^^^
       #                           | Replace the expression with the environment variable
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["pr-close-message"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["pr-close-message"]
+
 	},
 }
 
-var actionRuleSergeysovaJqAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		return hasName(uses, "sergeysova/jq-action")
+var actionRuleSergeysovaJqAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		return hasName(step, "sergeysova/jq-action")
 	},
-	rule: rule{
-		id:    "ADES104",
-		title: "Expression in 'cmd' input of 'sergeysova/jq-action'",
-		description: `
+	id:    "ADES104",
+	title: "Expression in 'cmd' input of 'sergeysova/jq-action'",
+	description: `
 When an expression appears in the 'cmd' input of 'sergeysova/jq-action' you can avoid any potential
 attack by extracting the expression into an environment variable and using the environment variable
 instead.
@@ -782,67 +750,40 @@ it can be made safer by converting it into:
       #                 |
       #                 | Note: use double quotes to avoid argument splitting
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["cmd"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["cmd"]
+
 	},
 }
 
-var actionRuleSonarSourceSonarqubeScanAction = actionRule{
-	appliesTo: func(uses *gha.Uses) bool {
-		if !hasName(uses, "SonarSource/sonarqube-scan-action") {
+var actionRuleSonarSourceSonarqubeScanAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "SonarSource/sonarqube-scan-action") {
 			return false
 		}
 
-		return isAtOrAfterVersion(uses, "v4.0.0") && isBeforeVersion(uses, "v5.3.1")
+		return isAtOrAfterVersion(step, "v4.0.0") && isBeforeVersion(step, "v5.3.1")
 	},
-	rule: rule{
-		id:    "ADES203",
-		title: "Expression in 'args' input of 'SonarSource/sonarqube-scan-action'",
-		description: `
+	id:    "ADES203",
+	title: "Expression in 'args' input of 'SonarSource/sonarqube-scan-action'",
+	description: `
 When an expression is used in the 'args' input of 'SonarSource/sonarqube-scan-action' between v4.0.0
 and v5.3.0 it may be used to execute arbitrary shell commands, see GHSA-f79p-9c5r-xg88. To mitigate
 this, upgrade the action to a non-vulnerable version.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.With["args"]
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.With["args"]
+
 	},
 }
 
-var actionRules = []actionRule{
-	actionRule8398a7ActionSlack,
-	actionRuleActionsGitHubScript,
-	actionRuleAddnabDockerRunAction,
-	actionRuleAppleboySshAction,
-	actionRuleAmadevusPwshScript,
-	actionRuleAtlassianGajiraCreate,
-	actionRuleAzureCli,
-	actionRuleAzurePowershell,
-	actionRuleCardinalbyJsEvalAction,
-	actionRuleDevorbitusYqActionOutput,
-	actionRuleEriccornelissenGitTagAnnotationAction,
-	actionRuleFishShopSyntaxCheck,
-	actionRuleGautamkrishnarBlogPostWorkflow,
-	actionRuleJannekemRunPythonScriptAction,
-	actionRuleKcebGitMessageAction,
-	actionRuleLycheeverseLycheeAction,
-	actionRuleMikefarahYq,
-	actionRuleOziProjectPublish,
-	actionRuleRootsIssueCloserActionIssueCloseMessage,
-	actionRuleRootsIssueCloserActionPrCloseMessage,
-	actionRuleSergeysovaJqAction,
-	actionRuleSonarSourceSonarqubeScanAction,
-}
-
-var stepRuleRun = stepRule{
+var stepRuleRun = rule{
 	appliesTo: func(step *gha.Step) bool {
 		return len(step.Run) > 0
 	},
-	rule: rule{
-		id:    "ADES100",
-		title: "Expression in 'run:' directive",
-		description: `
+	id:    "ADES100",
+	title: "Expression in 'run:' directive",
+	description: `
 When an expression appears in a 'run:' directive you can avoid potential attacks by extracting the
 expression into an environment variable and using the environment variable instead.
 
@@ -867,34 +808,56 @@ it can be made safer by converting it into:
 Note that the changes depend on the runner and shell being used. For example, on Windows (or when
 using 'shell: powershell') the environment variable must be accessed as '$Env:NAME'.
 `,
-		extractFrom: func(step *gha.Step) string {
-			return step.Run
-		},
+	extractFrom: func(step *gha.Step) string {
+		return step.Run
+
 	},
 }
 
-var stepRules = []stepRule{
+var rules = []rule{
+	actionRule8398a7ActionSlack,
+	actionRuleActionsGitHubScript,
+	actionRuleAddnabDockerRunAction,
+	actionRuleAppleboySshAction,
+	actionRuleAmadevusPwshScript,
+	actionRuleAtlassianGajiraCreate,
+	actionRuleAzureCli,
+	actionRuleAzurePowershell,
+	actionRuleCardinalbyJsEvalAction,
+	actionRuleDevorbitusYqActionOutput,
+	actionRuleEriccornelissenGitTagAnnotationAction,
+	actionRuleFishShopSyntaxCheck,
+	actionRuleGautamkrishnarBlogPostWorkflow,
+	actionRuleJannekemRunPythonScriptAction,
+	actionRuleKcebGitMessageAction,
+	actionRuleLycheeverseLycheeAction,
+	actionRuleMikefarahYq,
+	actionRuleOziProjectPublish,
+	actionRuleRootsIssueCloserActionIssueCloseMessage,
+	actionRuleRootsIssueCloserActionPrCloseMessage,
+	actionRuleSergeysovaJqAction,
+	actionRuleSonarSourceSonarqubeScanAction,
 	stepRuleRun,
 }
 
-func getRef(uses *gha.Uses) (string, bool) {
-	ref := uses.Ref
-	if !semver.IsValid(ref) {
-		ref = uses.Annotation
-		if !semver.IsValid(ref) {
-			return "", false
-		}
+func getRef(step *gha.Step) (string, bool) {
+	if ref := step.Uses.Ref; semver.IsValid(ref) {
+		return ref, true
 	}
 
-	return ref, true
+	if ref := step.Uses.Annotation; semver.IsValid(ref) {
+		return ref, true
+	}
+
+	return "", false
 }
 
-func hasName(uses *gha.Uses, name string) bool {
-	return strings.EqualFold(uses.Name, name)
+func hasName(step *gha.Step, name string) bool {
+	return strings.EqualFold(step.Uses.Name, name)
 }
 
-func isAtOrAfterVersion(uses *gha.Uses, version string) bool {
-	ref, ok := getRef(uses)
+func isAtOrAfterVersion(step *gha.Step, version string) bool {
+	ref, ok := getRef(step)
 	if !ok {
 		return false
 	}
@@ -909,8 +872,8 @@ func isAtOrAfterVersion(uses *gha.Uses, version string) bool {
 	}
 }
 
-func isBeforeVersion(uses *gha.Uses, version string) bool {
-	ref, ok := getRef(uses)
+func isBeforeVersion(step *gha.Step, version string) bool {
+	ref, ok := getRef(step)
 	if !ok {
 		return false
 	}
@@ -954,15 +917,9 @@ func Fix(violation *Violation) ([]fix, error) {
 
 func findRule(ruleId string) (rule, error) {
 	ruleId = strings.ToUpper(ruleId)
-	for _, r := range actionRules {
-		if r.rule.id == ruleId {
-			return r.rule, nil
-		}
-	}
-
-	for _, r := range stepRules {
-		if r.rule.id == ruleId {
-			return r.rule, nil
+	for _, rule := range rules {
+		if rule.id == ruleId {
+			return rule, nil
 		}
 	}
 
