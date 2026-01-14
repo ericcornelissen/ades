@@ -48,7 +48,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.4.1 // indirect
 	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
-	github.com/dkorunic/betteralign v0.8.2 // indirect
+	github.com/dkorunic/betteralign v0.8.3 // indirect
 	github.com/docker/cli v28.3.3+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.9.3 // indirect
 	github.com/docker/go-events v0.0.0-20250808211157-605354379745 // indirect
@@ -78,7 +78,7 @@ require (
 	github.com/golang/groupcache v0.0.0-20241129210726-2c02b8208cf8 // indirect
 	github.com/google/capslock v0.3.0 // indirect
 	github.com/google/go-cmp v0.7.0 // indirect
-	github.com/google/renameio/v2 v2.0.1 // indirect
+	github.com/google/renameio/v2 v2.0.2 // indirect
 	github.com/google/uuid v1.6.0 // indirect
 	github.com/gordonklaus/ineffassign v0.2.0 // indirect
 	github.com/hashicorp/hcl v1.0.0 // indirect
