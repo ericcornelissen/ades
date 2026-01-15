@@ -104,6 +104,12 @@ stdout 'ADES114'
 stdout 'ADES115'
 ! stderr .
 
+# ADES116
+! exec ades ades116.yml
+! stdout 'Ok'
+stdout 'ADES116'
+! stderr .
+
 # ADES200
 ! exec ades ades200.yml
 ! stdout 'Ok'
@@ -359,6 +365,18 @@ jobs:
       with:
         inlineScript: |
           az vm create --name '${{ inputs.name }}'
+-- ades116.yml --
+name: Example workflow with a ADES116 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Example step
+      uses: Skitionek/notify-microsoft-teams@v1.0.8
+      with:
+        overwrite: "{title: '${{ inputs.title }}'}"
 -- ades200.yml --
 name: Example workflow with a ADES200 violation
 on: [push]

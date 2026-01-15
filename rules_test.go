@@ -885,6 +885,69 @@ func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleSkitionekNotifyMicrosoftTeams(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			ref  string
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"First vulnerable version": {
+				ref:  "v1.0.0",
+				want: true,
+			},
+			"Middle vulnerable version": {
+				ref:  "v1.0.4",
+				want: true,
+			},
+			"Last vulnerable version": {
+				ref:  "v1.0.8",
+				want: true,
+			},
+			"First fixed version": {
+				ref:  "v1.0.9",
+				want: false,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "Skitionek/notify-microsoft-teams",
+						Ref:  tt.ref,
+					},
+				}
+
+				if got, want := actionRuleSkitionekNotifyMicrosoftTeams.appliesTo(&step), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["overwrite"] = value
+			return actionRuleSkitionekNotifyMicrosoftTeams.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "overwrite")
+			return actionRuleSkitionekNotifyMicrosoftTeams.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {
