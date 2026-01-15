@@ -74,7 +74,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["custom_payload"]
-
 	},
 }
 
@@ -110,7 +109,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["script"]
-
 	},
 }
 
@@ -130,7 +128,6 @@ up alternative attack vectors because the options are not validated.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["run"]
-
 	},
 }
 
@@ -169,7 +166,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["script"]
-
 	},
 }
 
@@ -207,7 +203,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["script"]
-
 	},
 }
 
@@ -228,7 +223,6 @@ upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["summary"]
-
 	},
 }
 
@@ -267,7 +261,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["inlineScript"]
-
 	},
 }
 
@@ -308,7 +301,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["inlineScript"]
-
 	},
 }
 
@@ -402,7 +394,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["cmd"]
-
 	},
 }
 
@@ -413,7 +404,6 @@ var actionRuleEriccornelissenGitTagAnnotationAction = rule{
 		}
 
 		return isBeforeVersion(step, "v1.0.1")
-
 	},
 	id:    "ADES200",
 	title: "Expression in 'tag' input of 'ericcornelissen/git-tag-annotation-action'",
@@ -424,7 +414,6 @@ mitigate this, upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["tag"]
-
 	},
 }
 
@@ -445,7 +434,6 @@ upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["pattern"]
-
 	},
 }
 
@@ -486,7 +474,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["item_exec"]
-
 	},
 }
 
@@ -523,7 +510,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["script"]
-
 	},
 }
 
@@ -544,7 +530,6 @@ this, upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["sha"]
-
 	},
 }
 
@@ -565,7 +550,6 @@ upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["lycheeVersion"]
-
 	},
 }
 
@@ -602,7 +586,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["cmd"]
-
 	},
 }
 
@@ -623,7 +606,6 @@ this, upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["pull-request-body"]
-
 	},
 }
 
@@ -715,7 +697,6 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["pr-close-message"]
-
 	},
 }
 
@@ -752,7 +733,48 @@ it can be made safer by converting it into:
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["cmd"]
+	},
+}
 
+var actionRuleSkitionekNotifyMicrosoftTeams = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "Skitionek/notify-microsoft-teams") {
+			return false
+		}
+
+		return isBeforeVersion(step, "v1.0.9")
+	},
+	id:    "ADES116",
+	title: "Expression in 'overwrite' input of 'Skitionek/notify-microsoft-teams'",
+	description: `
+When an expression appears in the 'overwrite' input of 'Skitionek/notify-microsoft-teams' you can
+avoid any potential attack by extracting the expression into an environment variable and using the
+environment variable instead.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: Skitionek/notify-microsoft-teams@v1.0.8
+      with:
+        overwrite: |
+          {title: "${{ inputs.title }}"}
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: Skitionek/notify-microsoft-teams@v1.0.8
+      env:
+        TITLE: ${{ inputs.title }} # <- Assign the expression to an environment variable
+      with:
+        overwrite: |
+          {title: ` + "`" + `${process.env.TITLE}` + "`" + `}
+      #           ^  ^^^^^^^^^^^^^^^^^
+      #           |  | Replace the expression with the environment variable
+      #           |
+      #           | Note: the use of backticks is required for interpolation
+`,
+	extractFrom: func(step *gha.Step) string {
+		return step.With["overwrite"]
 	},
 }
 
@@ -773,7 +795,6 @@ this, upgrade the action to a non-vulnerable version.
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.With["args"]
-
 	},
 }
 
@@ -810,7 +831,6 @@ using 'shell: powershell') the environment variable must be accessed as '$Env:NA
 `,
 	extractFrom: func(step *gha.Step) string {
 		return step.Run
-
 	},
 }
 
@@ -836,6 +856,7 @@ var rules = []rule{
 	actionRuleRootsIssueCloserActionIssueCloseMessage,
 	actionRuleRootsIssueCloserActionPrCloseMessage,
 	actionRuleSergeysovaJqAction,
+	actionRuleSkitionekNotifyMicrosoftTeams,
 	actionRuleSonarSourceSonarqubeScanAction,
 	stepRuleRun,
 }
