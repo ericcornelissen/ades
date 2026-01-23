@@ -18,7 +18,7 @@ Only the latest release of the project is supported with security updates.
 To report a security issue in the latest release or the development head, either:
 
 - [Report it through GitHub][new github advisory], or
-- Send an email to [security@ericcornelissen.dev] with the terms "SECURITY" and "ades" in the
+- Send an email to [ericornelissen+security@gmail.com] with the terms "SECURITY" and "ades" in the
   subject line.
 
 Please do not open a regular issue or Pull Request in the public repository.
@@ -28,7 +28,7 @@ report it publicly. For example, as a regular issue in the public repository. If
 the issue privately.
 
 [new github advisory]: https://github.com/ericcornelissen/ades/security/advisories/new
-[security@ericcornelissen.dev]: mailto:security@ericcornelissen.dev?subject=SECURITY%20%28ades%29
+[ericornelissen+security@gmail.com]: mailto:ericornelissen+security@gmail.com?subject=SECURITY%20%28ades%29
 
 ### Threat Model
 
