@@ -75,6 +75,9 @@ test/**
 # Website
 !web/
 web/**
+!web/.well-known/
+web/.well-known/**
+!web/.well-known/security.txt
 !web/ades.go
 !web/index.css
 !web/index.html
