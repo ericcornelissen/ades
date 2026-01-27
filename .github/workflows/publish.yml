@@ -108,6 +108,6 @@ jobs:
         artifacts: ./_compiled/*
         immutableCreate: true
     - name: Attest build provenance
-      uses: actions/attest-build-provenance@v3.1.0
+      uses: actions/attest-build-provenance@v3.2.0
       with:
         subject-path: ./_compiled/*
