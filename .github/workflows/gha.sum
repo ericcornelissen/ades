@@ -2,14 +2,14 @@ version 1
 
 JamesIves/github-pages-deploy-action@v4.8.0 k2ZA/TDxQeePExLjsAMjR1mwvtHZh4/y3SW7jNrtDKc=
 actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538 XNMz7LHJ9IN3MIa8gRo+72lU5I7gjRYQ8yR0N/cAWwo=
-actions/attest-build-provenance@v3.1.0 uON4rVJph2AcYoGrs1RbNOcrSdtiq2nB8VG8wKWl3lI=
-actions/attest@7667f588f2f73a90cea6c7ac70e78266c4f76616 OtwL+vGbfGDzG2lvDb0xVx5KhJJ9/1eEkPicbJjuPHs=
+actions/attest-build-provenance@v3.2.0 RFMpIx7eQbSbndgMazkskj4uqzO3wHg+9CwebWA/M08=
+actions/attest@e59cbc1ad1ac2d59339667419eb8cdde6eb61e3d rNIPbfK41Xp+f9XyttOpqU65LM+UMl841faLMb2HPS4=
 actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
 actions/setup-go@7a3fe6cf4cb3a834922a1244abfce67bcef6a0c5 lrrHv9nNcHze5hvbFhKZDz3O8ZhV8UXCbDx8WeoXer0=
 docker/build-push-action@v6.17.0 JSBiASwiRckIi1Wp4xJz7zlr/fU3g9lZK9k212ed574=
 docker/login-action@v3.6.0 4RAwqK9AsSvSEtV9RMGVQo+3jz9tsgNg9UyqMVfA/vE=
 docker/setup-buildx-action@v3.12.0 Pc060N0ajyrI7UfGFDE06XCpFmAVqyxc4kit1ubO8Fg=
-github/codeql-action@cf1bb45a277cb3c205638b2cd5c984db1c46a412 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
-github/codeql-action@v4.31.7 c3zMeTc0C6jbQOj2TRt7G0ZvSwJJHUZ0E4iXry8DS6M=
+github/codeql-action@b20883b0cd1f46c72ae0ba6d1090936928f9fa30 cKk/jC+AF7SIc9AV9Pk3XEbI+kND9NsY4T1AfQQkPzY=
+github/codeql-action@v4.32.0 cKk/jC+AF7SIc9AV9Pk3XEbI+kND9NsY4T1AfQQkPzY=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
 sigstore/cosign-installer@v4.0.0 9G7ZrM2Fr/B0uwOObCSa6gMY4kv7spg439EVhNZZjds=
