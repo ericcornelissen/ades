@@ -1,0 +1,6 @@
+Contact: https://github.com/ericcornelissen/ades/security/advisories/new
+Contact: mailto:ericornelissen+security@gmail.com
+Policy: https://github.com/ericcornelissen/ades/blob/main/SECURITY.md
+Acknowledgments: https://github.com/ericcornelissen/ades/blob/main/SECURITY.md#acknowledgments
+Preferred-Languages: en
+Expires: 2026-06-01T00:00:00Z
