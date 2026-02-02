@@ -90,6 +90,83 @@ jobs:
       uses: ./.github/actions/ghasum
     - name: Check source code formatting
       run: go run tasks.go format-check
+  gha-release:
+    name: GitHub Actions Release Immutability
+    runs-on: ubuntu-24.04
+    if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref || github.ref_name, 'renovate/')
+    permissions:
+      pull-requests: write # To comment on a Pull Request
+    steps:
+    - name: Parse
+      id: parse
+      shell: bash
+      env:
+        BODY: ${{ github.event.pull_request.body }}
+      run: |
+        ROW=$(echo "${BODY}" | grep -m1 '^| .* | action |') || true
+        REPO=$(echo "${ROW}" | cut -d'|' -f2 | sed -nE 's/.*\[([^]]+)\].*/\1/p')
+        OLD=$(echo "${ROW}" | cut -d'|' -f5 | awk -F'`' '{print $2}')
+        NEW=$(echo "${ROW}" | cut -d'|' -f5 | awk -F'`' '{print $4}')
+
+        {
+          echo "repo=$REPO"
+          echo "new=$NEW"
+          echo "old=$OLD"
+        } >>"$GITHUB_OUTPUT"
+    - name: Check
+      if: steps.parse.outputs.repo != ''
+      id: check
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        NEW: ${{ steps.parse.outputs.new }}
+        NUMBER: ${{ github.event.pull_request.number }}
+        OLD: ${{ steps.parse.outputs.old }}
+        THAT_REPO: ${{ steps.parse.outputs.repo }}
+        THIS_REPO: ${{ github.repository }}
+      run: |
+        set -euo pipefail
+
+        WAS_IMMUTABLE=$(gh release view "${OLD}" --repo "${THAT_REPO}" --json isImmutable | jq .isImmutable)
+        IS_IMMUTABLE=$(gh release view "${NEW}" --repo "${THAT_REPO}" --json isImmutable | jq .isImmutable)
+
+        echo "::debug::was ${WAS_IMMUTABLE}; is ${IS_IMMUTABLE}"
+        case "${WAS_IMMUTABLE};${IS_IMMUTABLE}" in
+        'true;true')
+          COMMENT=""
+          ;;
+        'false;false')
+          COMMENT="${OLD} was not an immutable release and ${NEW} still is not. :neutral_face:"
+          ;;
+        'true;false')
+          COMMENT="${OLD} was an immutable release but ${NEW} is not. :cry:"
+          ;;
+        'false;true')
+          COMMENT="${OLD} was not an immutable release but ${NEW} is! :smile:"
+          ;;
+        esac
+
+        exists=$(gh pr view "${NUMBER}" --repo "${THIS_REPO}" --json comments | jq --raw-output --arg comment "${COMMENT}" 'any(.comments[].body; . == $comment)')
+        if [[ ${exists} == 'true' ]]; then
+          echo '::debug::comment exists, not commenting again'
+          SKIP='true'
+        else
+          echo '::debug::comment does not yet exists'
+          SKIP='false'
+        fi
+
+        echo "comment=${COMMENT}" >>"$GITHUB_OUTPUT"
+        echo "skip=${SKIP}" >>"$GITHUB_OUTPUT"
+    - name: Comment
+      if: steps.parse.outputs.repo != '' && steps.check.outputs.comment != '' && steps.check.outputs.skip == 'false'
+      shell: bash
+      env:
+        GH_TOKEN: ${{ github.token }}
+        COMMENT: ${{ steps.check.outputs.comment }}
+        NUMBER: ${{ github.event.pull_request.number }}
+        THIS_REPO: ${{ github.repository }}
+      run: |
+        gh pr comment "${NUMBER}" --repo "${THIS_REPO}" --body "${COMMENT}"
   reproducible:
     name: Reproducible build
     runs-on: ubuntu-24.04
