@@ -563,11 +563,12 @@ func TaskWebBuild(t *T) error {
 		buildWasm    = "env GOOS=js GOARCH=wasm go build -o ades.wasm"
 		copyLicense  = "cp ../COPYING.txt ./COPYING.txt"
 		copyWasmExec = fmt.Sprintf("cp -f %s/lib/wasm/wasm_exec.js ./wasm_exec.js", goroot)
+		noJekyll     = "touch ./.nojekyll"
 	)
 
 	t.Log("Building webapp...")
 	t.Cd(webDir)
-	return t.Exec(buildWasm, copyLicense, copyWasmExec)
+	return t.Exec(buildWasm, copyLicense, copyWasmExec, noJekyll)
 }
 
 // Check if the WASM binary is reproducible.
