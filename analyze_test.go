@@ -577,7 +577,6 @@ func TestAnalyzeJob(t *testing.T) {
 				Steps: []gha.Step{
 					{
 						Name: "Checkout repository",
-						Run:  "",
 					},
 					{
 						Name: "Example",
@@ -599,7 +598,6 @@ func TestAnalyzeJob(t *testing.T) {
 				Steps: []gha.Step{
 					{
 						Name: "Checkout repository",
-						Run:  "",
 					},
 					{
 						Name: "Example",
@@ -613,6 +611,44 @@ func TestAnalyzeJob(t *testing.T) {
 			},
 			matcher:   AllMatcher,
 			wantCount: 1,
+			wantId:    "Unsafe",
+		},
+		"Job with two unsafe expressions in one step": {
+			job: gha.Job{
+				Name: "Unsafe",
+				Steps: []gha.Step{
+					{
+						Name: "Checkout repository",
+					},
+					{
+						Name: "Example",
+						Run:  "echo ${{ inputs.foo }}\necho ${{ inputs.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 2,
+			wantId:    "Unsafe",
+		},
+		"Job with two unsafe expressions in separate steps": {
+			job: gha.Job{
+				Name: "Unsafe",
+				Steps: []gha.Step{
+					{
+						Name: "Checkout repository",
+					},
+					{
+						Name: "Example",
+						Run:  "echo ${{ inputs.foo }}",
+					},
+					{
+						Name: "Example",
+						Run:  "echo ${{ inputs.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 2,
 			wantId:    "Unsafe",
 		},
 		"matrix safe": {
@@ -709,13 +745,33 @@ func TestAnalyzeJob(t *testing.T) {
 				Strategy: gha.Strategy{
 					Matrix: []map[string]any{
 						{
-							"foo": "safe",
+							"field": "safe",
 						},
 					},
 				},
 				Steps: []gha.Step{
 					{
 						Run: "echo ${{ matrix.field || inputs.unsafe }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Safe matrix",
+		},
+		"matrix safe and something unsafe": {
+			job: gha.Job{
+				Name: "Safe matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"field": "safe",
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.field }} ${{ inputs.unsafe }}",
 					},
 				},
 			},
@@ -1031,6 +1087,13 @@ func TestAnalyzeString(t *testing.T) {
 			matcher: AllMatcher,
 			want: []Violation{
 				{Problem: "${{ true || inputs.sha }}"},
+			},
+		},
+		"Safe and unsafe expressions": {
+			value:   "echo '${{ true }} ${{ inputs.name }}'",
+			matcher: AllMatcher,
+			want: []Violation{
+				{Problem: "${{ inputs.name }}"},
 			},
 		},
 	}
