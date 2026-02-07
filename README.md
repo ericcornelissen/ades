@@ -260,8 +260,10 @@ Actions Expression but is still worth mentioning:
 - [BOLT]: Egress-filter and runtime security tool for GitHub Actions pipelines.
 - [Bullfrog]: Control the outbound network connections of GitHub Actions pipelines.
 - [Cimon]: Runtime security to stop software supply-chain attacks on GitHub Actions pipelines.
+- [COSSETER]: Determine minimum GitHub Action job permissions statically.
 - [CodeQL support for GitHub Actions]: CodeQL queries for GitHub Actions workflows.
 - [OpenSSF Scorecard]: Assess repository configs, including GitHub Action workflows.
+- [Soteria]: Security misconfiguration detector for GitHub Actions.
 - [StepSecurity]: Runtime protection for GitHub Actions pipelines.
 
 [`actionlint`]: https://github.com/rhysd/actionlint
@@ -269,35 +271,27 @@ Actions Expression but is still worth mentioning:
 [bolt]: https://github.com/koalalab-inc/bolt
 [bullfrog]: https://github.com/bullfrogsec/bullfrog
 [cimon]: https://github.com/CycodeLabs/cimon-action
+[cosseter]: https://github.com/s3c2/cosseter
 [codeql support for github actions]: https://docs.github.com/en/code-security/code-scanning/managing-your-code-scanning-configuration/actions-built-in-queries
 [openssf scorecard]: https://scorecard.dev/
+[soteria]: https://github.com/aegis-forge/soteria
 [stepsecurity]: https://www.stepsecurity.io/
 
 #### Research
 
-- [Ambush From All Sides: Understanding Security Threats in Open-Source Software CI/CD Pipelines]
-- [A Preliminary Study of GitHub Actions Dependencies]
-- [Cacheract: GitHub Actions Cache Native Malware]
-- [Catching Smells in the Act: A GitHub Actions Workflow Investigation]
-- [Characterizing the Security of Github CI Workflows]
-- [Continuous Intrusion: Characterizing the Security of Continuous Integration Services]
-- [GitHub Actions Attack Diagram]
-- [Living Off the Pipeline]
-- [Mitigating Security Issues in GitHub Actions]
-- [On the outdatedness of workflows in the GitHub Actions ecosystem]
-- [Quantifying Security Issues in Reusable JavaScript Actions in GitHub Workflows]
-
-[ambush from all sides: understanding security threats in open-source software ci/cd pipelines]: https://ieeexplore.ieee.org/abstract/document/10061526
-[a preliminary study of github actions dependencies]: https://ceur-ws.org/Vol-3483/paper7.pdf
-[cacheract: github actions cache native malware]: https://github.com/AdnaneKhan/Cacheract
-[catching smells in the act: a github actions workflow investigation]: https://ieeexplore.ieee.org/abstract/document/10795325
-[characterizing the security of github ci workflows]: https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev
-[continuous intrusion: characterizing the security of continuous integration services]: https://ieeexplore.ieee.org/abstract/document/10179471
-[github actions attack diagram]: https://github.com/jstawinski/GitHub-Actions-Attack-Diagram
-[living off the pipeline]: https://boostsecurityio.github.io/lotp/#github-actions
-[mitigating security issues in gitHub actions]: https://dl.acm.org/doi/abs/10.1145/3643662.3643961
-[on the outdatedness of workflows in the github actions ecosystem]: https://www.sciencedirect.com/science/article/pii/S0164121223002224
-[quantifying security issues in reusable javascript actions in github workflows]: https://dl.acm.org/doi/abs/10.1145/3643991.3644899
+- [Ambush From All Sides: Understanding Security Threats in Open-Source Software CI/CD Pipelines](https://ieeexplore.ieee.org/abstract/document/10061526)
+- [A Preliminary Study of GitHub Actions Dependencies](https://ceur-ws.org/Vol-3483/paper7.pdf)
+- [Cacheract: GitHub Actions Cache Native Malware](https://github.com/AdnaneKhan/Cacheract)
+- [Catching Smells in the Act: A GitHub Actions Workflow Investigation](https://ieeexplore.ieee.org/abstract/document/10795325)
+- [Characterizing the Security of Github CI Workflows](https://www.usenix.org/conference/usenixsecurity22/presentation/koishybayev)
+- [Continuous Intrusion: Characterizing the Security of Continuous Integration Services](https://ieeexplore.ieee.org/abstract/document/10179471)
+- [GitHub Actions Attack Diagram](https://github.com/jstawinski/GitHub-Actions-Attack-Diagram)
+- [Granite: Granular Runtime Enforcement for GitHub Actions Permissions](https://arxiv.org/abs/2512.11602)
+- [Living Off the Pipeline](https://boostsecurityio.github.io/lotp/#github-actions)
+- [Mitigating Security Issues in GitHub Actions](https://dl.acm.org/doi/abs/10.1145/3643662.3643961)
+- [On the outdatedness of workflows in the GitHub Actions ecosystem](https://www.sciencedirect.com/science/article/pii/S0164121223002224)
+- [Pipelines Under Pressure: An Empirical Study of Security Misconfigurations of GitHub Workflows](https://link.springer.com/chapter/10.1007/978-3-032-12089-2_14)
+- [Quantifying Security Issues in Reusable JavaScript Actions in GitHub Workflows](https://dl.acm.org/doi/abs/10.1145/3643991.3644899)
 
 ## License
 
