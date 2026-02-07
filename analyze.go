@@ -214,17 +214,19 @@ func analyzeStep(id int, step *gha.Step, matcher ExprMatcher) []Violation {
 
 func analyzeString(s string, matcher ExprMatcher) []Violation {
 	b := []byte(s)
-	if len(matcher.FindAll(stripSafe(b))) == 0 {
+	if matcher.FindAll(stripSafe(b)) == nil {
 		return nil
 	}
 
 	violations := make([]Violation, 0)
-	if matches := matcher.FindAll(b); matches != nil {
-		for _, problem := range matches {
-			violations = append(violations, Violation{
-				Problem: string(problem),
-			})
+	for _, problem := range matcher.FindAll(b) {
+		if len(matcher.FindAll(stripSafe(problem))) == 0 {
+			continue
 		}
+
+		violations = append(violations, Violation{
+			Problem: string(problem),
+		})
 	}
 
 	return violations
