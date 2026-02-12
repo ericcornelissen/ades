@@ -50,7 +50,7 @@ jobs:
         password: ${{ secrets.DOCKER_PASSWORD }}
     - name: Build and push to Docker Hub
       id: docker
-      uses: docker/build-push-action@v6.17.0
+      uses: docker/build-push-action@v6.19.1
       with:
         build-args: GO_VERSION=${{ steps.go.outputs.version }}
         context: .
