@@ -116,7 +116,6 @@ func TaskBuildAll(t *T) error {
 		{GOOS: osLinux, GOARCH: archArm64},
 		{GOOS: osWindows, GOARCH: arch386},
 		{GOOS: osWindows, GOARCH: archAmd64},
-		{GOOS: osWindows, GOARCH: archArm},
 		{GOOS: osWindows, GOARCH: archArm64},
 	}
 
