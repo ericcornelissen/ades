@@ -22,6 +22,9 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 |   # | Advisory              | Relevant | Detected | Conservative | Rule      |
 | --: | :-------------------- | :------- | :------- | :----------- | :-------- |
+|  41 | [GHSA-9p44-j4g5-cfx5] | No       |          |              |           |
+|  40 | [GHSA-r79c-pqj3-577x] | No       |          |              |           |
+|  39 | [GHSA-cpmj-h4f6-r6pq] | No       |          |              |           |
 |  38 | [GHSA-pwf7-47c3-mfhx] | Yes      | Yes      | No           | [ADES100] |
 |  37 | [GHSA-5xq9-5g24-4g6f] | No       |          |              |           |
 |  36 | [GHSA-vxmw-7h4f-hqxh] | Yes      | Yes      | No           | [ADES100] |
@@ -63,6 +66,9 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 [GitHub Actions Advisories]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Aactions
 
+[GHSA-9p44-j4g5-cfx5]: https://github.com/advisories/GHSA-9p44-j4g5-cfx5
+[GHSA-r79c-pqj3-577x]: https://github.com/advisories/GHSA-r79c-pqj3-577x
+[GHSA-cpmj-h4f6-r6pq]: https://github.com/advisories/GHSA-cpmj-h4f6-r6pq
 [GHSA-pwf7-47c3-mfhx]: https://github.com/advisories/GHSA-pwf7-47c3-mfhx
 [GHSA-5xq9-5g24-4g6f]: https://github.com/advisories/GHSA-5xq9-5g24-4g6f
 [GHSA-vxmw-7h4f-hqxh]: https://github.com/advisories/GHSA-vxmw-7h4f-hqxh
@@ -111,31 +117,35 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 "Detected" indicates the vulnerability is detected by `ades` with the default configuration, and
 "Conservative" indicates if the problem is detected by `ades` when using the `-conservative` flag.
 
-|   # | Advisory                  | Relevant | Detected | Conservative | Rule      |
+|   # | Incident                  | Relevant | Detected | Conservative | Rule      |
 | --: | :------------------------ | :------- | :------- | :----------- | :-------- |
 |   1 | [Grafana Labs 2025-04-27] | Yes      | Yes      | Yes          | [ADES101] |
+|   2 | [Cline 2026-02-24]        | Yes      | Yes      | Yes          | [ADES300] |
 
 [grafana labs 2025-04-27]: https://grafana.com/blog/2025/04/27/grafana-security-update-no-customer-impact-from-github-workflow-vulnerability/
+[cline 2026-02-24]: https://cline.bot/blog/post-mortem-unauthorized-cline-cli-npm
 
 ## Graphs
 
 ```mermaid
 sankey-beta
 
-Advisories,Considered,     38
-Incidents,Considered,      1
+Advisories,Considered,     41
+Incidents,Considered,      2
 
-Considered,Relevant,       15
+Considered,Relevant,       16
 
 Relevant,Non-conservative, 8
 Non-conservative,ADES100,  8
 
-Relevant,Conservative,     7
+Relevant,Conservative,     8
 Conservative,ADES100,      6
 Conservative,ADES101,      1
+Conservative,ADES300,      1
 
-Considered,Out of scope,   24
+Considered,Out of scope,   27
 ```
 
 [ADES100]: ../docs/RULES.md#ADES100
 [ADES101]: ../docs/RULES.md#ADES101
+[ADES300]: ../docs/RULES.md#ADES300
