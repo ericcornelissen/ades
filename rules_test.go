@@ -181,6 +181,72 @@ func TestActionRuleAppleboySshAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleAquasecurityTrivyAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		type TestCase struct {
+			ref  string
+			want bool
+		}
+
+		testCases := map[string]TestCase{
+			"Last vulnerable version": {
+				ref:  "0.33.1",
+				want: true,
+			},
+			"Earliest vulnerable version": {
+				ref:  "0.31.0",
+				want: true,
+			},
+			"Old version": {
+				ref:  "0.29.0",
+				want: false,
+			},
+			"First fixed version": {
+				ref:  "0.34.0",
+				want: false,
+			},
+			"New version": {
+				ref:  "0.34.1",
+				want: false,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				t.Parallel()
+
+				step := gha.Step{
+					Uses: gha.Uses{
+						Name: "aquasecurity/trivy-action",
+						Ref:  tt.ref,
+					},
+				}
+
+				if got, want := actionRuleAquasecurityTrivyAction.appliesTo(&step), tt.want; got != want {
+					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
+				}
+			})
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		f := func(step gha.Step) bool {
+			got := actionRuleAquasecurityTrivyAction.extractFrom(&step)
+
+			for _, v := range step.With {
+				if !strings.Contains(got, v) {
+					return false
+				}
+			}
+
+			return true
+		}
+		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		type TestCase struct {

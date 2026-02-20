@@ -555,3 +555,11 @@ it may be used to execute arbitrary shell commands, see [GHSA-xj87-mqvh-88w2]. T
 upgrade the action to a non-vulnerable version.
 
 [GHSA-xj87-mqvh-88w2]: https://github.com/advisories/GHSA-xj87-mqvh-88w2
+
+## <a id="ADES207"></a> ADES207 - Expression in _any_ input of `aquasecurity/trivy-action`
+
+When an expression is used in _any_ input of `aquasecurity/trivy-action` starting from v0.31.0 up
+to v0.33.1 it may be used to execute arbitrary shell commands, see [GHSA-9p44-j4g5-cfx5]. To
+mitigate this, upgrade the action to a non-vulnerable version.
+
+[GHSA-9p44-j4g5-cfx5]: https://github.com/advisories/GHSA-9p44-j4g5-cfx5
