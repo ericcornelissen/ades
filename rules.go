@@ -206,6 +206,31 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleAquasecurityTrivyAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "aquasecurity/trivy-action") {
+			return false
+		}
+
+		return isAtOrAfterVersion(step, "v0.31.0") && isBeforeVersion(step, "v0.34.0")
+	},
+	id:    "ADES207",
+	title: "Expression in any input of 'aquasecurity/trivy-action'",
+	description: `
+When an expression is used in _any_ input of 'aquasecurity/trivy-action' starting from v0.31.0 up
+to v0.33.1 it may be used to execute arbitrary shell commands, see GHSA-9p44-j4g5-cfx5. To mitigate
+this, upgrade the action to a non-vulnerable version.
+`,
+	extractFrom: func(step *gha.Step) string {
+		var sb strings.Builder
+		for _, v := range step.With {
+			sb.WriteString(v)
+		}
+
+		return sb.String()
+	},
+}
+
 var actionRuleAtlassianGajiraCreate = rule{
 	appliesTo: func(step *gha.Step) bool {
 		if !hasName(step, "atlassian/gajira-create") {
@@ -838,8 +863,9 @@ var rules = []rule{
 	actionRule8398a7ActionSlack,
 	actionRuleActionsGitHubScript,
 	actionRuleAddnabDockerRunAction,
-	actionRuleAppleboySshAction,
 	actionRuleAmadevusPwshScript,
+	actionRuleAppleboySshAction,
+	actionRuleAquasecurityTrivyAction,
 	actionRuleAtlassianGajiraCreate,
 	actionRuleAzureCli,
 	actionRuleAzurePowershell,
@@ -864,6 +890,10 @@ var rules = []rule{
 func getRef(step *gha.Step) (string, bool) {
 	if ref := step.Uses.Ref; semver.IsValid(ref) {
 		return ref, true
+	}
+
+	if ref := step.Uses.Ref; semver.IsValid("v" + ref) {
+		return "v" + ref, true
 	}
 
 	if ref := step.Uses.Annotation; semver.IsValid(ref) {
