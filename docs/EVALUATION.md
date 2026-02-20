@@ -22,6 +22,9 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 |   # | Advisory              | Relevant | Detected | Conservative | Rule      |
 | --: | :-------------------- | :------- | :------- | :----------- | :-------- |
+|  41 | [GHSA-9p44-j4g5-cfx5] | No       |          |              |           |
+|  40 | [GHSA-r79c-pqj3-577x] | No       |          |              |           |
+|  39 | [GHSA-cpmj-h4f6-r6pq] | No       |          |              |           |
 |  38 | [GHSA-pwf7-47c3-mfhx] | Yes      | Yes      | No           | [ADES100] |
 |  37 | [GHSA-5xq9-5g24-4g6f] | No       |          |              |           |
 |  36 | [GHSA-vxmw-7h4f-hqxh] | Yes      | Yes      | No           | [ADES100] |
@@ -63,6 +66,9 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 
 [GitHub Actions Advisories]: https://github.com/advisories?query=type%3Areviewed+ecosystem%3Aactions
 
+[GHSA-9p44-j4g5-cfx5]: https://github.com/advisories/GHSA-9p44-j4g5-cfx5
+[GHSA-r79c-pqj3-577x]: https://github.com/advisories/GHSA-r79c-pqj3-577x
+[GHSA-cpmj-h4f6-r6pq]: https://github.com/advisories/GHSA-cpmj-h4f6-r6pq
 [GHSA-pwf7-47c3-mfhx]: https://github.com/advisories/GHSA-pwf7-47c3-mfhx
 [GHSA-5xq9-5g24-4g6f]: https://github.com/advisories/GHSA-5xq9-5g24-4g6f
 [GHSA-vxmw-7h4f-hqxh]: https://github.com/advisories/GHSA-vxmw-7h4f-hqxh
@@ -122,7 +128,7 @@ Here "Relevant" means the vulnerability is caused by the insecure use of GitHub 
 ```mermaid
 sankey-beta
 
-Advisories,Considered,     38
+Advisories,Considered,     41
 Incidents,Considered,      1
 
 Considered,Relevant,       15
@@ -134,7 +140,7 @@ Relevant,Conservative,     7
 Conservative,ADES100,      6
 Conservative,ADES101,      1
 
-Considered,Out of scope,   24
+Considered,Out of scope,   27
 ```
 
 [ADES100]: ../docs/RULES.md#ADES100
