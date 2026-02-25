@@ -30,7 +30,7 @@ require (
 	github.com/butuzov/ireturn v0.4.0 // indirect
 	github.com/catenacyber/perfsprint v0.10.1 // indirect
 	github.com/chains-project/ghasum v0.6.3 // indirect
-	github.com/cloudflare/circl v1.6.1 // indirect
+	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/containerd/cgroups/v3 v3.0.5 // indirect
 	github.com/containerd/console v1.0.5 // indirect
 	github.com/containerd/containerd v1.7.30 // indirect
