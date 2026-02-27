@@ -169,6 +169,45 @@ it can be made safer by converting it into:
 	},
 }
 
+var actionRuleAnthropicsClaudeCodeAction = rule{
+	appliesTo: func(step *gha.Step) bool {
+		if !hasName(step, "anthropics/claude-code-action") {
+			return false
+		}
+
+		return step.With["allowed_non_write_users"] != ""
+	},
+	id:    "ADES300",
+	title: "Expression in 'prompt' input of 'anthropics/claude-code-action'",
+	description: `
+When an expression appears in the 'prompt' input of 'anthropics/claude-code-action' it allows for
+prompt injection. If the 'allowed_non_write_users' option is used this enables untrusted users to
+escalate their privileges through Claude Code. To avoid attacks, remove the expression from the
+prompt or disable the 'allowed_non_write_users' option.
+
+For example, given the workflow snippet:
+
+    - name: Example step
+      uses: anthropics/claude-code-action@v1
+      with:
+        allowed_non_write_users: '*'
+        prompt: |
+          Summarize the issue title ${{ github.event.issue.title }}
+
+it can be made safer by converting it into:
+
+    - name: Example step
+      uses: anthropics/claude-code-action@v1
+      with:
+        # DO NOT use 'allowed_non_write_users'
+        prompt: |
+          Summarize the issue title ${{ github.event.issue.title }}
+`,
+	extractFrom: func(step *gha.Step) string {
+		return step.With["prompt"]
+	},
+}
+
 var actionRuleAppleboySshAction = rule{
 	appliesTo: func(step *gha.Step) bool {
 		return hasName(step, "appleboy/ssh-action")
@@ -864,6 +903,7 @@ var rules = []rule{
 	actionRuleActionsGitHubScript,
 	actionRuleAddnabDockerRunAction,
 	actionRuleAmadevusPwshScript,
+	actionRuleAnthropicsClaudeCodeAction,
 	actionRuleAppleboySshAction,
 	actionRuleAquasecurityTrivyAction,
 	actionRuleAtlassianGajiraCreate,
