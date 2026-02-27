@@ -563,3 +563,32 @@ to v0.33.1 it may be used to execute arbitrary shell commands, see [GHSA-9p44-j4
 mitigate this, upgrade the action to a non-vulnerable version.
 
 [GHSA-9p44-j4g5-cfx5]: https://github.com/advisories/GHSA-9p44-j4g5-cfx5
+
+## <a id="ADES300"></a> ADES300 - Expression in `prompt` input of `anthropics/claude-code-action`
+
+When an expression appears in the `prompt` input of `anthropics/claude-code-action` it allows for
+prompt injection. If the `allowed_non_write_users` option is used this enables untrusted users to
+escalate their privileges through Claude Code. To avoid attacks, remove the expression from the
+prompt or disable the `allowed_non_write_users` option.
+
+For example, given the workflow snippet:
+
+```yaml
+- name: Example step
+  uses: anthropics/claude-code-action@v1
+  with:
+    allowed_non_write_users: '*'
+    prompt: |
+      Summarize the issue title ${{ github.event.issue.title }}
+```
+
+it can be made safer by converting it into:
+
+```yaml
+- name: Example step
+  uses: anthropics/claude-code-action@v1
+  with:
+    # DO NOT use 'allowed_non_write_users'
+    prompt: |
+      Summarize the issue title ${{ github.event.issue.title }}
+```

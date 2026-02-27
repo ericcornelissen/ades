@@ -119,6 +119,55 @@ func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	})
 }
 
+func TestActionRuleAnthropicsClaudeCodeAction(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		applicable := func(step gha.Step, nonWriteUsers string) bool {
+			if nonWriteUsers == "" {
+				return true
+			}
+
+			step.Uses.Name = "anthropics/claude-code-action"
+			step.With["allowed_non_write_users"] = nonWriteUsers
+			return actionRuleAnthropicsClaudeCodeAction.appliesTo(&step)
+		}
+
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if name == "anthropics/claude-code-action" {
+				delete(step.With, "allowed_non_write_users")
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAnthropicsClaudeCodeAction.appliesTo(&step)
+		}
+
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["prompt"] = value
+			return actionRuleAnthropicsClaudeCodeAction.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "prompt")
+			return actionRuleAnthropicsClaudeCodeAction.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+}
+
 func TestActionRuleAmadevusPwshScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
 		f := func(step gha.Step) bool {

@@ -158,6 +158,12 @@ stdout 'ADES206'
 stdout 'ADES207'
 ! stderr .
 
+# ADES300
+! exec ades ades300.yml
+! stdout 'Ok'
+stdout 'ADES300'
+! stderr .
+
 
 -- ades100.yml --
 name: Example workflow with a ADES100 violation
@@ -474,3 +480,16 @@ jobs:
     - uses: aquasecurity/trivy-action@0.33.1
       with:
         output: "trivy-${{ github.event.pull_request.title }}.sarif"
+-- ades300.yml --
+name: Example workflow with a ADES300 violation
+on: [push]
+
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: anthropics/claude-code-action@v1
+      with:
+        allowed_non_write_users: '*'
+        prompt: |
+          Summarize the issue title ${{ github.event.issue.title }}
