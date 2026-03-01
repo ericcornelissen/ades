@@ -1,9 +1,8 @@
 version 1
 
 JamesIves/github-pages-deploy-action@v4.8.0 k2ZA/TDxQeePExLjsAMjR1mwvtHZh4/y3SW7jNrtDKc=
-actions/attest-build-provenance@864457a58d4733d7f1574bd8821fa24e02cf7538 XNMz7LHJ9IN3MIa8gRo+72lU5I7gjRYQ8yR0N/cAWwo=
-actions/attest-build-provenance@v3.2.0 RFMpIx7eQbSbndgMazkskj4uqzO3wHg+9CwebWA/M08=
-actions/attest@e59cbc1ad1ac2d59339667419eb8cdde6eb61e3d rNIPbfK41Xp+f9XyttOpqU65LM+UMl841faLMb2HPS4=
+actions/attest-build-provenance@v4.1.0 QCZ6ogXjObFSFBe//GreuOR8Xeb6WCfKJJxZOWjYAsY=
+actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 agyNlMe8+htaH7hxdtYVNsE2kvTZ8TXeo30nzBEWGWg=
 actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
 actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 kpLmaLGuAW5sFgkcLVucoRwWROZYYNzWa2WoD67rybA=
 docker/build-push-action@v6.19.1 Vw7UDoQxaLrjalkejoJkgOn6s9JGonZjG+GsPSQTHDE=
