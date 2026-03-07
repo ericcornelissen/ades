@@ -28,12 +28,23 @@ import (
 
 func TestActionRule8398a7ActionSlack(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "8398a7/action-slack"
 			return actionRule8398a7ActionSlack.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "8398a7/action-slack") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRule8398a7ActionSlack.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -59,12 +70,23 @@ func TestActionRule8398a7ActionSlack(t *testing.T) {
 
 func TestActionRuleActionsGithubScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "actions/github-script"
 			return actionRuleActionsGitHubScript.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "actions/github-script") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleActionsGitHubScript.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -90,12 +112,23 @@ func TestActionRuleActionsGithubScript(t *testing.T) {
 
 func TestActionRuleAddnabDockerRunAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "addnab/docker-run-action"
 			return actionRuleAddnabDockerRunAction.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "addnab/docker-run-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAddnabDockerRunAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -130,20 +163,18 @@ func TestActionRuleAnthropicsClaudeCodeAction(t *testing.T) {
 			step.With["allowed_non_write_users"] = nonWriteUsers
 			return actionRuleAnthropicsClaudeCodeAction.appliesTo(&step)
 		}
-
 		if err := quick.Check(applicable, nil); err != nil {
 			t.Error(err)
 		}
 
 		inapplicable := func(step gha.Step, name string) bool {
-			if name == "anthropics/claude-code-action" {
+			if strings.EqualFold(name, "anthropics/claude-code-action") {
 				delete(step.With, "allowed_non_write_users")
 			}
 
 			step.Uses.Name = name
 			return !actionRuleAnthropicsClaudeCodeAction.appliesTo(&step)
 		}
-
 		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
@@ -170,12 +201,23 @@ func TestActionRuleAnthropicsClaudeCodeAction(t *testing.T) {
 
 func TestActionRuleAmadevusPwshScript(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "Amadevus/pwsh-script"
 			return actionRuleAmadevusPwshScript.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "Amadevus/pwsh-script") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAmadevusPwshScript.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -201,12 +243,23 @@ func TestActionRuleAmadevusPwshScript(t *testing.T) {
 
 func TestActionRuleAppleboySshAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "appleboy/ssh-action"
 			return actionRuleAppleboySshAction.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "appleboy/ssh-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAppleboySshAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -276,6 +329,18 @@ func TestActionRuleAquasecurityTrivyAction(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "aquasecurity/trivy-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAquasecurityTrivyAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -338,6 +403,18 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "atlassian/gajira-create") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAtlassianGajiraCreate.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -361,12 +438,23 @@ func TestActionRuleAtlassianGajiraCreate(t *testing.T) {
 
 func TestActionRuleAzureCli(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "azure/cli"
 			return actionRuleAzureCli.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "azure/cli") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAzureCli.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -392,12 +480,23 @@ func TestActionRuleAzureCli(t *testing.T) {
 
 func TestActionRuleAzurePowershell(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "azure/powershell"
 			return actionRuleAzurePowershell.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "azure/powershell") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleAzurePowershell.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -423,12 +522,23 @@ func TestActionRuleAzurePowershell(t *testing.T) {
 
 func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "cardinalby/js-eval-action"
 			return actionRuleCardinalbyJsEvalAction.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "cardinalby/js-eval-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleCardinalbyJsEvalAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -458,8 +568,19 @@ func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
 			step.Uses.Name = "devorbitus/yq-action-output"
 			return actionRuleDevorbitusYqActionOutput.appliesTo(&step)
 		}
-
 		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "devorbitus/yq-action-output") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleDevorbitusYqActionOutput.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -525,6 +646,18 @@ func TestActionRuleEriccornelissenGitTagAnnotationAction(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "ericcornelissen/git-tag-annotation-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleEriccornelissenGitTagAnnotationAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -588,6 +721,18 @@ func TestActionRuleFishShopSyntaxCheck(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "fish-shop/syntax-check") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleFishShopSyntaxCheck.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -615,8 +760,19 @@ func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 			step.Uses.Name = "gautamkrishnar/blog-post-workflow"
 			return actionRuleGautamkrishnarBlogPostWorkflow.appliesTo(&step)
 		}
-
 		if err := quick.Check(f, nil); err != nil {
+			t.Error(err)
+		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "gautamkrishnar/blog-post-workflow") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleGautamkrishnarBlogPostWorkflow.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -642,12 +798,23 @@ func TestActionRuleGautamkrishnarBlogPostWorkflow(t *testing.T) {
 
 func TestActionRuleJannekemRunPythonScriptAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "jannekem/run-python-script-action"
 			return actionRuleJannekemRunPythonScriptAction.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "jannekem/run-python-script-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleJannekemRunPythonScriptAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -713,6 +880,18 @@ func TestActionRuleKcebGitMessageAction(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "kceb/git-message-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleKcebGitMessageAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -776,6 +955,18 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "lycheeverse/lychee") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleLycheeverseLycheeAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -799,12 +990,23 @@ func TestActionRuleLycheeverseLycheeAction(t *testing.T) {
 
 func TestActionRuleMikefarahYq(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "mikefarah/yq"
 			return actionRuleMikefarahYq.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "mikefarah/yq") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleMikefarahYq.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -874,6 +1076,18 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "OZI-Project/publish") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleOziProjectPublish.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -898,7 +1112,7 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 	t.Run("issue-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(step gha.Step, i uint) bool {
+			applicable := func(step gha.Step, i uint) bool {
 				if i%2 == 0 {
 					step.Uses.Name = "roots/issue-closer-action"
 				} else {
@@ -907,8 +1121,19 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
 			}
+			if err := quick.Check(applicable, nil); err != nil {
+				t.Error(err)
+			}
 
-			if err := quick.Check(f, nil); err != nil {
+			inapplicable := func(step gha.Step, name string) bool {
+				if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
+					return true
+				}
+
+				step.Uses.Name = name
+				return !actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
+			}
+			if err := quick.Check(inapplicable, nil); err != nil {
 				t.Error(err)
 			}
 		})
@@ -934,7 +1159,7 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 	t.Run("pr-close-message", func(t *testing.T) {
 		t.Run("Applies to", func(t *testing.T) {
-			f := func(step gha.Step, i uint) bool {
+			applicable := func(step gha.Step, i uint) bool {
 				if i%2 == 0 {
 					step.Uses.Name = "roots/issue-closer-action"
 				} else {
@@ -943,8 +1168,19 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
 			}
+			if err := quick.Check(applicable, nil); err != nil {
+				t.Error(err)
+			}
 
-			if err := quick.Check(f, nil); err != nil {
+			inapplicable := func(step gha.Step, name string) bool {
+				if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
+					return true
+				}
+
+				step.Uses.Name = name
+				return !actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
+			}
+			if err := quick.Check(inapplicable, nil); err != nil {
 				t.Error(err)
 			}
 		})
@@ -971,12 +1207,23 @@ func TestActionRuleRootsIssueCloserAction(t *testing.T) {
 
 func TestActionRuleSergeysovaJqAction(t *testing.T) {
 	t.Run("Applies to", func(t *testing.T) {
-		f := func(step gha.Step) bool {
+		applicable := func(step gha.Step) bool {
 			step.Uses.Name = "sergeysova/jq-action"
 			return actionRuleSergeysovaJqAction.appliesTo(&step)
 		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-		if err := quick.Check(f, nil); err != nil {
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "sergeysova/jq-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleSergeysovaJqAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
 			t.Error(err)
 		}
 	})
@@ -1041,6 +1288,18 @@ func TestActionRuleSkitionekNotifyMicrosoftTeams(t *testing.T) {
 					t.Fatalf("Unexpected result for %s (got %t, want %t)", tt.ref, got, want)
 				}
 			})
+		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "Skitionek/notify-microsoft-teams") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleSkitionekNotifyMicrosoftTeams.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
 		}
 	})
 
@@ -1113,6 +1372,18 @@ func TestActionRuleSonarSourceSonarqubeScanAction(t *testing.T) {
 				}
 			})
 		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "SonarSource/sonarqube-scan-action") {
+				return true
+			}
+
+			step.Uses.Name = name
+			return !actionRuleSonarSourceSonarqubeScanAction.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
 	t.Run("Extract from", func(t *testing.T) {
@@ -1148,16 +1419,20 @@ func TestStepRuleRun(t *testing.T) {
 			t.Error(err)
 		}
 
+		shortRunStep := func(step gha.Step, char uint8) bool {
+			step.Run = fmt.Sprintf("%c", char)
+			return stepRuleRun.appliesTo(&step)
+		}
+		if err := quick.Check(shortRunStep, nil); err != nil {
+			t.Error(err)
+		}
+
 		nonRunStep := func(step gha.Step) bool {
 			step.Run = ""
 			return !stepRuleRun.appliesTo(&step)
 		}
 		if err := quick.Check(nonRunStep, nil); err != nil {
 			t.Error(err)
-		}
-
-		if !stepRuleRun.appliesTo(&gha.Step{Run: "a"}) {
-			t.Error("Should apply to extremely short scripts, but didn't")
 		}
 	})
 
