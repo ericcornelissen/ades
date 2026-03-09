@@ -5,7 +5,7 @@ actions/attest-build-provenance@v4.1.0 QCZ6ogXjObFSFBe//GreuOR8Xeb6WCfKJJxZOWjYA
 actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 agyNlMe8+htaH7hxdtYVNsE2kvTZ8TXeo30nzBEWGWg=
 actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+vaHfT8MJqXvjKe4fdsTjs=
 actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 kpLmaLGuAW5sFgkcLVucoRwWROZYYNzWa2WoD67rybA=
-docker/build-push-action@v6.19.1 Vw7UDoQxaLrjalkejoJkgOn6s9JGonZjG+GsPSQTHDE=
+docker/build-push-action@v7.0.0 kj8LOQRy/AlJqEyp/6SeSRPJnJyCgKIdMT64WbjVvZQ=
 docker/login-action@v3.7.0 EQ0tVrPuze2B1XMW9Kdt9eFHR68I+NVE6CMYsSMASkg=
 docker/setup-buildx-action@v3.12.0 Pc060N0ajyrI7UfGFDE06XCpFmAVqyxc4kit1ubO8Fg=
 github/codeql-action@b20883b0cd1f46c72ae0ba6d1090936928f9fa30 cKk/jC+AF7SIc9AV9Pk3XEbI+kND9NsY4T1AfQQkPzY=
