@@ -7,7 +7,7 @@ actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3 lqcOZgWyTneOKF0riqdP6+
 actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 kpLmaLGuAW5sFgkcLVucoRwWROZYYNzWa2WoD67rybA=
 docker/build-push-action@v7.0.0 kj8LOQRy/AlJqEyp/6SeSRPJnJyCgKIdMT64WbjVvZQ=
 docker/login-action@v4.0.0 lwUwuHOW9RJYPtghjGIg2uhJowEOlmPCMwTIgQyK73s=
-docker/setup-buildx-action@v3.12.0 Pc060N0ajyrI7UfGFDE06XCpFmAVqyxc4kit1ubO8Fg=
+docker/setup-buildx-action@v4.0.0 PTu/VTmV1s4Owxh4KuGu2W5KXeIc/izmXTglUnobLXc=
 github/codeql-action@b20883b0cd1f46c72ae0ba6d1090936928f9fa30 cKk/jC+AF7SIc9AV9Pk3XEbI+kND9NsY4T1AfQQkPzY=
 github/codeql-action@v4.32.0 cKk/jC+AF7SIc9AV9Pk3XEbI+kND9NsY4T1AfQQkPzY=
 ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
