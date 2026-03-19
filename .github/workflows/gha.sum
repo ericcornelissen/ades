@@ -10,5 +10,5 @@ docker/login-action@v4.0.0 lwUwuHOW9RJYPtghjGIg2uhJowEOlmPCMwTIgQyK73s=
 docker/setup-buildx-action@v4.0.0 PTu/VTmV1s4Owxh4KuGu2W5KXeIc/izmXTglUnobLXc=
 github/codeql-action@b1bff81932f5cdfc8695c7752dcee935dcd061c8 osaMoMl0h2/8q1LRJZfxtu+nLCWaziVAVPazqOavVt0=
 github/codeql-action@v4.33.0 osaMoMl0h2/8q1LRJZfxtu+nLCWaziVAVPazqOavVt0=
-ncipollo/release-action@v1.20.0 x49H6hPD8AWXRzcWpr1XIT5RoPcHJ/4QprD1vkG7ZnA=
+ncipollo/release-action@v1.21.0 BVxEx9pIhil9GqSTP9yGXoMhmlS7hjzYhAvL4fJfpyQ=
 sigstore/cosign-installer@v4.1.0 BrsAnwKWGWKPxPE4FeM5H+IX8IEsObRDjxuAqaMZVOo=
