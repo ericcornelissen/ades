@@ -522,7 +522,6 @@ func TaskVet(t *T) error {
 	t.Log("Vetting...")
 	return t.Exec(
 		"go vet ./...",
-		"go run 4d63.com/gochecknoinits ./...",
 		"go run fillmore-labs.com/zerolint -level=full ./...",
 		"go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status ./...",
 		"go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 ./...",
@@ -537,6 +536,7 @@ func TaskVet(t *T) error {
 		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status ./web/...",
 		"go run github.com/kisielk/errcheck ./...",
 		"go run github.com/kunwardeep/paralleltest -i -ignoreloopVar -checkcleanup ./...",
+		"go run github.com/leighmcculloch/gochecknoinits ./...",
 		"go run github.com/mdempsky/unconvert ./...",
 		"go run github.com/nishanths/exhaustive/cmd/exhaustive ./...",
 		"go run github.com/polyfloyd/go-errorlint ./...",
