@@ -12,7 +12,6 @@ require (
 )
 
 require (
-	4d63.com/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3 // indirect
 	dario.cat/mergo v1.0.2 // indirect
 	fillmore-labs.com/zerolint v0.0.16 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 // indirect
@@ -92,6 +91,7 @@ require (
 	github.com/kisielk/errcheck v1.9.0 // indirect
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/kunwardeep/paralleltest v1.0.15 // indirect
+	github.com/leighmcculloch/gochecknoinits v0.0.0-20210416043744-25bb07f6e4e3 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -175,7 +175,6 @@ require (
 )
 
 tool (
-	4d63.com/gochecknoinits
 	fillmore-labs.com/zerolint
 	github.com/alexkohler/dogsled/cmd/dogsled
 	github.com/alexkohler/nakedret/v2/cmd/nakedret
@@ -191,6 +190,7 @@ tool (
 	github.com/jgautheron/goconst/cmd/goconst
 	github.com/kisielk/errcheck
 	github.com/kunwardeep/paralleltest
+	github.com/leighmcculloch/gochecknoinits
 	github.com/mdempsky/unconvert
 	github.com/nishanths/exhaustive/cmd/exhaustive
 	github.com/polyfloyd/go-errorlint
