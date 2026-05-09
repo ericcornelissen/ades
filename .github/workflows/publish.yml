@@ -27,7 +27,7 @@ jobs:
     - name: Verify action checksums
       uses: ./.github/actions/ghasum
     - name: Install cosign
-      uses: sigstore/cosign-installer@v4.1.0
+      uses: sigstore/cosign-installer@v4.1.2
       with:
         cosign-release: v3.0.5
     - name: Install Docker Buildx
