@@ -51,7 +51,7 @@ require (
 	github.com/cyphar/filepath-securejoin v0.6.1 // indirect
 	github.com/deckarep/golang-set/v2 v2.8.0 // indirect
 	github.com/distribution/reference v0.6.0 // indirect
-	github.com/dkorunic/betteralign v0.9.1 // indirect
+	github.com/dkorunic/betteralign v0.11.0 // indirect
 	github.com/docker/cli v29.2.1+incompatible // indirect
 	github.com/docker/docker-credential-helpers v0.9.3 // indirect
 	github.com/docker/go-events v0.0.0-20250808211157-605354379745 // indirect
