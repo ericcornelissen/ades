@@ -2,43 +2,60 @@
 
 # Security Policy
 
-The maintainers of the `ades` project take security issues seriously. We appreciate your efforts
-to responsibly disclose your findings. Due to the non-funded and open-source nature of the project,
-we take a best-efforts approach when it comes to engaging with security reports.
+The maintainers of the _ades_ project take security issues seriously. We
+appreciate your efforts to responsibly disclose your findings. Due to the
+non-funded and open-source nature of the project, we take a best-efforts
+approach when it comes to engaging with security reports.
 
-This document should be considered expired after 2026-06-01. If you are reading this after that date
-you should try to find an up-to-date version in the official source repository.
+This document should be considered expired after 2027-01-01. If you are reading
+this after that date you should try to find an up-to-date version in the
+official source repository.
 
-## Supported Versions
+## Suported Versions
 
 Only the latest release of the project is supported with security updates.
 
 ## Reporting a Vulnerability
 
-To report a security issue in the latest release or the development head, either:
+To report a security issue in a supported version or the development head of the
+project, either:
 
 - [Report it through GitHub][new github advisory], or
-- Send an email to [ericornelissen+security@gmail.com] with the terms "SECURITY" and "ades" in the
-  subject line.
+- Send an email to [ericornelissen+security@gmail.com] with the terms "SECURITY"
+  and "ades" in the subject line.
 
 Please do not open a regular issue or Pull Request in the public repository.
 
-To report a security issue in an older version - i.e. the latest release isn't affected - please
-report it publicly. For example, as a regular issue in the public repository. If in doubt, report
-the issue privately.
+If a security issue only affects an unsupported version of the project, please
+report it publicly. For example, as a regular issue in the public repository. If
+in doubt, report the issue privately.
 
 [new github advisory]: https://github.com/ericcornelissen/ades/security/advisories/new
 [ericornelissen+security@gmail.com]: mailto:ericornelissen+security@gmail.com?subject=SECURITY%20%28ades%29
 
-### Threat Model
+### When to Report
 
-The standalone program considers the Go runtime and command line arguments as trusted. The
-containerized program additionally considers the container runtime used as trusted. The website
-considers the browser used as trusted. All other inputs, most notably files and text to analyze, are
-considered untrusted. Any violation of confidentiality or integrity is considered a security issue.
+Consider if the issue you found really is a security concern. Below you can find
+guidelines for what is and isn't considered a security issue. Any issue that
+does not fall into one of the listed categories should be reported based on your
+own judgement. If in doubt, report the issue privately.
 
-The project considers the GitHub infrastructure and all project maintainers to be trusted. Any
-action performed by any other GitHub user against the repository is considered untrusted.
+Any issue that is out of scope should still be reported, but can be reported
+publicly because it is not considered sensitive.
+
+#### In Scope
+
+- Violations of the confidentiality of analyzed files.
+- Violations of availability due to analyzed files.
+- Insecure suggestions or snippets in the documentation.
+- Security misconfigurations in the continuous integration pipeline or software
+  supply chain.
+
+#### Out of Scope
+
+- Bugs in code not part of a published artifact.
+- Insecure defaults or confusing API design.
+- Known vulnerabilities in third-party dependencies.
 
 ### What to Include in a Report
 
@@ -55,10 +72,27 @@ Try to include as many of the following items as possible in a security report:
 
 [cwe]: https://cwe.mitre.org/
 
+## Threat Model
+
+The standalone program considers the Go runtime and command line arguments as
+trusted. The containerized program additionally considers the container runtime
+used as trusted. The website considers the browser used as trusted. All other
+inputs, most notably files and text to analyze, are considered untrusted. Any
+violation of availability and confidentiality is considered a security issue.
+
+The project considers the GitHub infrastructure and all project maintainers to
+be trusted. Any action performed by any other GitHub user against the repository
+is considered untrusted.
+
 ## Advisories
 
-> **Note**: Advisories will be created only for vulnerabilities present in released versions of the
-> project.
+An advisory will be created only if a vulnerability affects at least one
+released versions of the project. The affected versions range of an advisory
+will by default include all unsupported versions of the project at the time of
+disclosure.
+
+All advisories are listed in the table below, ordered most to least recent by
+publication date.
 
 | ID               | Date       | Affected versions | Patched versions |
 | :--------------- | :--------- | :---------------- | :--------------- |
