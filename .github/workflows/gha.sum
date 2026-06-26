@@ -4,7 +4,7 @@ JamesIves/github-pages-deploy-action@v4.8.0 k2ZA/TDxQeePExLjsAMjR1mwvtHZh4/y3SW7
 actions/attest-build-provenance@v4.1.0 QCZ6ogXjObFSFBe//GreuOR8Xeb6WCfKJJxZOWjYAsY=
 actions/attest@59d89421af93a897026c735860bf21b6eb4f7b26 agyNlMe8+htaH7hxdtYVNsE2kvTZ8TXeo30nzBEWGWg=
 actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 sHLxd6T0XFaWDFYcxWhk5jm4T5hmgxejPsHIQFdIP34=
-actions/setup-go@4b73464bb391d4059bd26b0524d20df3927bd417 kpLmaLGuAW5sFgkcLVucoRwWROZYYNzWa2WoD67rybA=
+actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 4BuraEiVzf0Oy87ZNJ82LoLYnXaKOQ50qp9qIyuRhmI=
 docker/build-push-action@v7.2.0 JbUCxduFBzEKMO2W/mi04YFgP7jP6Fi/SmK7WAbzR5w=
 docker/login-action@v4.2.0 OFLx/ny8Cc/roOD8NRNcIl0SvnUFyU6pcpOQByAngLk=
 docker/setup-buildx-action@v4.1.0 qvHuZL9f96xLrl+T9Hb7rlZwUhW7BDuyAw8MKUPt6ec=
