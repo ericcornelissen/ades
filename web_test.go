@@ -27,12 +27,11 @@ import (
 	"testing"
 	"time"
 
-	"github.com/playwright-community/playwright-go"
+	"github.com/mxschmitt/playwright-go"
 )
 
 var browserOptions = playwright.BrowserTypeLaunchOptions{
 	Headless: playwright.Bool(true),
-	Devtools: playwright.Bool(false),
 }
 
 func TestWebInitialState(t *testing.T) {
