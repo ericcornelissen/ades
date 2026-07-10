@@ -1,4 +1,4 @@
-// Copyright (C) 2023-2024  Eric Cornelissen
+// Copyright (C) 2023-2026  Eric Cornelissen
 //
 // This program is free software: you can redistribute it and/or modify
 // it under the terms of the GNU General Public License as published by
@@ -56,8 +56,7 @@ func TestJsonSchema(t *testing.T) {
 			return false
 		}
 
-		err = schema.Validate(data)
-		return err == nil
+		return schema.Validate(data) == nil
 	}
 
 	if err := quick.Check(f, nil); err != nil {

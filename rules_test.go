@@ -560,6 +560,98 @@ func TestActionRuleCardinalbyJsEvalAction(t *testing.T) {
 			t.Error(err)
 		}
 	})
+
+	t.Run("Fix", func(t *testing.T) {
+		type TestCase struct {
+			violation Violation
+			want      []fix
+		}
+
+		testCases := map[string]TestCase{
+			"violation in manifest": {
+				violation: Violation{
+					stepIndex: 0,
+					Problem:   "${{ inputs.value }}",
+					source: &gha.Manifest{
+						Runs: gha.Runs{
+							Steps: []gha.Step{
+								{
+									With: map[string]string{
+										"expression": "1 + parseInt(${{ inputs.value }})",
+									},
+								},
+							},
+						},
+					},
+				},
+				want: []fix{
+					{New: "${0}${1}env:\n${1}  VALUE: ${{ inputs.value }}\n"},
+					{New: "${0}${1} ${2}env:\n${1} ${2}  VALUE: ${{ inputs.value }}\n"},
+					{New: "1 + parseInt(env.VALUE)"},
+				},
+			},
+			"violation in workflow": {
+				violation: Violation{
+					jobKey:    "example",
+					stepIndex: 0,
+					Problem:   "${{ inputs.value }}",
+					source: &gha.Workflow{
+						Jobs: map[string]gha.Job{
+							"example": {
+								Steps: []gha.Step{
+									{
+										With: map[string]string{
+											"expression": "1 + parseInt(${{ inputs.value }})",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				want: []fix{
+					{New: "${0}${1}env:\n${1}  VALUE: ${{ inputs.value }}\n"},
+					{New: "${0}${1} ${2}env:\n${1} ${2}  VALUE: ${{ inputs.value }}\n"},
+					{New: "1 + parseInt(env.VALUE)"},
+				},
+			},
+			"name already in use": {
+				violation: Violation{
+					stepIndex: 0,
+					Problem:   "${{ inputs.value }}",
+					source: &gha.Manifest{
+						Runs: gha.Runs{
+							Steps: []gha.Step{
+								{
+									Env: map[string]string{
+										"VALUE": "reserved",
+									},
+								},
+							},
+						},
+					},
+				},
+				want: nil,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				got := actionRuleCardinalbyJsEvalAction.fix(&tt.violation)
+				want := tt.want
+				if got, want := len(got), len(want); got != want {
+					t.Fatalf("Unexpected number of fixed (got %d, want %d)", got, want)
+				}
+
+				for i, got := range got {
+					want := want[i]
+					if got, want := got.New, want.New; got != want {
+						t.Errorf("Unexpected fix %d (got %q, want %q)", i, got, want)
+					}
+				}
+			})
+		}
+	})
 }
 
 func TestActionRuleDevorbitusYqActionOutput(t *testing.T) {
@@ -1109,99 +1201,189 @@ func TestActionRuleOziProjectPublish(t *testing.T) {
 	})
 }
 
-func TestActionRuleRootsIssueCloserAction(t *testing.T) {
-	t.Run("issue-close-message", func(t *testing.T) {
-		t.Run("Applies to", func(t *testing.T) {
-			applicable := func(step gha.Step, i uint) bool {
-				if i%2 == 0 {
-					step.Uses.Name = "roots/issue-closer-action"
-				} else {
-					step.Uses.Name = "roots/issue-closer"
-				}
-
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
-			}
-			if err := quick.Check(applicable, nil); err != nil {
-				t.Error(err)
+func TestActionRuleRootsIssueCloserActionIssueCloseMessage(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		applicable := func(step gha.Step, i uint) bool {
+			if i%2 == 0 {
+				step.Uses.Name = "roots/issue-closer-action"
+			} else {
+				step.Uses.Name = "roots/issue-closer"
 			}
 
-			inapplicable := func(step gha.Step, name string) bool {
-				if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
-					return true
-				}
+			return actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
+		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
 
-				step.Uses.Name = name
-				return !actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
-			}
-			if err := quick.Check(inapplicable, nil); err != nil {
-				t.Error(err)
-			}
-		})
-
-		t.Run("Extract from", func(t *testing.T) {
-			with := func(step gha.Step, value string) bool {
-				step.With["issue-close-message"] = value
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == value
-			}
-			if err := quick.Check(with, nil); err != nil {
-				t.Error(err)
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
+				return true
 			}
 
-			without := func(step gha.Step) bool {
-				delete(step.With, "issue-close-message")
-				return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == ""
-			}
-			if err := quick.Check(without, nil); err != nil {
-				t.Error(err)
-			}
-		})
+			step.Uses.Name = name
+			return !actionRuleRootsIssueCloserActionIssueCloseMessage.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
 	})
 
-	t.Run("pr-close-message", func(t *testing.T) {
-		t.Run("Applies to", func(t *testing.T) {
-			applicable := func(step gha.Step, i uint) bool {
-				if i%2 == 0 {
-					step.Uses.Name = "roots/issue-closer-action"
-				} else {
-					step.Uses.Name = "roots/issue-closer"
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["issue-close-message"] = value
+			return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "issue-close-message")
+			return actionRuleRootsIssueCloserActionIssueCloseMessage.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Fix", func(t *testing.T) {
+		type TestCase struct {
+			violation Violation
+			want      []fix
+		}
+
+		testCases := map[string]TestCase{
+			"violation in manifest": {
+				violation: Violation{
+					stepIndex: 0,
+					Problem:   "${{ github.event.issue.title }}",
+					source: &gha.Manifest{
+						Runs: gha.Runs{
+							Steps: []gha.Step{
+								{
+									With: map[string]string{
+										"issue-close-message": "Closing ${{ github.event.issue.title }}",
+									},
+								},
+							},
+						},
+					},
+				},
+				want: []fix{
+					{New: "${0}${1}env:\n${1}  TITLE: ${{ github.event.issue.title }}\n"},
+					{New: "${0}${1} ${2}env:\n${1} ${2}  TITLE: ${{ github.event.issue.title }}\n"},
+					{New: "Closing ${process.env.TITLE}"},
+				},
+			},
+			"violation in workflow": {
+				violation: Violation{
+					jobKey:    "example",
+					stepIndex: 0,
+					Problem:   "${{ github.event.issue.title }}",
+					source: &gha.Workflow{
+						Jobs: map[string]gha.Job{
+							"example": {
+								Steps: []gha.Step{
+									{
+										With: map[string]string{
+											"issue-close-message": "Closing ${{ github.event.issue.title }}",
+										},
+									},
+								},
+							},
+						},
+					},
+				},
+				want: []fix{
+					{New: "${0}${1}env:\n${1}  TITLE: ${{ github.event.issue.title }}\n"},
+					{New: "${0}${1} ${2}env:\n${1} ${2}  TITLE: ${{ github.event.issue.title }}\n"},
+					{New: "Closing ${process.env.TITLE}"},
+				},
+			},
+			"name already in use": {
+				violation: Violation{
+					stepIndex: 0,
+					Problem:   "${{ github.event.issue.title }}",
+					source: &gha.Manifest{
+						Runs: gha.Runs{
+							Steps: []gha.Step{
+								{
+									Env: map[string]string{
+										"TITLE": "reserved",
+									},
+								},
+							},
+						},
+					},
+				},
+				want: nil,
+			},
+		}
+
+		for name, tt := range testCases {
+			t.Run(name, func(t *testing.T) {
+				got := actionRuleRootsIssueCloserActionIssueCloseMessage.fix(&tt.violation)
+				want := tt.want
+				if got, want := len(got), len(want); got != want {
+					t.Fatalf("Unexpected number of fixed (got %d, want %d)", got, want)
 				}
 
-				return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
-			}
-			if err := quick.Check(applicable, nil); err != nil {
-				t.Error(err)
-			}
-
-			inapplicable := func(step gha.Step, name string) bool {
-				if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
-					return true
+				for i, got := range got {
+					want := want[i]
+					if got, want := got.New, want.New; got != want {
+						t.Errorf("Unexpected fix %d (got %q, want %q)", i, got, want)
+					}
 				}
+			})
+		}
+	})
+}
 
-				step.Uses.Name = name
-				return !actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
-			}
-			if err := quick.Check(inapplicable, nil); err != nil {
-				t.Error(err)
-			}
-		})
-
-		t.Run("Extract from", func(t *testing.T) {
-			with := func(step gha.Step, value string) bool {
-				step.With["pr-close-message"] = value
-				return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == value
-			}
-			if err := quick.Check(with, nil); err != nil {
-				t.Error(err)
+func TestActionRuleRootsIssueCloserActionPrCloseMessage(t *testing.T) {
+	t.Run("Applies to", func(t *testing.T) {
+		applicable := func(step gha.Step, i uint) bool {
+			if i%2 == 0 {
+				step.Uses.Name = "roots/issue-closer-action"
+			} else {
+				step.Uses.Name = "roots/issue-closer"
 			}
 
-			without := func(step gha.Step) bool {
-				delete(step.With, "pr-close-message")
-				return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == ""
+			return actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
+		}
+		if err := quick.Check(applicable, nil); err != nil {
+			t.Error(err)
+		}
+
+		inapplicable := func(step gha.Step, name string) bool {
+			if strings.EqualFold(name, "roots/issue-closer-action") || strings.EqualFold(name, "roots/issue-closer") {
+				return true
 			}
-			if err := quick.Check(without, nil); err != nil {
-				t.Error(err)
-			}
-		})
+
+			step.Uses.Name = name
+			return !actionRuleRootsIssueCloserActionPrCloseMessage.appliesTo(&step)
+		}
+		if err := quick.Check(inapplicable, nil); err != nil {
+			t.Error(err)
+		}
+	})
+
+	t.Run("Extract from", func(t *testing.T) {
+		with := func(step gha.Step, value string) bool {
+			step.With["pr-close-message"] = value
+			return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == value
+		}
+		if err := quick.Check(with, nil); err != nil {
+			t.Error(err)
+		}
+
+		without := func(step gha.Step) bool {
+			delete(step.With, "pr-close-message")
+			return actionRuleRootsIssueCloserActionPrCloseMessage.extractFrom(&step) == ""
+		}
+		if err := quick.Check(without, nil); err != nil {
+			t.Error(err)
+		}
 	})
 }
 
