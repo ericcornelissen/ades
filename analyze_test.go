@@ -18,6 +18,7 @@ package ades
 import (
 	"io"
 	"io/fs"
+	"strings"
 	"testing"
 	"testing/fstest"
 
@@ -29,6 +30,7 @@ func TestAnalyzeRepo(t *testing.T) {
 		fsys    fs.FS
 		matcher ExprMatcher
 		want    int
+		wantErr string
 	}
 
 	testCases := map[string]TestCase{
@@ -183,6 +185,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not open \".github/workflows/example.yml\": ",
 		},
 		"Cannot open manifest": {
 			fsys: FailOpenFS{
@@ -194,6 +197,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not open \"action.yml\": ",
 		},
 		"Cannot read workflow": {
 			fsys: FailReadFS{
@@ -205,6 +209,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not read \".github/workflows/example.yml\": ",
 		},
 		"Cannot read manifest": {
 			fsys: FailReadFS{
@@ -216,6 +221,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not read \"action.yml\": ",
 		},
 		"Corrupt workflow": {
 			fsys: fstest.MapFS{
@@ -224,6 +230,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not process workflow \".github/workflows/example.yml\": ",
 		},
 		"Corrupt manifest": {
 			fsys: fstest.MapFS{
@@ -232,6 +239,7 @@ runs:
 				},
 			},
 			matcher: AllMatcher,
+			wantErr: "could not process manifest \"action.yml\": ",
 		},
 	}
 
@@ -239,8 +247,13 @@ runs:
 		t.Run(name, func(t *testing.T) {
 			t.Parallel()
 
-			if _, err := AnalyzeRepo(tt.fsys, AllMatcher); err == nil {
+			_, err := AnalyzeRepo(tt.fsys, AllMatcher)
+			if err == nil {
 				t.Fatal("Unexpected success")
+			}
+
+			if got, want := err.Error(), tt.wantErr; !strings.HasPrefix(got, want) {
+				t.Errorf("Incorrect error (got %q, want %q)", got, want)
 			}
 		})
 	}
@@ -738,6 +751,167 @@ func TestAnalyzeJob(t *testing.T) {
 			matcher:   AllMatcher,
 			wantCount: 1,
 			wantId:    "Unsafe nested matrix",
+		},
+		"matrix deeply nested safe": {
+			job: gha.Job{
+				Name: "Safe deeply nested matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": map[string]any{
+								"bar": map[string]any{
+									"baz": "safe",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar.baz }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix deeply nested unsafe": {
+			job: gha.Job{
+				Name: "Unsafe deeply nested matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": map[string]any{
+								"bar": map[string]any{
+									"baz": "${{ inputs.unsafe }}",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar.baz }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe deeply nested matrix",
+		},
+		"matrix nested array safe": {
+			job: gha.Job{
+				Name: "Safe nested array matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": []any{
+								map[string]any{
+									"bar": "safe",
+								},
+								map[string]any{
+									"bar": "also safe",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix nested array unsafe": {
+			job: gha.Job{
+				Name: "Unsafe nested array matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": []any{
+								map[string]any{
+									"bar": "safe",
+								},
+								map[string]any{
+									"bar": "${{ inputs.unsafe }}",
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe nested array matrix",
+		},
+		"matrix deeply nested array safe": {
+			job: gha.Job{
+				Name: "Safe deeply nested array matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": []any{
+								map[string]any{
+									"bar": map[string]any{
+										"baz": "safe",
+									},
+								},
+								map[string]any{
+									"bar": map[string]any{
+										"baz": "also safe",
+									},
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar.baz }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 0,
+		},
+		"matrix deeply nested array unsafe": {
+			job: gha.Job{
+				Name: "Unsafe deeply nested array matrix",
+				Strategy: gha.Strategy{
+					Matrix: []map[string]any{
+						{
+							"foo": []any{
+								map[string]any{
+									"bar": map[string]any{
+										"baz": "safe",
+									},
+								},
+								map[string]any{
+									"bar": map[string]any{
+										"baz": "${{ inputs.unsafe }}",
+									},
+								},
+							},
+						},
+					},
+				},
+				Steps: []gha.Step{
+					{
+						Run: "echo ${{ matrix.foo.bar.baz }}",
+					},
+				},
+			},
+			matcher:   AllMatcher,
+			wantCount: 1,
+			wantId:    "Unsafe deeply nested array matrix",
 		},
 		"matrix safe combined with something unsafe": {
 			job: gha.Job{
