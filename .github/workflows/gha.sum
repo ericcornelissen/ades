@@ -4,7 +4,7 @@ JamesIves/github-pages-deploy-action@v4.8.0 k2ZA/TDxQeePExLjsAMjR1mwvtHZh4/y3SW7
 actions/attest@v4.2.0 3pwePjcVEgvfk8Bw12KDMF4u/r0FZlzGUlAvyOoUtvQ=
 actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 sHLxd6T0XFaWDFYcxWhk5jm4T5hmgxejPsHIQFdIP34=
 actions/create-github-app-token@1b10c78c7865c340bc4f6099eb2f838309f1e8c3 ZHZjH0QRM6Y9p81lbJ0MO8R6kBed+Y20rJCBEdPRG6Y=
-actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 4BuraEiVzf0Oy87ZNJ82LoLYnXaKOQ50qp9qIyuRhmI=
+actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e XeVFynqLiBqopoycPB/yyrppKKs8rhRxKbHxRL2kCfs=
 docker/build-push-action@v7.3.0 pkKWriYGi6wfEtOMDrTAHUCxxtF1YwpQlXtnIlXn5Ak=
 docker/login-action@v4.4.0 WUli6qE/5qTmmUUl91ZtTAM1k6AFoAj6UUIIGWlq35Q=
 docker/setup-buildx-action@v4.2.0 OUF6tU3l19j2zwFVn3YeYoxw6uHcf0uOSeKF+hndv6g=
