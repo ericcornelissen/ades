@@ -540,7 +540,7 @@ func TaskVet(t *T) error {
 		"go run github.com/mdempsky/unconvert ./...",
 		"go run github.com/nishanths/exhaustive/cmd/exhaustive ./...",
 		"go run github.com/polyfloyd/go-errorlint ./...",
-		"go run github.com/rhysd/actionlint/cmd/actionlint",
+		"go run github.com/rhysd/actionlint/cmd/actionlint -config-file .github/actionlint.yml",
 		"go run github.com/tetafro/godot/cmd/godot .",
 		"go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck -test=false ./...",
 		"go run github.com/ultraware/whitespace/cmd/whitespace ./...",

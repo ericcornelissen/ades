@@ -12,16 +12,16 @@ jobs:
     name: Build
     runs-on: ubuntu-24.04
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Build binary
       run: go run tasks.go build
     - name: Build all release binaries
@@ -38,16 +38,16 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Build container with ${{ matrix.engine }}
       run: go run tasks.go container
       env:
@@ -60,16 +60,16 @@ jobs:
     name: Development image
     runs-on: ubuntu-24.04
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Build
       run: go run tasks.go dev-img
   format:
@@ -78,16 +78,16 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Check source code formatting
       run: go run tasks.go format-check
   reproducible:
@@ -96,16 +96,16 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Check reproducibility
       run: go run tasks.go reproducible
   reproducible-container:
@@ -115,16 +115,16 @@ jobs:
     - container
     - reproducible
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Check reproducibility
       run: go run tasks.go reproducible-container
   reproducible-web:
@@ -133,16 +133,16 @@ jobs:
     needs:
     - web
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Check reproducibility
       run: go run tasks.go web-reproducible
   test-unit:
@@ -151,16 +151,16 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Run tests
       run: go run tasks.go test-randomized
   test-dogfeed:
@@ -169,16 +169,16 @@ jobs:
     needs:
     - test-unit
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Run on this repository
       run: go run tasks.go dogfeed
   test-mutation:
@@ -187,16 +187,16 @@ jobs:
     needs:
     - test-unit
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Run mutation tests
       run: go run tasks.go test-mutation
   test-web:
@@ -206,16 +206,16 @@ jobs:
     - test-unit
     - web
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Run web tests
       run: go run tasks.go web-test
   vet:
@@ -224,16 +224,16 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Vet source code
       run: go run tasks.go vet
   web:
@@ -242,15 +242,15 @@ jobs:
     needs:
     - build
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Build web app
       run: go run tasks.go web-build

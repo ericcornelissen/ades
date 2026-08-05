@@ -1,62 +1,13 @@
 name: ghasum
 description: Verify checksums of actions
 
-runs:
-  using: composite
-  steps:
-  # Verify checksums
-  - name: Verify the action checksums
-    if: runner.os == 'Linux'
-    shell: bash
-    env:
-      JOB: ${{ github.job }}
-      WORKFLOW: ${{ github.workflow_ref }}
-    run: |
-      set -euo pipefail
-      WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
-      go run github.com/chains-project/ghasum/cmd/ghasum verify \
-        -cache /home/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
-  - name: Verify the action checksums
-    if: runner.os == 'macOS'
-    shell: bash
-    env:
-      JOB: ${{ github.job }}
-      WORKFLOW: ${{ github.workflow_ref }}
-    run: |
-      set -euo pipefail
-      WORKFLOW=$(echo "${WORKFLOW}" | cut -d '@' -f 1 | cut -d '/' -f 3-5)
-      go run github.com/chains-project/ghasum/cmd/ghasum verify \
-        -cache /Users/runner/work/_actions -no-evict -offline "${WORKFLOW}:${JOB}"
-  - name: Verify the action checksums
-    if: runner.os == 'Windows'
-    shell: pwsh
-    env:
-      JOB: ${{ github.job }}
-      WORKFLOW: ${{ github.workflow_ref }}
-    run: |
-      $WorkflowParts = $env:WORKFLOW -split '@'
-      $WorkflowPath = ($WorkflowParts[0] -split '/')[2..4] -join '/'
-      if (Test-Path -Path 'C:\a\_actions') {
-        go run github.com/chains-project/ghasum/cmd/ghasum verify -cache C:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
-      } else {
-        go run github.com/chains-project/ghasum/cmd/ghasum verify -cache D:\a\_actions -no-evict -offline "${WorkflowPath}:$env:JOB"
-      }
+inputs:
+  workflow:
+    description: The workflow to verify.
+    required: false
+    default: ${{ job.workflow_ref }}
 
-  # Invalidate actions
-  - name: Remove actions
-    if: failure() && runner.os == 'Linux'
-    shell: bash
-    run: rm -rf /home/runner/work/_actions
-  - name: Remove actions
-    if: failure() && runner.os == 'macOS'
-    shell: bash
-    run: rm -rf /Users/runner/work/_actions
-  - name: Remove actions
-    if: failure() && runner.os == 'Windows'
-    shell: pwsh
-    run: |
-      if (Test-Path -Path 'C:\a\_actions') {
-        Remove-Item -Recurse -Force -Path C:\a\_actions
-      } else {
-        Remove-Item -Recurse -Force -Path D:\a\_actions
-      }
+runs:
+  using: node24
+  main: main.js
+  pre: pre.js
