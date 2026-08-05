@@ -1,6 +1,6 @@
 module github.com/ericcornelissen/ades
 
-go 1.26.0
+go 1.26.5
 
 require (
 	github.com/ericcornelissen/go-gha-models v0.8.0
@@ -31,7 +31,7 @@ require (
 	github.com/butuzov/ireturn v0.4.1 // indirect
 	github.com/catenacyber/perfsprint v0.10.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
-	github.com/chains-project/ghasum v0.6.3 // indirect
+	github.com/chains-project/ghasum v0.6.4 // indirect
 	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/containerd/cgroups/v3 v3.0.5 // indirect
@@ -139,7 +139,7 @@ require (
 	github.com/spf13/viper v1.18.2 // indirect
 	github.com/subosito/gotenv v1.6.0 // indirect
 	github.com/tetafro/godot v1.5.6 // indirect
-	github.com/tomarrell/wrapcheck/v2 v2.11.0 // indirect
+	github.com/tomarrell/wrapcheck/v2 v2.12.0 // indirect
 	github.com/ultraware/whitespace v0.2.0 // indirect
 	github.com/urfave/cli v1.22.17 // indirect
 	github.com/xanzy/ssh-agent v0.3.3 // indirect

@@ -17,6 +17,8 @@
 !.github/actions/ghasum/
 .github/actions/ghasum/**
 !.github/actions/ghasum/action.yml
+!.github/actions/ghasum/main.js
+!.github/actions/ghasum/pre.js
 !.github/workflows/
 .github/workflows/**
 !.github/workflows/audit.yml
@@ -27,6 +29,7 @@
 !.github/workflows/renovate.yml
 !.github/workflows/semgrep.yml
 !.github/workflows/website.yml
+!.github/actionlint.yml
 !.github/codeql.yml
 !.github/renovate.json
 

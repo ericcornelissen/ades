@@ -16,16 +16,16 @@ jobs:
       name: docker
       url: https://hub.docker.com/r/ericornelissen/ades
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Install cosign
       uses: sigstore/cosign-installer@v4.1.0
       with:
@@ -82,16 +82,16 @@ jobs:
       contents: write # To create a GitHub Release
       id-token: write # To perform keyless signing with cosign for attestations
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Checkout repository
-      uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+      uses: actions/checkout@v7.0.0
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
-    - name: Verify action checksums
-      uses: ./.github/actions/ghasum
     - name: Get release version
       id: version
       shell: bash

@@ -17,6 +17,8 @@ jobs:
     permissions:
       pull-requests: write # To comment on a Pull Request
     steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
     - name: Parse
       id: parse
       shell: bash
@@ -98,7 +100,7 @@ jobs:
         fetch-depth: 2 # required for --amend
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+      uses: actions/setup-go@v7.0.0
       with:
         go-version-file: go.mod
     - name: Create automation token
