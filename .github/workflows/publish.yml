@@ -115,6 +115,6 @@ jobs:
           --generate-notes=false \
           --prerelease=false
     - name: Attest build provenance
-      uses: actions/attest@v4.2.0
+      uses: actions/attest@v4.2.2
       with:
         subject-path: ./_compiled/*
