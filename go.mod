@@ -6,7 +6,7 @@ require (
 	github.com/ericcornelissen/go-gha-models v0.8.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/mxschmitt/playwright-go v0.6100.0
-	github.com/rogpeppe/go-internal v1.15.0
+	github.com/rogpeppe/go-internal v1.16.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.2
 	golang.org/x/mod v0.38.0
 )
@@ -171,7 +171,7 @@ require (
 	gopkg.in/warnings.v0 v0.1.2 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 	honnef.co/go/tools v0.7.0 // indirect
-	mvdan.cc/unparam v0.0.0-20251027182757-5beb8c8f8f15 // indirect
+	mvdan.cc/unparam v0.0.0-20260808223834-a64391f2ca86 // indirect
 )
 
 tool (
