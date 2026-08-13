@@ -5,7 +5,7 @@ go 1.26.5
 require (
 	github.com/ericcornelissen/go-gha-models v0.8.0
 	github.com/gtramontina/ooze v0.2.0
-	github.com/mxschmitt/playwright-go v0.6100.0
+	github.com/mxschmitt/playwright-go v0.6201.0
 	github.com/rogpeppe/go-internal v1.16.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	golang.org/x/mod v0.38.0
