@@ -5,7 +5,7 @@ go 1.26.5
 require (
 	github.com/ericcornelissen/go-gha-models v0.8.0
 	github.com/gtramontina/ooze v0.2.0
-	github.com/mxschmitt/playwright-go v0.6100.0
+	github.com/mxschmitt/playwright-go v0.6201.1
 	github.com/rogpeppe/go-internal v1.16.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	golang.org/x/mod v0.38.0
@@ -64,7 +64,6 @@ require (
 	github.com/go-git/gcfg v1.5.1-0.20230307220236-3a3c6141e376 // indirect
 	github.com/go-git/go-billy/v5 v5.9.0 // indirect
 	github.com/go-git/go-git/v5 v5.19.2 // indirect
-	github.com/go-jose/go-jose/v3 v3.0.5 // indirect
 	github.com/go-logr/logr v1.4.3 // indirect
 	github.com/go-logr/stdr v1.2.2 // indirect
 	github.com/go-stack/stack v1.8.1 // indirect
