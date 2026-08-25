@@ -309,6 +309,264 @@
 		},
 		{
 			"packageName": "main",
+			"capabilityName": "RUNTIME",
+			"capability": "CAPABILITY_RUNTIME",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get internal/poll.newPoolPipe runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "86",
+						"column": "12"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/poll.newPoolPipe",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "internal/poll"
+				},
+				{
+					"name": "runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+					"site": {
+						"filename": "splice_linux.go",
+						"line": "197",
+						"column": "32"
+					},
+					"package": "runtime"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "RUNTIME",
+			"capability": "CAPABILITY_RUNTIME",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get internal/poll.newPoolPipe runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/poll.newPoolPipe",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "internal/poll"
+				},
+				{
+					"name": "runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+					"site": {
+						"filename": "splice_linux.go",
+						"line": "197",
+						"column": "32"
+					},
+					"package": "runtime"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "RUNTIME",
+			"capability": "CAPABILITY_RUNTIME",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get internal/poll.newPoolPipe runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/poll.newPoolPipe",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "internal/poll"
+				},
+				{
+					"name": "runtime.AddCleanup[internal/poll.splicePipe, internal/poll.splicePipeFields]",
+					"site": {
+						"filename": "splice_linux.go",
+						"line": "197",
+						"column": "32"
+					},
+					"package": "runtime"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
 			"capabilityName": "READ_SYSTEM_STATE",
 			"capability": "CAPABILITY_READ_SYSTEM_STATE",
 			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run os.Getwd",
@@ -543,7 +801,7 @@
 			"packageName": "ades",
 			"capabilityName": "OPERATING_SYSTEM",
 			"capability": "CAPABILITY_OPERATING_SYSTEM",
-			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]os.DirEntry os.DirEntry] slices.pdqsortCmpFunc[os.DirEntry] (*os.rootFS).ReadDir$1",
+			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry] slices.pdqsortCmpFunc[io/fs.DirEntry] (*os.rootFS).ReadDir$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades.AnalyzeRepo",
@@ -577,7 +835,7 @@
 					"package": "io/fs"
 				},
 				{
-					"name": "slices.SortFunc[[]os.DirEntry os.DirEntry]",
+					"name": "slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry]",
 					"site": {
 						"filename": "readdir.go",
 						"line": "46",
@@ -586,7 +844,7 @@
 					"package": "slices"
 				},
 				{
-					"name": "slices.pdqsortCmpFunc[os.DirEntry]",
+					"name": "slices.pdqsortCmpFunc[io/fs.DirEntry]",
 					"site": {
 						"filename": "sort.go",
 						"line": "32",
@@ -611,7 +869,7 @@
 			"packageName": "main",
 			"capabilityName": "OPERATING_SYSTEM",
 			"capability": "CAPABILITY_OPERATING_SYSTEM",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]os.DirEntry os.DirEntry] slices.pdqsortCmpFunc[os.DirEntry] (*os.rootFS).ReadDir$1",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry] slices.pdqsortCmpFunc[io/fs.DirEntry] (*os.rootFS).ReadDir$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
@@ -681,7 +939,7 @@
 					"package": "io/fs"
 				},
 				{
-					"name": "slices.SortFunc[[]os.DirEntry os.DirEntry]",
+					"name": "slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry]",
 					"site": {
 						"filename": "readdir.go",
 						"line": "46",
@@ -690,7 +948,7 @@
 					"package": "slices"
 				},
 				{
-					"name": "slices.pdqsortCmpFunc[os.DirEntry]",
+					"name": "slices.pdqsortCmpFunc[io/fs.DirEntry]",
 					"site": {
 						"filename": "sort.go",
 						"line": "32",
@@ -715,7 +973,7 @@
 			"packageName": "main",
 			"capabilityName": "OPERATING_SYSTEM",
 			"capability": "CAPABILITY_OPERATING_SYSTEM",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]os.DirEntry os.DirEntry] slices.pdqsortCmpFunc[os.DirEntry] (*os.rootFS).ReadDir$1",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry] slices.pdqsortCmpFunc[io/fs.DirEntry] (*os.rootFS).ReadDir$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
@@ -776,7 +1034,7 @@
 					"package": "io/fs"
 				},
 				{
-					"name": "slices.SortFunc[[]os.DirEntry os.DirEntry]",
+					"name": "slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry]",
 					"site": {
 						"filename": "readdir.go",
 						"line": "46",
@@ -785,7 +1043,7 @@
 					"package": "slices"
 				},
 				{
-					"name": "slices.pdqsortCmpFunc[os.DirEntry]",
+					"name": "slices.pdqsortCmpFunc[io/fs.DirEntry]",
 					"site": {
 						"filename": "sort.go",
 						"line": "32",
@@ -810,7 +1068,7 @@
 			"packageName": "main",
 			"capabilityName": "OPERATING_SYSTEM",
 			"capability": "CAPABILITY_OPERATING_SYSTEM",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]os.DirEntry os.DirEntry] slices.pdqsortCmpFunc[os.DirEntry] (*os.rootFS).ReadDir$1",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry] slices.pdqsortCmpFunc[io/fs.DirEntry] (*os.rootFS).ReadDir$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
@@ -853,7 +1111,7 @@
 					"package": "io/fs"
 				},
 				{
-					"name": "slices.SortFunc[[]os.DirEntry os.DirEntry]",
+					"name": "slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry]",
 					"site": {
 						"filename": "readdir.go",
 						"line": "46",
@@ -862,7 +1120,7 @@
 					"package": "slices"
 				},
 				{
-					"name": "slices.pdqsortCmpFunc[os.DirEntry]",
+					"name": "slices.pdqsortCmpFunc[io/fs.DirEntry]",
 					"site": {
 						"filename": "sort.go",
 						"line": "32",
@@ -887,7 +1145,7 @@
 			"packageName": "main",
 			"capabilityName": "OPERATING_SYSTEM",
 			"capability": "CAPABILITY_OPERATING_SYSTEM",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]os.DirEntry os.DirEntry] slices.pdqsortCmpFunc[os.DirEntry] (*os.rootFS).ReadDir$1",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir io/fs.walkDir io/fs.ReadDir slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry] slices.pdqsortCmpFunc[io/fs.DirEntry] (*os.rootFS).ReadDir$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
@@ -939,7 +1197,7 @@
 					"package": "io/fs"
 				},
 				{
-					"name": "slices.SortFunc[[]os.DirEntry os.DirEntry]",
+					"name": "slices.SortFunc[[]io/fs.DirEntry, io/fs.DirEntry]",
 					"site": {
 						"filename": "readdir.go",
 						"line": "46",
@@ -948,7 +1206,7 @@
 					"package": "slices"
 				},
 				{
-					"name": "slices.pdqsortCmpFunc[os.DirEntry]",
+					"name": "slices.pdqsortCmpFunc[io/fs.DirEntry]",
 					"site": {
 						"filename": "sort.go",
 						"line": "32",
@@ -968,6 +1226,522 @@
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
 			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "SYSTEM_CALLS",
+			"capability": "CAPABILITY_SYSTEM_CALLS",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get syscall.init$2",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "86",
+						"column": "12"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "syscall.init$2",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "syscall"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "SYSTEM_CALLS",
+			"capability": "CAPABILITY_SYSTEM_CALLS",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get syscall.init$2",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "syscall.init$2",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "syscall"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "SYSTEM_CALLS",
+			"capability": "CAPABILITY_SYSTEM_CALLS",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get syscall.init$2",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "syscall.init$2",
+					"site": {
+						"filename": "pool.go",
+						"line": "156",
+						"column": "12"
+					},
+					"package": "syscall"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "ARBITRARY_EXECUTION",
+			"capability": "CAPABILITY_ARBITRARY_EXECUTION",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get (*sync.Pool).pin (*sync.Pool).pinSlow internal/runtime/atomic.StoreReluintptr",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"site": {
+						"filename": "main.go",
+						"line": "86",
+						"column": "12"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pin",
+					"site": {
+						"filename": "pool.go",
+						"line": "136",
+						"column": "17"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pinSlow",
+					"site": {
+						"filename": "pool.go",
+						"line": "221",
+						"column": "18"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/runtime/atomic.StoreReluintptr",
+					"site": {
+						"filename": "pool.go",
+						"line": "244",
+						"column": "26"
+					},
+					"package": "internal/runtime/atomic"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "ARBITRARY_EXECUTION",
+			"capability": "CAPABILITY_ARBITRARY_EXECUTION",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get (*sync.Pool).pin (*sync.Pool).pinSlow internal/runtime/atomic.StoreReluintptr",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pin",
+					"site": {
+						"filename": "pool.go",
+						"line": "136",
+						"column": "17"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pinSlow",
+					"site": {
+						"filename": "pool.go",
+						"line": "221",
+						"column": "18"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/runtime/atomic.StoreReluintptr",
+					"site": {
+						"filename": "pool.go",
+						"line": "244",
+						"column": "26"
+					},
+					"package": "internal/runtime/atomic"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "ARBITRARY_EXECUTION",
+			"capability": "CAPABILITY_ARBITRARY_EXECUTION",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get (*sync.Pool).pin (*sync.Pool).pinSlow internal/runtime/atomic.StoreReluintptr",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
+					"site": {
+						"filename": "main.go",
+						"line": "144",
+						"column": "24"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "encoding/json.Marshal",
+					"site": {
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
+					},
+					"package": "encoding/json"
+				},
+				{
+					"name": "encoding/json/v2.Marshal",
+					"site": {
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
+					},
+					"package": "encoding/json/v2"
+				},
+				{
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
+					"site": {
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pin",
+					"site": {
+						"filename": "pool.go",
+						"line": "136",
+						"column": "17"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "(*sync.Pool).pinSlow",
+					"site": {
+						"filename": "pool.go",
+						"line": "221",
+						"column": "18"
+					},
+					"package": "sync"
+				},
+				{
+					"name": "internal/runtime/atomic.StoreReluintptr",
+					"site": {
+						"filename": "pool.go",
+						"line": "244",
+						"column": "26"
+					},
+					"package": "internal/runtime/atomic"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_DIRECT"
 		},
 		{
 			"packageName": "ades",
@@ -1073,7 +1847,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -1082,7 +1856,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -1091,8 +1865,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -1186,7 +1960,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -1195,7 +1969,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -1204,8 +1978,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -1217,7 +1991,7 @@
 			"packageName": "main",
 			"capabilityName": "UNSAFE_POINTER",
 			"capability": "CAPABILITY_UNSAFE_POINTER",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.init flag.Bool (*flag.FlagSet).Bool (*flag.FlagSet).BoolVar (*flag.FlagSet).Var (*flag.float64Value).String strconv.FormatFloat internal/strconv.FormatFloat internal/strconv.genericFtoa internal/strconv.float32bits",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.init flag.Bool (*flag.FlagSet).Bool (*flag.FlagSet).BoolVar (*flag.FlagSet).Var (*flag.float64Value).String strconv.FormatFloat internal/strconv.FormatFloat internal/strconv.ftoa32 internal/strconv.float32bits",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.init",
@@ -1287,11 +2061,11 @@
 					"package": "internal/strconv"
 				},
 				{
-					"name": "internal/strconv.genericFtoa",
+					"name": "internal/strconv.ftoa32",
 					"site": {
 						"filename": "ftoa.go",
-						"line": "63",
-						"column": "27"
+						"line": "61",
+						"column": "23"
 					},
 					"package": "internal/strconv"
 				},
@@ -1299,8 +2073,8 @@
 					"name": "internal/strconv.float32bits",
 					"site": {
 						"filename": "ftoa.go",
-						"line": "77",
-						"column": "28"
+						"line": "93",
+						"column": "25"
 					},
 					"package": "internal/strconv"
 				}
@@ -1312,7 +2086,7 @@
 			"packageName": "main",
 			"capabilityName": "UNSAFE_POINTER",
 			"capability": "CAPABILITY_UNSAFE_POINTER",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run flag.Parse (*flag.FlagSet).Parse (*flag.FlagSet).parseOne (*flag.float64Value).Set strconv.ParseFloat internal/strconv.ParseFloat internal/strconv.parseFloatPrefix internal/strconv.atof32 internal/strconv.float32frombits",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get sync.poolRaceAddr",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
@@ -1328,85 +2102,67 @@
 					"package": "github.com/ericcornelissen/ades/cmd/ades"
 				},
 				{
-					"name": "flag.Parse",
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
 					"site": {
 						"filename": "main.go",
-						"line": "91",
-						"column": "12"
+						"line": "144",
+						"column": "24"
 					},
-					"package": "flag"
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
 				},
 				{
-					"name": "(*flag.FlagSet).Parse",
+					"name": "encoding/json.Marshal",
 					"site": {
-						"filename": "flag.go",
-						"line": "1188",
-						"column": "19"
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
 					},
-					"package": "flag"
+					"package": "encoding/json"
 				},
 				{
-					"name": "(*flag.FlagSet).parseOne",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "flag.go",
-						"line": "1157",
-						"column": "26"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "flag"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*flag.float64Value).Set",
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
 					"site": {
-						"filename": "flag.go",
-						"line": "1138",
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
 						"column": "27"
 					},
-					"package": "flag"
+					"package": "encoding/json/jsontext"
 				},
 				{
-					"name": "strconv.ParseFloat",
+					"name": "(*sync.Pool).Get",
 					"site": {
-						"filename": "flag.go",
-						"line": "265",
+						"filename": "pools.go",
+						"line": "45",
 						"column": "30"
 					},
-					"package": "strconv"
+					"package": "sync"
 				},
 				{
-					"name": "internal/strconv.ParseFloat",
+					"name": "sync.poolRaceAddr",
 					"site": {
-						"filename": "number.go",
-						"line": "94",
-						"column": "30"
+						"filename": "pool.go",
+						"line": "152",
+						"column": "29"
 					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.parseFloatPrefix",
-					"site": {
-						"filename": "atof.go",
-						"line": "693",
-						"column": "31"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.atof32",
-					"site": {
-						"filename": "atof.go",
-						"line": "702",
-						"column": "22"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.float32frombits",
-					"site": {
-						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
-					},
-					"package": "internal/strconv"
+					"package": "sync"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1416,7 +2172,7 @@
 			"packageName": "main",
 			"capabilityName": "UNSAFE_POINTER",
 			"capability": "CAPABILITY_UNSAFE_POINTER",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode strconv.AppendFloat internal/strconv.AppendFloat internal/strconv.genericFtoa internal/strconv.float32bits",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get sync.poolRaceAddr",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
@@ -1432,71 +2188,49 @@
 					"package": "encoding/json"
 				},
 				{
-					"name": "(*encoding/json.encodeState).marshal",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "encode.go",
-						"line": "209",
-						"column": "18"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*encoding/json.encodeState).reflectValue",
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
 					"site": {
-						"filename": "encode.go",
-						"line": "343",
-						"column": "16"
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/jsontext"
 				},
 				{
-					"name": "(encoding/json.floatEncoder).encode$bound",
+					"name": "encoding/json/jsontext.getBufferedEncoder",
 					"site": {
-						"filename": "encode.go",
-						"line": "367",
-						"column": "17"
+						"filename": "export.go",
+						"line": "61",
+						"column": "27"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/jsontext"
 				},
 				{
-					"name": "(encoding/json.floatEncoder).encode",
-					"package": "encoding/json"
+					"name": "(*sync.Pool).Get",
+					"site": {
+						"filename": "pools.go",
+						"line": "45",
+						"column": "30"
+					},
+					"package": "sync"
 				},
 				{
-					"name": "strconv.AppendFloat",
+					"name": "sync.poolRaceAddr",
 					"site": {
-						"filename": "encode.go",
-						"line": "592",
-						"column": "25"
+						"filename": "pool.go",
+						"line": "152",
+						"column": "29"
 					},
-					"package": "strconv"
-				},
-				{
-					"name": "internal/strconv.AppendFloat",
-					"site": {
-						"filename": "number.go",
-						"line": "196",
-						"column": "28"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.genericFtoa",
-					"site": {
-						"filename": "ftoa.go",
-						"line": "69",
-						"column": "20"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.float32bits",
-					"site": {
-						"filename": "ftoa.go",
-						"line": "77",
-						"column": "28"
-					},
-					"package": "internal/strconv"
+					"package": "sync"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1506,92 +2240,74 @@
 			"packageName": "main",
 			"capabilityName": "UNSAFE_POINTER",
 			"capability": "CAPABILITY_UNSAFE_POINTER",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run flag.Parse (*flag.FlagSet).Parse (*flag.FlagSet).parseOne (*flag.float64Value).Set strconv.ParseFloat internal/strconv.ParseFloat internal/strconv.parseFloatPrefix internal/strconv.atof32 internal/strconv.float32frombits",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal (encoding/json/jsontext.export).GetBufferedEncoder encoding/json/jsontext.getBufferedEncoder (*sync.Pool).Get sync.poolRaceAddr",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
 					"package": "github.com/ericcornelissen/ades/cmd/ades"
 				},
 				{
-					"name": "flag.Parse",
+					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
 					"site": {
 						"filename": "main.go",
-						"line": "91",
-						"column": "12"
+						"line": "144",
+						"column": "24"
 					},
-					"package": "flag"
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
 				},
 				{
-					"name": "(*flag.FlagSet).Parse",
+					"name": "encoding/json.Marshal",
 					"site": {
-						"filename": "flag.go",
-						"line": "1188",
-						"column": "19"
+						"filename": "output.go",
+						"line": "61",
+						"column": "30"
 					},
-					"package": "flag"
+					"package": "encoding/json"
 				},
 				{
-					"name": "(*flag.FlagSet).parseOne",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "flag.go",
-						"line": "1157",
-						"column": "26"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "flag"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*flag.float64Value).Set",
+					"name": "(encoding/json/jsontext.export).GetBufferedEncoder",
 					"site": {
-						"filename": "flag.go",
-						"line": "1138",
+						"filename": "arshal.go",
+						"line": "164",
+						"column": "34"
+					},
+					"package": "encoding/json/jsontext"
+				},
+				{
+					"name": "encoding/json/jsontext.getBufferedEncoder",
+					"site": {
+						"filename": "export.go",
+						"line": "61",
 						"column": "27"
 					},
-					"package": "flag"
+					"package": "encoding/json/jsontext"
 				},
 				{
-					"name": "strconv.ParseFloat",
+					"name": "(*sync.Pool).Get",
 					"site": {
-						"filename": "flag.go",
-						"line": "265",
+						"filename": "pools.go",
+						"line": "45",
 						"column": "30"
 					},
-					"package": "strconv"
+					"package": "sync"
 				},
 				{
-					"name": "internal/strconv.ParseFloat",
+					"name": "sync.poolRaceAddr",
 					"site": {
-						"filename": "number.go",
-						"line": "94",
-						"column": "30"
+						"filename": "pool.go",
+						"line": "152",
+						"column": "29"
 					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.parseFloatPrefix",
-					"site": {
-						"filename": "atof.go",
-						"line": "693",
-						"column": "31"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.atof32",
-					"site": {
-						"filename": "atof.go",
-						"line": "702",
-						"column": "22"
-					},
-					"package": "internal/strconv"
-				},
-				{
-					"name": "internal/strconv.float32frombits",
-					"site": {
-						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
-					},
-					"package": "internal/strconv"
+					"package": "sync"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1692,7 +2408,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -1701,7 +2417,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -1710,8 +2426,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -1814,7 +2530,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -1823,7 +2539,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -1832,8 +2548,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -1945,7 +2661,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -1954,7 +2670,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -1963,8 +2679,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -2085,7 +2801,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -2094,7 +2810,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -2103,8 +2819,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -2198,7 +2914,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -2207,7 +2923,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -2216,8 +2932,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -2311,7 +3027,7 @@
 					"name": "internal/strconv.parseFloatPrefix",
 					"site": {
 						"filename": "atof.go",
-						"line": "693",
+						"line": "720",
 						"column": "31"
 					},
 					"package": "internal/strconv"
@@ -2320,7 +3036,7 @@
 					"name": "internal/strconv.atof32",
 					"site": {
 						"filename": "atof.go",
-						"line": "702",
+						"line": "729",
 						"column": "22"
 					},
 					"package": "internal/strconv"
@@ -2329,8 +3045,8 @@
 					"name": "internal/strconv.float32frombits",
 					"site": {
 						"filename": "atof.go",
-						"line": "607",
-						"column": "21"
+						"line": "592",
+						"column": "26"
 					},
 					"package": "internal/strconv"
 				}
@@ -2478,7 +3194,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal encoding/json/v2.marshalEncode encoding/json/v2.makeBytesArshaler$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.main",
@@ -2512,35 +3228,31 @@
 					"package": "encoding/json"
 				},
 				{
-					"name": "(*encoding/json.encodeState).marshal",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "encode.go",
-						"line": "209",
-						"column": "18"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*encoding/json.encodeState).reflectValue",
+					"name": "encoding/json/v2.marshalEncode",
 					"site": {
-						"filename": "encode.go",
-						"line": "343",
-						"column": "16"
+						"filename": "arshal.go",
+						"line": "168",
+						"column": "21"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(encoding/json.floatEncoder).encode$bound",
+					"name": "encoding/json/v2.makeBytesArshaler$1",
 					"site": {
-						"filename": "encode.go",
-						"line": "367",
-						"column": "17"
+						"filename": "arshal.go",
+						"line": "248",
+						"column": "19"
 					},
-					"package": "encoding/json"
-				},
-				{
-					"name": "(encoding/json.floatEncoder).encode",
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -2550,7 +3262,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal encoding/json/v2.marshalEncode encoding/json/v2.makeBytesArshaler$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.printJson",
@@ -2566,35 +3278,31 @@
 					"package": "encoding/json"
 				},
 				{
-					"name": "(*encoding/json.encodeState).marshal",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "encode.go",
-						"line": "209",
-						"column": "18"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*encoding/json.encodeState).reflectValue",
+					"name": "encoding/json/v2.marshalEncode",
 					"site": {
-						"filename": "encode.go",
-						"line": "343",
-						"column": "16"
+						"filename": "arshal.go",
+						"line": "168",
+						"column": "21"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(encoding/json.floatEncoder).encode$bound",
+					"name": "encoding/json/v2.makeBytesArshaler$1",
 					"site": {
-						"filename": "encode.go",
-						"line": "367",
-						"column": "17"
+						"filename": "arshal.go",
+						"line": "248",
+						"column": "19"
 					},
-					"package": "encoding/json"
-				},
-				{
-					"name": "(encoding/json.floatEncoder).encode",
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -2604,7 +3312,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal (*encoding/json.encodeState).marshal (*encoding/json.encodeState).reflectValue (encoding/json.floatEncoder).encode$bound (encoding/json.floatEncoder).encode",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.run github.com/ericcornelissen/ades/cmd/ades.printJson encoding/json.Marshal encoding/json/v2.Marshal encoding/json/v2.marshalEncode encoding/json/v2.makeBytesArshaler$1",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.run",
@@ -2629,35 +3337,31 @@
 					"package": "encoding/json"
 				},
 				{
-					"name": "(*encoding/json.encodeState).marshal",
+					"name": "encoding/json/v2.Marshal",
 					"site": {
-						"filename": "encode.go",
-						"line": "209",
-						"column": "18"
+						"filename": "v2_encode.go",
+						"line": "186",
+						"column": "23"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(*encoding/json.encodeState).reflectValue",
+					"name": "encoding/json/v2.marshalEncode",
 					"site": {
-						"filename": "encode.go",
-						"line": "343",
-						"column": "16"
+						"filename": "arshal.go",
+						"line": "168",
+						"column": "21"
 					},
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				},
 				{
-					"name": "(encoding/json.floatEncoder).encode$bound",
+					"name": "encoding/json/v2.makeBytesArshaler$1",
 					"site": {
-						"filename": "encode.go",
-						"line": "367",
-						"column": "17"
+						"filename": "arshal.go",
+						"line": "248",
+						"column": "19"
 					},
-					"package": "encoding/json"
-				},
-				{
-					"name": "(encoding/json.floatEncoder).encode",
-					"package": "encoding/json"
+					"package": "encoding/json/v2"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -3092,7 +3796,7 @@
 		},
 		{
 			"path": "golang.org/x/mod",
-			"version": "v0.33.0"
+			"version": "v0.40.0"
 		}
 	],
 	"packageInfo": [
