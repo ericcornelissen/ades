@@ -12,7 +12,7 @@ permissions: read-all
 jobs:
   gha-release:
     name: GitHub Actions Release Immutability
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     if: github.event_name == 'pull_request' && github.actor == 'renovate[bot]'
     permissions:
       pull-requests: write # To comment on a Pull Request
@@ -91,7 +91,7 @@ jobs:
         gh pr comment "${NUMBER}" --repo "${THIS_REPO}" --body "${COMMENT}"
   ghasum:
     name: Update gha.sum
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     if: github.event_name == 'push' && github.actor == 'renovate[bot]'
     steps:
     - name: Checkout repository
