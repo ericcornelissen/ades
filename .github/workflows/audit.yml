@@ -32,6 +32,22 @@ jobs:
         go-version-file: go.mod
     - name: Audit
       run: go run tasks.go audit-capabilities
+  trust:
+    name: Trust
+    runs-on: ubuntu-26.04
+    steps:
+    - name: Verify action checksums
+      uses: $/.github/actions/ghasum
+    - name: Checkout repository
+      uses: actions/checkout@v7.0.0
+      with:
+        persist-credentials: false
+    - name: Install Go
+      uses: actions/setup-go@v7.0.0
+      with:
+        go-version-file: go.mod
+    - name: Audit
+      run: go run tasks.go audit-trust
   vulnerabilities:
     name: Vulnerabilities
     runs-on: ubuntu-26.04
