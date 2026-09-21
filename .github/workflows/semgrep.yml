@@ -10,7 +10,7 @@ permissions: read-all
 jobs:
   malicious-code:
     name: Malicious code
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     container:
       image: semgrep/semgrep:1.175.0
     steps:
@@ -33,7 +33,7 @@ jobs:
       run: semgrep --config ../malicious-code-ruleset
   semgrep:
     name: Semgrep
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     permissions:
       security-events: write # To upload SARIF results
     container:
