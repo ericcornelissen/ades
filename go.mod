@@ -2,11 +2,12 @@ module github.com/ericcornelissen/ades
 
 go 1.27.0
 
+// gomodjail:confined
 require (
 	github.com/ericcornelissen/go-gha-models v0.8.0
-	github.com/gtramontina/ooze v0.2.0
-	github.com/mxschmitt/playwright-go v0.6201.1
-	github.com/rogpeppe/go-internal v1.16.0
+	github.com/gtramontina/ooze v0.2.0 // gomodjail:unconfined
+	github.com/mxschmitt/playwright-go v0.6201.1 // gomodjail:unconfined
+	github.com/rogpeppe/go-internal v1.16.0 // gomodjail:unconfined
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
 	golang.org/x/mod v0.41.0
 )
@@ -18,6 +19,9 @@ require (
 	fillmore-labs.com/zerolint v0.0.16 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 // indirect
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20250520111509-a70c2aa677fa // indirect
+	github.com/AkihiroSuda/gomoddirectivecomments v0.1.0 // indirect
+	github.com/AkihiroSuda/gomodjail v1.0.0 // indirect
+	github.com/AkihiroSuda/gosocialcheck v0.1.3 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/KimMachineGun/automemlimit v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
@@ -56,6 +60,7 @@ require (
 	github.com/docker/docker-credential-helpers v0.9.3 // indirect
 	github.com/docker/go-events v0.0.0-20250808211157-605354379745 // indirect
 	github.com/docker/go-units v0.5.0 // indirect
+	github.com/elastic/go-seccomp-bpf v1.6.0 // indirect
 	github.com/emirpasic/gods v1.18.1 // indirect
 	github.com/fatih/color v1.19.0 // indirect
 	github.com/felixge/httpsnoop v1.0.4 // indirect
@@ -176,6 +181,7 @@ require (
 tool (
 	4d63.com/gochecknoinits
 	fillmore-labs.com/zerolint
+	github.com/AkihiroSuda/gomodjail/cmd/gomodjail
 	github.com/alexkohler/dogsled/cmd/dogsled
 	github.com/alexkohler/nakedret/v2/cmd/nakedret
 	github.com/alexkohler/prealloc
