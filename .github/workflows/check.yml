@@ -10,7 +10,7 @@ permissions: read-all
 jobs:
   build:
     name: Build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: Verify action checksums
       uses: $/.github/actions/ghasum
@@ -28,7 +28,7 @@ jobs:
       run: go run tasks.go build-all
   container:
     name: Container
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     strategy:
       fail-fast: false
       matrix:
@@ -58,7 +58,7 @@ jobs:
         CONTAINER_ENGINE: ${{ matrix.engine }}
   development-image:
     name: Development image
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     steps:
     - name: Verify action checksums
       uses: $/.github/actions/ghasum
@@ -74,7 +74,7 @@ jobs:
       run: go run tasks.go dev-img
   format:
     name: Format
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - build
     steps:
@@ -92,7 +92,7 @@ jobs:
       run: go run tasks.go format-check
   reproducible:
     name: Reproducible build
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - build
     steps:
@@ -110,7 +110,7 @@ jobs:
       run: go run tasks.go reproducible
   reproducible-container:
     name: Reproducible container
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - container
     - reproducible
@@ -129,7 +129,7 @@ jobs:
       run: go run tasks.go reproducible-container
   reproducible-web:
     name: Reproducible web
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - web
     steps:
@@ -147,7 +147,7 @@ jobs:
       run: go run tasks.go web-reproducible
   test-unit:
     name: Unit test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - build
     steps:
@@ -165,7 +165,7 @@ jobs:
       run: go run tasks.go test-randomized
   test-dogfeed:
     name: Dogfeed
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - test-unit
     steps:
@@ -183,7 +183,7 @@ jobs:
       run: go run tasks.go dogfeed
   test-mutation:
     name: Mutation test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - test-unit
     steps:
@@ -201,7 +201,7 @@ jobs:
       run: go run tasks.go test-mutation
   test-web:
     name: Web test
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - test-unit
     - web
@@ -220,7 +220,7 @@ jobs:
       run: go run tasks.go web-test
   vet:
     name: Vet
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - build
     steps:
@@ -238,7 +238,7 @@ jobs:
       run: go run tasks.go vet
   web:
     name: Web
-    runs-on: ubuntu-24.04
+    runs-on: ubuntu-26.04
     needs:
     - build
     steps:
