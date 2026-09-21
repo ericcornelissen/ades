@@ -70,12 +70,7 @@ func TaskAudit(t *T) error {
 // Audit for capabilities.
 func TaskAuditCapabilities(t *T) error {
 	t.Log("Checking capabilities...")
-	return t.Exec(`
-		go run github.com/google/capslock/cmd/capslock
-			-packages ./...
-			-noisy
-			-output=compare capabilities.json
-	`)
+	return t.Exec(`go run github.com/AkihiroSuda/gomodjail/cmd/gomodjail analyze ./...`)
 }
 
 // Audit for known vulnerabilities.
@@ -487,22 +482,6 @@ func TaskTestMutation(t *T) error {
 func TaskTestRandomized(t *T) error {
 	t.Log("Testing (random order)...")
 	return t.Exec(`go test -shuffle=on ./...`)
-}
-
-// Update the capability snapshot to the project's current capabilities.
-func TaskUpdateCapabilities(t *T) error {
-	t.Log("Updating capabilities...")
-	stdout, err := t.ExecS(`
-		go run github.com/google/capslock/cmd/capslock
-			-packages ./...
-			-noisy
-			-output json
-	`)
-	if err != nil {
-		return err
-	}
-
-	return os.WriteFile("./capabilities.json", []byte(stdout), permFile)
 }
 
 // Verify project is in a good state.

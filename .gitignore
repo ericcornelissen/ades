@@ -53,9 +53,6 @@ docs/**
 !COPYING.txt
 !DCO.txt
 
-# Security
-!capabilities.json
-
 # Source
 !cmd/
 cmd/**
