@@ -3,7 +3,7 @@ module github.com/ericcornelissen/ades
 go 1.27.0
 
 require (
-	github.com/ericcornelissen/go-gha-models v0.8.0
+	github.com/ericcornelissen/go-gha-models v0.8.0 // gosocialcheck:trusted
 	github.com/gtramontina/ooze v0.2.0
 	github.com/mxschmitt/playwright-go v0.6201.1
 	github.com/rogpeppe/go-internal v1.16.0
@@ -18,6 +18,8 @@ require (
 	fillmore-labs.com/zerolint v0.0.16 // indirect
 	github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 // indirect
 	github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20250520111509-a70c2aa677fa // indirect
+	github.com/AkihiroSuda/gomoddirectivecomments v0.1.0 // indirect
+	github.com/AkihiroSuda/gosocialcheck v0.2.0 // indirect
 	github.com/BurntSushi/toml v1.5.0 // indirect
 	github.com/KimMachineGun/automemlimit v1.0.0 // indirect
 	github.com/Microsoft/go-winio v0.6.2 // indirect
@@ -93,6 +95,7 @@ require (
 	github.com/klauspost/compress v1.18.0 // indirect
 	github.com/klauspost/cpuid/v2 v2.3.0 // indirect
 	github.com/kunwardeep/paralleltest v1.0.15 // indirect
+	github.com/lmittmann/tint v1.2.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
@@ -176,6 +179,7 @@ require (
 tool (
 	4d63.com/gochecknoinits
 	fillmore-labs.com/zerolint
+	github.com/AkihiroSuda/gosocialcheck/cmd/gosocialcheck
 	github.com/alexkohler/dogsled/cmd/dogsled
 	github.com/alexkohler/nakedret/v2/cmd/nakedret
 	github.com/alexkohler/prealloc

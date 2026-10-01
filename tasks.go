@@ -63,6 +63,7 @@ var (
 func TaskAudit(t *T) error {
 	return t.Run(
 		TaskAuditCapabilities,
+		TaskAuditTrust,
 		TaskAuditVulnerabilities,
 	)
 }
@@ -76,6 +77,12 @@ func TaskAuditCapabilities(t *T) error {
 			-noisy
 			-output=compare capabilities.json
 	`)
+}
+
+// Audit for untrusted dependencies.
+func TaskAuditTrust(t *T) error {
+	t.Log("Checking dependency trust...")
+	return t.Exec(`go run github.com/AkihiroSuda/gosocialcheck/cmd/gosocialcheck run ./...`)
 }
 
 // Audit for known vulnerabilities.

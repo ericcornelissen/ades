@@ -11,6 +11,10 @@ github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6 h1:He8af
 github.com/AdaLogics/go-fuzz-headers v0.0.0-20240806141605-e8a1dd7889d6/go.mod h1:8o94RPi1/7XTJvwPpRSzSUedZrtlirdB3r9Z20bi2f8=
 github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20250520111509-a70c2aa677fa h1:x6kFzdPgBoLbyoNkA/jny0ENpoEz4wqY8lPTQL2DPkg=
 github.com/AdamKorcz/go-118-fuzz-build v0.0.0-20250520111509-a70c2aa677fa/go.mod h1:gCLVsLfv1egrcZu+GoJATN5ts75F2s62ih/457eWzOw=
+github.com/AkihiroSuda/gomoddirectivecomments v0.1.0 h1:5sKxYIkq9GGs0DTnuPNVm2Z/LmhKdTN+8QblThzTKqg=
+github.com/AkihiroSuda/gomoddirectivecomments v0.1.0/go.mod h1:flXOhVLWfsi4FuFhFoc9F3m7wAH2RT4aM3fVyQROKt4=
+github.com/AkihiroSuda/gosocialcheck v0.2.0 h1:vYk5ftnb94WVDXn9qsShZWcLM3ZB+Ap8WU3P7z7/v5c=
+github.com/AkihiroSuda/gosocialcheck v0.2.0/go.mod h1:6tmL03uCiHjFFYjP1FezN3eYjf5vGn3m6bYiCDAvaqo=
 github.com/BurntSushi/toml v0.3.1/go.mod h1:xHWCNGjB5oqiDr8zfno3MHue2Ht5sIBksp03qcyfWMU=
 github.com/BurntSushi/toml v1.5.0 h1:W5quZX/G/csjUnuI8SUYlsHs9M38FC7znL0lIO+DvMg=
 github.com/BurntSushi/toml v1.5.0/go.mod h1:ukJfTF/6rtPPRCnwkur4qwRxa8vTRFBF0uk2lLoLwho=
@@ -234,6 +238,8 @@ github.com/kunwardeep/paralleltest v1.0.15 h1:ZMk4Qt306tHIgKISHWFJAO1IDQJLc6uDyJ
 github.com/kunwardeep/paralleltest v1.0.15/go.mod h1:di4moFqtfz3ToSKxhNjhOZL+696QtJGCFe132CbBLGk=
 github.com/liamg/memoryfs v1.6.0 h1:jAFec2HI1PgMTem5gR7UT8zi9u4BfG5jorCRlLH06W8=
 github.com/liamg/memoryfs v1.6.0/go.mod h1:z7mfqXFQS8eSeBBsFjYLlxYRMRyiPktytvYCYTb3BSk=
+github.com/lmittmann/tint v1.2.0 h1:AogHRHy8HUJUnNJBHJlYa+fR4YY8mko2cnCp67xn9JY=
+github.com/lmittmann/tint v1.2.0/go.mod h1:HIS3gSy7qNwGCj+5oRjAutErFBl4BzdQP6cJZ0NfMwE=
 github.com/magiconair/properties v1.8.7 h1:IeQXZAiQcpL9mgcAe1Nu6cX9LLw6ExEHKjN0VQdvPDY=
 github.com/magiconair/properties v1.8.7/go.mod h1:Dhd985XPs7jluiymwWYZ0G4Z61jb3vdS329zhj2hYo0=
 github.com/mattn/go-colorable v0.1.14 h1:9A9LHSqF/7dyVVX6g0U9cwm9pG3kP9gSzcuIPHPsaIE=
