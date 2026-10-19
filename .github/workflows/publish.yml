@@ -78,6 +78,7 @@ jobs:
     name: GitHub Release
     runs-on: ubuntu-26.04
     permissions:
+      artifact-metadata: write # To create GitHub Attestations
       attestations: write # To create GitHub Attestations
       contents: write # To create a GitHub Release
       id-token: write # To perform keyless signing with cosign for attestations
