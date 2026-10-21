@@ -98,7 +98,7 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-runewidth v0.0.21 // indirect
 	github.com/mattn/go-shellwords v1.0.12 // indirect
-	github.com/mdempsky/unconvert v0.0.0-20250216222326-4a038b3d31f5 // indirect
+	github.com/mdempsky/unconvert v0.0.0-20261020133855-975dd2843474 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/locker v1.0.1 // indirect
 	github.com/moby/sys/mountinfo v0.7.2 // indirect
