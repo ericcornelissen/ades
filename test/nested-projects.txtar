@@ -1,0 +1,33 @@
+# A parent directory reports workflows from each nested project.
+! exec ades
+stdout 'one/.github/workflows/ci.yml'
+stdout 'group/two/.github/workflows/ci.yaml'
+! stdout 'Ok'
+! stdout '\.git/'
+! stderr .
+
+# Scanning a single project still works.
+cd one
+! exec ades
+stdout '.github/workflows/ci.yml'
+! stdout 'Ok'
+! stderr .
+
+-- one/.github/workflows/ci.yml --
+name: Example workflow
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ inputs.name }}'
+-- group/two/.github/workflows/ci.yaml --
+name: Example workflow
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ inputs.name }}'
+-- one/.git/.github/workflows/invalid.yml --
+not: [valid yaml
