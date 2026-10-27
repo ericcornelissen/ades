@@ -262,8 +262,8 @@ github.com/moby/sys/userns v0.1.0 h1:tVLXkFOxVu9A64/yh59slHVv9ahO9UIev4JZusOLG/g
 github.com/moby/sys/userns v0.1.0/go.mod h1:IHUYgu/kao6N8YZlp9Cf444ySSvCmDlmzUcYfDHOl28=
 github.com/mxschmitt/playwright-go v0.6201.1 h1:KBBDopE+IIdjAp2FIk6zhLcKCCSSx/T6rGjKZmfo/Bs=
 github.com/mxschmitt/playwright-go v0.6201.1/go.mod h1:vLBP2yVO1gokUlb9ENA+YE3VQaVqf2A9BGxcb7aPjMI=
-github.com/nishanths/exhaustive v0.14.0 h1:wqwHW3EPNu/mD0ZpkQVNPbupXKkH4XhMpXjFZ+kn/So=
-github.com/nishanths/exhaustive v0.14.0/go.mod h1:yt2T8QaQ/5OlVZsG+WV9uexQanVPI8MStaHR/JYg1hM=
+github.com/nishanths/exhaustive v0.16.1 h1:5la0VKPN6CY8WYJq+JfyP970R3IBbJHZiTUY+Fl0yuA=
+github.com/nishanths/exhaustive v0.16.1/go.mod h1:/nBwAMRn2QmCjWQ3PiJ939yRSwvWLKSa21L2C6Tp84E=
 github.com/onsi/gomega v1.34.1 h1:EUMJIKUjM8sKjYbtxQI9A4z2o+rruxnzNvpknOXie6k=
 github.com/onsi/gomega v1.34.1/go.mod h1:kU1QgUvBDLXBJq618Xvm2LUX6rSAfRaFRTcdOeDLwwY=
 github.com/opencontainers/go-digest v1.0.0 h1:apOUWs51W5PlhuyGyz9FCeeBIOUDA/6nW8Oi/yOhh5U=
@@ -522,3 +522,5 @@ honnef.co/go/tools v0.8.2 h1:+jPbCzuYxYrcoOvCecYUFDj+XJQRmzIhJmlbpps21Zk=
 honnef.co/go/tools v0.8.2/go.mod h1:xG1Q4n+mg3bKZrO6RWFA9jFlkqplflmDRHGeuexiLDs=
 mvdan.cc/unparam v0.0.0-20261011093844-7a2c2c0b7aa6 h1:BPYbCqDxFpG6SoLzbiU5hVn8kHW89plTWGddjT3OD7I=
 mvdan.cc/unparam v0.0.0-20261011093844-7a2c2c0b7aa6/go.mod h1:BEImwwhtsPZ0eyZhBtvrirFOvbQ7HmEnmfdFl3tz9M0=
+rsc.io/script v0.0.2 h1:eYoG7A3GFC3z1pRx3A2+s/vZ9LA8cxojHyCvslnj4RI=
+rsc.io/script v0.0.2/go.mod h1:cKBjCtFBBeZ0cbYFRXkRoxP+xGqhArPa9t3VWhtXfzU=
