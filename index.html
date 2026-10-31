@@ -1,0 +1,134 @@
+<!--
+Copyright (C) 2024-2025 Eric Cornelissen
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
+-->
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+	<title>ades</title>
+	<meta charset="utf-8" />
+
+	<meta
+		name="viewport"
+		content="initial-scale=1"
+	/>
+	<meta
+		name="description"
+		content="Find dangerous uses of GitHub Actions Workflow expressions. "
+	/>
+
+	<meta
+		http-equiv="Content-Security-Policy"
+		content="base-uri 'none'; connect-src 'self'; default-src 'none'; object-src 'none'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self'; trusted-types 'none'; require-trusted-types-for 'script';"
+	/>
+	<meta
+		http-equiv="Referrer-Policy"
+		content="no-referrer"
+	/>
+
+	<link rel="stylesheet" href="index.css">
+	<script src="wasm_exec.js"></script>
+</head>
+
+<body>
+	<noscript>
+		This website requires JavaScript and WebAssembly to run. The website's source code is
+		available on
+		<a
+			href="https://github.com/ericcornelissen/ades"
+			rel="noopener"
+		>GitHub</a>
+		, where the tool is also available as a standalone application.
+	</noscript>
+
+	<main>
+		<h1>Actions Dangerous Expressions Scanner</h1>
+		<div>
+			<div>
+				<input
+					id="option-conservative"
+					type="checkbox"
+				>
+				<label for="option-conservative">
+					Only expressions known to be controllable by attackers.
+				</label>
+			</div>
+			<div>
+				<label for="workflow-input">
+					Paste your GitHub Actions workflow or manifest below and get a report of dangerous uses of
+					<a
+						href="https://docs.github.com/en/actions/learn-github-actions/expressions"
+						rel="noopener"
+					>expressions</a>
+					in it.
+				</label>
+			</div>
+			<textarea
+				class="code"
+				id="workflow-input"
+				rows="24" cols="100"
+			>
+name: Example
+on: [push]
+
+jobs:
+  example:
+    name: example
+    runs-on: ubuntu-latest
+    steps:
+    - name: Safe run
+      run: echo 'Hello world!'
+    - name: Unsafe run
+      run: echo 'Hello ${{ inputs.name }}'
+			</textarea>
+		</div>
+		<div>
+			<h2>Report</h2>
+			<div id="results">
+				<i>Working...</i>
+			</div>
+		</div>
+	</main>
+
+	<footer>
+		<hr/>
+		<p>
+			Code available on
+			<a
+				href="https://github.com/ericcornelissen/ades"
+				rel="noopener"
+			>GitHub</a>
+			by
+			<a
+				href="https://ericcornelissen.dev/"
+				rel="noopener"
+			>@ericcornelissen</a>.
+		</p>
+		<p>
+			<a
+				href="https://github.com/ericcornelissen/ades/issues/new?template=website.yml"
+				rel="noopener"
+			>
+				Report a bug or suggestion for this website.
+			</a>
+		</p>
+	</footer>
+
+	<script src="index.js"></script>
+</body>
+
+</html>
