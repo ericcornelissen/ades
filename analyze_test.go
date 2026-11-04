@@ -25,6 +25,71 @@ import (
 	"github.com/ericcornelissen/go-gha-models"
 )
 
+func TestAnalyzeRepoNestedProjects(t *testing.T) {
+	workflow := []byte(`name: Unsafe workflow
+on: [push]
+jobs:
+  example:
+    runs-on: ubuntu-latest
+    steps:
+    - run: echo '${{ inputs.name }}'
+`)
+	testCases := map[string]struct {
+		files []string
+		want  []string
+	}{
+		"sibling projects": {
+			files: []string{"one/.github/workflows/ci.yml", "two/.github/workflows/ci.yaml"},
+			want:  []string{"one/.github/workflows/ci.yml", "two/.github/workflows/ci.yaml"},
+		},
+		"deeply nested project": {
+			files: []string{"group/project/.github/workflows/ci.yml"},
+			want:  []string{"group/project/.github/workflows/ci.yml"},
+		},
+		"root and nested projects": {
+			files: []string{".github/workflows/ci.yml", "project/.github/workflows/ci.yml"},
+			want:  []string{".github/workflows/ci.yml", "project/.github/workflows/ci.yml"},
+		},
+		"skip nested git metadata": {
+			files: []string{"project/.git/.github/workflows/ci.yml", "project/.git/action.yml"},
+		},
+		"ignore similar directories": {
+			files: []string{"project/not.github/workflows/ci.yml", "project/.github/workflows-extra/ci.yml"},
+		},
+		"ignore workflow subdirectories": {
+			files: []string{"project/.github/workflows/nested/ci.yml"},
+		},
+		"ignore other extensions": {
+			files: []string{"project/.github/workflows/ci.txt"},
+		},
+	}
+	for name, tt := range testCases {
+		t.Run(name, func(t *testing.T) {
+			t.Parallel()
+			fsys := fstest.MapFS{}
+			for _, name := range tt.files {
+				fsys[name] = &fstest.MapFile{Data: workflow}
+			}
+			report, err := AnalyzeRepo(fsys, AllMatcher)
+			if err != nil {
+				t.Fatalf("unexpected error: %v", err)
+			}
+			if len(report) != len(tt.want) {
+				t.Fatalf("unexpected report size (got %d, want %d): %v", len(report), len(tt.want), report)
+			}
+			for _, name := range tt.want {
+				violations := report[name]
+				if len(violations) != 1 {
+					t.Fatalf("expected one violation for %q, got %v", name, violations)
+				}
+				if got := violations[0].Problem; got != "${{ inputs.name }}" {
+					t.Errorf("unexpected problem: %q", got)
+				}
+			}
+		})
+	}
+}
+
 func TestAnalyzeRepo(t *testing.T) {
 	type TestCase struct {
 		fsys    fs.FS
