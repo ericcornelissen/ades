@@ -8,7 +8,7 @@ require (
 	github.com/mxschmitt/playwright-go v0.6401.0
 	github.com/rogpeppe/go-internal v1.16.0
 	github.com/santhosh-tekuri/jsonschema/v6 v6.0.3
-	golang.org/x/mod v0.42.0
+	golang.org/x/mod v0.43.0
 )
 
 require (
