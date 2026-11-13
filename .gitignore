@@ -29,7 +29,6 @@
 !.github/workflows/renovate.yml
 !.github/workflows/semgrep.yml
 !.github/workflows/website.yml
-!.github/actionlint.yml
 !.github/codeql.yml
 !.github/renovate.json
 

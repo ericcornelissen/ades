@@ -3,7 +3,7 @@ module github.com/ericcornelissen/ades
 go 1.27.0
 
 require (
-	github.com/ericcornelissen/go-gha-models v0.8.0
+	github.com/ericcornelissen/go-gha-models v0.10.0
 	github.com/gtramontina/ooze v0.2.0
 	github.com/mxschmitt/playwright-go v0.6401.0
 	github.com/rogpeppe/go-internal v1.16.0
@@ -27,12 +27,10 @@ require (
 	github.com/alexkohler/nakedret/v2 v2.0.6 // indirect
 	github.com/alexkohler/prealloc v1.1.0 // indirect
 	github.com/alexkohler/unimport v0.0.0-20171106223308-e6f2b2e2d406 // indirect
-	github.com/bmatcuk/doublestar/v4 v4.10.0 // indirect
 	github.com/butuzov/ireturn v0.4.1 // indirect
 	github.com/catenacyber/perfsprint v0.10.1 // indirect
 	github.com/cespare/xxhash/v2 v2.3.0 // indirect
 	github.com/chains-project/ghasum v0.6.4 // indirect
-	github.com/clipperhouse/uax29/v2 v2.7.0 // indirect
 	github.com/cloudflare/circl v1.6.3 // indirect
 	github.com/containerd/cgroups/v3 v3.0.5 // indirect
 	github.com/containerd/console v1.0.5 // indirect
@@ -96,8 +94,6 @@ require (
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mattn/go-colorable v0.1.14 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
-	github.com/mattn/go-runewidth v0.0.21 // indirect
-	github.com/mattn/go-shellwords v1.0.12 // indirect
 	github.com/mdempsky/unconvert v0.0.0-20261020133855-975dd2843474 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect
 	github.com/moby/locker v1.0.1 // indirect
@@ -122,8 +118,6 @@ require (
 	github.com/quasilyte/regex/syntax v0.0.0-20210819130434-b3f0c404a727 // indirect
 	github.com/quasilyte/stdinfo v0.0.0-20220114132959-f7386bf02567 // indirect
 	github.com/reproducible-containers/diffoci v0.1.8 // indirect
-	github.com/rhysd/actionlint v1.7.12 // indirect
-	github.com/robfig/cron/v3 v3.0.1 // indirect
 	github.com/russross/blackfriday/v2 v2.1.0 // indirect
 	github.com/sagikazarmark/locafero v0.4.0 // indirect
 	github.com/sagikazarmark/slog-shim v0.1.0 // indirect
@@ -151,7 +145,7 @@ require (
 	go.opentelemetry.io/otel/trace v1.44.0 // indirect
 	go.uber.org/multierr v1.11.0 // indirect
 	go.yaml.in/yaml/v3 v3.0.4 // indirect
-	go.yaml.in/yaml/v4 v4.0.0-rc.3 // indirect
+	go.yaml.in/yaml/v4 v4.0.0 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
 	golang.org/x/exp v0.0.0-20260410095643-746e56fc9e2f // indirect
 	golang.org/x/exp/typeparams v0.0.0-20251023183803-a4bb9ffd2546 // indirect
@@ -194,7 +188,6 @@ tool (
 	github.com/nishanths/exhaustive/cmd/exhaustive
 	github.com/polyfloyd/go-errorlint
 	github.com/reproducible-containers/diffoci/cmd/diffoci
-	github.com/rhysd/actionlint/cmd/actionlint
 	github.com/tetafro/godot/cmd/godot
 	github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck
 	github.com/ultraware/whitespace/cmd/whitespace

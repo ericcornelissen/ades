@@ -309,6 +309,476 @@
 		},
 		{
 			"packageName": "main",
+			"capabilityName": "FILES",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$2 os.ReadFile",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "328",
+						"column": "36"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "manifest.go",
+						"line": "73",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$2",
+					"site": {
+						"filename": "plugin.go",
+						"line": "182",
+						"column": "33"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.ReadFile",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "127",
+						"column": "28"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "FILES",
+			"capability": "CAPABILITY_FILES",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow github.com/ericcornelissen/go-gha-models.ParseWorkflow go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$2 os.ReadFile",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseWorkflow",
+					"site": {
+						"filename": "main.go",
+						"line": "344",
+						"column": "36"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "workflow.go",
+						"line": "415",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$2",
+					"site": {
+						"filename": "plugin.go",
+						"line": "182",
+						"column": "33"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.ReadFile",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "127",
+						"column": "28"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "ades",
+			"capabilityName": "READ_SYSTEM_STATE",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3 os.Environ",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades.AnalyzeRepo",
+					"package": "github.com/ericcornelissen/ades"
+				},
+				{
+					"name": "io/fs.WalkDir",
+					"site": {
+						"filename": "analyze.go",
+						"line": "64",
+						"column": "27"
+					},
+					"package": "io/fs"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades.AnalyzeRepo$1",
+					"site": {
+						"filename": "walk.go",
+						"line": "120",
+						"column": "11"
+					},
+					"package": "github.com/ericcornelissen/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseManifest",
+					"site": {
+						"filename": "analyze.go",
+						"line": "109",
+						"column": "38"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "manifest.go",
+						"line": "73",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3",
+					"site": {
+						"filename": "plugin.go",
+						"line": "210",
+						"column": "63"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.Environ",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "159",
+						"column": "36"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "ades",
+			"capabilityName": "READ_SYSTEM_STATE",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3 os.Environ",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades.AnalyzeRepo$1",
+					"package": "github.com/ericcornelissen/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseManifest",
+					"site": {
+						"filename": "analyze.go",
+						"line": "109",
+						"column": "38"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "manifest.go",
+						"line": "73",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3",
+					"site": {
+						"filename": "plugin.go",
+						"line": "210",
+						"column": "63"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.Environ",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "159",
+						"column": "36"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
 			"capabilityName": "READ_SYSTEM_STATE",
 			"capability": "CAPABILITY_READ_SYSTEM_STATE",
 			"depPath": "github.com/ericcornelissen/ades/cmd/ades.main github.com/ericcornelissen/ades/cmd/ades.run os.Getwd",
@@ -411,6 +881,128 @@
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
 			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "READ_SYSTEM_STATE",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3 os.Environ",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "222",
+						"column": "39"
+					},
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "328",
+						"column": "36"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "manifest.go",
+						"line": "73",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3",
+					"site": {
+						"filename": "plugin.go",
+						"line": "210",
+						"column": "63"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.Environ",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "159",
+						"column": "36"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
 		},
 		{
 			"packageName": "main",
@@ -538,6 +1130,232 @@
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
 			"capabilityType": "CAPABILITY_TYPE_DIRECT"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "READ_SYSTEM_STATE",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3 os.Environ",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseManifest",
+					"site": {
+						"filename": "main.go",
+						"line": "328",
+						"column": "36"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "manifest.go",
+						"line": "73",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3",
+					"site": {
+						"filename": "plugin.go",
+						"line": "210",
+						"column": "63"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.Environ",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "159",
+						"column": "36"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
+		},
+		{
+			"packageName": "main",
+			"capabilityName": "READ_SYSTEM_STATE",
+			"capability": "CAPABILITY_READ_SYSTEM_STATE",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow github.com/ericcornelissen/go-gha-models.ParseWorkflow go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll (*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load (*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose (*go.yaml.in/yaml/v4/internal/libyaml.Composer).init (*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3 os.Environ",
+			"path": [
+				{
+					"name": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow",
+					"package": "github.com/ericcornelissen/ades/cmd/ades"
+				},
+				{
+					"name": "github.com/ericcornelissen/go-gha-models.ParseWorkflow",
+					"site": {
+						"filename": "main.go",
+						"line": "344",
+						"column": "36"
+					},
+					"package": "github.com/ericcornelissen/go-gha-models"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
+					"site": {
+						"filename": "workflow.go",
+						"line": "415",
+						"column": "26"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "1028",
+						"column": "13"
+					},
+					"package": "go.yaml.in/yaml/v4"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
+					"site": {
+						"filename": "yaml.go",
+						"line": "854",
+						"column": "21"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
+					"site": {
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Loader).Load",
+					"site": {
+						"filename": "loader.go",
+						"line": "195",
+						"column": "16"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).Compose",
+					"site": {
+						"filename": "loader.go",
+						"line": "133",
+						"column": "28"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/internal/libyaml.Composer).init",
+					"site": {
+						"filename": "composer.go",
+						"line": "104",
+						"column": "8"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "(*go.yaml.in/yaml/v4/plugin/aliasdata.Plugin).NewAliasDataContext",
+					"site": {
+						"filename": "composer.go",
+						"line": "347",
+						"column": "53"
+					},
+					"package": "go.yaml.in/yaml/v4/plugin/aliasdata"
+				},
+				{
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.aliasDataServices$3",
+					"site": {
+						"filename": "plugin.go",
+						"line": "210",
+						"column": "63"
+					},
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
+				},
+				{
+					"name": "os.Environ",
+					"site": {
+						"filename": "plugin_alias_data.go",
+						"line": "159",
+						"column": "36"
+					},
+					"package": "os"
+				}
+			],
+			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
+			"capabilityType": "CAPABILITY_TYPE_TRANSITIVE"
 		},
 		{
 			"packageName": "ades",
@@ -973,7 +1791,7 @@
 			"packageName": "ades",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo io/fs.WalkDir github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades.AnalyzeRepo",
@@ -1007,40 +1825,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades",
@@ -1050,7 +1868,7 @@
 			"packageName": "ades",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades.AnalyzeRepo$1 github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades.AnalyzeRepo$1",
@@ -1066,40 +1884,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades",
@@ -1286,7 +2104,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnFile",
@@ -1311,40 +2129,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1354,7 +2172,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnStdin",
@@ -1379,40 +2197,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1422,7 +2240,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTarget",
@@ -1456,40 +2274,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1499,7 +2317,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets github.com/ericcornelissen/ades/cmd/ades.runOnTarget github.com/ericcornelissen/ades/cmd/ades.runOnFile github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.runOnTargets",
@@ -1542,40 +2360,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1585,7 +2403,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryManifest github.com/ericcornelissen/go-gha-models.ParseManifest go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.tryManifest",
@@ -1601,40 +2419,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "manifest.go",
 						"line": "73",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1644,7 +2462,7 @@
 			"packageName": "main",
 			"capabilityName": "REFLECT",
 			"capability": "CAPABILITY_REFLECT",
-			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow github.com/ericcornelissen/go-gha-models.ParseWorkflow go.yaml.in/yaml/v3.Unmarshal go.yaml.in/yaml/v3.unmarshal (*go.yaml.in/yaml/v3.decoder).unmarshal (reflect.Value).Set",
+			"depPath": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow github.com/ericcornelissen/go-gha-models.ParseWorkflow go.yaml.in/yaml/v4.Unmarshal go.yaml.in/yaml/v4.Load go.yaml.in/yaml/v4/internal/libyaml.Load go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 			"path": [
 				{
 					"name": "github.com/ericcornelissen/ades/cmd/ades.tryWorkflow",
@@ -1660,40 +2478,40 @@
 					"package": "github.com/ericcornelissen/go-gha-models"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.Unmarshal",
+					"name": "go.yaml.in/yaml/v4.Unmarshal",
 					"site": {
 						"filename": "workflow.go",
 						"line": "415",
 						"column": "26"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "go.yaml.in/yaml/v3.unmarshal",
+					"name": "go.yaml.in/yaml/v4.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "87",
-						"column": "18"
+						"line": "1028",
+						"column": "13"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4"
 				},
 				{
-					"name": "(*go.yaml.in/yaml/v3.decoder).unmarshal",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.Load",
 					"site": {
 						"filename": "yaml.go",
-						"line": "165",
-						"column": "14"
+						"line": "854",
+						"column": "21"
 					},
-					"package": "go.yaml.in/yaml/v3"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				},
 				{
-					"name": "(reflect.Value).Set",
+					"name": "go.yaml.in/yaml/v4/internal/libyaml.loadAll",
 					"site": {
-						"filename": "decode.go",
-						"line": "493",
-						"column": "10"
+						"filename": "loader.go",
+						"line": "99",
+						"column": "17"
 					},
-					"package": "reflect"
+					"package": "go.yaml.in/yaml/v4/internal/libyaml"
 				}
 			],
 			"packageDir": "github.com/ericcornelissen/ades/cmd/ades",
@@ -1703,15 +2521,15 @@
 	"moduleInfo": [
 		{
 			"path": "github.com/ericcornelissen/go-gha-models",
-			"version": "v0.8.0"
+			"version": "v0.10.0"
 		},
 		{
-			"path": "go.yaml.in/yaml/v3",
-			"version": "v3.0.4"
+			"path": "go.yaml.in/yaml/v4",
+			"version": "v4.0.0"
 		},
 		{
 			"path": "golang.org/x/mod",
-			"version": "v0.42.0"
+			"version": "v0.43.0"
 		}
 	],
 	"packageInfo": [
@@ -1730,7 +2548,31 @@
 			"path": "github.com/ericcornelissen/go-gha-models"
 		},
 		{
-			"path": "go.yaml.in/yaml/v3"
+			"path": "go.yaml.in/yaml/v4"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/internal/libyaml"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/internal/plugin"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/internal/plugin/mergekey"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/plugin/aliasdata"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/plugin/errorformat/v3"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/plugin/errorformat/v4"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/plugin/loaderlimits"
+		},
+		{
+			"path": "go.yaml.in/yaml/v4/plugin/mergekey"
 		},
 		{
 			"path": "golang.org/x/mod/semver"
