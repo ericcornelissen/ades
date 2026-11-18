@@ -23,7 +23,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@v7.0.0
+      uses: actions/setup-go@v7.1.0
       with:
         go-version-file: go.mod
     - name: Install cosign
@@ -90,7 +90,7 @@ jobs:
       with:
         persist-credentials: false
     - name: Install Go
-      uses: actions/setup-go@v7.0.0
+      uses: actions/setup-go@v7.1.0
       with:
         cache: false
         go-version-file: go.mod
