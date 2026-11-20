@@ -19,8 +19,9 @@ import (
 	"fmt"
 	"io"
 	"io/fs"
-	"path/filepath"
+	"path"
 	"slices"
+	"strings"
 
 	"github.com/ericcornelissen/go-gha-models"
 )
@@ -61,13 +62,13 @@ type Violation struct {
 // and workflows.
 func AnalyzeRepo(fsys fs.FS, matcher ExprMatcher) (map[string][]Violation, error) {
 	report := make(map[string][]Violation)
-	return report, fs.WalkDir(fsys, ".", func(path string, entry fs.DirEntry, err error) error {
+	return report, fs.WalkDir(fsys, ".", func(name string, entry fs.DirEntry, err error) error {
 		if err != nil {
 			return err
 		}
 
 		if entry.IsDir() {
-			if path == ".git" {
+			if entry.Name() == ".git" {
 				return fs.SkipDir
 			}
 
@@ -75,43 +76,44 @@ func AnalyzeRepo(fsys fs.FS, matcher ExprMatcher) (map[string][]Violation, error
 		}
 
 		var (
-			dir  = filepath.Dir(path)
-			base = filepath.Base(path)
-			ext  = filepath.Ext(path)
+			dir  = path.Dir(name)
+			base = path.Base(name)
+			ext  = path.Ext(name)
 
-			isManifest = base == "action.yml" || base == "action.yaml"
-			isWorkflow = dir == ".github/workflows" && (ext == ".yml" || ext == ".yaml")
+			isManifest    = base == "action.yml" || base == "action.yaml"
+			isWorkflowDir = dir == ".github/workflows" || strings.HasSuffix(dir, "/.github/workflows")
+			isWorkflow    = isWorkflowDir && (ext == ".yml" || ext == ".yaml")
 		)
 
 		if !isManifest && !isWorkflow {
 			return nil
 		}
 
-		file, err := fsys.Open(path)
+		file, err := fsys.Open(name)
 		if err != nil {
-			return fmt.Errorf("could not open %q: %v", path, err)
+			return fmt.Errorf("could not open %q: %v", name, err)
 		}
 		defer func() { _ = file.Close() }()
 
 		content, err := io.ReadAll(file)
 		if err != nil {
-			return fmt.Errorf("could not read %q: %v", path, err)
+			return fmt.Errorf("could not read %q: %v", name, err)
 		}
 
 		if isWorkflow {
 			workflow, err := gha.ParseWorkflow(content)
 			if err != nil {
-				return fmt.Errorf("could not process workflow %q: %v", path, err)
+				return fmt.Errorf("could not process workflow %q: %v", name, err)
 			}
 
-			report[path] = AnalyzeWorkflow(&workflow, matcher)
+			report[name] = AnalyzeWorkflow(&workflow, matcher)
 		} else {
 			manifest, err := gha.ParseManifest(content)
 			if err != nil {
-				return fmt.Errorf("could not process manifest %q: %v", path, err)
+				return fmt.Errorf("could not process manifest %q: %v", name, err)
 			}
 
-			report[path] = AnalyzeManifest(&manifest, matcher)
+			report[name] = AnalyzeManifest(&manifest, matcher)
 		}
 
 		return nil
