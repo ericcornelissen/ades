@@ -71,7 +71,7 @@ func TaskAudit(t *T) error {
 func TaskAuditCapabilities(t *T) error {
 	t.Log("Checking capabilities...")
 	return t.Exec(`
-		go run github.com/google/capslock/cmd/capslock
+		go tool capslock
 			-packages ./...
 			-noisy
 			-output=compare capabilities.json
@@ -81,7 +81,7 @@ func TaskAuditCapabilities(t *T) error {
 // Audit for known vulnerabilities.
 func TaskAuditVulnerabilities(t *T) error {
 	t.Log("Checking vulnerabilities...")
-	return t.Exec(`go run golang.org/x/vuln/cmd/govulncheck .`)
+	return t.Exec(`go tool govulncheck .`)
 }
 
 // Build the ades binary for the current platform.
@@ -262,7 +262,7 @@ func TaskFormat(t *T) error {
 	return t.Exec(
 		"gofmt -w .",
 		"go mod tidy",
-		"go run golang.org/x/tools/cmd/goimports -w .",
+		"go tool goimports -w .",
 	)
 }
 
@@ -272,10 +272,11 @@ func TaskFormatCheck(t *T) error {
 
 	out, err := t.ExecS(
 		"gofmt -l .",
-		"gofmt -l -r 'interface{} -> any' .",
-		"go run golang.org/x/tools/cmd/goimports -l .",
+		"go mod tidy -diff",
+		"go tool goimports -l .",
 	)
 	if err != nil {
+		fmt.Println(out)
 		return err
 	} else if out != "" {
 		return errors.New("not formatted")
@@ -458,7 +459,7 @@ func TaskReproducibleContainer(t *T) error {
 
 	t.Log("Check...")
 	cmd = fmt.Sprintf(
-		"go run github.com/reproducible-containers/diffoci/cmd/diffoci diff --semantic %s://%s %s://%s",
+		"go tool diffoci diff --semantic %s://%s %s://%s",
 		OCI,
 		tag1,
 		OCI,
@@ -493,7 +494,7 @@ func TaskTestRandomized(t *T) error {
 func TaskUpdateCapabilities(t *T) error {
 	t.Log("Updating capabilities...")
 	stdout, err := t.ExecS(`
-		go run github.com/google/capslock/cmd/capslock
+		go tool capslock
 			-packages ./...
 			-noisy
 			-output json
@@ -522,31 +523,31 @@ func TaskVet(t *T) error {
 	return t.Exec(
 		"go vet ./...",
 		"go fix -diff ./...",
-		"go run 4d63.com/gochecknoinits ./...",
-		"go run fillmore-labs.com/zerolint -level=full ./...",
-		"go run github.com/alexkohler/dogsled/cmd/dogsled -set_exit_status ./...",
-		"go run github.com/alexkohler/nakedret/v2/cmd/nakedret -l 0 ./...",
-		"go run github.com/alexkohler/prealloc .",
-		"go run github.com/alexkohler/unimport ./...",
-		"go run github.com/butuzov/ireturn/cmd/ireturn ./...",
-		"go run github.com/catenacyber/perfsprint ./...",
-		"go run github.com/dkorunic/betteralign/cmd/betteralign ./...",
-		"go run github.com/go-critic/go-critic/cmd/gocritic check ./...",
-		"go run github.com/gordonklaus/ineffassign ./...",
-		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status -ignore 'web|tasks.go' ./...",
-		"go run github.com/jgautheron/goconst/cmd/goconst -numbers -set-exit-status ./web/...",
-		"go run github.com/kisielk/errcheck ./...",
-		"go run github.com/kunwardeep/paralleltest -i -ignoreloopVar -checkcleanup ./...",
-		"go run github.com/mdempsky/unconvert ./...",
-		"go run github.com/nishanths/exhaustive/cmd/exhaustive ./...",
-		"go run github.com/polyfloyd/go-errorlint ./...",
-		"go run github.com/tetafro/godot/cmd/godot .",
-		"go run github.com/tomarrell/wrapcheck/v2/cmd/wrapcheck -test=false ./...",
-		"go run github.com/ultraware/whitespace/cmd/whitespace ./...",
-		"go run golang.org/x/tools/cmd/deadcode ./...",
-		"go run golang.org/x/tools/go/analysis/passes/shadow/cmd/shadow ./...",
-		"go run honnef.co/go/tools/cmd/staticcheck ./...",
-		"go run mvdan.cc/unparam ./...",
+		"go tool gochecknoinits ./...",
+		"go tool zerolint -level=full ./...",
+		"go tool dogsled -set_exit_status ./...",
+		"go tool nakedret -l 0 ./...",
+		"go tool prealloc .",
+		"go tool unimport ./...",
+		"go tool ireturn ./...",
+		"go tool perfsprint ./...",
+		"go tool betteralign ./...",
+		"go tool gocritic check ./...",
+		"go tool ineffassign ./...",
+		"go tool goconst -numbers -set-exit-status -ignore 'web|tasks.go' ./...",
+		"go tool goconst -numbers -set-exit-status ./web/...",
+		"go tool errcheck ./...",
+		"go tool paralleltest -i -ignoreloopVar -checkcleanup ./...",
+		"go tool unconvert ./...",
+		"go tool exhaustive ./...",
+		"go tool go-errorlint ./...",
+		"go tool godot .",
+		"go tool wrapcheck -test=false ./...",
+		"go tool whitespace ./...",
+		"go tool deadcode ./...",
+		"go tool shadow ./...",
+		"go tool staticcheck ./...",
+		"go tool unparam ./...",
 	)
 }
 
