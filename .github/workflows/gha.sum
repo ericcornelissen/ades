@@ -11,4 +11,4 @@ docker/login-action@v4.8.0 S69quT6iX6ZQc6YpvSNyGqymMBrgk/rkNbsJlbJNCv8=
 docker/setup-buildx-action@v4.3.0 LQ72s4GrR1xJhPlAQ8133zVKgtdP1gkbfgzC3JisDp0=
 github/codeql-action@1fc58d04a4d4374f921bdac573c3811c240f9c26 8RaTb7aeu5k3anUzGz8T0t4UEVyzCaKr861wJCw+GXo=
 github/codeql-action@v4.39.2 8RaTb7aeu5k3anUzGz8T0t4UEVyzCaKr861wJCw+GXo=
-sigstore/cosign-installer@v4.1.0 BrsAnwKWGWKPxPE4FeM5H+IX8IEsObRDjxuAqaMZVOo=
+sigstore/cosign-installer@v4.1.4 4n1rsW41mxyklj72VutXyV4I4D41fo+pl/5EQK4BJRU=
